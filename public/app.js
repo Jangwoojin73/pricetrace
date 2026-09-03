@@ -809,8 +809,12 @@ function initEventListeners() {
 
   // 모달 열기/닫기
   const openModal = () => {
-    elements.modalTargetPriceInput.value = state.targetPrice;
+    elements.modalTargetPriceInput.value = state.targetPrice || 15000;
     elements.configModal.classList.remove("hidden");
+    setTimeout(() => {
+      elements.modalTargetPriceInput.focus();
+      elements.modalTargetPriceInput.select();
+    }, 50);
   };
   const closeModal = () => {
     elements.configModal.classList.add("hidden");
@@ -823,6 +827,22 @@ function initEventListeners() {
   elements.closeConfigModalBtn.addEventListener("click", closeModal);
   elements.cancelConfigModalBtn.addEventListener("click", closeModal);
 
+  // 모달 바깥 배경 클릭 시 닫기
+  if (elements.configModal) {
+    elements.configModal.addEventListener("click", (e) => {
+      if (e.target === elements.configModal) {
+        closeModal();
+      }
+    });
+  }
+
+  // ESC 키로 모달 닫기
+  window.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && elements.configModal && !elements.configModal.classList.contains("hidden")) {
+      closeModal();
+    }
+  });
+
   // 모달 프리셋 버튼
   elements.presetPriceBtns.forEach(btn => {
     btn.addEventListener("click", () => {
@@ -831,14 +851,28 @@ function initEventListeners() {
     });
   });
 
+  // 모달 인풋 엔터키 저장
+  elements.modalTargetPriceInput.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      elements.saveConfigModalBtn.click();
+    }
+  });
+
   // 모달 설정 저장
   elements.saveConfigModalBtn.addEventListener("click", () => {
     const newTarget = parseInt(elements.modalTargetPriceInput.value, 10);
     if (!isNaN(newTarget) && newTarget > 0) {
       closeModal();
-      loadPriceData(state.keyword, newTarget);
+      state.targetPrice = newTarget;
+      if (elements.btnTargetPriceDisplay) {
+        elements.btnTargetPriceDisplay.textContent = formatCurrency(newTarget) + "원";
+      }
+      if (state.keyword && state.keyword.trim()) {
+        loadPriceData(state.keyword, newTarget);
+      }
     } else {
-      alert("올바른 금액을 입력해 주세요.");
+      alert("올바른 금액을 입력해 주세요 (1원 이상의 숫자).");
     }
   });
 
