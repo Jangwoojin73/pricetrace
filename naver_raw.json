@@ -1,0 +1,1009 @@
+{
+  "data": [
+    {
+      "page": 1,
+      "pageSize": 8,
+      "slots": [
+        {
+          "slotType": "CARD",
+          "data": {
+            "cardType": "CATALOG_CARD",
+            "sourceType": "SAS",
+            "sasType": "SHOPPING",
+            "rank": 1,
+            "nvMid": 53018889018,
+            "channelProductId": "",
+            "originalMallProductId": "",
+            "productName": "농심 <mark>신라면</mark>, 120g, <mark>20개</mark>",
+            "productClickUrl": {
+              "pcUrl": "https://cr3.shopping.naver.com/v2/bridge/searchGate?nv_mid=53018889018&cat_id=50013941&query=%EC%8B%A0%EB%9D%BC%EB%A9%B4%2020%EA%B0%9C&t=mtfdp5b5&h=c207181d51d5965d5a9fe644a9801c7fb83f4dc3",
+              "mobileUrl": "https://cr3.shopping.naver.com/v2/bridge/searchGate?nv_mid=53018889018&cat_id=50013941&query=%EC%8B%A0%EB%9D%BC%EB%A9%B4%2020%EA%B0%9C&t=mtfdp5b5&h=c207181d51d5965d5a9fe644a9801c7fb83f4dc3"
+            },
+            "productUrl": {
+              "pcUrl": "",
+              "mobileUrl": ""
+            },
+            "images": [
+              {
+                "imageUrl": "https://shopping-phinf.pstatic.net/main_5301888/53018889018.20250214174431.jpg",
+                "width": 500,
+                "height": 500
+              }
+            ],
+            "mallSeq": "0",
+            "mallName": "",
+            "isIndividualSeller": false,
+            "mallUrl": {
+              "pcUrl": "",
+              "mobileUrl": ""
+            },
+            "mallId": "naver_model",
+            "priceCurrency": "KRW",
+            "capacityUnit": {
+              "unitCapacityWithUnit": "100g",
+              "unitPrice": 550
+            },
+            "averageReviewScore": 4.88,
+            "totalReviewCount": 104105,
+            "purchaseCount": 0,
+            "keepCount": 93,
+            "mallCount": 3881,
+            "saleType": "0",
+            "productType": "NORMAL",
+            "goodsType": "DEFAULT",
+            "promotionTypes": [],
+            "isHotDeal": false,
+            "deliveryFilters": [
+              "512"
+            ],
+            "productDeliveryInfo": {
+              "deliveryFee": 4000,
+              "exchangeDeliveryFee": 4000,
+              "deliveryFeeTypes": [
+                "CATALOG_INCLUDED_FREE"
+              ]
+            },
+            "fastDeliveryType": "NONE",
+            "productRmids": [],
+            "catalogMatchingId": 53018889018,
+            "deliveryAdditionalInfo": {
+              "noDeliveryDayOfWeek": [],
+              "isNoDeliveryHoliday": false
+            },
+            "gdid": "00000009_000c582c0b3a",
+            "customsFee": {
+              "isCustomsDutySeparate": false,
+              "isCustomsServiceFeeSeparate": false
+            },
+            "lCatId": "50000006",
+            "mCatId": "50013960",
+            "sCatId": "50013961",
+            "ssCatId": "50013941",
+            "leafCategoryId": "50013941",
+            "isBrandStore": false,
+            "isAdultContentRestricted": false,
+            "isGroupProduct": true,
+            "isOverseaProduct": false,
+            "isSmartStoreProduct": false,
+            "isNewProduct": false,
+            "isWindowProduct": false,
+            "salePrice": 0,
+            "discountedSalePrice": 13200,
+            "discountedKRWSalePrice": 13200,
+            "discountedRatio": 0,
+            "shoppingExtraInfo": {
+              "hasDeliveryPrice": true,
+              "deliveryPrice": 16490,
+              "deliveryKRWPrice": 16490,
+              "fastDeliveryInfo": {
+                "fastDeliveryDate": "2006-01-01T15:00:00.000Z",
+                "noDeliveryDayOfWeek": [],
+                "isNoDeliveryHoliday": false
+              }
+            },
+            "isMembershipFreeDelivery": false,
+            "isMembershipBenefit": false,
+            "exceptBenefitTypes": [],
+            "membershipSavingPoint": {
+              "savingRatio": 0,
+              "pointName": "",
+              "disabledPoint": false,
+              "point": 0
+            },
+            "enabledMembershipBenefit": false,
+            "enabledOptimizedBenefit": false,
+            "fulfillment": {},
+            "productBenefit": {
+              "productId": "",
+              "benefitKey": "_nonad",
+              "optimizedPriceBenefit": {
+                "isMyDiscount": false,
+                "hasMembership": false,
+                "optimizedDiscountedPrice": 20710,
+                "optimizedDiscountRate": 0,
+                "hasDiscount": false
+              },
+              "membershipPointBenefit": {}
+            }
+          }
+        },
+        {
+          "slotType": "CARD",
+          "data": {
+            "cardType": "ORGANIC_CARD",
+            "sourceType": "SAS",
+            "sasType": "SHOPPING",
+            "rank": 2,
+            "nvMid": 86221175355,
+            "channelProductId": "8676675032",
+            "originalMallProductId": "8635732079",
+            "channelNo": "101916615",
+            "productName": "농심 <mark>신라면</mark>120g <mark>20개</mark> 1박스",
+            "productClickUrl": {
+              "pcUrl": "https://cr3.shopping.naver.com/v2/bridge/searchGate?nv_mid=86221175355&cat_id=50013941&query=%EC%8B%A0%EB%9D%BC%EB%A9%B4%2020%EA%B0%9C&t=mtfdp5b6&h=84e54e7c47ac522198852a7b6ac3428b2b9c021d",
+              "mobileUrl": "https://cr3.shopping.naver.com/v2/bridge/searchGate?nv_mid=86221175355&cat_id=50013941&query=%EC%8B%A0%EB%9D%BC%EB%A9%B4%2020%EA%B0%9C&t=mtfdp5b6&h=84e54e7c47ac522198852a7b6ac3428b2b9c021d"
+            },
+            "productUrl": {
+              "pcUrl": "https://smartstore.naver.com/main/products/8676675032",
+              "mobileUrl": "https://m.smartstore.naver.com/main/products/8676675032"
+            },
+            "images": [
+              {
+                "imageUrl": "https://shopping-phinf.pstatic.net/main_8622117/86221175355.jpg",
+                "width": 600,
+                "height": 600
+              }
+            ],
+            "mallSeq": "8172805",
+            "mallName": "신성마켓몰",
+            "isIndividualSeller": false,
+            "mallUrl": {
+              "mobileUrl": "https://m.smartstore.naver.com/inflow/outlink/url?url=https%3A%2F%2Fm.smartstore.naver.com%2Fshinsungmaket%3Fnl-ts-pid%3D%26tr%3Dslsmn",
+              "pcUrl": "https://smartstore.naver.com/inflow/outlink/url?url=https%3A%2F%2Fsmartstore.naver.com%2Fshinsungmaket%3Fnl-ts-pid%3D%26tr%3Dslsmn"
+            },
+            "mallId": "ncp_1om9oi_01",
+            "priceCurrency": "KRW",
+            "capacityUnit": {
+              "unitCapacityWithUnit": "100g",
+              "unitPrice": 550
+            },
+            "averageReviewScore": 4.88,
+            "totalReviewCount": 710,
+            "purchaseCount": 591,
+            "keepCount": 91,
+            "mallCount": 0,
+            "saleType": "0",
+            "productType": "NORMAL",
+            "goodsType": "DEFAULT",
+            "promotionTypes": [],
+            "isHotDeal": false,
+            "nPayMobileType": "NPAY_PLUS",
+            "nPayPcType": "NPAY_PLUS",
+            "deliveryFilters": [
+              "512",
+              "2"
+            ],
+            "productDeliveryInfo": {
+              "deliveryFee": 4000,
+              "exchangeDeliveryFee": 4000,
+              "deliveryFeeTypes": [
+                "PAID"
+              ]
+            },
+            "fastDeliveryType": "TODAY_DELIVERY",
+            "productRmids": [],
+            "deliveryAdditionalInfo": {
+              "orderClosedTime": "14:00",
+              "noDeliveryDayOfWeek": [
+                6,
+                0
+              ],
+              "isNoDeliveryHoliday": true
+            },
+            "gdid": "00000009_0014132eba3b",
+            "customsFee": {
+              "isCustomsDutySeparate": false,
+              "isCustomsServiceFeeSeparate": false
+            },
+            "lCatId": "50000006",
+            "mCatId": "50013960",
+            "sCatId": "50013961",
+            "ssCatId": "50013941",
+            "leafCategoryId": "50013941",
+            "isBrandStore": false,
+            "isAdultContentRestricted": false,
+            "isGroupProduct": false,
+            "isOverseaProduct": false,
+            "isSmartStoreProduct": true,
+            "isNewProduct": false,
+            "isWindowProduct": false,
+            "salePrice": 13200,
+            "discountedSalePrice": 13200,
+            "discountedKRWSalePrice": 13200,
+            "discountedRatio": 0,
+            "shoppingExtraInfo": {
+              "hasDeliveryPrice": false,
+              "deliveryPrice": 17200,
+              "deliveryKRWPrice": 17200,
+              "fastDeliveryInfo": {
+                "fastDeliveryDate": "2006-01-01T15:00:00.000Z",
+                "noDeliveryDayOfWeek": [],
+                "isNoDeliveryHoliday": false
+              }
+            },
+            "isMembershipFreeDelivery": false,
+            "isMembershipBenefit": false,
+            "merchantNo": 511825834,
+            "exceptBenefitTypes": [],
+            "membershipSavingPoint": {
+              "savingRatio": 0,
+              "pointName": "",
+              "disabledPoint": false,
+              "point": 132
+            },
+            "enabledMembershipBenefit": false,
+            "enabledOptimizedBenefit": true,
+            "fulfillment": {},
+            "productBenefit": {
+              "productId": "8676675032",
+              "benefitKey": "8676675032_nonad",
+              "optimizedPriceBenefit": {
+                "isMyDiscount": false,
+                "hasMembership": false,
+                "optimizedDiscountedPrice": 13200,
+                "optimizedDiscountRate": 0,
+                "hasDiscount": false
+              },
+              "membershipPointBenefit": {}
+            }
+          }
+        },
+        {
+          "slotType": "CARD",
+          "data": {
+            "cardType": "CATALOG_CARD",
+            "sourceType": "SAS",
+            "sasType": "SHOPPING",
+            "rank": 3,
+            "nvMid": 53055812409,
+            "channelProductId": "",
+            "originalMallProductId": "",
+            "productName": "농심 <mark>신라면</mark> 건면, 97g, <mark>20개</mark>",
+            "productClickUrl": {
+              "pcUrl": "https://cr3.shopping.naver.com/v2/bridge/searchGate?nv_mid=53055812409&cat_id=50013941&query=%EC%8B%A0%EB%9D%BC%EB%A9%B4%2020%EA%B0%9C&t=mtfdp5b7&h=440562f17fbd4c691959cd4819342ae5d85ca19c",
+              "mobileUrl": "https://cr3.shopping.naver.com/v2/bridge/searchGate?nv_mid=53055812409&cat_id=50013941&query=%EC%8B%A0%EB%9D%BC%EB%A9%B4%2020%EA%B0%9C&t=mtfdp5b7&h=440562f17fbd4c691959cd4819342ae5d85ca19c"
+            },
+            "productUrl": {
+              "pcUrl": "",
+              "mobileUrl": ""
+            },
+            "images": [
+              {
+                "imageUrl": "https://shopping-phinf.pstatic.net/main_5305581/53055812409.20250217100828.jpg",
+                "width": 500,
+                "height": 500
+              }
+            ],
+            "mallSeq": "0",
+            "mallName": "",
+            "isIndividualSeller": false,
+            "mallUrl": {
+              "pcUrl": "",
+              "mobileUrl": ""
+            },
+            "mallId": "naver_model",
+            "priceCurrency": "KRW",
+            "capacityUnit": {
+              "unitCapacityWithUnit": "100g",
+              "unitPrice": 875
+            },
+            "averageReviewScore": 4.86,
+            "totalReviewCount": 7613,
+            "purchaseCount": 0,
+            "keepCount": 32,
+            "mallCount": 1360,
+            "saleType": "0",
+            "productType": "NORMAL",
+            "goodsType": "DEFAULT",
+            "promotionTypes": [],
+            "isHotDeal": false,
+            "deliveryFilters": [
+              "512"
+            ],
+            "productDeliveryInfo": {
+              "deliveryFee": 3900,
+              "exchangeDeliveryFee": 3900,
+              "deliveryFeeTypes": [
+                "CATALOG_INCLUDED_FREE"
+              ]
+            },
+            "fastDeliveryType": "NONE",
+            "productRmids": [],
+            "catalogMatchingId": 53055812409,
+            "deliveryAdditionalInfo": {
+              "noDeliveryDayOfWeek": [],
+              "isNoDeliveryHoliday": false
+            },
+            "gdid": "00000009_000c5a5f7339",
+            "customsFee": {
+              "isCustomsDutySeparate": false,
+              "isCustomsServiceFeeSeparate": false
+            },
+            "lCatId": "50000006",
+            "mCatId": "50013960",
+            "sCatId": "50013961",
+            "ssCatId": "50013941",
+            "leafCategoryId": "50013941",
+            "isBrandStore": false,
+            "isAdultContentRestricted": false,
+            "isGroupProduct": true,
+            "isOverseaProduct": false,
+            "isSmartStoreProduct": false,
+            "isNewProduct": false,
+            "isWindowProduct": false,
+            "salePrice": 0,
+            "discountedSalePrice": 16990,
+            "discountedKRWSalePrice": 16990,
+            "discountedRatio": 0,
+            "shoppingExtraInfo": {
+              "hasDeliveryPrice": true,
+              "deliveryPrice": 18570,
+              "deliveryKRWPrice": 18570,
+              "fastDeliveryInfo": {
+                "fastDeliveryDate": "2006-01-01T15:00:00.000Z",
+                "noDeliveryDayOfWeek": [],
+                "isNoDeliveryHoliday": false
+              }
+            },
+            "isMembershipFreeDelivery": false,
+            "isMembershipBenefit": false,
+            "exceptBenefitTypes": [],
+            "membershipSavingPoint": {
+              "savingRatio": 0,
+              "pointName": "",
+              "disabledPoint": false,
+              "point": 0
+            },
+            "enabledMembershipBenefit": false,
+            "enabledOptimizedBenefit": false,
+            "fulfillment": {},
+            "productBenefit": {
+              "productId": "",
+              "benefitKey": "_nonad",
+              "optimizedPriceBenefit": {
+                "isMyDiscount": false,
+                "hasMembership": false,
+                "optimizedDiscountedPrice": 20710,
+                "optimizedDiscountRate": 0,
+                "hasDiscount": false
+              },
+              "membershipPointBenefit": {}
+            }
+          }
+        },
+        {
+          "slotType": "CARD",
+          "data": {
+            "cardType": "CATALOG_CARD",
+            "sourceType": "SAS",
+            "sasType": "SHOPPING",
+            "rank": 4,
+            "nvMid": 53018926818,
+            "channelProductId": "",
+            "originalMallProductId": "",
+            "productName": "농심 <mark>신라면</mark> <mark>신라면</mark>블랙, 134g, <mark>20개</mark>",
+            "productClickUrl": {
+              "pcUrl": "https://cr3.shopping.naver.com/v2/bridge/searchGate?nv_mid=53018926818&cat_id=50013941&query=%EC%8B%A0%EB%9D%BC%EB%A9%B4%2020%EA%B0%9C&t=mtfdp5b7&h=a96aa7b9d3e50bc7cca499bc0e9e8dddec09a26a",
+              "mobileUrl": "https://cr3.shopping.naver.com/v2/bridge/searchGate?nv_mid=53018926818&cat_id=50013941&query=%EC%8B%A0%EB%9D%BC%EB%A9%B4%2020%EA%B0%9C&t=mtfdp5b7&h=a96aa7b9d3e50bc7cca499bc0e9e8dddec09a26a"
+            },
+            "productUrl": {
+              "pcUrl": "",
+              "mobileUrl": ""
+            },
+            "images": [
+              {
+                "imageUrl": "https://shopping-phinf.pstatic.net/main_5301892/53018926818.20260106100140.jpg",
+                "width": 750,
+                "height": 750
+              }
+            ],
+            "mallSeq": "0",
+            "mallName": "",
+            "isIndividualSeller": false,
+            "mallUrl": {
+              "pcUrl": "",
+              "mobileUrl": ""
+            },
+            "mallId": "naver_model",
+            "priceCurrency": "KRW",
+            "capacityUnit": {
+              "unitCapacityWithUnit": "100g",
+              "unitPrice": 745
+            },
+            "averageReviewScore": 4.79,
+            "totalReviewCount": 1388,
+            "purchaseCount": 0,
+            "keepCount": 10,
+            "mallCount": 427,
+            "saleType": "0",
+            "productType": "NORMAL",
+            "goodsType": "DEFAULT",
+            "promotionTypes": [],
+            "isHotDeal": false,
+            "deliveryFilters": [
+              "512"
+            ],
+            "productDeliveryInfo": {
+              "deliveryFee": 0,
+              "exchangeDeliveryFee": 0,
+              "deliveryFeeTypes": [
+                "CATALOG_INCLUDED_FREE",
+                "CATALOG_NOT_INCLUDED_FREE"
+              ]
+            },
+            "fastDeliveryType": "NONE",
+            "productRmids": [],
+            "catalogMatchingId": 53018926818,
+            "deliveryAdditionalInfo": {
+              "noDeliveryDayOfWeek": [],
+              "isNoDeliveryHoliday": false
+            },
+            "gdid": "00000009_000c582c9ee2",
+            "customsFee": {
+              "isCustomsDutySeparate": false,
+              "isCustomsServiceFeeSeparate": false
+            },
+            "lCatId": "50000006",
+            "mCatId": "50013960",
+            "sCatId": "50013961",
+            "ssCatId": "50013941",
+            "leafCategoryId": "50013941",
+            "isBrandStore": false,
+            "isAdultContentRestricted": false,
+            "isGroupProduct": true,
+            "isOverseaProduct": false,
+            "isSmartStoreProduct": false,
+            "isNewProduct": false,
+            "isWindowProduct": false,
+            "salePrice": 0,
+            "discountedSalePrice": 19990,
+            "discountedKRWSalePrice": 19990,
+            "discountedRatio": 0,
+            "shoppingExtraInfo": {
+              "hasDeliveryPrice": false,
+              "deliveryPrice": 19990,
+              "deliveryKRWPrice": 19990,
+              "fastDeliveryInfo": {
+                "fastDeliveryDate": "2006-01-01T15:00:00.000Z",
+                "noDeliveryDayOfWeek": [],
+                "isNoDeliveryHoliday": false
+              }
+            },
+            "isMembershipFreeDelivery": false,
+            "isMembershipBenefit": false,
+            "exceptBenefitTypes": [],
+            "membershipSavingPoint": {
+              "savingRatio": 0,
+              "pointName": "",
+              "disabledPoint": false,
+              "point": 0
+            },
+            "enabledMembershipBenefit": false,
+            "enabledOptimizedBenefit": false,
+            "fulfillment": {},
+            "productBenefit": {
+              "productId": "",
+              "benefitKey": "_nonad",
+              "optimizedPriceBenefit": {
+                "isMyDiscount": false,
+                "hasMembership": false,
+                "optimizedDiscountedPrice": 20710,
+                "optimizedDiscountRate": 0,
+                "hasDiscount": false
+              },
+              "membershipPointBenefit": {}
+            }
+          }
+        },
+        {
+          "slotType": "CARD",
+          "data": {
+            "cardType": "CATALOG_CARD",
+            "sourceType": "SAS",
+            "sasType": "SHOPPING",
+            "rank": 5,
+            "nvMid": 58396587570,
+            "channelProductId": "",
+            "originalMallProductId": "",
+            "productName": "농심 <mark>신라면</mark>   골드 봉지라면 125g, <mark>20개</mark>",
+            "productClickUrl": {
+              "pcUrl": "https://cr3.shopping.naver.com/v2/bridge/searchGate?nv_mid=58396587570&cat_id=50013941&query=%EC%8B%A0%EB%9D%BC%EB%A9%B4%2020%EA%B0%9C&t=mtfdp5b8&h=db54a264aaa93e55d461ae5e6a684f178ceaa98f",
+              "mobileUrl": "https://cr3.shopping.naver.com/v2/bridge/searchGate?nv_mid=58396587570&cat_id=50013941&query=%EC%8B%A0%EB%9D%BC%EB%A9%B4%2020%EA%B0%9C&t=mtfdp5b8&h=db54a264aaa93e55d461ae5e6a684f178ceaa98f"
+            },
+            "productUrl": {
+              "pcUrl": "",
+              "mobileUrl": ""
+            },
+            "images": [
+              {
+                "imageUrl": "https://shopping-phinf.pstatic.net/main_5839658/58396587570.20260106121919.jpg",
+                "width": 750,
+                "height": 750
+              }
+            ],
+            "mallSeq": "0",
+            "mallName": "",
+            "isIndividualSeller": false,
+            "mallUrl": {
+              "pcUrl": "",
+              "mobileUrl": ""
+            },
+            "mallId": "naver_model",
+            "priceCurrency": "KRW",
+            "capacityUnit": {
+              "unitCapacityWithUnit": "100g",
+              "unitPrice": 818
+            },
+            "averageReviewScore": 4.72,
+            "totalReviewCount": 2401,
+            "purchaseCount": 0,
+            "keepCount": 10,
+            "mallCount": 160,
+            "saleType": "0",
+            "productType": "NORMAL",
+            "goodsType": "DEFAULT",
+            "promotionTypes": [],
+            "isHotDeal": false,
+            "deliveryFilters": [
+              "512"
+            ],
+            "productDeliveryInfo": {
+              "deliveryFee": 0,
+              "exchangeDeliveryFee": 0,
+              "deliveryFeeTypes": [
+                "CATALOG_INCLUDED_FREE",
+                "CATALOG_NOT_INCLUDED_FREE"
+              ]
+            },
+            "fastDeliveryType": "NONE",
+            "productRmids": [],
+            "catalogMatchingId": 58396587570,
+            "deliveryAdditionalInfo": {
+              "noDeliveryDayOfWeek": [],
+              "isNoDeliveryHoliday": false
+            },
+            "gdid": "00000009_000d98b53632",
+            "customsFee": {
+              "isCustomsDutySeparate": false,
+              "isCustomsServiceFeeSeparate": false
+            },
+            "lCatId": "50000006",
+            "mCatId": "50013960",
+            "sCatId": "50013961",
+            "ssCatId": "50013941",
+            "leafCategoryId": "50013941",
+            "isBrandStore": false,
+            "isAdultContentRestricted": false,
+            "isGroupProduct": true,
+            "isOverseaProduct": false,
+            "isSmartStoreProduct": false,
+            "isNewProduct": false,
+            "isWindowProduct": false,
+            "salePrice": 0,
+            "discountedSalePrice": 20470,
+            "discountedKRWSalePrice": 20470,
+            "discountedRatio": 0,
+            "shoppingExtraInfo": {
+              "hasDeliveryPrice": false,
+              "deliveryPrice": 20470,
+              "deliveryKRWPrice": 20470,
+              "fastDeliveryInfo": {
+                "fastDeliveryDate": "2006-01-01T15:00:00.000Z",
+                "noDeliveryDayOfWeek": [],
+                "isNoDeliveryHoliday": false
+              }
+            },
+            "isMembershipFreeDelivery": false,
+            "isMembershipBenefit": false,
+            "exceptBenefitTypes": [],
+            "membershipSavingPoint": {
+              "savingRatio": 0,
+              "pointName": "",
+              "disabledPoint": false,
+              "point": 0
+            },
+            "enabledMembershipBenefit": false,
+            "enabledOptimizedBenefit": false,
+            "fulfillment": {},
+            "productBenefit": {
+              "productId": "",
+              "benefitKey": "_nonad",
+              "optimizedPriceBenefit": {
+                "isMyDiscount": false,
+                "hasMembership": false,
+                "optimizedDiscountedPrice": 20710,
+                "optimizedDiscountRate": 0,
+                "hasDiscount": false
+              },
+              "membershipPointBenefit": {}
+            }
+          }
+        },
+        {
+          "slotType": "CARD",
+          "data": {
+            "cardType": "ORGANIC_CARD",
+            "sourceType": "SAS",
+            "sasType": "SHOPPING",
+            "rank": 6,
+            "nvMid": 91050546486,
+            "channelProductId": "13506036134",
+            "originalMallProductId": "13446806035",
+            "channelNo": "101209381",
+            "productName": "농심 <mark>신라면</mark> 1박스 한박스 <mark>신라면</mark> 40개 30개 <mark>20개</mark> 1박스",
+            "productClickUrl": {
+              "pcUrl": "https://cr3.shopping.naver.com/v2/bridge/searchGate?nv_mid=91050546486&cat_id=50013941&query=%EC%8B%A0%EB%9D%BC%EB%A9%B4%2020%EA%B0%9C&t=mtfdp5b8&h=28720b25591c305fd7e931c775f3833a64d6402f",
+              "mobileUrl": "https://cr3.shopping.naver.com/v2/bridge/searchGate?nv_mid=91050546486&cat_id=50013941&query=%EC%8B%A0%EB%9D%BC%EB%A9%B4%2020%EA%B0%9C&t=mtfdp5b8&h=28720b25591c305fd7e931c775f3833a64d6402f"
+            },
+            "productUrl": {
+              "pcUrl": "https://smartstore.naver.com/main/products/13506036134",
+              "mobileUrl": "https://m.smartstore.naver.com/main/products/13506036134"
+            },
+            "images": [
+              {
+                "imageUrl": "https://shopping-phinf.pstatic.net/main_9105054/91050546486.jpg",
+                "width": 1000,
+                "height": 1000
+              }
+            ],
+            "mallSeq": "3916238",
+            "mallName": "마일드앤블랙",
+            "isIndividualSeller": false,
+            "mallUrl": {
+              "mobileUrl": "https://m.smartstore.naver.com/inflow/outlink/url?url=https%3A%2F%2Fm.smartstore.naver.com%2Fy1market%3Fnl-ts-pid%3D%26tr%3Dslsmn",
+              "pcUrl": "https://smartstore.naver.com/inflow/outlink/url?url=https%3A%2F%2Fsmartstore.naver.com%2Fy1market%3Fnl-ts-pid%3D%26tr%3Dslsmn"
+            },
+            "mallId": "ncp_1o7mzc_01",
+            "priceCurrency": "KRW",
+            "capacityUnit": {
+              "unitCapacityWithUnit": "100g",
+              "unitPrice": 650
+            },
+            "averageReviewScore": 4.68,
+            "totalReviewCount": 28,
+            "purchaseCount": 119,
+            "keepCount": 4,
+            "mallCount": 0,
+            "saleType": "0",
+            "productType": "NORMAL",
+            "goodsType": "DEFAULT",
+            "promotionTypes": [],
+            "isHotDeal": false,
+            "nPayMobileType": "NPAY_PLUS",
+            "nPayPcType": "NPAY_PLUS",
+            "deliveryFilters": [
+              "512"
+            ],
+            "productDeliveryInfo": {
+              "deliveryFee": 3000,
+              "exchangeDeliveryFee": 3000,
+              "deliveryFeeTypes": [
+                "PAID"
+              ]
+            },
+            "fastDeliveryType": "NONE",
+            "productRmids": [],
+            "deliveryAdditionalInfo": {
+              "orderClosedTime": "",
+              "noDeliveryDayOfWeek": [],
+              "isNoDeliveryHoliday": false
+            },
+            "gdid": "00000009_001533091536",
+            "customsFee": {
+              "isCustomsDutySeparate": false,
+              "isCustomsServiceFeeSeparate": false
+            },
+            "lCatId": "50000006",
+            "mCatId": "50013960",
+            "sCatId": "50013961",
+            "ssCatId": "50013941",
+            "leafCategoryId": "50013941",
+            "isBrandStore": false,
+            "isAdultContentRestricted": false,
+            "isGroupProduct": false,
+            "isOverseaProduct": false,
+            "isSmartStoreProduct": true,
+            "isNewProduct": false,
+            "isWindowProduct": false,
+            "salePrice": 37000,
+            "discountedSalePrice": 31200,
+            "discountedKRWSalePrice": 31200,
+            "discountedRatio": 15,
+            "shoppingExtraInfo": {
+              "couponDiscountedPrice": 30700,
+              "hasDeliveryPrice": false,
+              "deliveryPrice": 34200,
+              "deliveryKRWPrice": 33700,
+              "fastDeliveryInfo": {
+                "fastDeliveryDate": "2006-01-01T15:00:00.000Z",
+                "noDeliveryDayOfWeek": [],
+                "isNoDeliveryHoliday": false
+              }
+            },
+            "isMembershipFreeDelivery": false,
+            "isMembershipBenefit": false,
+            "merchantNo": 511143232,
+            "exceptBenefitTypes": [],
+            "membershipSavingPoint": {
+              "savingRatio": 0,
+              "pointName": "",
+              "disabledPoint": false,
+              "point": 312
+            },
+            "enabledMembershipBenefit": false,
+            "enabledOptimizedBenefit": true,
+            "fulfillment": {},
+            "productBenefit": {
+              "productId": "13506036134",
+              "benefitKey": "13506036134_nonad",
+              "optimizedPriceBenefit": {
+                "isMyDiscount": false,
+                "hasMembership": false,
+                "optimizedDiscountedPrice": 31200,
+                "optimizedDiscountRate": 15,
+                "hasDiscount": true
+              },
+              "membershipPointBenefit": {}
+            }
+          }
+        },
+        {
+          "slotType": "CARD",
+          "data": {
+            "cardType": "CATALOG_CARD",
+            "sourceType": "SAS",
+            "sasType": "SHOPPING",
+            "rank": 7,
+            "nvMid": 53057252025,
+            "channelProductId": "",
+            "originalMallProductId": "",
+            "productName": "농심 더레드 <mark>신라면</mark> , 125g, <mark>20개</mark>",
+            "productClickUrl": {
+              "pcUrl": "https://cr3.shopping.naver.com/v2/bridge/searchGate?nv_mid=53057252025&cat_id=50013941&query=%EC%8B%A0%EB%9D%BC%EB%A9%B4%2020%EA%B0%9C&t=mtfdp5b9&h=1c54cd70dfa8fc03250479856cc4740bd6ce0647",
+              "mobileUrl": "https://cr3.shopping.naver.com/v2/bridge/searchGate?nv_mid=53057252025&cat_id=50013941&query=%EC%8B%A0%EB%9D%BC%EB%A9%B4%2020%EA%B0%9C&t=mtfdp5b9&h=1c54cd70dfa8fc03250479856cc4740bd6ce0647"
+            },
+            "productUrl": {
+              "pcUrl": "",
+              "mobileUrl": ""
+            },
+            "images": [
+              {
+                "imageUrl": "https://shopping-phinf.pstatic.net/main_5305725/53057252025.20250217141911.jpg",
+                "width": 750,
+                "height": 750
+              }
+            ],
+            "mallSeq": "0",
+            "mallName": "",
+            "isIndividualSeller": false,
+            "mallUrl": {
+              "pcUrl": "",
+              "mobileUrl": ""
+            },
+            "mallId": "naver_model",
+            "priceCurrency": "KRW",
+            "capacityUnit": {
+              "unitCapacityWithUnit": "100g",
+              "unitPrice": 559
+            },
+            "averageReviewScore": 4.92,
+            "totalReviewCount": 8834,
+            "purchaseCount": 0,
+            "keepCount": 4,
+            "mallCount": 872,
+            "saleType": "0",
+            "productType": "NORMAL",
+            "goodsType": "DEFAULT",
+            "promotionTypes": [],
+            "isHotDeal": false,
+            "deliveryFilters": [
+              "512"
+            ],
+            "productDeliveryInfo": {
+              "deliveryFee": 5000,
+              "exchangeDeliveryFee": 5000,
+              "deliveryFeeTypes": [
+                "CATALOG_INCLUDED_FREE"
+              ]
+            },
+            "fastDeliveryType": "NONE",
+            "productRmids": [],
+            "catalogMatchingId": 53057252025,
+            "deliveryAdditionalInfo": {
+              "noDeliveryDayOfWeek": [],
+              "isNoDeliveryHoliday": false
+            },
+            "gdid": "00000009_000c5a756ab9",
+            "customsFee": {
+              "isCustomsDutySeparate": false,
+              "isCustomsServiceFeeSeparate": false
+            },
+            "lCatId": "50000006",
+            "mCatId": "50013960",
+            "sCatId": "50013961",
+            "ssCatId": "50013941",
+            "leafCategoryId": "50013941",
+            "isBrandStore": false,
+            "isAdultContentRestricted": false,
+            "isGroupProduct": true,
+            "isOverseaProduct": false,
+            "isSmartStoreProduct": false,
+            "isNewProduct": false,
+            "isWindowProduct": false,
+            "salePrice": 0,
+            "discountedSalePrice": 13980,
+            "discountedKRWSalePrice": 13980,
+            "discountedRatio": 0,
+            "shoppingExtraInfo": {
+              "hasDeliveryPrice": false,
+              "deliveryPrice": 18980,
+              "deliveryKRWPrice": 18980,
+              "fastDeliveryInfo": {
+                "fastDeliveryDate": "2006-01-01T15:00:00.000Z",
+                "noDeliveryDayOfWeek": [],
+                "isNoDeliveryHoliday": false
+              }
+            },
+            "isMembershipFreeDelivery": false,
+            "isMembershipBenefit": false,
+            "exceptBenefitTypes": [],
+            "membershipSavingPoint": {
+              "savingRatio": 0,
+              "pointName": "",
+              "disabledPoint": false,
+              "point": 0
+            },
+            "enabledMembershipBenefit": false,
+            "enabledOptimizedBenefit": false,
+            "fulfillment": {},
+            "productBenefit": {
+              "productId": "",
+              "benefitKey": "_nonad",
+              "optimizedPriceBenefit": {
+                "isMyDiscount": false,
+                "hasMembership": false,
+                "optimizedDiscountedPrice": 20710,
+                "optimizedDiscountRate": 0,
+                "hasDiscount": false
+              },
+              "membershipPointBenefit": {}
+            }
+          }
+        },
+        {
+          "slotType": "CARD",
+          "data": {
+            "cardType": "CATALOG_CARD",
+            "sourceType": "SAS",
+            "sasType": "SHOPPING",
+            "rank": 8,
+            "nvMid": 53057415208,
+            "channelProductId": "",
+            "originalMallProductId": "",
+            "productName": "농심 툼바 <mark>신라면</mark>, 137g, <mark>20개</mark>",
+            "productClickUrl": {
+              "pcUrl": "https://cr3.shopping.naver.com/v2/bridge/searchGate?nv_mid=53057415208&cat_id=50013941&query=%EC%8B%A0%EB%9D%BC%EB%A9%B4%2020%EA%B0%9C&t=mtfdp5b9&h=0785496d0f33f8b8e78d14308966896af039c64a",
+              "mobileUrl": "https://cr3.shopping.naver.com/v2/bridge/searchGate?nv_mid=53057415208&cat_id=50013941&query=%EC%8B%A0%EB%9D%BC%EB%A9%B4%2020%EA%B0%9C&t=mtfdp5ba&h=227709d70c7fafc5f330014780199c551fc3ee96"
+            },
+            "productUrl": {
+              "pcUrl": "",
+              "mobileUrl": ""
+            },
+            "images": [
+              {
+                "imageUrl": "https://shopping-phinf.pstatic.net/main_5305741/53057415208.20250217143350.jpg",
+                "width": 434,
+                "height": 434
+              }
+            ],
+            "mallSeq": "0",
+            "mallName": "",
+            "isIndividualSeller": false,
+            "mallUrl": {
+              "pcUrl": "",
+              "mobileUrl": ""
+            },
+            "mallId": "naver_model",
+            "priceCurrency": "KRW",
+            "capacityUnit": {
+              "unitCapacityWithUnit": "100g",
+              "unitPrice": 483
+            },
+            "averageReviewScore": 4.91,
+            "totalReviewCount": 6429,
+            "purchaseCount": 0,
+            "keepCount": 8,
+            "mallCount": 510,
+            "saleType": "0",
+            "productType": "NORMAL",
+            "goodsType": "DEFAULT",
+            "promotionTypes": [],
+            "isHotDeal": false,
+            "deliveryFilters": [
+              "512"
+            ],
+            "productDeliveryInfo": {
+              "deliveryFee": 5000,
+              "exchangeDeliveryFee": 5000,
+              "deliveryFeeTypes": [
+                "PAID"
+              ]
+            },
+            "fastDeliveryType": "NONE",
+            "productRmids": [],
+            "catalogMatchingId": 53057415208,
+            "deliveryAdditionalInfo": {
+              "noDeliveryDayOfWeek": [],
+              "isNoDeliveryHoliday": false
+            },
+            "gdid": "00000009_000c5a77e828",
+            "customsFee": {
+              "isCustomsDutySeparate": false,
+              "isCustomsServiceFeeSeparate": false
+            },
+            "lCatId": "50000006",
+            "mCatId": "50013960",
+            "sCatId": "50013961",
+            "ssCatId": "50013941",
+            "leafCategoryId": "50013941",
+            "isBrandStore": false,
+            "isAdultContentRestricted": false,
+            "isGroupProduct": true,
+            "isOverseaProduct": false,
+            "isSmartStoreProduct": false,
+            "isNewProduct": false,
+            "isWindowProduct": false,
+            "salePrice": 0,
+            "discountedSalePrice": 13250,
+            "discountedKRWSalePrice": 13250,
+            "discountedRatio": 0,
+            "shoppingExtraInfo": {
+              "hasDeliveryPrice": false,
+              "deliveryPrice": 18250,
+              "deliveryKRWPrice": 18250,
+              "fastDeliveryInfo": {
+                "fastDeliveryDate": "2006-01-01T15:00:00.000Z",
+                "noDeliveryDayOfWeek": [],
+                "isNoDeliveryHoliday": false
+              }
+            },
+            "isMembershipFreeDelivery": false,
+            "isMembershipBenefit": false,
+            "exceptBenefitTypes": [],
+            "membershipSavingPoint": {
+              "savingRatio": 0,
+              "pointName": "",
+              "disabledPoint": false,
+              "point": 0
+            },
+            "enabledMembershipBenefit": false,
+            "enabledOptimizedBenefit": false,
+            "fulfillment": {},
+            "productBenefit": {
+              "productId": "",
+              "benefitKey": "_nonad",
+              "optimizedPriceBenefit": {
+                "isMyDiscount": false,
+                "hasMembership": false,
+                "optimizedDiscountedPrice": 20710,
+                "optimizedDiscountRate": 0,
+                "hasDiscount": false
+              },
+              "membershipPointBenefit": {}
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

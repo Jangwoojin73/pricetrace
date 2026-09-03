@@ -1,0 +1,20 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+.venv/
+
+# Vercel
+.vercel/
+
+# Environment Variables & Credentials
+.env
+credentials.json
+
+# Temporary & System Generated Files
+.tmp/
+*.log

@@ -1,0 +1,2 @@
+# Vercel Python Runtime Dependencies
+# 이 프로젝트는 표준 라이브러리(urllib, json, ssl, re, http.server)를 사용하여 추가 pip 패키지가 필요하지 않습니다.
