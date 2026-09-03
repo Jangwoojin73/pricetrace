@@ -84,7 +84,6 @@
         <div>
           <span class="text-xl font-black tracking-tight text-slate-900 flex items-center gap-1">
             Price<span class="text-naver">Trace</span>
-            <span class="text-[10px] uppercase font-bold tracking-widest bg-slate-100 text-slate-600 px-1.5 py-0.5 rounded border border-slate-200">Bot</span>
           </span>
           <p class="text-[11px] text-slate-500 font-medium -mt-1 hidden sm:block">스마트 이커머스 최저가 레이더</p>
         </div>
@@ -99,13 +98,23 @@
           <input 
             type="text" 
             id="searchInput" 
-            value="농심 신라면 봉지 20개입" 
-            placeholder="상품명이나 패키지 수량을 입력하세요 (예: 신라면 20개)" 
-            class="w-full pl-11 pr-28 py-3 bg-slate-100/90 hover:bg-slate-100 focus:bg-white text-sm font-semibold rounded-2xl border-2 border-transparent focus:border-naver focus:ring-4 focus:ring-naver/10 transition-all outline-none"
+            value="" 
+            placeholder="원하시는 상품과 수량을 검색해 보세요 (예: 신라면 20개, 햇반 24개, 삼다수 2L)" 
+            autocomplete="off"
+            class="w-full pl-11 pr-24 sm:pr-28 py-3 bg-slate-100/90 hover:bg-slate-100 focus:bg-white text-sm font-semibold rounded-2xl border-2 border-transparent focus:border-naver focus:ring-4 focus:ring-naver/10 transition-all outline-none"
           >
+          <!-- 텍스트 지우기 버튼 -->
+          <button 
+            type="button" 
+            id="clearSearchBtn" 
+            class="hidden absolute right-20 sm:right-24 p-1.5 text-slate-400 hover:text-slate-600 transition-colors"
+            title="검색어 지우기"
+          >
+            <i data-lucide="x" class="w-4 h-4"></i>
+          </button>
           <button 
             type="submit" 
-            class="absolute right-2 px-4 py-2 bg-naver hover:bg-naver-dark text-white text-xs font-bold rounded-xl transition-all shadow-sm shadow-naver/30 flex items-center space-x-1"
+            class="absolute right-2 px-3.5 sm:px-4 py-2 bg-naver hover:bg-naver-dark text-white text-xs font-bold rounded-xl transition-all shadow-sm shadow-naver/30 flex items-center space-x-1"
           >
             <span>조회</span>
             <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
@@ -113,17 +122,13 @@
         </form>
 
         <!-- 인기 검색어 / 빠른 태그 칩 -->
-        <div class="hidden lg:flex items-center space-x-2 mt-1.5 text-xs text-slate-500 px-1">
-          <span class="font-semibold text-slate-400 flex items-center gap-1"><i data-lucide="flame" class="w-3.5 h-3.5 text-coupang"></i> 인기:</span>
-          <button type="button" class="quick-chip hover:text-naver hover:underline font-medium" data-keyword="농심 신라면 봉지 20개입">#신라면 20개</button>
-          <span class="text-slate-300">·</span>
-          <button type="button" class="quick-chip hover:text-naver hover:underline font-medium" data-keyword="CJ제일제당 햇반 210g 24개">#햇반 24개</button>
-          <span class="text-slate-300">·</span>
-          <button type="button" class="quick-chip hover:text-naver hover:underline font-medium" data-keyword="코카콜라 제로 355ml 24캔">#코카콜라 제로</button>
-          <span class="text-slate-300">·</span>
-          <button type="button" class="quick-chip hover:text-naver hover:underline font-medium" data-keyword="제주 삼다수 2L 6개">#삼다수 2L</button>
-          <span class="text-slate-300">·</span>
-          <button type="button" class="quick-chip hover:text-naver hover:underline font-medium" data-keyword="오뚜기 진라면 매운맛 40개">#진라면 40개</button>
+        <div class="flex flex-wrap items-center gap-1.5 sm:gap-2 mt-1.5 text-xs text-slate-500 px-1">
+          <span class="font-bold text-slate-400 flex items-center gap-1"><i data-lucide="flame" class="w-3.5 h-3.5 text-coupang"></i> 인기:</span>
+          <button type="button" class="quick-chip px-2 py-0.5 rounded-lg bg-slate-100 hover:bg-emerald-50 hover:text-naver hover:border-naver/30 border border-transparent font-semibold transition-all" data-keyword="농심 신라면 봉지 20개입">#신라면 20개</button>
+          <button type="button" class="quick-chip px-2 py-0.5 rounded-lg bg-slate-100 hover:bg-emerald-50 hover:text-naver hover:border-naver/30 border border-transparent font-semibold transition-all" data-keyword="CJ제일제당 햇반 210g 24개">#햇반 24개</button>
+          <button type="button" class="quick-chip px-2 py-0.5 rounded-lg bg-slate-100 hover:bg-emerald-50 hover:text-naver hover:border-naver/30 border border-transparent font-semibold transition-all" data-keyword="코카콜라 제로 355ml 24캔">#코카콜라 제로</button>
+          <button type="button" class="quick-chip px-2 py-0.5 rounded-lg bg-slate-100 hover:bg-emerald-50 hover:text-naver hover:border-naver/30 border border-transparent font-semibold transition-all" data-keyword="제주 삼다수 2L 6개">#삼다수 2L</button>
+          <button type="button" class="quick-chip hidden md:inline-block px-2 py-0.5 rounded-lg bg-slate-100 hover:bg-emerald-50 hover:text-naver hover:border-naver/30 border border-transparent font-semibold transition-all" data-keyword="오뚜기 진라면 매운맛 40개">#진라면 40개</button>
         </div>
       </div>
 
@@ -153,8 +158,195 @@
   <!-- 메인 본문 컨테이너 -->
   <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-8">
 
-    <!-- 3. 실시간 특가 상태 배너 (Alert Box) -->
-    <div id="alertBanner" class="relative overflow-hidden rounded-3xl p-5 sm:p-6 transition-all duration-300 shadow-md">
+    <!-- ============================================== -->
+    <!-- [VIEW 1] 초기 웰컴 & 서비스 탐색 화면 (Welcome View) -->
+    <!-- ============================================== -->
+    <div id="welcomeView" class="space-y-10">
+
+      <!-- 1. 웰컴 히어로 헤더 -->
+      <div class="relative overflow-hidden rounded-3xl bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white p-7 sm:p-10 shadow-xl border border-slate-700/50">
+        <!-- 배경 장식 글로우 -->
+        <div class="absolute -right-20 -top-20 w-80 h-80 bg-emerald-500/20 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="absolute -left-20 -bottom-20 w-80 h-80 bg-naver/20 rounded-full blur-3xl pointer-events-none"></div>
+
+        <div class="relative z-10 max-w-3xl space-y-4">
+          <div class="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 text-xs font-bold tracking-wide uppercase">
+            <i data-lucide="sparkles" class="w-3.5 h-3.5 text-emerald-400"></i>
+            <span>실시간 이커머스 최저가 추적 레이더</span>
+          </div>
+
+          <h1 class="text-2xl sm:text-4xl font-black tracking-tight text-white leading-tight">
+            광고는 거르고,<br class="hidden sm:block">
+            <span class="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-naver">1개당 진짜 최저가</span>를 찾아드립니다
+          </h1>
+
+          <p class="text-slate-300 text-xs sm:text-sm font-normal leading-relaxed pt-1">
+            수많은 미끼 상품과 스폰서 광고 속에서, 네이버 쇼핑 공식 카탈로그와 스마트스토어의 
+            <strong>배송비 포함 실구매가</strong> 및 <strong>묶음당 개당 환산단가</strong>를 실시간으로 비교 분석합니다.
+          </p>
+
+          <div class="pt-2 flex flex-wrap items-center gap-3 text-xs text-slate-300">
+            <span class="flex items-center gap-1 text-emerald-400 font-semibold">
+              <i data-lucide="check-circle-2" class="w-4 h-4"></i> 광고(AD) 자동 필터링
+            </span>
+            <span class="text-slate-600">•</span>
+            <span class="flex items-center gap-1 text-emerald-400 font-semibold">
+              <i data-lucide="check-circle-2" class="w-4 h-4"></i> 1개당 단가 자동 환산
+            </span>
+            <span class="text-slate-600">•</span>
+            <span class="flex items-center gap-1 text-emerald-400 font-semibold">
+              <i data-lucide="check-circle-2" class="w-4 h-4"></i> 30일 시세 변동 추이
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2. 자주 찾는 인기 생필품 TOP 4 (원클릭 퀵 조회 카드) -->
+      <div>
+        <div class="flex items-center justify-between mb-4 px-1">
+          <div>
+            <h2 class="text-lg sm:text-xl font-black text-slate-900 flex items-center space-x-2">
+              <i data-lucide="flame" class="w-5 h-5 text-coupang"></i>
+              <span>자주 찾는 인기 생필품 원클릭 최저가</span>
+            </h2>
+            <p class="text-xs text-slate-500 mt-0.5">카드를 클릭하면 즉시 실시간 가격비교 및 30일 시세 차트가 열립니다.</p>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
+          
+          <!-- 카드 1: 신라면 20개입 -->
+          <div class="welcome-card group bg-white rounded-3xl p-5 border border-slate-200/80 shadow-xs hover:shadow-lg hover:border-naver/40 transition-all duration-300 flex flex-col justify-between cursor-pointer" data-keyword="농심 신라면 봉지 20개입">
+            <div>
+              <div class="flex items-center justify-between mb-3">
+                <span class="text-2xl p-2 rounded-2xl bg-amber-50 border border-amber-100/80">🍜</span>
+                <span class="text-[11px] font-bold text-naver bg-emerald-50 px-2.5 py-1 rounded-full">20개 패키지</span>
+              </div>
+              <h3 class="text-base font-bold text-slate-900 group-hover:text-naver transition-colors">농심 신라면 20개</h3>
+              <p class="text-xs text-slate-500 mt-1">봉지라면 대표 베스트셀러<br>120g 20개 1박스 묶음</p>
+            </div>
+            <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs font-bold text-naver">
+              <span>실시간 최저가 확인</span>
+              <i data-lucide="arrow-right" class="w-4 h-4 group-hover:translate-x-1 transition-transform"></i>
+            </div>
+          </div>
+
+          <!-- 카드 2: 햇반 24개 -->
+          <div class="welcome-card group bg-white rounded-3xl p-5 border border-slate-200/80 shadow-xs hover:shadow-lg hover:border-naver/40 transition-all duration-300 flex flex-col justify-between cursor-pointer" data-keyword="CJ제일제당 햇반 210g 24개">
+            <div>
+              <div class="flex items-center justify-between mb-3">
+                <span class="text-2xl p-2 rounded-2xl bg-slate-50 border border-slate-100">🍚</span>
+                <span class="text-[11px] font-bold text-naver bg-emerald-50 px-2.5 py-1 rounded-full">24개 대용량</span>
+              </div>
+              <h3 class="text-base font-bold text-slate-900 group-hover:text-naver transition-colors">CJ제일제당 햇반 24개</h3>
+              <p class="text-xs text-slate-500 mt-1">즉석밥 국민 필수 생필품<br>210g 24개 박스 특가</p>
+            </div>
+            <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs font-bold text-naver">
+              <span>실시간 최저가 확인</span>
+              <i data-lucide="arrow-right" class="w-4 h-4 group-hover:translate-x-1 transition-transform"></i>
+            </div>
+          </div>
+
+          <!-- 카드 3: 코카콜라 제로 24캔 -->
+          <div class="welcome-card group bg-white rounded-3xl p-5 border border-slate-200/80 shadow-xs hover:shadow-lg hover:border-naver/40 transition-all duration-300 flex flex-col justify-between cursor-pointer" data-keyword="코카콜라 제로 355ml 24캔">
+            <div>
+              <div class="flex items-center justify-between mb-3">
+                <span class="text-2xl p-2 rounded-2xl bg-rose-50 border border-rose-100/80">🥤</span>
+                <span class="text-[11px] font-bold text-naver bg-emerald-50 px-2.5 py-1 rounded-full">24캔 뚱캔</span>
+              </div>
+              <h3 class="text-base font-bold text-slate-900 group-hover:text-naver transition-colors">코카콜라 제로 24캔</h3>
+              <p class="text-xs text-slate-500 mt-1">탄산음료 압도적 1위<br>355ml 24캔 1박스 최저가</p>
+            </div>
+            <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs font-bold text-naver">
+              <span>실시간 최저가 확인</span>
+              <i data-lucide="arrow-right" class="w-4 h-4 group-hover:translate-x-1 transition-transform"></i>
+            </div>
+          </div>
+
+          <!-- 카드 4: 삼다수 2L 6개 -->
+          <div class="welcome-card group bg-white rounded-3xl p-5 border border-slate-200/80 shadow-xs hover:shadow-lg hover:border-naver/40 transition-all duration-300 flex flex-col justify-between cursor-pointer" data-keyword="제주 삼다수 2L 6개">
+            <div>
+              <div class="flex items-center justify-between mb-3">
+                <span class="text-2xl p-2 rounded-2xl bg-sky-50 border border-sky-100/80">💧</span>
+                <span class="text-[11px] font-bold text-naver bg-emerald-50 px-2.5 py-1 rounded-full">2L 6병 팩</span>
+              </div>
+              <h3 class="text-base font-bold text-slate-900 group-hover:text-naver transition-colors">제주 삼다수 2L 6개</h3>
+              <p class="text-xs text-slate-500 mt-1">국민 생수 정기 구매 필수<br>2L 6병 묶음 배송비 비교</p>
+            </div>
+            <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs font-bold text-naver">
+              <span>실시간 최저가 확인</span>
+              <i data-lucide="arrow-right" class="w-4 h-4 group-hover:translate-x-1 transition-transform"></i>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- 3. PriceTrace 핵심 가치 (Why PriceTrace?) -->
+      <div class="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/80 shadow-xs">
+        <h3 class="text-base sm:text-lg font-black text-slate-900 mb-6 flex items-center space-x-2">
+          <i data-lucide="shield-check" class="w-5 h-5 text-naver"></i>
+          <span>PriceTrace가 다른 검색과 다른 3가지 이유</span>
+        </h3>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div class="space-y-2.5 p-4 rounded-2xl bg-slate-50/80 border border-slate-100">
+            <div class="w-10 h-10 rounded-xl bg-emerald-100 text-naver flex items-center justify-center font-bold">
+              <i data-lucide="filter" class="w-5 h-5"></i>
+            </div>
+            <h4 class="font-bold text-sm text-slate-900">클린 필터링 (광고 제외)</h4>
+            <p class="text-xs text-slate-500 leading-relaxed">
+              돈 내고 올리는 스폰서 광고 상품과 엉뚱한 낱개 미끼 상품을 시스템이 자동으로 배제하여 순수 실시간 최저가만 수집합니다.
+            </p>
+          </div>
+
+          <div class="space-y-2.5 p-4 rounded-2xl bg-blue-100/50 border border-blue-100">
+            <div class="w-10 h-10 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center font-bold">
+              <i data-lucide="calculator" class="w-5 h-5"></i>
+            </div>
+            <h4 class="font-bold text-sm text-slate-900">개당 환산 단가 계산</h4>
+            <p class="text-xs text-slate-500 leading-relaxed">
+              상품명 속 수량(20개, 24캔 등)을 자동 인식하여 1개당 실제 얼마인지 환산해 드려 진짜 가성비 제품을 즉시 판별합니다.
+            </p>
+          </div>
+
+          <div class="space-y-2.5 p-4 rounded-2xl bg-amber-50/80 border border-amber-100">
+            <div class="w-10 h-10 rounded-xl bg-amber-100 text-amber-600 flex items-center justify-center font-bold">
+              <i data-lucide="trending-up" class="w-5 h-5"></i>
+            </div>
+            <h4 class="font-bold text-sm text-slate-900">30일 가격 추이 및 알림</h4>
+            <p class="text-xs text-slate-500 leading-relaxed">
+              최근 한 달간의 시세 변동 흐름과 목표가를 비교 분석하여 지금 바로 사야 할 타이밍인지 직관적으로 진단해 드립니다.
+            </p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ============================================== -->
+    <!-- [VIEW 2] 검색 결과 대시보드 화면 (Result View) -->
+    <!-- ============================================== -->
+    <div id="resultView" class="space-y-8 hidden">
+
+      <!-- 상단 네비게이션 (홈으로 돌아가기 & 현재 검색어 정보) -->
+      <div class="flex items-center justify-between pb-3 border-b border-slate-200/80">
+        <button 
+          id="backToHomeBtn" 
+          type="button" 
+          class="inline-flex items-center space-x-2 text-xs sm:text-sm font-bold text-slate-600 hover:text-naver transition-colors group px-3 py-1.5 rounded-xl hover:bg-slate-100"
+        >
+          <i data-lucide="arrow-left" class="w-4 h-4 group-hover:-translate-x-1 transition-transform"></i>
+          <span>초기 화면으로 돌아가기</span>
+        </button>
+
+        <div class="text-xs text-slate-500 font-medium">
+          현재 검색어: <strong id="currentSearchKeywordText" class="text-slate-900 font-bold"></strong>
+        </div>
+      </div>
+
+      <!-- 3. 실시간 특가 상태 배너 (Alert Box) -->
+      <div id="alertBanner" class="relative overflow-hidden rounded-3xl p-5 sm:p-6 transition-all duration-300 shadow-md">
       <!-- 배경 애니메이션 그라데이션이 JS로 동적 토글됨 -->
       <div class="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div class="flex items-start sm:items-center space-x-4">
@@ -306,9 +498,10 @@
               <div class="flex items-center space-x-3 w-full sm:w-auto">
                 <a 
                   id="buyButton" 
-                  href="https://cr3.shopping.naver.com/v2/bridge/searchGate?nv_mid=53018889018" 
+                  href="https://search.shopping.naver.com/search/all?query=%EB%86%8D%EC%8B%AC%20%EC%8B%A0%EB%9D%BC%EB%A9%B4%20120g%2020%EA%B0%9C" 
                   target="_blank" 
-                  rel="noopener noreferrer"
+                  rel="noopener"
+                  referrerpolicy="no-referrer-when-downgrade"
                   class="w-full sm:w-auto inline-flex items-center justify-center space-x-2 px-6 py-3.5 bg-naver hover:bg-naver-dark text-white text-sm font-extrabold rounded-2xl shadow-md shadow-naver/25 hover:shadow-lg hover:shadow-naver/35 transition-all group"
                 >
                   <span>최저가 구매하러 가기</span>
@@ -498,6 +691,7 @@
       </div>
 
     </section>
+    </div> <!-- #resultView 끝 -->
 
   </main>
 
@@ -505,7 +699,7 @@
   <footer class="mt-12 bg-white border-t border-slate-200/80 py-8 text-xs text-slate-500">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-4 text-center md:text-left">
       <div class="space-y-1">
-        <p class="font-bold text-slate-800">🍜 PriceTrace Bot WebApp v1.0.0</p>
+        <p class="font-bold text-slate-800">🍜 PriceTrace WebApp v1.0.0</p>
         <p class="text-slate-400">데이터 출처: 네이버 쇼핑 공개 BFF API 및 k-skill proxy 엔드포인트 실시간 연동</p>
       </div>
       <div class="flex items-center space-x-4 text-slate-400">

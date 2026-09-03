@@ -45,7 +45,7 @@ DEFAULT_FALLBACK_ITEMS = [
         "title": "농심 신라면, 120g, 20개",
         "price": 13200,
         "mall_name": "네이버 가격비교 (카탈로그)",
-        "url": "https://cr3.shopping.naver.com/v2/bridge/searchGate?nv_mid=53018889018",
+        "url": "https://search.shopping.naver.com/search/all?query=%EB%86%8D%EC%8B%AC%20%EC%8B%A0%EB%9D%BC%EB%A9%B4%20120g%2020%EA%B0%9C",
         "review_count": 104069,
         "score": 4.88,
         "is_ad": False
@@ -54,7 +54,7 @@ DEFAULT_FALLBACK_ITEMS = [
         "title": "농심 신라면120g 20개 1박스",
         "price": 13200,
         "mall_name": "신성마켓몰",
-        "url": "https://smartstore.naver.com/main/products/8676675032",
+        "url": "https://m.smartstore.naver.com/main/products/8676675032",
         "review_count": 715,
         "score": 4.88,
         "is_ad": False
@@ -155,6 +155,11 @@ def fetch_price_data(keyword: str = "농심 신라면 봉지 20개입", target_p
                 "history": [],
                 "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             }
+
+    # 모든 아이템의 URL 정규화 보장 (n2 오류 원천 차단 및 로그인/캡차 우회)
+    if pricetrace_bot:
+        for it in refined_items:
+            it["url"] = pricetrace_bot.normalize_shopping_url(it.get("url", ""), title=it.get("title", ""))
 
     top_items = refined_items[:3]
     lowest_price = top_items[0]["price"] if top_items else 0

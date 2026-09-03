@@ -96,6 +96,64 @@ def fetch_from_proxy(keyword: str, limit: int = 20) -> Optional[List[Dict[str, A
     return None
 
 
+def normalize_shopping_url(url: str, nv_mid: Optional[Any] = None, card_type: str = "", title: str = "") -> str:
+    """
+    네이버 쇼핑 URL을 안전하고 인증/캡차 제약이 최소화된 URL로 변환합니다.
+    - 카탈로그 상품(CATALOG_CARD, cr*.shopping.naver.com 등):
+      카탈로그 상세 페이지(catalog/{id})는 외부 직접 유입 시 네이버 로그인을 강제(nidlogin)하므로,
+      로그인 인증 없이 실시간 가격비교 및 판매처 목록이 즉시 열리는 네이버 쇼핑 공식 검색 딥링크로 연결합니다.
+    - 스마트스토어 상품(smartstore.naver.com/main/products/...):
+      PC 버전의 영수증 캡차(CAPTCHA) 빈도를 줄이기 위해 모바일 반응형 URL(m.smartstore.naver.com)로 최적화합니다.
+    """
+    str_nv_mid = str(nv_mid).strip() if nv_mid else ""
+    url = (url or "").strip()
+    clean_title = (title or "").strip()
+
+    # 1. URL 내에서 nv_mid 파라미터 추출 시도
+    if not str_nv_mid and url:
+        m = re.search(r"[?&]nv_mid=(\d+)", url)
+        if m:
+            str_nv_mid = m.group(1)
+
+    # 2. 카탈로그 카드 또는 브릿지 URL (로그인 강제 우회)
+    is_catalog = (
+        card_type == "CATALOG_CARD" or 
+        any(pattern in url for pattern in ["shopping.naver.com/v2/bridge", "cr.shopping.naver.com", "cr3.shopping.naver.com", "searchGate", "catalog"])
+    )
+    if is_catalog:
+        if clean_title:
+            # 로그인 없이 즉시 열리는 네이버 쇼핑 오픈 가격비교 검색 딥링크
+            encoded = urllib.parse.quote(clean_title)
+            return f"https://search.shopping.naver.com/search/all?query={encoded}"
+        elif str_nv_mid:
+            return f"https://search.shopping.naver.com/catalog/{str_nv_mid}"
+
+    # 3. URL이 비어있지만 nv_mid가 있는 경우
+    if not url and str_nv_mid:
+        if clean_title:
+            return f"https://search.shopping.naver.com/search/all?query={urllib.parse.quote(clean_title)}"
+        return f"https://search.shopping.naver.com/catalog/{str_nv_mid}"
+
+    # 4. 스마트스토어 outlink 게이트웨이 정규화
+    if "smartstore.naver.com/inflow/outlink/url?url=" in url:
+        try:
+            parsed = urllib.parse.urlparse(url)
+            qs = urllib.parse.parse_qs(parsed.query)
+            target = qs.get("url", [None])[0]
+            if target:
+                clean_target = urllib.parse.unquote(target)
+                if clean_target.startswith("http"):
+                    url = clean_target.split("?")[0]
+        except Exception:
+            pass
+
+    # 5. 스마트스토어 캡차 방지: PC 전용 main/products -> 모바일 반응형 변환
+    if "smartstore.naver.com/main/products/" in url and not url.startswith("https://m.smartstore"):
+        url = url.replace("https://smartstore.naver.com/", "https://m.smartstore.naver.com/")
+
+    return url
+
+
 def fetch_from_naver_bff(keyword: str) -> List[Dict[str, Any]]:
     """
     네이버 쇼핑 공개 BFF JSON 엔드포인트를 직접 조회합니다.
@@ -153,14 +211,19 @@ def fetch_from_naver_bff(keyword: str) -> List[Dict[str, Any]]:
             price = 0
 
         mall = d.get("mallName") or d.get("shopName") or ""
+        card_type = d.get("cardType", "")
+        nv_mid = d.get("nvMid") or d.get("catalogMatchingId")
         if not mall:
             mall = "네이버 가격비교 (카탈로그)"
 
         product_url = d.get("productUrl", {})
-        url = product_url.get("pcUrl") or product_url.get("mobileUrl") if isinstance(product_url, dict) else str(product_url)
-        if not url:
+        raw_url = product_url.get("pcUrl") or product_url.get("mobileUrl") if isinstance(product_url, dict) else str(product_url)
+        if not raw_url:
             click_url = d.get("productClickUrl", {})
-            url = click_url.get("pcUrl") or click_url.get("mobileUrl") if isinstance(click_url, dict) else str(click_url)
+            raw_url = click_url.get("pcUrl") or click_url.get("mobileUrl") if isinstance(click_url, dict) else str(click_url)
+
+        # 안전한 정규 URL로 변환 (n2 '올바른 요청이 아닙니다' 및 로그인 강제 차단)
+        safe_url = normalize_shopping_url(raw_url, nv_mid=nv_mid, card_type=card_type, title=title_clean)
 
         review_count = d.get("totalReviewCount") or d.get("reviewCount") or 0
         score = d.get("averageReviewScore") or d.get("score") or 0.0
@@ -177,7 +240,7 @@ def fetch_from_naver_bff(keyword: str) -> List[Dict[str, Any]]:
                 "title": title_clean,
                 "price": price,
                 "mall_name": mall,
-                "url": url,
+                "url": safe_url,
                 "image_url": image_url,
                 "review_count": review_count,
                 "score": float(score),
@@ -276,6 +339,7 @@ def filter_and_refine_products(items: List[Dict[str, Any]], keyword: str = "") -
         key = (title, price, item.get("mall_name", ""))
         if key not in seen:
             seen.add(key)
+            item["url"] = normalize_shopping_url(item.get("url", ""), title=title)
             valid_products.append(item)
 
     # 최저가 순(오름차순) 정렬

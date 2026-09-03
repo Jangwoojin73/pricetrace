@@ -4,15 +4,66 @@
 
 // 전역 상태
 const state = {
-  keyword: "농심 신라면 봉지 20개입",
+  keyword: "",
   targetPrice: 15000,
   data: null,
   chart: null,
-  isLoading: false
+  isLoading: false,
+  view: "welcome" // "welcome" | "result"
 };
+
+// URL 정규화 헬퍼 (로그인 강제 및 캡차 발생 최소화)
+function normalizeProductUrl(url, title = "") {
+  if (!url) return "#";
+  let trimmed = String(url).trim();
+
+  // 1. 카탈로그 링크 또는 cr 브릿지 링크: 비로그인 시 nidlogin 리다이렉트를 방지하고 즉시 열리는 공식 검색 딥링크로 연결
+  if (
+    trimmed.includes("shopping.naver.com/v2/bridge") || 
+    trimmed.includes("cr.shopping.naver.com") || 
+    trimmed.includes("cr3.shopping.naver.com") || 
+    trimmed.includes("searchGate") ||
+    trimmed.includes("shopping.naver.com/catalog")
+  ) {
+    if (title && title.trim()) {
+      return `https://search.shopping.naver.com/search/all?query=${encodeURIComponent(title.trim())}`;
+    }
+    const match = trimmed.match(/[?&]nv_mid=(\d+)/);
+    if (match && match[1]) {
+      return `https://search.shopping.naver.com/catalog/${match[1]}`;
+    }
+  }
+
+  // 2. 스마트스토어 outlink 게이트웨이 파라미터 디코딩
+  if (trimmed.includes("smartstore.naver.com/inflow/outlink/url?url=")) {
+    try {
+      const urlObj = new URL(trimmed);
+      const target = urlObj.searchParams.get("url");
+      if (target && target.startsWith("http")) {
+        trimmed = decodeURIComponent(target).split("?")[0];
+      }
+    } catch (e) {
+      // 무시
+    }
+  }
+
+  // 3. 스마트스토어 영수증 캡차 방지: PC 버전 main/products -> 모바일 반응형 변환
+  if (trimmed.includes("smartstore.naver.com/main/products/") && !trimmed.startsWith("https://m.smartstore")) {
+    trimmed = trimmed.replace("https://smartstore.naver.com/", "https://m.smartstore.naver.com/");
+  }
+
+  return trimmed;
+}
 
 // DOM 요소 캐시
 const elements = {
+  // 뷰 컨테이너
+  welcomeView: document.getElementById("welcomeView"),
+  resultView: document.getElementById("resultView"),
+  backToHomeBtn: document.getElementById("backToHomeBtn"),
+  currentSearchKeywordText: document.getElementById("currentSearchKeywordText"),
+  welcomeCards: document.querySelectorAll(".welcome-card"),
+
   // 배너 및 헤더
   topBannerText: document.getElementById("topBannerText"),
   lastUpdatedTime: document.getElementById("lastUpdatedTime"),
@@ -27,6 +78,7 @@ const elements = {
   // 검색
   searchForm: document.getElementById("searchForm"),
   searchInput: document.getElementById("searchInput"),
+  clearSearchBtn: document.getElementById("clearSearchBtn"),
   quickChips: document.querySelectorAll(".quick-chip"),
   refreshBtn: document.getElementById("refreshBtn"),
   refreshIcon: document.getElementById("refreshIcon"),
@@ -72,11 +124,73 @@ function formatCurrency(num) {
   return Number(num || 0).toLocaleString("ko-KR");
 }
 
+// 뷰 전환: 초기 웰컴 화면
+function switchToWelcomeView() {
+  state.view = "welcome";
+  state.keyword = "";
+  if (elements.welcomeView) elements.welcomeView.classList.remove("hidden");
+  if (elements.resultView) elements.resultView.classList.add("hidden");
+  if (elements.searchInput) {
+    elements.searchInput.value = "";
+    updateClearBtn();
+  }
+  if (elements.topBannerText) {
+    elements.topBannerText.textContent = "네이버 쇼핑 공식 카탈로그 실시간 최저가 레이더";
+  }
+  if (window.history.pushState && window.location.search) {
+    window.history.pushState({}, "", window.location.pathname);
+  }
+  if (window.lucide) {
+    window.lucide.createIcons();
+  }
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+// 뷰 전환: 검색 결과 대시보드 화면
+function switchToResultView(keyword) {
+  state.view = "result";
+  if (elements.welcomeView) elements.welcomeView.classList.add("hidden");
+  if (elements.resultView) elements.resultView.classList.remove("hidden");
+  if (elements.currentSearchKeywordText) {
+    elements.currentSearchKeywordText.textContent = keyword;
+  }
+  if (elements.searchInput && elements.searchInput.value !== keyword) {
+    elements.searchInput.value = keyword;
+    updateClearBtn();
+  }
+  if (elements.topBannerText) {
+    elements.topBannerText.textContent = `'${keyword}' 실시간 최저가 비교 분석`;
+  }
+  if (window.history.pushState) {
+    const newUrl = `${window.location.pathname}?q=${encodeURIComponent(keyword)}`;
+    window.history.pushState({ keyword }, "", newUrl);
+  }
+  if (window.lucide) {
+    window.lucide.createIcons();
+  }
+}
+
+// 검색창 지우기 버튼 상태 갱신
+function updateClearBtn() {
+  if (!elements.clearSearchBtn || !elements.searchInput) return;
+  if (elements.searchInput.value.trim().length > 0) {
+    elements.clearSearchBtn.classList.remove("hidden");
+  } else {
+    elements.clearSearchBtn.classList.add("hidden");
+  }
+}
+
 // 1. API 데이터 로드
-async function loadPriceData(keyword = state.keyword, targetPrice = state.targetPrice) {
+async function loadPriceData(keyword, targetPrice = 0) {
+  if (!keyword || !keyword.trim()) {
+    switchToWelcomeView();
+    return;
+  }
+  keyword = keyword.trim();
   if (state.isLoading) return;
   state.isLoading = true;
   setLoadingUI(true);
+  switchToResultView(keyword);
 
   try {
     const encodedQuery = encodeURIComponent(keyword);
@@ -167,8 +281,9 @@ function renderAll(data) {
 
     // 링크 설정
     if (representative_item.url) {
-      elements.buyButton.href = representative_item.url;
-      elements.directBuySubBtn.onclick = () => window.open(representative_item.url, "_blank");
+      const safeBuyUrl = normalizeProductUrl(representative_item.url, representative_item.title);
+      elements.buyButton.href = safeBuyUrl;
+      elements.directBuySubBtn.onclick = () => window.open(safeBuyUrl, "_blank");
     }
 
     // 할인 뱃지
@@ -221,6 +336,7 @@ function renderComparisonGrid(items, unit_count = 1) {
     const unitText = unit_count > 1 ? `<span class="text-xs text-slate-400 ml-1">(개당 ${formatCurrency(unitPrice)}원)</span>` : '';
     const reviewCnt = item.review_count ? formatCurrency(item.review_count) + "개" : "리뷰 정보 없음";
     const scoreVal = item.score ? `★ ${item.score.toFixed(2)}` : "평점 정보 없음";
+    const safeItemUrl = normalizeProductUrl(item.url, item.title);
 
     return `
       <div class="relative bg-white rounded-3xl p-5 ${borderClass} flex flex-col justify-between space-y-4 card-hover">
@@ -245,9 +361,10 @@ function renderComparisonGrid(items, unit_count = 1) {
           </div>
         </div>
         <a 
-          href="${item.url || '#'}" 
+          href="${safeItemUrl}" 
           target="_blank" 
-          rel="noopener noreferrer" 
+          rel="noopener" 
+          referrerpolicy="no-referrer-when-downgrade"
           class="w-full py-2.5 text-center ${btnClass} text-xs font-extrabold rounded-xl transition-colors flex items-center justify-center space-x-1"
         >
           <span>구매 페이지 열기</span>
@@ -376,6 +493,50 @@ function showErrorNotification(msg) {
 
 // 6. 이벤트 리스너 등록
 function initEventListeners() {
+  // 검색창 입력 감지 -> 지우기 버튼 토글
+  if (elements.searchInput) {
+    elements.searchInput.addEventListener("input", updateClearBtn);
+  }
+
+  // 검색창 지우기 버튼 클릭
+  if (elements.clearSearchBtn) {
+    elements.clearSearchBtn.addEventListener("click", () => {
+      elements.searchInput.value = "";
+      updateClearBtn();
+      elements.searchInput.focus();
+    });
+  }
+
+  // 홈으로 돌아가기 버튼 클릭
+  if (elements.backToHomeBtn) {
+    elements.backToHomeBtn.addEventListener("click", () => {
+      switchToWelcomeView();
+    });
+  }
+
+  // 상단 로고 클릭 시 홈으로 이동
+  const logoLink = document.querySelector("header a");
+  if (logoLink) {
+    logoLink.addEventListener("click", (e) => {
+      e.preventDefault();
+      switchToWelcomeView();
+    });
+  }
+
+  // 웰컴 퀵 카드 클릭
+  if (elements.welcomeCards) {
+    elements.welcomeCards.forEach(card => {
+      card.addEventListener("click", () => {
+        const kw = card.getAttribute("data-keyword");
+        if (kw) {
+          elements.searchInput.value = kw;
+          updateClearBtn();
+          loadPriceData(kw, 0);
+        }
+      });
+    });
+  }
+
   // 검색 폼
   elements.searchForm.addEventListener("submit", (e) => {
     e.preventDefault();
@@ -393,6 +554,7 @@ function initEventListeners() {
       const kw = chip.getAttribute("data-keyword");
       if (kw) {
         elements.searchInput.value = kw;
+        updateClearBtn();
         loadPriceData(kw, 0);
       }
     });
@@ -400,7 +562,11 @@ function initEventListeners() {
 
   // 실시간 갱신 버튼
   elements.refreshBtn.addEventListener("click", () => {
-    loadPriceData(state.keyword, state.targetPrice);
+    if (state.keyword) {
+      loadPriceData(state.keyword, state.targetPrice);
+    } else {
+      switchToWelcomeView();
+    }
   });
 
   // 모달 열기/닫기
@@ -413,7 +579,9 @@ function initEventListeners() {
   };
 
   elements.openConfigModalBtn.addEventListener("click", openModal);
-  elements.quickTargetEditBtn.addEventListener("click", openModal);
+  if (elements.quickTargetEditBtn) {
+    elements.quickTargetEditBtn.addEventListener("click", openModal);
+  }
   elements.closeConfigModalBtn.addEventListener("click", closeModal);
   elements.cancelConfigModalBtn.addEventListener("click", closeModal);
 
@@ -435,10 +603,34 @@ function initEventListeners() {
       alert("올바른 금액을 입력해 주세요.");
     }
   });
+
+  // 브라우저 뒤로가기/앞으로가기 처리
+  window.addEventListener("popstate", () => {
+    const params = new URLSearchParams(window.location.search);
+    const q = params.get("q");
+    if (q && q.trim()) {
+      elements.searchInput.value = q.trim();
+      updateClearBtn();
+      loadPriceData(q.trim(), 0);
+    } else {
+      switchToWelcomeView();
+    }
+  });
 }
 
 // 초기 실행
 document.addEventListener("DOMContentLoaded", () => {
   initEventListeners();
-  loadPriceData();
+
+  // URL에 ?q=검색어가 있으면 해당 상품 조회, 없으면 초기 웰컴 화면 노출
+  const urlParams = new URLSearchParams(window.location.search);
+  const initialQuery = urlParams.get("q");
+
+  if (initialQuery && initialQuery.trim()) {
+    elements.searchInput.value = initialQuery.trim();
+    updateClearBtn();
+    loadPriceData(initialQuery.trim(), 0);
+  } else {
+    switchToWelcomeView();
+  }
 });
