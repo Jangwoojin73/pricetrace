@@ -107,3 +107,12 @@ html {
     backdrop-filter: blur(4px);
   }
 }
+
+/* 스크롤바 숨기기 (모바일 가로 스크롤용) */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}

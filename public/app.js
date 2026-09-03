@@ -223,6 +223,7 @@ const elements = {
   alertDescription: document.getElementById("alertDescription"),
   currentSetTargetPrice: document.getElementById("currentSetTargetPrice"),
   btnTargetPriceDisplay: document.getElementById("btnTargetPriceDisplay"),
+  mobileBtnTargetPriceDisplay: document.getElementById("mobileBtnTargetPriceDisplay"),
 
   // 검색
   searchForm: document.getElementById("searchForm"),
@@ -231,6 +232,8 @@ const elements = {
   quickChipsContainer: document.getElementById("quickChipsContainer"),
   shuffleChipsBtn: document.getElementById("shuffleChipsBtn"),
   refreshBtn: document.getElementById("refreshBtn"),
+  mobileRefreshBtn: document.getElementById("mobileRefreshBtn"),
+  mobileOpenConfigModalBtn: document.getElementById("mobileOpenConfigModalBtn"),
   refreshIcon: document.getElementById("refreshIcon"),
 
   // 히어로 대시보드
@@ -381,7 +384,8 @@ function renderAll(data) {
   } = data;
 
   // 헤더 및 시간 업데이트
-  elements.btnTargetPriceDisplay.textContent = `${formatCurrency(target_price)}원`;
+  if (elements.btnTargetPriceDisplay) elements.btnTargetPriceDisplay.textContent = `${formatCurrency(target_price)}원`;
+  if (elements.mobileBtnTargetPriceDisplay) elements.mobileBtnTargetPriceDisplay.textContent = `${formatCurrency(target_price)}원`;
   elements.currentSetTargetPrice.textContent = `${formatCurrency(target_price)}원`;
   elements.lastUpdatedTime.textContent = timestamp ? timestamp.split(" ")[1] + " 갱신됨" : "방금 갱신됨";
   elements.topBannerText.textContent = `${keyword} 최저가 ${formatCurrency(lowest_price)}원 감지됨!`;
@@ -820,7 +824,17 @@ function initEventListeners() {
     elements.configModal.classList.add("hidden");
   };
 
-  elements.openConfigModalBtn.addEventListener("click", openModal);
+  if (elements.openConfigModalBtn) {
+    elements.openConfigModalBtn.addEventListener("click", openModal);
+  }
+  if (elements.mobileOpenConfigModalBtn) {
+    elements.mobileOpenConfigModalBtn.addEventListener("click", openModal);
+  }
+  if (elements.mobileRefreshBtn) {
+    elements.mobileRefreshBtn.addEventListener("click", () => {
+      elements.refreshBtn.click();
+    });
+  }
   if (elements.quickTargetEditBtn) {
     elements.quickTargetEditBtn.addEventListener("click", openModal);
   }
@@ -867,6 +881,9 @@ function initEventListeners() {
       state.targetPrice = newTarget;
       if (elements.btnTargetPriceDisplay) {
         elements.btnTargetPriceDisplay.textContent = formatCurrency(newTarget) + "원";
+      }
+      if (elements.mobileBtnTargetPriceDisplay) {
+        elements.mobileBtnTargetPriceDisplay.textContent = formatCurrency(newTarget) + "원";
       }
       if (state.keyword && state.keyword.trim()) {
         loadPriceData(state.keyword, newTarget);
