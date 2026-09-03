@@ -64,6 +64,9 @@ python server.py --port 8080
 
 # 브라우저 접속
 http://localhost:8080
+
+# [선택] 전수 인터랙션 및 버튼 무결성 E2E 자동화 검증 실행
+python audit_all_interactions.py
 ```
 
 ---
@@ -77,12 +80,13 @@ pricetrace-bot/
 ├── .gitignore                  # 깃 버전 관리 제외 파일 목록
 ├── server.py                   # 로컬 실행용 경량 웹 서버
 ├── pricetrace_bot.py           # 네이버 쇼핑 최저가 크롤링 및 정제 핵심 로직
+├── audit_all_interactions.py   # 사용자 관점 전수 인터랙션 자동화 검증 스크립트
 ├── api/
 │   └── index.py                # Vercel Serverless Function 진입점
 ├── public/
-│   ├── index.html              # 이커머스 전형적 스타일 메인 화면
-│   ├── style.css               # 테마 및 애니메이션
-│   └── app.js                  # 실시간 데이터 통신 & Chart.js 렌더링
+│   ├── index.html              # 청금석 테마 이커머스 전형적 스타일 메인 화면
+│   ├── style.css               # 청금석 Lapis Lazuli 테마 및 마이크로 인터랙션
+│   └── app.js                  # 실시간 데이터 통신 & Chart.js 렌더링 & 모달 로직
 └── docs/                       # 기획(PRD) 및 설계(TRD), 분석(GAP) 문서
 ```
 
