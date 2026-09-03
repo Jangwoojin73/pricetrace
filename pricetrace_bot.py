@@ -165,12 +165,20 @@ def fetch_from_naver_bff(keyword: str) -> List[Dict[str, Any]]:
         review_count = d.get("totalReviewCount") or d.get("reviewCount") or 0
         score = d.get("averageReviewScore") or d.get("score") or 0.0
 
+        images = d.get("images", [])
+        image_url = ""
+        if isinstance(images, list) and len(images) > 0 and isinstance(images[0], dict):
+            image_url = images[0].get("imageUrl") or ""
+        if not image_url:
+            image_url = d.get("imageUrl") or d.get("productImageUrl") or ""
+
         if title_clean and price > 0:
             extracted_items.append({
                 "title": title_clean,
                 "price": price,
                 "mall_name": mall,
                 "url": url,
+                "image_url": image_url,
                 "review_count": review_count,
                 "score": float(score),
                 "is_ad": is_ad
@@ -179,31 +187,57 @@ def fetch_from_naver_bff(keyword: str) -> List[Dict[str, Any]]:
     return extracted_items
 
 
-def default_data_fetcher() -> Tuple[List[Dict[str, Any]], List[str]]:
-    """실제 네이버 쇼핑 데이터를 수집하는 기본 fetcher"""
+def fetch_products_for_keyword(keyword: str) -> Tuple[List[Dict[str, Any]], List[str]]:
+    """임의의 검색어에 대해 네이버 쇼핑 실시간 데이터를 수집합니다."""
+    all_items: List[Dict[str, Any]] = []
+    errors: List[str] = []
+
+    try:
+        bff_items = fetch_from_naver_bff(keyword)
+        if bff_items:
+            all_items.extend(bff_items)
+    except Exception as e:
+        errors.append(f"네이버 쇼핑 BFF '{keyword}': {str(e)}")
+
+    if not all_items:
+        try:
+            proxy_items = fetch_from_proxy(keyword)
+            if proxy_items:
+                all_items.extend(proxy_items)
+        except Exception as e:
+            errors.append(f"프록시 '{keyword}': {str(e)}")
+
+    return all_items, errors
+
+
+def default_data_fetcher(keyword: Optional[str] = None) -> Tuple[List[Dict[str, Any]], List[str]]:
+    """실제 네이버 쇼핑 데이터를 수집하는 기본 fetcher (임의 키워드 지원)"""
+    if keyword and keyword != PRIMARY_KEYWORD:
+        return fetch_products_for_keyword(keyword)
+
     all_raw_items: List[Dict[str, Any]] = []
     fetch_errors: List[str] = []
 
     for kw in SEARCH_KEYWORDS:
-        items = fetch_from_proxy(kw)
-        if items:
-            all_raw_items.extend(items)
-        else:
-            try:
-                bff_items = fetch_from_naver_bff(kw)
+        try:
+            bff_items = fetch_from_naver_bff(kw)
+            if bff_items:
                 all_raw_items.extend(bff_items)
-            except RuntimeError as e:
-                fetch_errors.append(f"'{kw}': {str(e)}")
+        except Exception as e:
+            fetch_errors.append(f"'{kw}': {str(e)}")
 
     return all_raw_items, fetch_errors
 
 
-def filter_and_refine_products(items: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+def filter_and_refine_products(items: List[Dict[str, Any]], keyword: str = "") -> List[Dict[str, Any]]:
     """
-    광고 상품을 제외하고, 순수 오리지널 신라면 20개입 상품만 정밀 필터링합니다.
+    광고 상품을 제외하고, 검색어에 맞는 상품을 정밀 필터링합니다.
+    검색어가 비어있거나 '신라면'인 경우 신라면 20개입 전용 필터링을 적용합니다.
     """
     valid_products = []
     seen = set()
+
+    is_shinramyun_mode = (not keyword) or ("신라면" in keyword)
 
     for item in items:
         # 1. 광고 상품 필터링
@@ -212,23 +246,32 @@ def filter_and_refine_products(items: List[Dict[str, Any]]) -> List[Dict[str, An
 
         title = item.get("title", "")
         title_lower = title.lower()
-
-        # 2. '신라면' 필수 포함 확인
-        if "신라면" not in title:
-            continue
-
-        # 3. 파생 상품(블랙, 건면, 투움바 등) 제외 키워드 검사
-        if any(exc in title_lower for exc in EXCLUDE_KEYWORDS):
-            continue
-
-        # 4. 20개입(20개, 20봉, 20입, 20ea 등) 수량 확인
-        match_20 = re.search(r'(20\s*(개|봉|입|ea|p|pack)|20개입)', title_lower)
-        if not match_20:
-            continue
-
         price = item.get("price", 0)
-        if price < 5000:
-            continue
+
+        if is_shinramyun_mode:
+            # 2. '신라면' 필수 포함 확인
+            if "신라면" not in title:
+                continue
+
+            # 3. 파생 상품(블랙, 건면, 투움바 등) 제외 키워드 검사
+            if any(exc in title_lower for exc in EXCLUDE_KEYWORDS):
+                continue
+
+            # 4. 20개입(20개, 20봉, 20입, 20ea 등) 수량 확인
+            match_20 = re.search(r'(20\s*(개|봉|입|ea|p|pack)|20개입)', title_lower)
+            if not match_20:
+                continue
+
+            if price < 5000:
+                continue
+        else:
+            # 일반 검색어 모드: 검색어 키워드 매칭
+            kw_tokens = [tok.strip() for tok in re.split(r'\s+', keyword) if len(tok.strip()) >= 2]
+            if kw_tokens:
+                if not any(token.lower() in title_lower for token in kw_tokens):
+                    continue
+            if price < 500:
+                continue
 
         key = (title, price, item.get("mall_name", ""))
         if key not in seen:

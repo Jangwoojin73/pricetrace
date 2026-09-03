@@ -115,11 +115,15 @@
         <!-- 인기 검색어 / 빠른 태그 칩 -->
         <div class="hidden lg:flex items-center space-x-2 mt-1.5 text-xs text-slate-500 px-1">
           <span class="font-semibold text-slate-400 flex items-center gap-1"><i data-lucide="flame" class="w-3.5 h-3.5 text-coupang"></i> 인기:</span>
-          <button type="button" class="quick-chip hover:text-naver hover:underline font-medium" data-keyword="농심 신라면 봉지 20개입">#신라면 20개입</button>
+          <button type="button" class="quick-chip hover:text-naver hover:underline font-medium" data-keyword="농심 신라면 봉지 20개입">#신라면 20개</button>
           <span class="text-slate-300">·</span>
-          <button type="button" class="quick-chip hover:text-naver hover:underline font-medium" data-keyword="농심 신라면 120g 20개">#신라면 120g 20개</button>
+          <button type="button" class="quick-chip hover:text-naver hover:underline font-medium" data-keyword="CJ제일제당 햇반 210g 24개">#햇반 24개</button>
           <span class="text-slate-300">·</span>
-          <button type="button" class="quick-chip hover:text-naver hover:underline font-medium" data-keyword="신라면 20개">#신라면 박스</button>
+          <button type="button" class="quick-chip hover:text-naver hover:underline font-medium" data-keyword="코카콜라 제로 355ml 24캔">#코카콜라 제로</button>
+          <span class="text-slate-300">·</span>
+          <button type="button" class="quick-chip hover:text-naver hover:underline font-medium" data-keyword="제주 삼다수 2L 6개">#삼다수 2L</button>
+          <span class="text-slate-300">·</span>
+          <button type="button" class="quick-chip hover:text-naver hover:underline font-medium" data-keyword="오뚜기 진라면 매운맛 40개">#진라면 40개</button>
         </div>
       </div>
 
@@ -214,9 +218,9 @@
             <img 
               id="productMainImage" 
               src="https://shopping-phinf.pstatic.net/main_5301888/53018889018.20250214174431.jpg" 
-              alt="농심 신라면 20개입 대표 이미지" 
+              alt="상품 대표 이미지" 
               class="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300"
-              onerror="this.src='https://images.unsplash.com/photo-1612927601601-6638404737ce?w=600&auto=format&fit=crop&q=80'"
+              onerror="this.src='https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80'"
             >
             <!-- 1위 최저가 뱃지 -->
             <div class="absolute top-4 left-4 bg-slate-900/90 backdrop-blur text-white text-xs font-black px-3 py-1 rounded-full shadow-md flex items-center space-x-1">
@@ -226,7 +230,7 @@
             <!-- 수량 검증 뱃지 -->
             <div class="absolute bottom-4 right-4 bg-white/95 text-slate-800 text-[11px] font-bold px-2.5 py-1 rounded-lg border border-slate-200 shadow-sm flex items-center space-x-1">
               <i data-lucide="package" class="w-3.5 h-3.5 text-naver"></i>
-              <span>20개입 정품 검증</span>
+              <span id="productBadgeText">실시간 정품 검증</span>
             </div>
           </div>
         </div>
@@ -236,16 +240,16 @@
           <div>
             <!-- 브랜드 및 카테고리 -->
             <div class="flex items-center space-x-2 text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">
-              <span class="text-naver">농심 (Nongshim)</span>
+              <span id="productCategoryTag" class="text-naver">실시간 최저가</span>
               <span>•</span>
-              <span>봉지 라면</span>
+              <span id="productMallTag">네이버 쇼핑</span>
               <span>•</span>
-              <span>20개입 박스 포장</span>
+              <span id="productUnitTag">온라인 공식 판매처</span>
             </div>
 
             <!-- 메인 상품명 -->
             <h1 id="productTitle" class="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight leading-snug">
-              농심 신라면 봉지 120g 20개입 (오리지널)
+              검색된 상품명
             </h1>
 
             <!-- 리뷰 및 평점 (쿠팡/네이버 스타일) -->
@@ -286,7 +290,7 @@
 
               <!-- 1봉당 환산 단가 카드 -->
               <div class="bg-white px-4 py-2.5 rounded-2xl border border-slate-200 shadow-xs text-left sm:text-right">
-                <span class="block text-[11px] text-slate-400 font-semibold">1봉지(120g)당 환산가</span>
+                <span class="block text-[11px] text-slate-400 font-semibold" id="unitPriceLabel">1개/봉당 환산가</span>
                 <span class="text-lg font-extrabold text-naver" id="unitPriceDisplay">약 660원</span>
               </div>
             </div>

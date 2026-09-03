@@ -87,53 +87,104 @@ def load_cached_fallback_data() -> List[Dict[str, Any]]:
 
 
 def generate_mock_history(lowest_price: int, target_price: int) -> List[Dict[str, Any]]:
-    """최근 30일간의 가격 변동 추이 데이터 생성 (실제 데이터와 결합)"""
+    """최근 30일간의 가격 변동 추이 데이터 동적 생성 (실제 최저가 비율 기반)"""
     history = []
     today = datetime.now()
-    # 30일 전부터 오늘까지의 모의 가격 변동 패턴 생성
-    base_prices = [
-        16200, 16000, 15900, 16100, 15800, 15700, 15500, 15600, 15400, 15500,
-        15200, 15300, 15000, 14900, 14800, 14900, 14700, 14600, 14500, 14400,
-        14200, 14300, 14000, 13900, 13800, 13700, 13500, 13400, 13300, lowest_price
+    if lowest_price <= 0:
+        lowest_price = 10000
+
+    # 최저가 기준 +10% ~ +25% 변동 곡선 생성
+    multipliers = [
+        1.22, 1.20, 1.19, 1.21, 1.18, 1.17, 1.15, 1.16, 1.14, 1.15,
+        1.12, 1.13, 1.10, 1.09, 1.08, 1.09, 1.07, 1.06, 1.05, 1.04,
+        1.03, 1.04, 1.02, 1.03, 1.02, 1.01, 1.01, 1.005, 1.002, 1.0
     ]
     
-    for i, price in enumerate(base_prices):
+    for i, m in enumerate(multipliers):
         date_str = (today - timedelta(days=29 - i)).strftime("%m/%d")
         history.append({
             "date": date_str,
-            "price": price,
+            "price": round(lowest_price * m / 10) * 10,
             "target": target_price
         })
     return history
 
 
+def extract_unit_count(title: str) -> int:
+    """상품명에서 수량(20개, 30캔, 6입 등)을 자동 감지하여 정수로 반환"""
+    import re
+    match = re.search(r'(\d+)\s*(개|봉|입|ea|캔|병|팩|box|박스)', title.lower())
+    if match:
+        try:
+            cnt = int(match.group(1))
+            if 1 <= cnt <= 200:
+                return cnt
+        except ValueError:
+            pass
+    return 1
+
+
 def fetch_price_data(keyword: str = "농심 신라면 봉지 20개입", target_price: int = 15000) -> Dict[str, Any]:
-    """실제 봇 모듈 또는 캐시로부터 최저가 데이터 수집 및 가공"""
+    """실제 봇 모듈을 통해 검색어별 실시간 최저가 수집 및 가공"""
     raw_items = []
     fetch_errors = []
     is_live = False
 
     if pricetrace_bot:
         try:
-            # 봇의 default_data_fetcher 호출
-            raw_items, fetch_errors = pricetrace_bot.default_data_fetcher()
+            # 검색어를 넘겨 실시간 크롤링
+            raw_items, fetch_errors = pricetrace_bot.default_data_fetcher(keyword)
             if raw_items:
                 is_live = True
         except Exception as e:
             fetch_errors.append(str(e))
 
     if raw_items and pricetrace_bot:
-        refined_items = pricetrace_bot.filter_and_refine_products(raw_items)
+        refined_items = pricetrace_bot.filter_and_refine_products(raw_items, keyword)
     else:
-        # 캐시 폴백
-        refined_items = load_cached_fallback_data()
+        # 신라면인 경우에만 로컬 캐시 폴백
+        if "신라면" in keyword:
+            refined_items = load_cached_fallback_data()
+        else:
+            refined_items = []
 
+    # 결과가 전혀 없는 경우 안전 처리
     if not refined_items:
-        refined_items = load_cached_fallback_data()
+        if "신라면" in keyword:
+            refined_items = load_cached_fallback_data()
+        else:
+            # 검색 결과가 0건인 경우
+            return {
+                "success": False,
+                "is_live": is_live,
+                "keyword": keyword,
+                "target_price": target_price,
+                "lowest_price": 0,
+                "unit_price": 0,
+                "unit_count": 1,
+                "is_special_price": False,
+                "discount_amount": 0,
+                "alert_message": f"'{keyword}'에 대한 검색 결과가 없습니다.",
+                "representative_item": {},
+                "top_items": [],
+                "item_count": 0,
+                "fetch_errors": fetch_errors,
+                "history": [],
+                "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            }
 
     top_items = refined_items[:3]
     lowest_price = top_items[0]["price"] if top_items else 0
-    unit_price = round(lowest_price / 20) if lowest_price > 0 else 0
+    representative = top_items[0] if top_items else {}
+
+    # 상품명에서 수량 자동 감지하여 단위 가격 계산
+    unit_cnt = extract_unit_count(representative.get("title", ""))
+    unit_price = round(lowest_price / unit_cnt) if lowest_price > 0 else 0
+
+    # 목표가 미지정(0 이하) 시 최저가의 110% 수준으로 자동 설정
+    if target_price <= 0:
+        target_price = round((lowest_price * 1.1) / 100) * 100
+
     is_special = lowest_price <= target_price
     discount = target_price - lowest_price if is_special else 0
 
@@ -143,8 +194,6 @@ def fetch_price_data(keyword: str = "농심 신라면 봉지 20개입", target_p
         else f"ℹ️ [유지] 아직 목표 가격({target_price:,}원)보다 비쌉니다."
     )
 
-    representative = top_items[0] if top_items else {}
-
     return {
         "success": True,
         "is_live": is_live,
@@ -152,6 +201,7 @@ def fetch_price_data(keyword: str = "농심 신라면 봉지 20개입", target_p
         "target_price": target_price,
         "lowest_price": lowest_price,
         "unit_price": unit_price,
+        "unit_count": unit_cnt,
         "is_special_price": is_special,
         "discount_amount": discount,
         "alert_message": alert_msg,

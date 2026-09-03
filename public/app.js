@@ -38,9 +38,14 @@ const elements = {
   lowestPriceDisplay: document.getElementById("lowestPriceDisplay"),
   discountBadge: document.getElementById("discountBadge"),
   unitPriceDisplay: document.getElementById("unitPriceDisplay"),
+  unitPriceLabel: document.getElementById("unitPriceLabel"),
   lowestMallName: document.getElementById("lowestMallName"),
   buyButton: document.getElementById("buyButton"),
   productMainImage: document.getElementById("productMainImage"),
+  productCategoryTag: document.getElementById("productCategoryTag"),
+  productMallTag: document.getElementById("productMallTag"),
+  productUnitTag: document.getElementById("productUnitTag"),
+  productBadgeText: document.getElementById("productBadgeText"),
 
   // 판매처 리스트
   priceComparisonGrid: document.getElementById("priceComparisonGrid"),
@@ -82,7 +87,7 @@ async function loadPriceData(keyword = state.keyword, targetPrice = state.target
     const data = await res.json();
     state.data = data;
     state.keyword = keyword;
-    state.targetPrice = targetPrice;
+    state.targetPrice = data.target_price || targetPrice;
 
     // UI 렌더링
     renderAll(data);
@@ -102,6 +107,7 @@ function renderAll(data) {
     target_price,
     lowest_price,
     unit_price,
+    unit_count = 1,
     is_special_price,
     discount_amount,
     representative_item,
@@ -120,9 +126,9 @@ function renderAll(data) {
   if (is_special_price) {
     elements.alertBanner.className = "relative overflow-hidden rounded-3xl p-5 sm:p-6 transition-all duration-300 shadow-md banner-special";
     elements.alertIconBox.textContent = "🚨";
-    elements.alertStatusBadge.textContent = "특가 발생";
+    elements.alertStatusBadge.textContent = "특가 감지";
     elements.alertMainMessage.textContent = "목표 가격 이하입니다! 지금이 구매 적기입니다.";
-    const discountRate = Math.round((discount_amount / target_price) * 100);
+    const discountRate = target_price > 0 ? Math.round((discount_amount / target_price) * 100) : 0;
     elements.alertDescription.innerHTML = `현재 1위 최저가가 설정하신 목표가 <strong>${formatCurrency(target_price)}원</strong>보다 <strong>${formatCurrency(discount_amount)}원(${discountRate}%)</strong> 저렴합니다.`;
   } else {
     elements.alertBanner.className = "relative overflow-hidden rounded-3xl p-5 sm:p-6 transition-all duration-300 shadow-md banner-normal";
@@ -134,13 +140,30 @@ function renderAll(data) {
   }
 
   // 대표 상품 카드 (Hero)
-  if (representative_item) {
+  if (representative_item && lowest_price > 0) {
     elements.productTitle.textContent = representative_item.title || keyword;
     elements.lowestPriceDisplay.textContent = formatCurrency(lowest_price);
+    
+    // 단위 단가 표시 (수량 자동 감지)
+    if (elements.unitPriceLabel) {
+      elements.unitPriceLabel.textContent = unit_count > 1 ? `1개/봉당 환산가 (${unit_count}개입)` : '1개당 가격';
+    }
     elements.unitPriceDisplay.textContent = `약 ${formatCurrency(unit_price)}원`;
+
     elements.lowestMallName.textContent = representative_item.mall_name || "네이버 가격비교";
     elements.productScore.textContent = (representative_item.score || 4.88).toFixed(2);
-    elements.productReviewCount.textContent = `${formatCurrency(representative_item.review_count || 104064)}건`;
+    elements.productReviewCount.textContent = `${formatCurrency(representative_item.review_count || 104)}건`;
+
+    // 상품 대표 이미지 동적 교체!
+    if (representative_item.image_url) {
+      elements.productMainImage.src = representative_item.image_url;
+      elements.productMainImage.alt = representative_item.title || keyword;
+    }
+
+    // 태그 동적 업데이트
+    if (elements.productMallTag) elements.productMallTag.textContent = representative_item.mall_name || "네이버 쇼핑";
+    if (elements.productUnitTag) elements.productUnitTag.textContent = unit_count > 1 ? `${unit_count}개 패키지` : "온라인 최저가";
+    if (elements.productBadgeText) elements.productBadgeText.textContent = unit_count > 1 ? `${unit_count}개입 실시간 검증` : "정품 인증 완료";
 
     // 링크 설정
     if (representative_item.url) {
@@ -150,7 +173,7 @@ function renderAll(data) {
 
     // 할인 뱃지
     if (is_special_price && discount_amount > 0) {
-      const discountRate = Math.round((discount_amount / target_price) * 100);
+      const discountRate = target_price > 0 ? Math.round((discount_amount / target_price) * 100) : 0;
       elements.discountBadge.textContent = `목표가 대비 -${formatCurrency(discount_amount)}원 (-${discountRate}%)`;
       elements.discountBadge.className = "text-xs sm:text-sm font-bold text-coupang bg-coupang/10 px-2.5 py-0.5 rounded-lg ml-2";
     } else {
@@ -161,7 +184,7 @@ function renderAll(data) {
   }
 
   // 판매처별 가격 비교 매트릭스 렌더링
-  renderComparisonGrid(top_items);
+  renderComparisonGrid(top_items, unit_count);
 
   // 차트 렌더링
   if (history && history.length > 0) {
@@ -175,7 +198,7 @@ function renderAll(data) {
 }
 
 // 3. 판매처별 가격 비교 리스트 렌더링
-function renderComparisonGrid(items) {
+function renderComparisonGrid(items, unit_count = 1) {
   if (!items || items.length === 0) {
     elements.priceComparisonGrid.innerHTML = `
       <div class="col-span-3 text-center py-12 text-slate-400">
@@ -194,7 +217,8 @@ function renderComparisonGrid(items) {
     const btnClass = isFirst 
       ? "bg-naver text-white hover:bg-naver-dark shadow-xs" 
       : "bg-slate-100 hover:bg-slate-200 text-slate-800";
-    const unitPrice = roundCalcUnitPrice(item.price);
+    const unitPrice = unit_count > 1 ? Math.round(item.price / unit_count) : item.price;
+    const unitText = unit_count > 1 ? `<span class="text-xs text-slate-400 ml-1">(개당 ${formatCurrency(unitPrice)}원)</span>` : '';
     const reviewCnt = item.review_count ? formatCurrency(item.review_count) + "개" : "리뷰 정보 없음";
     const scoreVal = item.score ? `★ ${item.score.toFixed(2)}` : "평점 정보 없음";
 
@@ -212,7 +236,7 @@ function renderComparisonGrid(items) {
           <div class="mt-3 flex items-baseline space-x-1">
             <span class="text-2xl font-black text-slate-900">${formatCurrency(item.price)}</span>
             <span class="text-sm font-bold text-slate-700">원</span>
-            <span class="text-xs text-slate-400 ml-1">(봉당 ${formatCurrency(unitPrice)}원)</span>
+            ${unitText}
           </div>
           <div class="mt-2 text-xs text-slate-500 flex items-center space-x-2">
             <span>${reviewCnt}</span>
@@ -357,7 +381,9 @@ function initEventListeners() {
     e.preventDefault();
     const query = elements.searchInput.value.trim();
     if (query) {
-      loadPriceData(query, state.targetPrice);
+      // 새로운 상품 검색 시 이전 상품의 목표가를 리셋하여 해당 상품 시세에 맞춤
+      const target = (query !== state.keyword) ? 0 : state.targetPrice;
+      loadPriceData(query, target);
     }
   });
 
@@ -365,8 +391,10 @@ function initEventListeners() {
   elements.quickChips.forEach(chip => {
     chip.addEventListener("click", () => {
       const kw = chip.getAttribute("data-keyword");
-      elements.searchInput.value = kw;
-      loadPriceData(kw, state.targetPrice);
+      if (kw) {
+        elements.searchInput.value = kw;
+        loadPriceData(kw, 0);
+      }
     });
   });
 
