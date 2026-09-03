@@ -121,14 +121,20 @@
           </button>
         </form>
 
-        <!-- 인기 검색어 / 빠른 태그 칩 -->
+        <!-- 인기 검색어 / 빠른 태그 칩 (동적 셔플 & 로테이션) -->
         <div class="flex flex-wrap items-center gap-1.5 sm:gap-2 mt-1.5 text-xs text-slate-500 px-1">
-          <span class="font-bold text-slate-400 flex items-center gap-1"><i data-lucide="flame" class="w-3.5 h-3.5 text-coupang"></i> 인기:</span>
-          <button type="button" class="quick-chip px-2 py-0.5 rounded-lg bg-slate-100 hover:bg-emerald-50 hover:text-naver hover:border-naver/30 border border-transparent font-semibold transition-all" data-keyword="농심 신라면 봉지 20개입">#신라면 20개</button>
-          <button type="button" class="quick-chip px-2 py-0.5 rounded-lg bg-slate-100 hover:bg-emerald-50 hover:text-naver hover:border-naver/30 border border-transparent font-semibold transition-all" data-keyword="CJ제일제당 햇반 210g 24개">#햇반 24개</button>
-          <button type="button" class="quick-chip px-2 py-0.5 rounded-lg bg-slate-100 hover:bg-emerald-50 hover:text-naver hover:border-naver/30 border border-transparent font-semibold transition-all" data-keyword="코카콜라 제로 355ml 24캔">#코카콜라 제로</button>
-          <button type="button" class="quick-chip px-2 py-0.5 rounded-lg bg-slate-100 hover:bg-emerald-50 hover:text-naver hover:border-naver/30 border border-transparent font-semibold transition-all" data-keyword="제주 삼다수 2L 6개">#삼다수 2L</button>
-          <button type="button" class="quick-chip hidden md:inline-block px-2 py-0.5 rounded-lg bg-slate-100 hover:bg-emerald-50 hover:text-naver hover:border-naver/30 border border-transparent font-semibold transition-all" data-keyword="오뚜기 진라면 매운맛 40개">#진라면 40개</button>
+          <span class="font-bold text-slate-400 flex items-center gap-1 shrink-0"><i data-lucide="flame" class="w-3.5 h-3.5 text-coupang"></i> 인기:</span>
+          <div id="quickChipsContainer" class="flex flex-wrap items-center gap-1.5 sm:gap-2">
+            <!-- JS 동적 렌더링 -->
+          </div>
+          <button 
+            type="button" 
+            id="shuffleChipsBtn" 
+            class="px-1.5 py-0.5 rounded text-slate-400 hover:text-naver hover:bg-emerald-50 transition-colors flex items-center gap-0.5 text-[11px]" 
+            title="다른 추천 키워드 보기"
+          >
+            <i data-lucide="rotate-cw" class="w-3 h-3"></i>
+          </button>
         </div>
       </div>
 
@@ -201,7 +207,7 @@
         </div>
       </div>
 
-      <!-- 2. 자주 찾는 인기 생필품 TOP 4 (원클릭 퀵 조회 카드) -->
+      <!-- 2. 자주 찾는 인기 생필품 TOP 4 (동적 로테이션 퀵 카드) -->
       <div>
         <div class="flex items-center justify-between mb-4 px-1">
           <div>
@@ -211,74 +217,20 @@
             </h2>
             <p class="text-xs text-slate-500 mt-0.5">카드를 클릭하면 즉시 실시간 가격비교 및 30일 시세 차트가 열립니다.</p>
           </div>
+          <button 
+            type="button" 
+            id="refreshRecommendCardsBtn" 
+            class="inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-xl bg-white border border-slate-200 hover:border-naver/40 hover:bg-emerald-50 text-slate-700 hover:text-naver text-xs font-semibold shadow-2xs transition-all active:scale-95 cursor-pointer"
+            title="다른 인기 생필품 추천 보기"
+          >
+            <i data-lucide="sparkles" class="w-3.5 h-3.5 text-naver"></i>
+            <span class="hidden sm:inline">다른 추천 보기</span>
+            <i data-lucide="rotate-cw" class="w-3 h-3 text-slate-400"></i>
+          </button>
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
-          
-          <!-- 카드 1: 신라면 20개입 -->
-          <div class="welcome-card group bg-white rounded-3xl p-5 border border-slate-200/80 shadow-xs hover:shadow-lg hover:border-naver/40 transition-all duration-300 flex flex-col justify-between cursor-pointer" data-keyword="농심 신라면 봉지 20개입">
-            <div>
-              <div class="flex items-center justify-between mb-3">
-                <span class="text-2xl p-2 rounded-2xl bg-amber-50 border border-amber-100/80">🍜</span>
-                <span class="text-[11px] font-bold text-naver bg-emerald-50 px-2.5 py-1 rounded-full">20개 패키지</span>
-              </div>
-              <h3 class="text-base font-bold text-slate-900 group-hover:text-naver transition-colors">농심 신라면 20개</h3>
-              <p class="text-xs text-slate-500 mt-1">봉지라면 대표 베스트셀러<br>120g 20개 1박스 묶음</p>
-            </div>
-            <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs font-bold text-naver">
-              <span>실시간 최저가 확인</span>
-              <i data-lucide="arrow-right" class="w-4 h-4 group-hover:translate-x-1 transition-transform"></i>
-            </div>
-          </div>
-
-          <!-- 카드 2: 햇반 24개 -->
-          <div class="welcome-card group bg-white rounded-3xl p-5 border border-slate-200/80 shadow-xs hover:shadow-lg hover:border-naver/40 transition-all duration-300 flex flex-col justify-between cursor-pointer" data-keyword="CJ제일제당 햇반 210g 24개">
-            <div>
-              <div class="flex items-center justify-between mb-3">
-                <span class="text-2xl p-2 rounded-2xl bg-slate-50 border border-slate-100">🍚</span>
-                <span class="text-[11px] font-bold text-naver bg-emerald-50 px-2.5 py-1 rounded-full">24개 대용량</span>
-              </div>
-              <h3 class="text-base font-bold text-slate-900 group-hover:text-naver transition-colors">CJ제일제당 햇반 24개</h3>
-              <p class="text-xs text-slate-500 mt-1">즉석밥 국민 필수 생필품<br>210g 24개 박스 특가</p>
-            </div>
-            <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs font-bold text-naver">
-              <span>실시간 최저가 확인</span>
-              <i data-lucide="arrow-right" class="w-4 h-4 group-hover:translate-x-1 transition-transform"></i>
-            </div>
-          </div>
-
-          <!-- 카드 3: 코카콜라 제로 24캔 -->
-          <div class="welcome-card group bg-white rounded-3xl p-5 border border-slate-200/80 shadow-xs hover:shadow-lg hover:border-naver/40 transition-all duration-300 flex flex-col justify-between cursor-pointer" data-keyword="코카콜라 제로 355ml 24캔">
-            <div>
-              <div class="flex items-center justify-between mb-3">
-                <span class="text-2xl p-2 rounded-2xl bg-rose-50 border border-rose-100/80">🥤</span>
-                <span class="text-[11px] font-bold text-naver bg-emerald-50 px-2.5 py-1 rounded-full">24캔 뚱캔</span>
-              </div>
-              <h3 class="text-base font-bold text-slate-900 group-hover:text-naver transition-colors">코카콜라 제로 24캔</h3>
-              <p class="text-xs text-slate-500 mt-1">탄산음료 압도적 1위<br>355ml 24캔 1박스 최저가</p>
-            </div>
-            <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs font-bold text-naver">
-              <span>실시간 최저가 확인</span>
-              <i data-lucide="arrow-right" class="w-4 h-4 group-hover:translate-x-1 transition-transform"></i>
-            </div>
-          </div>
-
-          <!-- 카드 4: 삼다수 2L 6개 -->
-          <div class="welcome-card group bg-white rounded-3xl p-5 border border-slate-200/80 shadow-xs hover:shadow-lg hover:border-naver/40 transition-all duration-300 flex flex-col justify-between cursor-pointer" data-keyword="제주 삼다수 2L 6개">
-            <div>
-              <div class="flex items-center justify-between mb-3">
-                <span class="text-2xl p-2 rounded-2xl bg-sky-50 border border-sky-100/80">💧</span>
-                <span class="text-[11px] font-bold text-naver bg-emerald-50 px-2.5 py-1 rounded-full">2L 6병 팩</span>
-              </div>
-              <h3 class="text-base font-bold text-slate-900 group-hover:text-naver transition-colors">제주 삼다수 2L 6개</h3>
-              <p class="text-xs text-slate-500 mt-1">국민 생수 정기 구매 필수<br>2L 6병 묶음 배송비 비교</p>
-            </div>
-            <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs font-bold text-naver">
-              <span>실시간 최저가 확인</span>
-              <i data-lucide="arrow-right" class="w-4 h-4 group-hover:translate-x-1 transition-transform"></i>
-            </div>
-          </div>
-
+        <div id="welcomeCardsContainer" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5 transition-opacity duration-200">
+          <!-- JS에서 인기 생필품 풀에서 4개를 동적으로 렌더링 -->
         </div>
       </div>
 

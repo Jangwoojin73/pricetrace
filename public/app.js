@@ -55,6 +55,154 @@ function normalizeProductUrl(url, title = "") {
   return trimmed;
 }
 
+// 16대 인기 국민 생필품 추천 풀 (동적 셔플 & 로테이션용)
+const RECOMMENDED_PRODUCTS_POOL = [
+  {
+    keyword: "농심 신라면 봉지 20개입",
+    shortName: "신라면 20개",
+    tag: "20개 패키지",
+    title: "농심 신라면 20개",
+    desc: "봉지라면 대표 베스트셀러<br>120g 20개 1박스 묶음",
+    icon: "🍜",
+    bgClass: "bg-amber-50 border-amber-100/80"
+  },
+  {
+    keyword: "CJ제일제당 햇반 210g 24개",
+    shortName: "햇반 24개",
+    tag: "24개 대용량",
+    title: "CJ제일제당 햇반 24개",
+    desc: "즉석밥 국민 필수 생필품<br>210g 24개 박스 특가",
+    icon: "🍚",
+    bgClass: "bg-slate-50 border-slate-100"
+  },
+  {
+    keyword: "코카콜라 제로 355ml 24캔",
+    shortName: "코카콜라 제로",
+    tag: "24캔 뚱캔",
+    title: "코카콜라 제로 24캔",
+    desc: "탄산음료 압도적 1위<br>355ml 24캔 1박스 최저가",
+    icon: "🥤",
+    bgClass: "bg-rose-50 border-rose-100/80"
+  },
+  {
+    keyword: "제주 삼다수 2L 6개",
+    shortName: "삼다수 2L",
+    tag: "2L 6병 팩",
+    title: "제주 삼다수 2L 6개",
+    desc: "국민 생수 정기 구매 필수<br>2L 6병 묶음 배송비 비교",
+    icon: "💧",
+    bgClass: "bg-sky-50 border-sky-100/80"
+  },
+  {
+    keyword: "오뚜기 진라면 매운맛 40개",
+    shortName: "진라면 40개",
+    tag: "40개 박스",
+    title: "오뚜기 진라면 40개",
+    desc: "가성비 라면 최강자<br>120g 40개 벌크 대용량",
+    icon: "🍜",
+    bgClass: "bg-amber-50 border-amber-100/80"
+  },
+  {
+    keyword: "맥심 모카골드 마일드 160T",
+    shortName: "맥심 커피 160T",
+    tag: "160개 스틱",
+    title: "맥심 모카골드 160T",
+    desc: "국민 믹스커피 대용량<br>사무실·가정 필수 상비품",
+    icon: "☕",
+    bgClass: "bg-yellow-50 border-yellow-100/80"
+  },
+  {
+    keyword: "크리넥스 3겹 데코소프트 30롤",
+    shortName: "크리넥스 30롤",
+    tag: "30롤 팩",
+    title: "크리넥스 롤화장지 30롤",
+    desc: "도톰한 3겹 천연펄프<br>프리미엄 롤티슈 최저가",
+    icon: "🧻",
+    bgClass: "bg-purple-50 border-purple-100/80"
+  },
+  {
+    keyword: "퍼실 파워젤 액체세제 2.7L",
+    shortName: "퍼실 세제 2.7L",
+    tag: "2.7L 대용량",
+    title: "퍼실 드럼 액체세제",
+    desc: "독일 No.1 세탁세제<br>딥클린 테크놀로지 특가",
+    icon: "🧼",
+    bgClass: "bg-emerald-50 border-emerald-100/80"
+  },
+  {
+    keyword: "동원참치 100g 10캔",
+    shortName: "동원참치 10캔",
+    tag: "10캔 세트",
+    title: "동원참치 라이트 10캔",
+    desc: "살코기 참치 국민 반찬<br>100g 10캔 묶음 실속팩",
+    icon: "🐟",
+    bgClass: "bg-blue-50 border-blue-100/80"
+  },
+  {
+    keyword: "베베숲 시그니처 물티슈 70매 10팩",
+    shortName: "베베숲 물티슈 10팩",
+    tag: "10팩 캡형",
+    title: "베베숲 프리미엄 물티슈",
+    desc: "엠보싱 고평점 물티슈<br>70매 10팩 대용량 박스",
+    icon: "👶",
+    bgClass: "bg-indigo-50 border-indigo-100/80"
+  },
+  {
+    keyword: "오뚜기 맛있는 오뚜기밥 210g 24개",
+    shortName: "오뚜기밥 24개",
+    tag: "24개 박스",
+    title: "맛있는 오뚜기밥 24개",
+    desc: "가성비 즉석밥 대표<br>210g 24개 1박스 특가",
+    icon: "🍚",
+    bgClass: "bg-orange-50 border-orange-100/80"
+  },
+  {
+    keyword: "농심 안성탕면 20개",
+    shortName: "안성탕면 20개",
+    tag: "20개 묶음",
+    title: "농심 안성탕면 20개",
+    desc: "구수한 된장 베이스 라면<br>125g 20개 1박스 최저가",
+    icon: "🍜",
+    bgClass: "bg-amber-50 border-amber-100/80"
+  },
+  {
+    keyword: "칠성사이다 제로 355ml 24캔",
+    shortName: "칠성사이다 제로",
+    tag: "24캔 박스",
+    title: "칠성사이다 제로 24캔",
+    desc: "짜릿한 청량감 끝판왕<br>355ml 24캔 뚱캔 박스",
+    icon: "🍏",
+    bgClass: "bg-emerald-50 border-emerald-100/80"
+  },
+  {
+    keyword: "다우니 섬유유연제 블루 1L 3개",
+    shortName: "다우니 3개",
+    tag: "3개 세트",
+    title: "다우니 섬유유연제 3개",
+    desc: "초고농축 상쾌한 향기<br>1L 3개 묶음 배송비 절약",
+    icon: "🌸",
+    bgClass: "bg-pink-50 border-pink-100/80"
+  },
+  {
+    keyword: "페브리즈 섬유탈취제 상쾌한향 리필 4개",
+    shortName: "페브리즈 리필 4개",
+    tag: "4개 리필",
+    title: "페브리즈 리필 4개입",
+    desc: "강력 항균 탈취 리필<br>가성비 4개 묶음 패키지",
+    icon: "✨",
+    bgClass: "bg-sky-50 border-sky-100/80"
+  },
+  {
+    keyword: "스팸 클래식 200g 10개",
+    shortName: "스팸 10캔",
+    tag: "10캔 세트",
+    title: "CJ 스팸 클래식 10캔",
+    desc: "국민 밥도둑 정품 캔햄<br>200g 10개 실속 묶음",
+    icon: "🍖",
+    bgClass: "bg-rose-50 border-rose-100/80"
+  }
+];
+
 // DOM 요소 캐시
 const elements = {
   // 뷰 컨테이너
@@ -62,7 +210,8 @@ const elements = {
   resultView: document.getElementById("resultView"),
   backToHomeBtn: document.getElementById("backToHomeBtn"),
   currentSearchKeywordText: document.getElementById("currentSearchKeywordText"),
-  welcomeCards: document.querySelectorAll(".welcome-card"),
+  welcomeCardsContainer: document.getElementById("welcomeCardsContainer"),
+  refreshRecommendCardsBtn: document.getElementById("refreshRecommendCardsBtn"),
 
   // 배너 및 헤더
   topBannerText: document.getElementById("topBannerText"),
@@ -79,7 +228,8 @@ const elements = {
   searchForm: document.getElementById("searchForm"),
   searchInput: document.getElementById("searchInput"),
   clearSearchBtn: document.getElementById("clearSearchBtn"),
-  quickChips: document.querySelectorAll(".quick-chip"),
+  quickChipsContainer: document.getElementById("quickChipsContainer"),
+  shuffleChipsBtn: document.getElementById("shuffleChipsBtn"),
   refreshBtn: document.getElementById("refreshBtn"),
   refreshIcon: document.getElementById("refreshIcon"),
 
@@ -491,8 +641,119 @@ function showErrorNotification(msg) {
   alert(`데이터 조회 중 오류가 발생했습니다: ${msg}\n네트워크 또는 로컬 서버 상태를 확인하세요.`);
 }
 
-// 6. 이벤트 리스너 등록
+// 6. 인기 생필품 추천 풀 셔플 및 동적 렌더링
+function shuffleArray(arr) {
+  const copy = [...arr];
+  for (let i = copy.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [copy[i], copy[j]] = [copy[j], copy[i]];
+  }
+  return copy;
+}
+
+let recommendationRotationTimer = null;
+
+function shuffleAndRenderRecommendations(animate = false) {
+  const shuffled = shuffleArray(RECOMMENDED_PRODUCTS_POOL);
+
+  // 1. 상단 인기 검색어 칩 (상위 5개) 렌더링
+  if (elements.quickChipsContainer) {
+    const topChips = shuffled.slice(0, 5);
+    elements.quickChipsContainer.innerHTML = topChips.map(item => `
+      <button 
+        type="button" 
+        class="quick-chip px-2 py-0.5 rounded-lg bg-slate-100 hover:bg-emerald-50 hover:text-naver hover:border-naver/30 border border-transparent font-semibold transition-all cursor-pointer" 
+        data-keyword="${item.keyword}"
+      >#${item.shortName}</button>
+    `).join("");
+
+    // 칩 클릭 이벤트 연결
+    elements.quickChipsContainer.querySelectorAll(".quick-chip").forEach(chip => {
+      chip.addEventListener("click", () => {
+        const kw = chip.getAttribute("data-keyword");
+        if (kw) {
+          elements.searchInput.value = kw;
+          updateClearBtn();
+          loadPriceData(kw, 0);
+        }
+      });
+    });
+  }
+
+  // 2. 메인 웰컴 추천 카드 (상위 4개) 렌더링
+  if (elements.welcomeCardsContainer) {
+    const topCards = shuffled.slice(0, 4);
+
+    if (animate) {
+      elements.welcomeCardsContainer.classList.add("opacity-20");
+    }
+
+    setTimeout(() => {
+      elements.welcomeCardsContainer.innerHTML = topCards.map(item => `
+        <div class="welcome-card group bg-white rounded-3xl p-5 border border-slate-200/80 shadow-xs hover:shadow-lg hover:border-naver/40 transition-all duration-300 flex flex-col justify-between cursor-pointer" data-keyword="${item.keyword}">
+          <div>
+            <div class="flex items-center justify-between mb-3">
+              <span class="text-2xl p-2 rounded-2xl ${item.bgClass}">${item.icon}</span>
+              <span class="text-[11px] font-bold text-naver bg-emerald-50 px-2.5 py-1 rounded-full">${item.tag}</span>
+            </div>
+            <h3 class="text-base font-bold text-slate-900 group-hover:text-naver transition-colors">${item.title}</h3>
+            <p class="text-xs text-slate-500 mt-1">${item.desc}</p>
+          </div>
+          <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs font-bold text-naver">
+            <span>실시간 최저가 확인</span>
+            <i data-lucide="arrow-right" class="w-4 h-4 group-hover:translate-x-1 transition-transform"></i>
+          </div>
+        </div>
+      `).join("");
+
+      if (animate) {
+        elements.welcomeCardsContainer.classList.remove("opacity-20");
+      }
+
+      // 웰컴 카드 클릭 이벤트 연결
+      elements.welcomeCardsContainer.querySelectorAll(".welcome-card").forEach(card => {
+        card.addEventListener("click", () => {
+          const kw = card.getAttribute("data-keyword");
+          if (kw) {
+            elements.searchInput.value = kw;
+            updateClearBtn();
+            loadPriceData(kw, 0);
+          }
+        });
+      });
+
+      if (window.lucide) window.lucide.createIcons();
+    }, animate ? 150 : 0);
+  }
+}
+
+// 30초마다 자동 로테이션
+function startRecommendationRotation() {
+  if (recommendationRotationTimer) clearInterval(recommendationRotationTimer);
+  recommendationRotationTimer = setInterval(() => {
+    // 웰컴 화면 상태일 때만 부드럽게 추천 항목 변경
+    if (state.view === "welcome") {
+      shuffleAndRenderRecommendations(true);
+    }
+  }, 30000);
+}
+
+// 7. 이벤트 리스너 등록
 function initEventListeners() {
+  // 추천 칩 셔플 버튼
+  if (elements.shuffleChipsBtn) {
+    elements.shuffleChipsBtn.addEventListener("click", () => {
+      shuffleAndRenderRecommendations(true);
+    });
+  }
+
+  // 웰컴 카드 '다른 추천 보기' 버튼
+  if (elements.refreshRecommendCardsBtn) {
+    elements.refreshRecommendCardsBtn.addEventListener("click", () => {
+      shuffleAndRenderRecommendations(true);
+    });
+  }
+
   // 검색창 입력 감지 -> 지우기 버튼 토글
   if (elements.searchInput) {
     elements.searchInput.addEventListener("input", updateClearBtn);
@@ -511,6 +772,7 @@ function initEventListeners() {
   if (elements.backToHomeBtn) {
     elements.backToHomeBtn.addEventListener("click", () => {
       switchToWelcomeView();
+      shuffleAndRenderRecommendations(false);
     });
   }
 
@@ -520,20 +782,7 @@ function initEventListeners() {
     logoLink.addEventListener("click", (e) => {
       e.preventDefault();
       switchToWelcomeView();
-    });
-  }
-
-  // 웰컴 퀵 카드 클릭
-  if (elements.welcomeCards) {
-    elements.welcomeCards.forEach(card => {
-      card.addEventListener("click", () => {
-        const kw = card.getAttribute("data-keyword");
-        if (kw) {
-          elements.searchInput.value = kw;
-          updateClearBtn();
-          loadPriceData(kw, 0);
-        }
-      });
+      shuffleAndRenderRecommendations(false);
     });
   }
 
@@ -548,24 +797,13 @@ function initEventListeners() {
     }
   });
 
-  // 퀵 칩 클릭
-  elements.quickChips.forEach(chip => {
-    chip.addEventListener("click", () => {
-      const kw = chip.getAttribute("data-keyword");
-      if (kw) {
-        elements.searchInput.value = kw;
-        updateClearBtn();
-        loadPriceData(kw, 0);
-      }
-    });
-  });
-
   // 실시간 갱신 버튼
   elements.refreshBtn.addEventListener("click", () => {
     if (state.keyword) {
       loadPriceData(state.keyword, state.targetPrice);
     } else {
       switchToWelcomeView();
+      shuffleAndRenderRecommendations(true);
     }
   });
 
@@ -614,6 +852,7 @@ function initEventListeners() {
       loadPriceData(q.trim(), 0);
     } else {
       switchToWelcomeView();
+      shuffleAndRenderRecommendations(false);
     }
   });
 }
@@ -621,6 +860,10 @@ function initEventListeners() {
 // 초기 실행
 document.addEventListener("DOMContentLoaded", () => {
   initEventListeners();
+
+  // 인기 추천 풀 셔플 렌더링 및 자동 로테이션 시작
+  shuffleAndRenderRecommendations(false);
+  startRecommendationRotation();
 
   // URL에 ?q=검색어가 있으면 해당 상품 조회, 없으면 초기 웰컴 화면 노출
   const urlParams = new URLSearchParams(window.location.search);
