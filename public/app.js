@@ -541,10 +541,10 @@ function renderChart(history, targetPrice) {
     state.chart.destroy();
   }
 
-  // 그라데이션 배경 생성
+  // 그라데이션 배경 생성 (청금석 Lapis Lazuli 테마)
   const gradient = ctx.createLinearGradient(0, 0, 0, 260);
-  gradient.addColorStop(0, "rgba(3, 199, 90, 0.28)");
-  gradient.addColorStop(1, "rgba(3, 199, 90, 0.0)");
+  gradient.addColorStop(0, "rgba(29, 78, 216, 0.25)");
+  gradient.addColorStop(1, "rgba(29, 78, 216, 0.0)");
 
   state.chart = new Chart(ctx, {
     type: "line",
@@ -554,14 +554,14 @@ function renderChart(history, targetPrice) {
         {
           label: "실시간 최저가 (원)",
           data: priceData,
-          borderColor: "#03C75A",
+          borderColor: "#1D4ED8",
           backgroundColor: gradient,
           borderWidth: 2.5,
           fill: true,
           tension: 0.35,
           pointRadius: 2.5,
           pointHoverRadius: 6,
-          pointBackgroundColor: "#03C75A"
+          pointBackgroundColor: "#1D4ED8"
         },
         {
           label: "목표 알림가 (원)",
@@ -662,7 +662,7 @@ function shuffleAndRenderRecommendations(animate = false) {
     elements.quickChipsContainer.innerHTML = topChips.map(item => `
       <button 
         type="button" 
-        class="quick-chip px-2 py-0.5 rounded-lg bg-slate-100 hover:bg-emerald-50 hover:text-naver hover:border-naver/30 border border-transparent font-semibold transition-all cursor-pointer" 
+        class="quick-chip px-2 py-0.5 rounded-lg bg-slate-100 hover:bg-blue-50 hover:text-blue-600 hover:border-blue-600/30 border border-transparent font-semibold transition-all cursor-pointer" 
         data-keyword="${item.keyword}"
       >#${item.shortName}</button>
     `).join("");
@@ -690,16 +690,16 @@ function shuffleAndRenderRecommendations(animate = false) {
 
     setTimeout(() => {
       elements.welcomeCardsContainer.innerHTML = topCards.map(item => `
-        <div class="welcome-card group bg-white rounded-3xl p-5 border border-slate-200/80 shadow-xs hover:shadow-lg hover:border-naver/40 transition-all duration-300 flex flex-col justify-between cursor-pointer" data-keyword="${item.keyword}">
+        <div class="welcome-card group bg-white rounded-3xl p-5 border border-slate-200/80 shadow-xs hover:shadow-lg hover:border-blue-600/40 transition-all duration-300 flex flex-col justify-between cursor-pointer" data-keyword="${item.keyword}">
           <div>
             <div class="flex items-center justify-between mb-3">
               <span class="text-2xl p-2 rounded-2xl ${item.bgClass}">${item.icon}</span>
-              <span class="text-[11px] font-bold text-naver bg-emerald-50 px-2.5 py-1 rounded-full">${item.tag}</span>
+              <span class="text-[11px] font-bold text-blue-700 bg-blue-50 px-2.5 py-1 rounded-full">${item.tag}</span>
             </div>
-            <h3 class="text-base font-bold text-slate-900 group-hover:text-naver transition-colors">${item.title}</h3>
+            <h3 class="text-base font-bold text-slate-900 group-hover:text-blue-600 transition-colors">${item.title}</h3>
             <p class="text-xs text-slate-500 mt-1">${item.desc}</p>
           </div>
-          <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs font-bold text-naver">
+          <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs font-bold text-blue-600">
             <span>실시간 최저가 확인</span>
             <i data-lucide="arrow-right" class="w-4 h-4 group-hover:translate-x-1 transition-transform"></i>
           </div>

@@ -5,20 +5,20 @@ html {
   scroll-behavior: smooth;
 }
 
-/* 특가 발생 시 배너 스타일 */
+/* 특가 발생 시 배너 스타일 (청금석 Lapis Lazuli 테마) */
 .banner-special {
-  background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 50%, #f0fdf4 100%);
-  border: 2px solid #10b981;
+  background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 50%, #e0e7ff 100%);
+  border: 2px solid #1d4ed8;
 }
 
 .banner-special #alertIconBox {
-  background-color: #10b981;
+  background-color: #1d4ed8;
   color: white;
-  box-shadow: 0 4px 14px 0 rgba(16, 185, 129, 0.35);
+  box-shadow: 0 4px 14px 0 rgba(29, 78, 216, 0.35);
 }
 
 .banner-special #alertStatusBadge {
-  background-color: #10b981;
+  background-color: #1d4ed8;
   color: white;
 }
 
@@ -74,17 +74,17 @@ html {
 }
 
 .quick-chip:hover {
-  color: #03C75A;
+  color: #1D4ED8;
   transform: translateY(-1px);
 }
 
 /* 버튼 펄스 효과 */
 @keyframes pulse-glow {
   0%, 100% {
-    box-shadow: 0 0 0 0 rgba(3, 199, 90, 0.4);
+    box-shadow: 0 0 0 0 rgba(29, 78, 216, 0.4);
   }
   50% {
-    box-shadow: 0 0 0 10px rgba(3, 199, 90, 0);
+    box-shadow: 0 0 0 10px rgba(29, 78, 216, 0);
   }
 }
 

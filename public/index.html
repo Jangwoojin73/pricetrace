@@ -31,10 +31,16 @@
             sans: ['Pretendard', '-apple-system', 'BlinkMacSystemFont', 'system-ui', 'Roboto', 'sans-serif'],
           },
           colors: {
+            lapis: {
+              DEFAULT: '#1D4ED8', // 고귀하고 선명한 청금석 로열 블루
+              dark: '#1E3A8A',    // 깊은 청남색
+              light: '#EFF6FF',   // 부드러운 스카이 틴트
+              vivid: '#2563EB'    // 비비드 코발트
+            },
             naver: {
-              DEFAULT: '#03C75A',
-              dark: '#029f48',
-              light: '#e6f9ef'
+              DEFAULT: '#1D4ED8', // 기존 호환성을 위해 청금석 블루로 매핑
+              dark: '#1E3A8A',
+              light: '#EFF6FF'
             },
             coupang: {
               DEFAULT: '#E52528',
@@ -52,7 +58,7 @@
     }
   </script>
 </head>
-<body class="bg-surface-50 text-slate-800 font-sans antialiased selection:bg-naver selection:text-white min-h-screen flex flex-col">
+<body class="bg-surface-50 text-slate-800 font-sans antialiased selection:bg-lapis selection:text-white min-h-screen flex flex-col">
 
   <!-- 1. 최상단 실시간 특가 알림 바 (쿠팡/네이버 공통 배너 스타일) -->
   <div class="bg-slate-900 text-white text-xs sm:text-sm py-2 px-4 shadow-sm border-b border-slate-800">
@@ -78,12 +84,12 @@
       
       <!-- 브랜드 로고 -->
       <a href="/" class="flex items-center space-x-2.5 group shrink-0">
-        <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-naver to-emerald-400 flex items-center justify-center text-white shadow-md shadow-naver/20 group-hover:scale-105 transition-transform">
+        <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-blue-700 via-blue-600 to-indigo-500 flex items-center justify-center text-white shadow-md shadow-blue-700/30 group-hover:scale-105 transition-transform">
           <i data-lucide="scan-line" class="w-5 h-5"></i>
         </div>
         <div>
           <span class="text-xl font-black tracking-tight text-slate-900 flex items-center gap-1">
-            Price<span class="text-naver">Trace</span>
+            Price<span class="text-blue-600">Trace</span>
           </span>
           <p class="text-[11px] text-slate-500 font-medium -mt-1 hidden sm:block">스마트 이커머스 최저가 레이더</p>
         </div>
@@ -130,7 +136,7 @@
           <button 
             type="button" 
             id="shuffleChipsBtn" 
-            class="px-1.5 py-0.5 rounded text-slate-400 hover:text-naver hover:bg-emerald-50 transition-colors flex items-center gap-0.5 text-[11px]" 
+            class="px-1.5 py-0.5 rounded text-slate-400 hover:text-blue-600 hover:bg-blue-50 transition-colors flex items-center gap-0.5 text-[11px]" 
             title="다른 추천 키워드 보기"
           >
             <i data-lucide="rotate-cw" class="w-3 h-3"></i>
@@ -153,7 +159,7 @@
           id="openConfigModalBtn" 
           class="flex items-center space-x-1.5 px-3.5 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold shadow-xs transition-all active:scale-95"
         >
-          <i data-lucide="sliders" class="w-4 h-4 text-emerald-400"></i>
+          <i data-lucide="sliders" class="w-4 h-4 text-blue-400"></i>
           <span class="hidden sm:inline">목표가</span> <span id="btnTargetPriceDisplay">15,000원</span>
         </button>
       </div>
@@ -169,21 +175,21 @@
     <!-- ============================================== -->
     <div id="welcomeView" class="space-y-10">
 
-      <!-- 1. 웰컴 히어로 헤더 -->
-      <div class="relative overflow-hidden rounded-3xl bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white p-7 sm:p-10 shadow-xl border border-slate-700/50">
+      <!-- 1. 웰컴 히어로 헤더 (청금석 라피스 라줄리 프리미엄 테마) -->
+      <div class="relative overflow-hidden rounded-3xl bg-gradient-to-br from-slate-950 via-slate-900 to-blue-950 text-white p-7 sm:p-10 shadow-2xl border border-blue-900/50">
         <!-- 배경 장식 글로우 -->
-        <div class="absolute -right-20 -top-20 w-80 h-80 bg-emerald-500/20 rounded-full blur-3xl pointer-events-none"></div>
-        <div class="absolute -left-20 -bottom-20 w-80 h-80 bg-naver/20 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="absolute -right-20 -top-20 w-80 h-80 bg-blue-600/20 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="absolute -left-20 -bottom-20 w-80 h-80 bg-indigo-600/25 rounded-full blur-3xl pointer-events-none"></div>
 
         <div class="relative z-10 max-w-3xl space-y-4">
-          <div class="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 text-xs font-bold tracking-wide uppercase">
-            <i data-lucide="sparkles" class="w-3.5 h-3.5 text-emerald-400"></i>
+          <div class="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-blue-500/15 border border-blue-400/30 text-sky-300 text-xs font-bold tracking-wide uppercase">
+            <i data-lucide="sparkles" class="w-3.5 h-3.5 text-sky-400"></i>
             <span>실시간 이커머스 최저가 추적 레이더</span>
           </div>
 
           <h1 class="text-2xl sm:text-4xl font-black tracking-tight text-white leading-tight">
             광고는 거르고,<br class="hidden sm:block">
-            <span class="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-naver">1개당 진짜 최저가</span>를 찾아드립니다
+            <span class="text-transparent bg-clip-text bg-gradient-to-r from-sky-300 via-blue-400 to-indigo-300">1개당 진짜 최저가</span>를 찾아드립니다
           </h1>
 
           <p class="text-slate-300 text-xs sm:text-sm font-normal leading-relaxed pt-1">
@@ -192,15 +198,15 @@
           </p>
 
           <div class="pt-2 flex flex-wrap items-center gap-3 text-xs text-slate-300">
-            <span class="flex items-center gap-1 text-emerald-400 font-semibold">
+            <span class="flex items-center gap-1 text-sky-400 font-semibold">
               <i data-lucide="check-circle-2" class="w-4 h-4"></i> 광고(AD) 자동 필터링
             </span>
             <span class="text-slate-600">•</span>
-            <span class="flex items-center gap-1 text-emerald-400 font-semibold">
+            <span class="flex items-center gap-1 text-sky-400 font-semibold">
               <i data-lucide="check-circle-2" class="w-4 h-4"></i> 1개당 단가 자동 환산
             </span>
             <span class="text-slate-600">•</span>
-            <span class="flex items-center gap-1 text-emerald-400 font-semibold">
+            <span class="flex items-center gap-1 text-sky-400 font-semibold">
               <i data-lucide="check-circle-2" class="w-4 h-4"></i> 30일 시세 변동 추이
             </span>
           </div>
@@ -220,10 +226,10 @@
           <button 
             type="button" 
             id="refreshRecommendCardsBtn" 
-            class="inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-xl bg-white border border-slate-200 hover:border-naver/40 hover:bg-emerald-50 text-slate-700 hover:text-naver text-xs font-semibold shadow-2xs transition-all active:scale-95 cursor-pointer"
+            class="inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-xl bg-white border border-slate-200 hover:border-blue-600/40 hover:bg-blue-50 text-slate-700 hover:text-blue-600 text-xs font-semibold shadow-2xs transition-all active:scale-95 cursor-pointer"
             title="다른 인기 생필품 추천 보기"
           >
-            <i data-lucide="sparkles" class="w-3.5 h-3.5 text-naver"></i>
+            <i data-lucide="sparkles" class="w-3.5 h-3.5 text-blue-600"></i>
             <span class="hidden sm:inline">다른 추천 보기</span>
             <i data-lucide="rotate-cw" class="w-3 h-3 text-slate-400"></i>
           </button>
@@ -237,13 +243,13 @@
       <!-- 3. PriceTrace 핵심 가치 (Why PriceTrace?) -->
       <div class="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/80 shadow-xs">
         <h3 class="text-base sm:text-lg font-black text-slate-900 mb-6 flex items-center space-x-2">
-          <i data-lucide="shield-check" class="w-5 h-5 text-naver"></i>
+          <i data-lucide="shield-check" class="w-5 h-5 text-blue-600"></i>
           <span>PriceTrace가 다른 검색과 다른 3가지 이유</span>
         </h3>
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div class="space-y-2.5 p-4 rounded-2xl bg-slate-50/80 border border-slate-100">
-            <div class="w-10 h-10 rounded-xl bg-emerald-100 text-naver flex items-center justify-center font-bold">
+            <div class="w-10 h-10 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center font-bold">
               <i data-lucide="filter" class="w-5 h-5"></i>
             </div>
             <h4 class="font-bold text-sm text-slate-900">클린 필터링 (광고 제외)</h4>
@@ -343,8 +349,8 @@
             <i data-lucide="check" class="w-3.5 h-3.5"></i>
             <span>네이버 쇼핑 공식 카탈로그 연동</span>
           </span>
-          <span class="inline-flex items-center space-x-1 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-800 border border-emerald-200">
-            <i data-lucide="sparkles" class="w-3 h-3 text-emerald-600"></i>
+          <span class="inline-flex items-center space-x-1 px-3 py-1 rounded-full text-xs font-semibold bg-blue-50 text-blue-800 border border-blue-200">
+            <i data-lucide="sparkles" class="w-3 h-3 text-blue-600"></i>
             <span>광고(AD) 제외 완료</span>
           </span>
         </div>
@@ -408,14 +414,14 @@
                 누적 리뷰 <strong class="text-slate-900 font-bold" id="productReviewCount">104,064건</strong>
               </div>
               <span class="text-slate-300">|</span>
-              <div class="text-xs text-emerald-600 font-semibold flex items-center">
+              <div class="text-xs text-blue-600 font-semibold flex items-center">
                 <i data-lucide="truck" class="w-3.5 h-3.5 mr-1"></i> 무료배송 혜택 포함
               </div>
             </div>
           </div>
 
           <!-- 실시간 최저가 가격 박스 (핵심 강조) -->
-          <div class="bg-gradient-to-br from-slate-50 to-emerald-50/30 rounded-3xl p-6 border border-slate-200/90">
+          <div class="bg-gradient-to-br from-slate-50 to-blue-50/40 rounded-3xl p-6 border border-slate-200/90">
             <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
               <div>
                 <span class="text-xs font-bold text-slate-500 uppercase tracking-wide block mb-1">
@@ -577,14 +583,14 @@
         <div class="flex flex-wrap items-center justify-between gap-2 mb-4">
           <div>
             <h3 class="text-lg font-black text-slate-900 flex items-center space-x-2">
-              <i data-lucide="trending-down" class="w-5 h-5 text-naver"></i>
+              <i data-lucide="trending-down" class="w-5 h-5 text-blue-600"></i>
               <span>최근 30일 가격 변동 트렌드</span>
             </h3>
             <p class="text-xs text-slate-500 mt-0.5">실시간 수집된 일자별 최저가 추이 그래프</p>
           </div>
           <div class="flex items-center space-x-3 text-xs font-semibold">
-            <span class="flex items-center text-emerald-600">
-              <span class="w-3 h-1 bg-emerald-500 rounded-full mr-1.5"></span> 실시간 최저가
+            <span class="flex items-center text-blue-600">
+              <span class="w-3 h-1 bg-blue-600 rounded-full mr-1.5"></span> 실시간 최저가
             </span>
             <span class="flex items-center text-slate-400">
               <span class="w-3 h-1 bg-slate-300 rounded-full mr-1.5 border border-dashed border-slate-400"></span> 목표 알림선 (15,000원)
@@ -597,11 +603,11 @@
         </div>
       </div>
 
-      <!-- 구매 타이밍 진단기 & 가이드 (4 cols) -->
-      <div class="lg:col-span-4 bg-gradient-to-br from-slate-900 to-slate-800 text-white rounded-3xl p-6 sm:p-7 shadow-md flex flex-col justify-between space-y-6">
+      <!-- 구매 타이밍 진단기 & 가이드 (4 cols, 청금석 Lapis Lazuli 테마) -->
+      <div class="lg:col-span-4 bg-gradient-to-br from-slate-950 via-slate-900 to-blue-950 text-white rounded-3xl p-6 sm:p-7 shadow-md flex flex-col justify-between space-y-6 border border-blue-900/40">
         <div>
           <div class="flex items-center justify-between">
-            <span class="text-[11px] font-bold uppercase tracking-widest text-emerald-400 bg-emerald-950/60 px-2.5 py-1 rounded-full border border-emerald-800">
+            <span class="text-[11px] font-bold uppercase tracking-widest text-sky-300 bg-blue-950/80 px-2.5 py-1 rounded-full border border-blue-800">
               AI 구매 타이밍 진단
             </span>
             <i data-lucide="zap" class="w-5 h-5 text-amber-400"></i>
@@ -611,7 +617,7 @@
           
           <div class="mt-4 p-4 rounded-2xl bg-white/10 backdrop-blur border border-white/10">
             <div class="text-xs text-slate-300 font-medium">현재 상태 판단</div>
-            <div class="text-lg font-black text-emerald-300 mt-1 flex items-center">
+            <div class="text-lg font-black text-sky-300 mt-1 flex items-center">
               <i data-lucide="check-circle" class="w-5 h-5 mr-1.5"></i>
               <span>강력 구매 추천</span>
             </div>
@@ -632,7 +638,7 @@
           </div>
           <div class="flex items-center justify-between text-xs text-slate-300 pb-1">
             <span>30일 최저가 (현재)</span>
-            <span class="font-extrabold text-emerald-400 text-sm">13,200원</span>
+            <span class="font-extrabold text-sky-300 text-sm">13,200원</span>
           </div>
 
           <button id="directBuySubBtn" class="w-full mt-3 py-3 bg-naver hover:bg-naver-dark text-white text-xs font-black rounded-xl shadow-lg shadow-naver/30 transition-all flex items-center justify-center space-x-1.5">
