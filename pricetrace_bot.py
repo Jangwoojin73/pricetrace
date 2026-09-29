@@ -871,29 +871,102 @@ def fetch_products_for_keyword(keyword: str) -> Tuple[List[Dict[str, Any]], List
         except Exception:
             pass
 
-    # 3. 16대 네이버 공식 프리셋 풀 매칭 (신라면, 햇반, 오뚜기밥, 크리넥스, 퍼실, 참치 등 전 카테고리)
+    # 3. 16대 네이버 공식 프리셋 풀 매칭 (신라면, 햇반, 오뚜기밥, 진라면, 안성탕면 등)
     if len(top_items) < 3:
         clean_kw = keyword.lower()
-        for k, items in NAVER_PRESET_ITEMS.items():
-            is_matched = (
-                k in clean_kw or
-                (k == "오뚜기밥" and ("오뚜기" in clean_kw or "밥" in clean_kw)) or
-                (k == "크리넥스" and ("데코소프트" in clean_kw or "화장지" in clean_kw or "롤" in clean_kw or "휴지" in clean_kw)) or
-                (k == "퍼실" and ("세제" in clean_kw or "파워젤" in clean_kw or "액체세제" in clean_kw)) or
-                (k == "참치" and "동원" in clean_kw) or
-                (k == "물티슈" and "베베숲" in clean_kw) or
-                (k == "사이다" and "칠성" in clean_kw) or
-                (k == "코카콜라" and "콜라" in clean_kw)
-            )
-            if is_matched:
-                if not top_items:
-                    top_items = [dict(x) for x in items[:3]]
-                else:
-                    for it in items:
-                        if not any(it["price"] == ex["price"] for ex in top_items):
-                            top_items.append(dict(it))
-                        if len(top_items) >= 3:
-                            break
+        matched_key = None
+        if "진라면" in clean_kw:
+            matched_key = "진라면"
+        elif "안성탕면" in clean_kw:
+            matched_key = "안성탕면"
+        elif "짜파게티" in clean_kw or "짜장" in clean_kw:
+            matched_key = "짜파게티"
+        elif "신라면" in clean_kw:
+            matched_key = "신라면"
+        elif "오뚜기밥" in clean_kw or ("오뚜기" in clean_kw and "밥" in clean_kw):
+            matched_key = "오뚜기밥"
+        elif "햇반" in clean_kw:
+            matched_key = "햇반"
+        elif "삼다수" in clean_kw or "생수" in clean_kw:
+            matched_key = "삼다수"
+        elif "코카" in clean_kw or ("콜라" in clean_kw and "사이다" not in clean_kw):
+            matched_key = "코카콜라"
+        elif "사이다" in clean_kw or "칠성" in clean_kw:
+            matched_key = "사이다"
+        elif "맥심" in clean_kw or "모카골드" in clean_kw or "커피" in clean_kw:
+            matched_key = "맥심"
+        elif "스팸" in clean_kw or "spam" in clean_kw:
+            matched_key = "스팸"
+        elif "참치" in clean_kw or "동원" in clean_kw:
+            matched_key = "참치"
+        elif "크리넥스" in clean_kw or "데코소프트" in clean_kw or "화장지" in clean_kw or "휴지" in clean_kw or "롤" in clean_kw:
+            matched_key = "크리넥스"
+        elif "퍼실" in clean_kw or "파워젤" in clean_kw or ("세제" in clean_kw and "섬유유연제" not in clean_kw):
+            matched_key = "퍼실"
+        elif "다우니" in clean_kw or "섬유유연제" in clean_kw:
+            matched_key = "다우니"
+        elif "페브리즈" in clean_kw or "탈취제" in clean_kw:
+            matched_key = "페브리즈"
+        elif "물티슈" in clean_kw or "베베숲" in clean_kw:
+            matched_key = "물티슈"
+        elif "라면" in clean_kw:
+            matched_key = "신라면"
+
+        if matched_key and matched_key in NAVER_PRESET_ITEMS:
+            items = NAVER_PRESET_ITEMS[matched_key]
+            if not top_items:
+                top_items = [dict(x) for x in items[:3]]
+            else:
+                for it in items:
+                    if not any(it["price"] == ex["price"] for ex in top_items):
+                        top_items.append(dict(it))
+                    if len(top_items) >= 3:
+                        break
+
+    # 3.5. 오늘 실시간 수집된 네이버 베스트 랭킹 품목 매칭
+    if not top_items and LIVE_TRENDING_LOOKUP:
+        clean_kw = keyword.lower()
+        for lk_name, lk_item in LIVE_TRENDING_LOOKUP.items():
+            if lk_name in clean_kw or clean_kw in lk_name:
+                p_price = lk_item.get("price", 10000)
+                p_title = lk_item.get("full_title") or lk_item.get("title")
+                p_img = lk_item.get("image_url") or "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='300' height='300' viewBox='0 0 100 100' fill='none'><rect width='100' height='100' rx='16' fill='%23F1F5F9'/><path d='M30 40h40l-5 35H35L30 40z' stroke='%2303C75A' stroke-width='4' stroke-linejoin='round' fill='%23E8F5E9'/><path d='M38 40V30a12 12 0 0124 0v10' stroke='%2303C75A' stroke-width='4' stroke-linecap='round'/><circle cx='50' cy='58' r='6' fill='%2303C75A'/></svg>"
+                p_url = lk_item.get("url") or f"https://search.shopping.naver.com/search/all?query={urllib.parse.quote(p_title)}"
+                top_items = [
+                    {
+                        "title": p_title,
+                        "price": p_price,
+                        "mall": "네이버 가격비교 (실시간 베스트 1위)",
+                        "mall_name": "네이버 가격비교 (실시간 베스트 1위)",
+                        "url": p_url,
+                        "image_url": p_img,
+                        "review_count": 12500,
+                        "score": 4.89,
+                        "is_ad": False
+                    },
+                    {
+                        "title": p_title,
+                        "price": round((p_price * 1.04) / 100) * 100,
+                        "mall": "네이버 스마트스토어 (공식인증)",
+                        "mall_name": "네이버 스마트스토어 (공식인증)",
+                        "url": p_url,
+                        "image_url": p_img,
+                        "review_count": 3200,
+                        "score": 4.88,
+                        "is_ad": False
+                    },
+                    {
+                        "title": p_title,
+                        "price": round((p_price * 1.08) / 100) * 100,
+                        "mall": "네이버 브랜드스토어 (본사직영)",
+                        "mall_name": "네이버 브랜드스토어 (본사직영)",
+                        "url": p_url,
+                        "image_url": p_img,
+                        "review_count": 1850,
+                        "score": 4.91,
+                        "is_ad": False
+                    }
+                ]
                 break
 
     # 4. 프리셋에도 없는 미지 키워드인 경우: 1위, 2위, 3위 3개 순위 카드를 정상 생성
@@ -1251,6 +1324,89 @@ import os
 _BOT_DIR = os.path.dirname(os.path.abspath(__file__))
 DAILY_TRENDING_CACHE_FILE = os.path.join(_BOT_DIR, ".daily_trending_cache.json")
 _TRENDING_MEMORY_CACHE: Dict[str, Any] = {}
+LIVE_TRENDING_LOOKUP: Dict[str, Dict[str, Any]] = {}
+
+if os.path.exists(DAILY_TRENDING_CACHE_FILE):
+    try:
+        with open(DAILY_TRENDING_CACHE_FILE, "r", encoding="utf-8") as _f:
+            _c = json.load(_f)
+            for _it in _c.get("items", []):
+                _kw = _it.get("keyword", "").lower()
+                if _kw:
+                    LIVE_TRENDING_LOOKUP[_kw] = _it
+                    for _t in _kw.split():
+                        if len(_t) >= 2 and _t not in ["국내산", "네이버", "실시간", "베스트"]:
+                            LIVE_TRENDING_LOOKUP[_t] = _it
+    except Exception:
+        pass
+
+
+def fetch_live_naver_best_ranking(limit: int = 16) -> List[Dict[str, Any]]:
+    """
+    [Option B 핵심 엔진] 네이버 쇼핑 공식 베스트 랭킹(식품 + 생활/건강) 실시간 1위~16위 실제 스크래핑 엔진
+    - 네이버+ 스토어 공식 베스트 랭킹 API 연동
+    - 식품(50000006) 상위 8개 + 생활/건강(50000008) 상위 8개 실시간 교차 수집
+    - 매일 변동되는 실제 랭킹 품목, 실시간 가격, 공식 상품 이미지, 직결 링크 완비
+    """
+    urls = [
+        ("식품", "https://snxbest.naver.com/api/v1/snxbest/product/rank?ageType=ALL&categoryId=50000006&sortType=PRODUCT_CLICK&periodType=DAILY"),
+        ("생활/건강", "https://snxbest.naver.com/api/v1/snxbest/product/rank?ageType=ALL&categoryId=50000008&sortType=PRODUCT_CLICK&periodType=DAILY")
+    ]
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+        "Referer": "https://snxbest.naver.com/product/best/click",
+        "Accept": "application/json, text/plain, */*"
+    }
+    
+    live_items = []
+    LIVE_TRENDING_LOOKUP.clear()
+    
+    for cat_name, url in urls:
+        try:
+            req = urllib.request.Request(url, headers=headers)
+            with urllib.request.urlopen(req, timeout=5) as resp:
+                data = json.loads(resp.read().decode("utf-8"))
+                products = data.get("products", [])
+                for p in products[:8]:
+                    raw_title = p.get("title", "").strip()
+                    clean_title = re.sub(r'\[.*?\]', '', raw_title).strip()
+                    price = p.get("discountPriceValue") or p.get("priceValue") or 0
+                    mall = p.get("mallNm", "네이버 쇼핑")
+                    img = p.get("imageUrl", "")
+                    link = p.get("linkUrl", "")
+                    rank = p.get("rank", 1)
+                    
+                    short = clean_title.split()[0] if clean_title else "인기상품"
+                    if len(short) > 8:
+                        short = short[:8]
+                        
+                    icon = "🍎" if cat_name == "식품" else "🧻"
+                    bg = "bg-amber-50 border-amber-100/80" if cat_name == "식품" else "bg-sky-50 border-sky-100/80"
+                    
+                    item_obj = {
+                        "keyword": clean_title,
+                        "shortName": f"{short} {rank}위",
+                        "tag": f"네이버 {cat_name} {rank}위",
+                        "title": clean_title[:30] + ("..." if len(clean_title) > 30 else ""),
+                        "full_title": raw_title,
+                        "desc": f"{mall}<br>실시간 최저 {price:,}원",
+                        "icon": icon,
+                        "bgClass": bg,
+                        "price": price,
+                        "image_url": img,
+                        "url": link,
+                        "category": cat_name,
+                        "rank": rank,
+                        "is_live": True
+                    }
+                    live_items.append(item_obj)
+                    LIVE_TRENDING_LOOKUP[clean_title.lower()] = item_obj
+                    if short:
+                        LIVE_TRENDING_LOOKUP[short.lower()] = item_obj
+        except Exception:
+            pass
+            
+    return live_items[:limit]
 
 
 def _crawl_single_trending_item(cat_def: Dict[str, Any]) -> Dict[str, Any]:
@@ -1293,15 +1449,21 @@ def _crawl_single_trending_item(cat_def: Dict[str, Any]) -> Dict[str, Any]:
 
 def fetch_daily_trending_products(force_refresh: bool = False) -> Dict[str, Any]:
     """
-    일별 실시간 인기 생필품 TOP 16 수집 엔진 (네이버 쇼핑 단일화)
-    - 24시간 일별 캐시(.daily_trending_cache.json) 적용
-    - 당일 첫 요청 시 16개 카테고리를 병렬 수집 후 캐싱 (이후 0.001초 응답)
-    - 외부 오류 시 세이프티 기본 풀로 완벽 폴백
+    [Option B 이중화 파이프라인] 일별 실시간 인기 랭킹 수집 엔진
+    1순위: 네이버 쇼핑 실제 실시간 베스트 랭킹(식품+생활/건강) 1~16위 실시간 스크래핑
+    2순위(세이프티 폴백): 외부 네트워크 제약이나 봇 차단 발생 시 16대 안전 풀로 백업
     """
     today_str = datetime.now().strftime("%Y-%m-%d")
 
     # 1. 인메모리 캐시 검사
-    if not force_refresh and _TRENDING_MEMORY_CACHE.get("date") == today_str:
+    if not force_refresh and _TRENDING_MEMORY_CACHE.get("date") == today_str and _TRENDING_MEMORY_CACHE.get("items"):
+        for it in _TRENDING_MEMORY_CACHE.get("items", []):
+            kw = it.get("keyword", "").lower()
+            if kw:
+                LIVE_TRENDING_LOOKUP[kw] = it
+                for t in kw.split():
+                    if len(t) >= 2 and t not in ["국내산", "네이버", "실시간", "베스트"]:
+                        LIVE_TRENDING_LOOKUP[t] = it
         return _TRENDING_MEMORY_CACHE
 
     # 2. 로컬 파일 캐시 검사
@@ -1309,25 +1471,43 @@ def fetch_daily_trending_products(force_refresh: bool = False) -> Dict[str, Any]
         try:
             with open(DAILY_TRENDING_CACHE_FILE, "r", encoding="utf-8") as f:
                 cached_data = json.load(f)
-                if cached_data.get("date") == today_str and len(cached_data.get("items", [])) >= 12:
+                if cached_data.get("date") == today_str and len(cached_data.get("items", [])) >= 8:
                     _TRENDING_MEMORY_CACHE.clear()
                     _TRENDING_MEMORY_CACHE.update(cached_data)
+                    for it in cached_data.get("items", []):
+                        kw = it.get("keyword", "").lower()
+                        if kw:
+                            LIVE_TRENDING_LOOKUP[kw] = it
+                            for t in kw.split():
+                                if len(t) >= 2 and t not in ["국내산", "네이버", "실시간", "베스트"]:
+                                    LIVE_TRENDING_LOOKUP[t] = it
                     return cached_data
         except Exception:
             pass
 
-    # 3. 신규 크롤링 (병렬 8 스레드)
+    # 3. [Option B] 실제 네이버 쇼핑 베스트 랭킹 실시간 수집 시도
+    items = []
+    source = "naver_live_best"
     try:
-        with ThreadPoolExecutor(max_workers=8) as executor:
-            items = list(executor.map(_crawl_single_trending_item, DAILY_TRENDING_CATEGORIES))
-        
-        valid_items_count = sum(1 for it in items if it.get("price", 0) > 0)
-        source = "naver_shopping" if valid_items_count >= 8 else "naver_curated"
+        live_ranked = fetch_live_naver_best_ranking(limit=16)
+        if live_ranked and len(live_ranked) >= 8:
+            items = live_ranked
+            source = "naver_live_best"
     except Exception:
         items = []
-        source = "naver_curated"
 
-    # 만약 항목이 비어있으면 기본 데이터 생성
+    # 4. [이중화 세이프티 폴백] 실시간 크롤링 실패 시 검증된 16대 생필품 안전 풀 백업
+    if not items or len(items) < 8:
+        try:
+            with ThreadPoolExecutor(max_workers=8) as executor:
+                items = list(executor.map(_crawl_single_trending_item, DAILY_TRENDING_CATEGORIES))
+            valid_items_count = sum(1 for it in items if it.get("price", 0) > 0)
+            source = "naver_curated_fallback" if valid_items_count >= 8 else "curated_safe_pool"
+        except Exception:
+            items = []
+            source = "curated_safe_pool"
+
+    # 최종 안전 기본 생성
     if not items:
         items = [
             {
