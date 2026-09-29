@@ -336,6 +336,27 @@ function switchToResultView(keyword) {
   if (elements.topBannerText) {
     elements.topBannerText.textContent = `'${keyword}' 네이버 쇼핑 실시간 최저가 분석`;
   }
+
+  // 🛡️ 빈 페이지 방지: 결과 뷰 전환 즉시 정적 템플릿을 스켈레톤 로딩 UI로 교체
+  // (API 응답 도착 전 사용자가 href="#" 클릭 시 빈 페이지로 이동하는 것을 원천 차단)
+  if (elements.priceComparisonGrid) {
+    elements.priceComparisonGrid.innerHTML = `
+      <div class="col-span-3 text-center py-16 text-slate-400">
+        <div class="animate-pulse flex flex-col items-center space-y-3">
+          <div class="w-10 h-10 bg-slate-200 rounded-full"></div>
+          <div class="h-3 bg-slate-200 rounded w-48"></div>
+          <div class="h-2 bg-slate-100 rounded w-32"></div>
+        </div>
+        <p class="mt-4 text-sm">판매처 가격비교 데이터를 불러오는 중...</p>
+      </div>
+    `;
+  }
+  // 대표 구매 버튼도 로딩 중에는 클릭 방지 (이전 검색의 잔여 URL 방지)
+  if (elements.buyButton) {
+    elements.buyButton.href = "javascript:void(0)";
+    elements.buyButton.onclick = function(e) { e.preventDefault(); };
+  }
+
   const currentQ = new URLSearchParams(window.location.search).get("q");
   const newUrl = `${window.location.pathname}?q=${encodeURIComponent(keyword)}`;
   if (currentQ === keyword) {
@@ -501,10 +522,11 @@ function renderAll(data) {
     if (elements.productUnitTag) elements.productUnitTag.textContent = unit_count > 1 ? `${unit_count}개 패키지` : "온라인 최저가";
     if (elements.productBadgeText) elements.productBadgeText.textContent = unit_count > 1 ? `${unit_count}개입 실시간 검증` : "정품 인증 완료";
 
-    // 링크 설정
+    // 링크 설정 (로딩 중 클릭 잠금 해제)
     if (representative_item.url) {
       const safeBuyUrl = normalizeProductUrl(representative_item.url, representative_item.title);
       elements.buyButton.href = safeBuyUrl;
+      elements.buyButton.onclick = null; // 로딩 중 클릭 방지 잠금 해제
       elements.directBuySubBtn.onclick = () => window.open(safeBuyUrl, "_blank");
     }
 
