@@ -361,7 +361,7 @@ function updateClearBtn() {
 }
 
 // 1. API 데이터 로드
-async function loadPriceData(keyword, targetPrice = 0) {
+async function loadPriceData(keyword, targetPrice = 0, forceRefresh = false) {
   if (!keyword || !keyword.trim()) {
     switchToWelcomeView();
     return;
@@ -374,7 +374,8 @@ async function loadPriceData(keyword, targetPrice = 0) {
 
   try {
     const encodedQuery = encodeURIComponent(keyword);
-    const res = await fetch(`/api/search?q=${encodedQuery}&target_price=${targetPrice}`);
+    const refreshQuery = forceRefresh ? "&refresh=true" : "";
+    const res = await fetch(`/api/search?q=${encodedQuery}&target_price=${targetPrice}${refreshQuery}`);
     if (!res.ok) {
       throw new Error(`HTTP error! status: ${res.status}`);
     }
@@ -899,7 +900,7 @@ function initEventListeners() {
   // 실시간 갱신 버튼
   elements.refreshBtn.addEventListener("click", () => {
     if (state.keyword) {
-      loadPriceData(state.keyword, state.targetPrice);
+      loadPriceData(state.keyword, state.targetPrice, true);
     } else {
       switchToWelcomeView();
       shuffleAndRenderRecommendations(true);

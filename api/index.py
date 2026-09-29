@@ -10,11 +10,13 @@ Vercel 표준 Serverless 규격(BaseHTTPRequestHandler 상속)을 준수하며,
 
 import sys
 import os
+import re
+import time
 import json
 import urllib.parse
 from datetime import datetime, timedelta
 from http.server import BaseHTTPRequestHandler
-from typing import Dict, Any, List
+from typing import Dict, Any, List, Optional, Tuple
 
 # 상위 디렉토리 모듈 임포트 경로 추가
 CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -181,25 +183,48 @@ def extract_unit_count(title: str, keyword: str = "") -> int:
     return 1
 
 
-def fetch_price_data(keyword: str = "농심 신라면 봉지 20개입", target_price: int = 15000) -> Dict[str, Any]:
-    """네이버 쇼핑 및 다나와 실시간 크롤링 또는 안전 캐시 반환"""
+# 인메모리 고속 검색 캐시 (키: 정규화된 검색어, 값: (캐시생성시각, 정제된 아이템 리스트))
+SEARCH_CACHE: Dict[str, Tuple[float, List[Dict[str, Any]]]] = {}
+CACHE_TTL_SECONDS: int = 600  # 10분간 유효
+
+
+def fetch_price_data(keyword: str = "농심 신라면 봉지 20개입", target_price: int = 15000, force_refresh: bool = False) -> Dict[str, Any]:
+    """네이버 쇼핑 및 다나와 실시간 크롤링 또는 안전 캐시 반환 (10분 인메모리 캐시 탑재)"""
     raw_items = []
     fetch_errors = []
     is_live = False
+    norm_key = re.sub(r'\s+', ' ', keyword.strip().lower())
 
-    if pricetrace_bot:
-        try:
-            raw_items, fetch_errors = pricetrace_bot.default_data_fetcher(keyword)
-            if raw_items:
-                is_live = True
-        except Exception as e:
-            fetch_errors.append(str(e))
-
-    if raw_items and pricetrace_bot:
-        refined_items = pricetrace_bot.filter_and_refine_products(raw_items, keyword)
+    # 1. 인메모리 캐시 확인 (강제 갱신이 아닌 경우 즉각 반환)
+    if not force_refresh and norm_key in SEARCH_CACHE:
+        cached_time, cached_items = SEARCH_CACHE[norm_key]
+        if time.time() - cached_time < CACHE_TTL_SECONDS and cached_items:
+            refined_items = cached_items
+            is_live = True
+        else:
+            refined_items = []
     else:
         refined_items = []
 
+    # 2. 캐시 미스 시 실시간 다나와 크롤러 가동
+    if not refined_items:
+        if pricetrace_bot:
+            try:
+                raw_items, fetch_errors = pricetrace_bot.default_data_fetcher(keyword)
+                if raw_items:
+                    is_live = True
+            except Exception as e:
+                fetch_errors.append(str(e))
+
+        if raw_items and pricetrace_bot:
+            refined_items = pricetrace_bot.filter_and_refine_products(raw_items, keyword)
+        else:
+            refined_items = []
+
+        if refined_items:
+            SEARCH_CACHE[norm_key] = (time.time(), refined_items)
+
+    # 3. 크롤링 실패 시 16대 생필품 세이프티 풀 폴백
     if not refined_items:
         if "신라면" in keyword:
             refined_items = get_cached_items()
@@ -285,14 +310,15 @@ class handler(BaseHTTPRequestHandler):
         params = urllib.parse.parse_qs(parsed.query)
 
         # /api/ 접두사 처리
+        refresh = params.get("refresh", ["false"])[0].lower() in ("true", "1", "yes")
         if path.endswith("/summary") or path == "/api/summary":
             target_price = int(params.get("target_price", [15000])[0])
-            result = fetch_price_data(keyword="농심 신라면 봉지 20개입", target_price=target_price)
+            result = fetch_price_data(keyword="농심 신라면 봉지 20개입", target_price=target_price, force_refresh=refresh)
             self.send_json(result)
         elif path.endswith("/search") or path == "/api/search":
             keyword = params.get("q", ["농심 신라면 봉지 20개입"])[0]
             target_price = int(params.get("target_price", [15000])[0])
-            result = fetch_price_data(keyword=keyword, target_price=target_price)
+            result = fetch_price_data(keyword=keyword, target_price=target_price, force_refresh=refresh)
             self.send_json(result)
         elif path.endswith("/history") or path == "/api/history":
             lowest_price = int(params.get("price", [13200])[0])

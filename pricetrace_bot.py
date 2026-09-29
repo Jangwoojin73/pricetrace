@@ -85,7 +85,7 @@ def fetch_from_proxy(keyword: str, limit: int = 20) -> Optional[List[Dict[str, A
     
     try:
         ctx = create_ssl_context()
-        with urllib.request.urlopen(req, context=ctx, timeout=5) as response:
+        with urllib.request.urlopen(req, context=ctx, timeout=2) as response:
             if response.status == 200:
                 data = json.loads(response.read().decode("utf-8"))
                 items = data.get("items", [])
@@ -281,7 +281,7 @@ def fetch_from_naver_bff(keyword: str) -> List[Dict[str, Any]]:
     
     try:
         ctx = create_ssl_context()
-        with urllib.request.urlopen(req, context=ctx, timeout=10) as response:
+        with urllib.request.urlopen(req, context=ctx, timeout=2.5) as response:
             if response.status != 200:
                 raise RuntimeError(f"HTTP 응답 오류: 상태 코드 {response.status}")
             raw_bytes = response.read()
@@ -360,19 +360,33 @@ def fetch_from_naver_bff(keyword: str) -> List[Dict[str, Any]]:
 
 
 def fetch_products_for_keyword(keyword: str) -> Tuple[List[Dict[str, Any]], List[str]]:
-    """임의의 검색어에 대해 네이버 쇼핑 및 다나와 실시간 데이터를 다계층으로 수집합니다."""
+    """
+    임의의 검색어에 대해 실시간 데이터를 신속하게 수집합니다.
+    1순위: 다나와 실시간 가격비교 (가장 안정적이고 빠른 응답, 1.3~1.8초)
+    2순위: 다나와 결과 부재 시 네이버 쇼핑 BFF 시도
+    3순위: 프록시 폴백
+    """
     all_items: List[Dict[str, Any]] = []
     errors: List[str] = []
 
-    # 1. 네이버 쇼핑 BFF 조회 시도
+    # 1. 다나와 실시간 가격비교 우선 조회 (1순위 고속 직결)
     try:
-        bff_items = fetch_from_naver_bff(keyword)
-        if bff_items:
-            all_items.extend(bff_items)
+        danawa_items = fetch_from_danawa(keyword)
+        if danawa_items:
+            all_items.extend(danawa_items)
     except Exception as e:
-        errors.append(f"네이버 쇼핑 BFF '{keyword}': {str(e)}")
+        errors.append(f"다나와 '{keyword}': {str(e)}")
 
-    # 2. k-skill 프록시 조회 시도
+    # 2. 다나와 결과가 없을 때만 네이버 쇼핑 BFF 시도 (타임아웃 2.5초)
+    if not all_items:
+        try:
+            bff_items = fetch_from_naver_bff(keyword)
+            if bff_items:
+                all_items.extend(bff_items)
+        except Exception as e:
+            errors.append(f"네이버 쇼핑 BFF '{keyword}': {str(e)}")
+
+    # 3. 프록시 시도 (타임아웃 2초)
     if not all_items:
         try:
             proxy_items = fetch_from_proxy(keyword)
@@ -381,46 +395,13 @@ def fetch_products_for_keyword(keyword: str) -> Tuple[List[Dict[str, Any]], List
         except Exception as e:
             errors.append(f"프록시 '{keyword}': {str(e)}")
 
-    # 3. 다나와 실시간 가격비교 조회 (네이버 봇 차단 시 고신뢰 폴백)
-    if not all_items:
-        try:
-            danawa_items = fetch_from_danawa(keyword)
-            if danawa_items:
-                all_items.extend(danawa_items)
-        except Exception as e:
-            errors.append(f"다나와 '{keyword}': {str(e)}")
-
     return all_items, errors
 
 
 def default_data_fetcher(keyword: Optional[str] = None) -> Tuple[List[Dict[str, Any]], List[str]]:
-    """실제 최저가 데이터를 수집하는 기본 fetcher (임의 키워드 지원)"""
-    target_kw = keyword or PRIMARY_KEYWORD
-    if keyword and keyword != PRIMARY_KEYWORD:
-        return fetch_products_for_keyword(keyword)
-
-    all_raw_items: List[Dict[str, Any]] = []
-    fetch_errors: List[str] = []
-
-    # 1. 네이버 쇼핑 조회 시도
-    for kw in SEARCH_KEYWORDS:
-        try:
-            bff_items = fetch_from_naver_bff(kw)
-            if bff_items:
-                all_raw_items.extend(bff_items)
-        except Exception as e:
-            fetch_errors.append(f"'{kw}': {str(e)}")
-
-    # 2. 네이버 실패 시 다나와 조회 시도
-    if not all_raw_items:
-        try:
-            danawa_items = fetch_from_danawa(target_kw)
-            if danawa_items:
-                all_raw_items.extend(danawa_items)
-        except Exception as e:
-            fetch_errors.append(f"다나와 '{target_kw}': {str(e)}")
-
-    return all_raw_items, fetch_errors
+    """실제 최저가 데이터를 수집하는 기본 fetcher (임의 키워드 직결 지원)"""
+    target_kw = (keyword or PRIMARY_KEYWORD).strip()
+    return fetch_products_for_keyword(target_kw)
 
 
 def filter_and_refine_products(items: List[Dict[str, Any]], keyword: str = "") -> List[Dict[str, Any]]:
