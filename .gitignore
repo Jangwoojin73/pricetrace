@@ -18,3 +18,5 @@ credentials.json
 # Temporary & System Generated Files
 .tmp/
 *.log
+.daily_trending_cache.json
+*.cache.json

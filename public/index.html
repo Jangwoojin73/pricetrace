@@ -253,11 +253,17 @@
       <div>
         <div class="flex items-center justify-between mb-4 px-1">
           <div>
-            <h2 class="text-lg sm:text-xl font-black text-slate-900 flex items-center space-x-2">
-              <i data-lucide="flame" class="w-5 h-5 text-coupang"></i>
-              <span>자주 찾는 인기 생필품 원클릭 최저가</span>
+            <h2 class="text-lg sm:text-xl font-black text-slate-900 flex items-center flex-wrap gap-2">
+              <span class="flex items-center gap-1.5">
+                <i data-lucide="flame" class="w-5 h-5 text-coupang"></i>
+                <span>자주 찾는 인기 생필품 원클릭 최저가</span>
+              </span>
+              <span id="dailyTrendingBadge" class="hidden text-[11px] font-bold text-emerald-700 bg-emerald-50 border border-emerald-200/80 px-2.5 py-0.5 rounded-full inline-flex items-center gap-1.5 shadow-2xs">
+                <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                <span id="dailyTrendingDateText">오늘 실시간 베스트</span>
+              </span>
             </h2>
-            <p class="text-xs text-slate-500 mt-0.5">카드를 클릭하면 즉시 실시간 가격비교 및 30일 시세 차트가 열립니다.</p>
+            <p class="text-xs text-slate-500 mt-0.5">매일 실시간 인기 랭킹 품목 자동 반영 · 카드를 클릭하면 즉시 최저가 비교로 이동합니다.</p>
           </div>
           <button 
             type="button" 

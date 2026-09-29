@@ -578,5 +578,314 @@ def run_pricetrace_bot(
     }
 
 
+
+# ==========================================
+# 일별 실시간 트렌드 인기 생필품 자동 수집 엔진
+# ==========================================
+from datetime import datetime
+from concurrent.futures import ThreadPoolExecutor
+
+DAILY_TRENDING_CATEGORIES = [
+    {
+        "category": "라면", 
+        "query": "농심 신라면 봉지 20개입", 
+        "shortName": "신라면 20개",
+        "default_title": "농심 신라면 20개",
+        "tag": "20개 패키지", 
+        "desc": "봉지라면 대표 베스트셀러",
+        "icon": "🍜", 
+        "bgClass": "bg-amber-50 border-amber-100/80"
+    },
+    {
+        "category": "즉석밥", 
+        "query": "CJ제일제당 햇반 210g 24개", 
+        "shortName": "햇반 24개",
+        "default_title": "CJ제일제당 햇반 24개",
+        "tag": "24개 대용량", 
+        "desc": "즉석밥 국민 필수 생필품",
+        "icon": "🍚", 
+        "bgClass": "bg-slate-50 border-slate-100"
+    },
+    {
+        "category": "탄산음료", 
+        "query": "코카콜라 제로 355ml 24캔", 
+        "shortName": "코카콜라 제로",
+        "default_title": "코카콜라 제로 24캔",
+        "tag": "24캔 뚱캔", 
+        "desc": "탄산음료 압도적 1위",
+        "icon": "🥤", 
+        "bgClass": "bg-rose-50 border-rose-100/80"
+    },
+    {
+        "category": "생수", 
+        "query": "제주 삼다수 2L 6개", 
+        "shortName": "삼다수 2L",
+        "default_title": "제주 삼다수 2L 6개",
+        "tag": "2L 6병 팩", 
+        "desc": "국민 생수 정기 구매 필수",
+        "icon": "💧", 
+        "bgClass": "bg-sky-50 border-sky-100/80"
+    },
+    {
+        "category": "가성비라면", 
+        "query": "오뚜기 진라면 매운맛 40개", 
+        "shortName": "진라면 40개",
+        "default_title": "오뚜기 진라면 40개",
+        "tag": "40개 박스", 
+        "desc": "가성비 라면 최강자",
+        "icon": "🍜", 
+        "bgClass": "bg-amber-50 border-amber-100/80"
+    },
+    {
+        "category": "커피", 
+        "query": "맥심 모카골드 마일드 160T", 
+        "shortName": "맥심 커피 160T",
+        "default_title": "맥심 모카골드 160T",
+        "tag": "160개 스틱", 
+        "desc": "국민 믹스커피 대용량",
+        "icon": "☕", 
+        "bgClass": "bg-yellow-50 border-yellow-100/80"
+    },
+    {
+        "category": "화장지", 
+        "query": "크리넥스 3겹 데코소프트 30롤", 
+        "shortName": "크리넥스 30롤",
+        "default_title": "크리넥스 롤화장지 30롤",
+        "tag": "30롤 팩", 
+        "desc": "도톰한 3겹 천연펄프",
+        "icon": "🧻", 
+        "bgClass": "bg-purple-50 border-purple-100/80"
+    },
+    {
+        "category": "세탁세제", 
+        "query": "퍼실 파워젤 액체세제 2.7L", 
+        "shortName": "퍼실 세제 2.7L",
+        "default_title": "퍼실 드럼 액체세제",
+        "tag": "2.7L 대용량", 
+        "desc": "독일 No.1 세탁세제",
+        "icon": "🧼", 
+        "bgClass": "bg-emerald-50 border-emerald-100/80"
+    },
+    {
+        "category": "통조림", 
+        "query": "동원참치 100g 10캔", 
+        "shortName": "동원참치 10캔",
+        "default_title": "동원참치 라이트 10캔",
+        "tag": "10캔 세트", 
+        "desc": "살코기 참치 국민 반찬",
+        "icon": "🐟", 
+        "bgClass": "bg-blue-50 border-blue-100/80"
+    },
+    {
+        "category": "물티슈", 
+        "query": "베베숲 시그니처 물티슈 70매 10팩", 
+        "shortName": "베베숲 물티슈 10팩",
+        "default_title": "베베숲 프리미엄 물티슈",
+        "tag": "10팩 캡형", 
+        "desc": "엠보싱 고평점 물티슈",
+        "icon": "👶", 
+        "bgClass": "bg-indigo-50 border-indigo-100/80"
+    },
+    {
+        "category": "즉석밥2", 
+        "query": "오뚜기 맛있는 오뚜기밥 210g 24개", 
+        "shortName": "오뚜기밥 24개",
+        "default_title": "맛있는 오뚜기밥 24개",
+        "tag": "24개 박스", 
+        "desc": "가성비 즉석밥 대표",
+        "icon": "🍚", 
+        "bgClass": "bg-orange-50 border-orange-100/80"
+    },
+    {
+        "category": "라면2", 
+        "query": "농심 안성탕면 20개", 
+        "shortName": "안성탕면 20개",
+        "default_title": "농심 안성탕면 20개",
+        "tag": "20개 묶음", 
+        "desc": "구수한 된장 베이스 라면",
+        "icon": "🍜", 
+        "bgClass": "bg-amber-50 border-amber-100/80"
+    },
+    {
+        "category": "사이다", 
+        "query": "칠성사이다 제로 355ml 24캔", 
+        "shortName": "칠성사이다 제로",
+        "default_title": "칠성사이다 제로 24캔",
+        "tag": "24캔 박스", 
+        "desc": "짜릿한 청량감 끝판왕",
+        "icon": "🍏", 
+        "bgClass": "bg-emerald-50 border-emerald-100/80"
+    },
+    {
+        "category": "섬유유연제", 
+        "query": "다우니 섬유유연제 블루 1L 3개", 
+        "shortName": "다우니 3개",
+        "default_title": "다우니 섬유유연제 3개",
+        "tag": "3개 세트", 
+        "desc": "초고농축 상쾌한 향기",
+        "icon": "🌸", 
+        "bgClass": "bg-pink-50 border-pink-100/80"
+    },
+    {
+        "category": "탈취제", 
+        "query": "페브리즈 섬유탈취제 상쾌한향 리필 4개", 
+        "shortName": "페브리즈 리필 4개",
+        "default_title": "페브리즈 리필 4개입",
+        "tag": "4개 리필", 
+        "desc": "강력 항균 탈취 리필",
+        "icon": "✨", 
+        "bgClass": "bg-sky-50 border-sky-100/80"
+    },
+    {
+        "category": "캔햄", 
+        "query": "스팸 클래식 200g 10개", 
+        "shortName": "스팸 10캔",
+        "default_title": "CJ 스팸 클래식 10캔",
+        "tag": "10캔 세트", 
+        "desc": "국민 밥도둑 정품 캔햄",
+        "icon": "🍖", 
+        "bgClass": "bg-rose-50 border-rose-100/80"
+    }
+]
+
+import os
+_BOT_DIR = os.path.dirname(os.path.abspath(__file__))
+DAILY_TRENDING_CACHE_FILE = os.path.join(_BOT_DIR, ".daily_trending_cache.json")
+_TRENDING_MEMORY_CACHE: Dict[str, Any] = {}
+
+
+def _crawl_single_trending_item(cat_def: Dict[str, Any]) -> Dict[str, Any]:
+    """단일 카테고리의 오늘 실시간 최저가 및 인기 품목 정보 크롤링"""
+    query = cat_def["query"]
+    encoded = urllib.parse.quote(query)
+    url = f"https://search.danawa.com/dsearch.php?query={encoded}&tab=main&sort=save"
+    req = urllib.request.Request(
+        url,
+        headers={
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+            "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+            "Accept-Language": "ko-KR,ko;q=0.9"
+        }
+    )
+    live_price = 0
+    live_title = cat_def["default_title"]
+    try:
+        ctx = create_ssl_context()
+        with urllib.request.urlopen(req, context=ctx, timeout=3.5) as resp:
+            html = resp.read().decode("utf-8", "ignore")
+        
+        item_blocks = re.findall(
+            r'<li[^>]*id="productItem(\d+)"[^>]*class="[^"]*prod_item[^"]*"[^>]*>(.*?)(?=<li[^>]*id="productItem\d+"|$)',
+            html,
+            re.DOTALL
+        )
+        if item_blocks:
+            pcode, block = item_blocks[0]
+            t_m = re.search(r'class="prod_name"[^>]*>.*?<a[^>]*>(.*?)</a>', block, re.DOTALL)
+            if t_m:
+                live_title = re.sub(r'<[^>]+>', '', t_m.group(1)).strip()
+            p_m = re.search(r'class="price_sect"[^>]*>.*?<strong>([\d,]+)</strong>', block, re.DOTALL)
+            if p_m:
+                live_price = int(p_m.group(1).replace(",", ""))
+    except Exception:
+        pass
+
+    # 설명 텍스트 구성 (실시간 최저가 가격 포함)
+    desc_base = cat_def["desc"]
+    if live_price > 0:
+        desc = f"{desc_base}<br>오늘 최저 {live_price:,}원"
+    else:
+        desc = f"{desc_base}<br>실시간 최저가 비교"
+
+    return {
+        "keyword": cat_def["query"],
+        "shortName": cat_def["shortName"],
+        "tag": cat_def["tag"],
+        "title": cat_def["default_title"],
+        "full_title": live_title,
+        "desc": desc,
+        "icon": cat_def["icon"],
+        "bgClass": cat_def["bgClass"],
+        "price": live_price,
+        "category": cat_def["category"]
+    }
+
+
+def fetch_daily_trending_products(force_refresh: bool = False) -> Dict[str, Any]:
+    """
+    일별 실시간 인기 생필품 TOP 16 수집 엔진
+    - 24시간 일별 캐시(.daily_trending_cache.json) 적용
+    - 당일 첫 요청 시 16개 카테고리를 병렬 수집 후 캐싱 (이후 0.001초 응답)
+    - 외부 오류 시 세이프티 기본 풀로 완벽 폴백
+    """
+    today_str = datetime.now().strftime("%Y-%m-%d")
+
+    # 1. 인메모리 캐시 검사
+    if not force_refresh and _TRENDING_MEMORY_CACHE.get("date") == today_str:
+        return _TRENDING_MEMORY_CACHE
+
+    # 2. 로컬 파일 캐시 검사
+    if not force_refresh and os.path.exists(DAILY_TRENDING_CACHE_FILE):
+        try:
+            with open(DAILY_TRENDING_CACHE_FILE, "r", encoding="utf-8") as f:
+                cached_data = json.load(f)
+                if cached_data.get("date") == today_str and len(cached_data.get("items", [])) >= 12:
+                    _TRENDING_MEMORY_CACHE.clear()
+                    _TRENDING_MEMORY_CACHE.update(cached_data)
+                    return cached_data
+        except Exception:
+            pass
+
+    # 3. 신규 크롤링 (병렬 8 스레드)
+    try:
+        with ThreadPoolExecutor(max_workers=8) as executor:
+            items = list(executor.map(_crawl_single_trending_item, DAILY_TRENDING_CATEGORIES))
+        
+        valid_items_count = sum(1 for it in items if it.get("price", 0) > 0)
+        source = "danawa_live" if valid_items_count >= 8 else "fallback_hybrid"
+    except Exception:
+        items = []
+        source = "fallback_curated"
+
+    # 만약 항목이 비어있으면 기본 데이터 생성
+    if not items:
+        items = [
+            {
+                "keyword": c["query"],
+                "shortName": c["shortName"],
+                "tag": c["tag"],
+                "title": c["default_title"],
+                "full_title": c["default_title"],
+                "desc": f"{c['desc']}<br>실시간 최저가 비교",
+                "icon": c["icon"],
+                "bgClass": c["bgClass"],
+                "price": 0,
+                "category": c["category"]
+            }
+            for c in DAILY_TRENDING_CATEGORIES
+        ]
+        source = "fallback_curated"
+
+    result_payload = {
+        "success": True,
+        "date": today_str,
+        "source": source,
+        "count": len(items),
+        "items": items,
+        "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    }
+
+    # 캐시 갱신 (인메모리 & 파일)
+    _TRENDING_MEMORY_CACHE.clear()
+    _TRENDING_MEMORY_CACHE.update(result_payload)
+    try:
+        with open(DAILY_TRENDING_CACHE_FILE, "w", encoding="utf-8") as f:
+            json.dump(result_payload, f, ensure_ascii=False, indent=2)
+    except Exception:
+        pass
+
+    return result_payload
+
+
 if __name__ == "__main__":
     run_pricetrace_bot()

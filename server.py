@@ -352,7 +352,12 @@ class PriceTraceHandler(SimpleHTTPRequestHandler):
             self.handle_api_status()
             return
 
-        # 5. 정적 파일 서빙 (public/ 디렉토리 기준)
+        # 5. API: /api/trending
+        elif path == "/api/trending":
+            self.handle_api_trending(params)
+            return
+
+        # 6. 정적 파일 서빙 (public/ 디렉토리 기준)
         return super().do_GET()
 
     def send_json_response(self, data: Any, status_code: int = 200):
@@ -383,6 +388,20 @@ class PriceTraceHandler(SimpleHTTPRequestHandler):
         target_price = int(params.get("target", [15000])[0])
         history = generate_mock_history(lowest_price, target_price)
         self.send_json_response({"success": True, "history": history})
+
+    def handle_api_trending(self, params: Dict[str, List[str]]):
+        force_refresh = params.get("refresh", ["false"])[0].lower() in ["true", "1", "t"]
+        if pricetrace_bot and hasattr(pricetrace_bot, "fetch_daily_trending_products"):
+            result = pricetrace_bot.fetch_daily_trending_products(force_refresh=force_refresh)
+        else:
+            result = {
+                "success": True,
+                "date": datetime.now().strftime("%Y-%m-%d"),
+                "source": "server_fallback",
+                "count": 0,
+                "items": []
+            }
+        self.send_json_response(result)
 
     def handle_api_status(self):
         status = {

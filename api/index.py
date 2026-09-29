@@ -333,6 +333,18 @@ class handler(BaseHTTPRequestHandler):
                 "timestamp": datetime.now().isoformat()
             }
             self.send_json(status)
+        elif path.endswith("/trending") or path == "/api/trending":
+            if pricetrace_bot and hasattr(pricetrace_bot, "fetch_daily_trending_products"):
+                result = pricetrace_bot.fetch_daily_trending_products(force_refresh=refresh)
+            else:
+                result = {
+                    "success": True,
+                    "date": datetime.now().strftime("%Y-%m-%d"),
+                    "source": "serverless_fallback",
+                    "count": 0,
+                    "items": []
+                }
+            self.send_json(result)
         else:
             # 기본 summary 반환
             result = fetch_price_data()

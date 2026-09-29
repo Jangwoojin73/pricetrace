@@ -61,8 +61,8 @@ function normalizeProductUrl(url, title = "") {
   return trimmed;
 }
 
-// 16대 인기 국민 생필품 추천 풀 (동적 셔플 & 로테이션용)
-const RECOMMENDED_PRODUCTS_POOL = [
+// 16대 인기 국민 생필품 추천 풀 (동적 셔플 & 로테이션용, /api/trending 데이터로 자동 확장)
+let RECOMMENDED_PRODUCTS_POOL = [
   {
     keyword: "농심 신라면 봉지 20개입",
     shortName: "신라면 20개",
@@ -800,7 +800,7 @@ function shuffleAndRenderRecommendations(animate = false) {
             <p class="text-xs text-slate-500 mt-1">${item.desc}</p>
           </div>
           <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs font-bold text-blue-600">
-            <span>실시간 최저가 확인</span>
+            <span>${item.price && item.price > 0 ? `오늘 최저 ${formatCurrency(item.price)}원` : '실시간 최저가 확인'}</span>
             <i data-lucide="arrow-right" class="w-4 h-4 group-hover:translate-x-1 transition-transform"></i>
           </div>
         </div>
@@ -824,6 +824,40 @@ function shuffleAndRenderRecommendations(animate = false) {
 
       if (window.lucide) window.lucide.createIcons();
     }, animate ? 150 : 0);
+  }
+}
+
+// 일별 실시간 트렌드 인기 생필품 비동기 로드 엔진
+async function loadDailyTrendingProducts() {
+  try {
+    const res = await fetch("/api/trending");
+    if (!res.ok) return;
+    const data = await res.json();
+    if (data && data.success && Array.isArray(data.items) && data.items.length > 0) {
+      RECOMMENDED_PRODUCTS_POOL = data.items;
+
+      // 일별 실시간 뱃지 업데이트
+      const badge = document.getElementById("dailyTrendingBadge");
+      const dateText = document.getElementById("dailyTrendingDateText");
+      if (badge && dateText) {
+        if (data.date) {
+          const parts = data.date.split("-");
+          if (parts.length === 3) {
+            dateText.textContent = `${parseInt(parts[1], 10)}월 ${parseInt(parts[2], 10)}일 실시간 베스트`;
+          } else {
+            dateText.textContent = "오늘 실시간 베스트";
+          }
+        }
+        badge.classList.remove("hidden");
+      }
+
+      // 화면이 웰컴 뷰일 때만 자연스럽게 재렌더링
+      if (state.view === "welcome") {
+        shuffleAndRenderRecommendations(true);
+      }
+    }
+  } catch (e) {
+    console.warn("일별 트렌드 수집 비동기 로드 실패 (내장 안전 풀 유지):", e);
   }
 }
 
@@ -1040,6 +1074,9 @@ document.addEventListener("DOMContentLoaded", () => {
   // 인기 추천 풀 셔플 렌더링 및 자동 로테이션 시작
   shuffleAndRenderRecommendations(false);
   startRecommendationRotation();
+
+  // 일별 실시간 베스트 트렌드 품목 비동기 수집 및 갱신
+  loadDailyTrendingProducts();
 
   // URL에 ?q=검색어가 있으면 해당 상품 조회, 없으면 초기 웰컴 화면 노출
   const urlParams = new URLSearchParams(window.location.search);
