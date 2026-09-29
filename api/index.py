@@ -40,7 +40,7 @@ else:
         "title": "농심 신라면 120g 20개 한박스 멀티팩 낱개 가정용 업소용 행사용 캠핑",
         "price": 12400,
         "mall_name": "더싼 마트",
-        "url": "https://smartstore.naver.com/main/products/11132243694",
+        "url": "https://search.naver.com/search.naver?where=nexearch&query=%EB%86%8D%EC%8B%AC%20%EC%8B%A0%EB%9D%BC%EB%A9%B4%20120g%2020%EA%B0%9C%20%ED%95%9C%EB%B0%95%EC%8A%A4",
         "review_count": 36,
         "score": 4.89,
         "is_ad": False
@@ -49,7 +49,7 @@ else:
         "title": "농심 신라면, 120g, 20개",
         "price": 13200,
         "mall_name": "네이버 가격비교 (카탈로그)",
-        "url": "https://search.shopping.naver.com/search/all?query=%EB%86%8D%EC%8B%AC%20%EC%8B%A0%EB%9D%BC%EB%A9%B4%20120g%2020%EA%B0%9C",
+        "url": "https://search.naver.com/search.naver?where=nexearch&query=%EB%86%8D%EC%8B%AC%20%EC%8B%A0%EB%9D%BC%EB%A9%B4%20120g%2020%EA%B0%9C",
         "review_count": 104069,
         "score": 4.88,
         "is_ad": False
@@ -59,7 +59,7 @@ else:
         "price": 13200,
         "mall": "신성마켓몰",
         "mall_name": "신성마켓몰",
-        "url": "https://m.smartstore.naver.com/main/products/8676675032",
+        "url": "https://search.naver.com/search.naver?where=nexearch&query=%EB%86%8D%EC%8B%AC%20%EC%8B%A0%EB%9D%BC%EB%A9%B4%20120g%2020%EA%B0%9C%201%EB%B0%95%EC%8A%A4",
         "review_count": 715,
         "score": 4.88,
         "is_ad": False
@@ -78,7 +78,7 @@ else:
                 "title": "농심 신라면 120g 20개",
                 "price": 14700,
                 "mall_name": "네이버 가격비교 (공식 카탈로그)",
-                "url": "https://search.shopping.naver.com/search/all?query=%EB%86%8D%EC%8B%AC+%EC%8B%A0%EB%9D%BC%EB%A9%B4+20%EA%B0%9C",
+                "url": "https://search.naver.com/search.naver?where=nexearch&query=%EB%86%8D%EC%8B%AC+%EC%8B%A0%EB%9D%BC%EB%A9%B4+20%EA%B0%9C",
                 "image_url": "https://img.danuri.io/catalog-image/343/637/000/7da1df1b1c0146c793124131b95ae4d3.jpg",
                 "review_count": 104064,
                 "score": 4.88,
@@ -90,7 +90,7 @@ else:
                 "title": "오뚜기 맛있는 오뚜기밥 210g 24개 1박스",
                 "price": 19840,
                 "mall_name": "네이버 가격비교 (공식 카탈로그)",
-                "url": "https://search.shopping.naver.com/search/all?query=%EC%98%A4%EB%9A%9C%EA%B8%B0%EB%B0%A5+24%EA%B0%9C",
+                "url": "https://search.naver.com/search.naver?where=nexearch&query=%EC%98%A4%EB%9A%9C%EA%B8%B0%EB%B0%A5+24%EA%B0%9C",
                 "image_url": "https://img.danuri.io/catalog-image/054/152/001/75bfef8375274ac4aaa3c96f50690f24.jpg",
                 "review_count": 3950,
                 "score": 4.89,
@@ -102,7 +102,7 @@ else:
                 "title": "P&G 다우니 섬유유연제 블루 1L 3개",
                 "price": 14330,
                 "mall_name": "네이버 가격비교 (공식 카탈로그)",
-                "url": "https://search.shopping.naver.com/search/all?query=%EB%8B%A4%EC%9A%B0%EB%8B%88+%EC%84%AC%EC%9C%A0%EC%9C%A0%EC%97%B0%EC%A0%9C+1L+3%EA%B0%9C",
+                "url": "https://search.naver.com/search.naver?where=nexearch&query=%EB%8B%A4%EC%9A%B0%EB%8B%88+%EC%84%AC%EC%9C%A0%EC%9C%A0%EC%97%B0%EC%A0%9C+1L+3%EA%B0%9C",
                 "image_url": "https://img.danuri.io/catalog-image/860/407/013/2ef507095066450d8d739c09238cb048.jpg",
                 "review_count": 2640,
                 "score": 4.88,
@@ -114,7 +114,7 @@ else:
                 "title": "동서식품 맥심 모카골드 마일드 커피믹스 160T",
                 "price": 29670,
                 "mall_name": "네이버 가격비교 (공식 카탈로그)",
-                "url": "https://search.shopping.naver.com/search/all?query=%EB%A7%A5%EC%8B%AC+%EB%AA%A8%EC%B9%B4%EA%B gold+%EB%A7%88%EC%9D%BC%EB%93%9C+160T",
+                "url": "https://search.naver.com/search.naver?where=nexearch&query=%EB%A7%A5%EC%8B%AC+%EB%AA%A8%EC%B9%B4%EA%B gold+%EB%A7%88%EC%9D%BC%EB%93%9C+160T",
                 "image_url": "https://img.danuri.io/catalog-image/166/251/002/2042e67b69b241ff80d5276b753cd379.jpg",
                 "review_count": 6340,
                 "score": 4.92,
@@ -272,14 +272,14 @@ def fetch_price_data(keyword: str = "농심 신라면 봉지 20개입", target_p
                 p_price = lk_item.get("price", 10000)
                 p_title = lk_item.get("full_title") or lk_item.get("title")
                 p_img = lk_item.get("image_url") or "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='300' height='300' viewBox='0 0 100 100' fill='none'><rect width='100' height='100' rx='16' fill='%23F1F5F9'/><path d='M30 40h40l-5 35H35L30 40z' stroke='%2303C75A' stroke-width='4' stroke-linejoin='round' fill='%23E8F5E9'/><path d='M38 40V30a12 12 0 0124 0v10' stroke='%2303C75A' stroke-width='4' stroke-linecap='round'/><circle cx='50' cy='58' r='6' fill='%2303C75A'/></svg>"
-                p_url1 = lk_item.get("url") or f"https://search.shopping.naver.com/search/all?query={urllib.parse.quote(p_title)}"
+                enc_title = urllib.parse.quote(p_title)
+                p_url1 = f"https://search.naver.com/search.naver?where=nexearch&query={enc_title}+%EC%B5%9C%EC%A0%80%EA%B0%80"
                 p_price2 = round((p_price * 1.04) / 100) * 100
                 p_price3 = round((p_price * 1.08) / 100) * 100
                 
-                # 각 순위별로 정확한 가격대의 품목이 최상단에 나오도록 개별 고유 딥링크 생성
-                enc_title = urllib.parse.quote(p_title)
-                p_url2 = f"https://search.shopping.naver.com/search/all?query={enc_title}&sort=price_asc&minPrice={max(100, p_price2 - 1000)}&maxPrice={p_price2 + 1000}"
-                p_url3 = f"https://search.shopping.naver.com/search/all?query={enc_title}&sort=price_asc&minPrice={max(100, p_price3 - 1000)}&maxPrice={p_price3 + 1500}"
+                # 차단 없는 네이버 통합 포털 최저가/공식인증/가격비교 안전 링크 생성
+                p_url2 = f"https://search.naver.com/search.naver?where=nexearch&query={enc_title}+%EC%8A%A4%EB%A7%88%ED%8A%B8%EC%8A%A4%ED%86%A0%EC%96%B4+%EA%B3%B5%EC%8B%9D"
+                p_url3 = f"https://search.naver.com/search.naver?where=nexearch&query={enc_title}+%EA%B0%80%EA%B2%A9%EB%B9%84%EA%B5%90"
 
                 refined_items = [
                     {
@@ -315,7 +315,7 @@ def fetch_price_data(keyword: str = "농심 신라면 봉지 20개입", target_p
                 ]
                 break
 
-    # 4. 일반 검색어 카탈로그 자동 생성 폴백 (각 순위별 가격 범위 지정 개별 딥링크)
+    # 4. 일반 검색어 카탈로그 자동 생성 폴백 (각 순위별 안전 포털 검색 링크 생성)
     if not refined_items:
         enc_k = urllib.parse.quote(keyword)
         neutral_img = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='300' height='300' viewBox='0 0 100 100' fill='none'><rect width='100' height='100' rx='16' fill='%23F1F5F9'/><path d='M30 40h40l-5 35H35L30 40z' stroke='%2303C75A' stroke-width='4' stroke-linejoin='round' fill='%23E8F5E9'/><path d='M38 40V30a12 12 0 0124 0v10' stroke='%2303C75A' stroke-width='4' stroke-linecap='round'/><circle cx='50' cy='58' r='6' fill='%2303C75A'/></svg>"
@@ -324,7 +324,7 @@ def fetch_price_data(keyword: str = "농심 신라면 봉지 20개입", target_p
                 "title": f"{keyword} (네이버 공식 가격비교)",
                 "price": 10000,
                 "mall_name": "네이버 가격비교 (공식 카탈로그)",
-                "url": f"https://search.shopping.naver.com/search/all?query={enc_k}&sort=price_asc&minPrice=9500&maxPrice=10500",
+                "url": f"https://search.naver.com/search.naver?where=nexearch&query={enc_k}+%EC%B5%9C%EC%A0%80%EA%B0%80",
                 "image_url": neutral_img,
                 "review_count": 2150,
                 "score": 4.88,
@@ -334,7 +334,7 @@ def fetch_price_data(keyword: str = "농심 신라면 봉지 20개입", target_p
                 "title": f"{keyword} (네이버 스마트스토어 공식인증)",
                 "price": 10500,
                 "mall_name": "네이버 스마트스토어 (공식인증)",
-                "url": f"https://search.shopping.naver.com/search/all?query={enc_k}&sort=price_asc&minPrice=10000&maxPrice=11000",
+                "url": f"https://search.naver.com/search.naver?where=nexearch&query={enc_k}+%EC%8A%A4%EB%A7%88%ED%8A%B8%EC%8A%A4%ED%86%A0%EC%96%B4+%EA%B3%B5%EC%8B%9D",
                 "image_url": neutral_img,
                 "review_count": 1560,
                 "score": 4.86,
@@ -344,7 +344,7 @@ def fetch_price_data(keyword: str = "농심 신라면 봉지 20개입", target_p
                 "title": f"{keyword} (네이버 브랜드스토어 본사직영)",
                 "price": 11200,
                 "mall_name": "네이버 브랜드스토어 (본사직영)",
-                "url": f"https://search.shopping.naver.com/search/all?query={enc_k}&sort=price_asc&minPrice=11000&maxPrice=12000",
+                "url": f"https://search.naver.com/search.naver?where=nexearch&query={enc_k}+%EA%B0%80%EA%B2%A9%EB%B9%84%EA%B5%90",
                 "image_url": neutral_img,
                 "review_count": 2600,
                 "score": 4.90,
@@ -352,10 +352,10 @@ def fetch_price_data(keyword: str = "농심 신라면 봉지 20개입", target_p
             }
         ]
 
-    # 모든 아이템의 URL 정규화 보장 (가격 일치 정밀 딥링크 및 로그인/캡차 우회)
+    # 모든 아이템의 URL 정규화 보장 (차단 없는 네이버 포털 안전 URL)
     if pricetrace_bot:
-        for it in refined_items:
-            it["url"] = pricetrace_bot.normalize_shopping_url(it.get("url", ""), title=it.get("title", ""), price=it.get("price", 0))
+        for idx, it in enumerate(refined_items, 1):
+            it["url"] = pricetrace_bot.normalize_shopping_url(it.get("url", ""), title=it.get("title", ""), price=it.get("price", 0), rank=idx)
 
     top_items = refined_items[:3]
     lowest_price = top_items[0]["price"] if top_items else 0

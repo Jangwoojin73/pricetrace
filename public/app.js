@@ -13,67 +13,43 @@ const state = {
   view: "welcome" // "welcome" | "result"
 };
 
-// URL 정규화 헬퍼 (로그인 강제 및 캡차 발생 최소화, 순위별 가격 일치 딥링크 보장)
-function normalizeProductUrl(url, title = "", price = 0) {
+// URL 정규화 헬퍼 (로그인·영수증 인증 화면 원천 우회 및 순위별 안전 통합검색 딥링크 제공)
+function normalizeProductUrl(url, title = "", price = 0, rank = 1) {
   let trimmed = String(url || "").trim();
-  if (!trimmed || trimmed === "#" || trimmed.startsWith("javascript:")) {
-    if (title && title.trim()) {
-      return `https://search.shopping.naver.com/search/all?query=${encodeURIComponent(title.trim())}&sort=price_asc`;
-    }
-    return "https://shopping.naver.com";
-  }
 
-  // 1. 스마트스토어/브랜드스토어 직결 상품 링크는 반응형 모바일 URL로 최적화하여 보존
-  if (trimmed.includes("smartstore.naver.com/inflow/outlink/url?url=")) {
-    try {
-      const urlObj = new URL(trimmed);
-      const target = urlObj.searchParams.get("url");
-      if (target && target.startsWith("http")) {
-        trimmed = decodeURIComponent(target).split("?")[0];
-      }
-    } catch (e) {
-      // 무시
-    }
-  }
-
-  if (trimmed.includes("smartstore.naver.com/main/products/") && !trimmed.startsWith("https://m.smartstore")) {
-    trimmed = trimmed.replace("https://smartstore.naver.com/", "https://m.smartstore.naver.com/");
-    return trimmed;
-  }
-  if (trimmed.includes("smartstore.naver.com") || trimmed.includes("brand.naver.com")) {
-    return trimmed;
-  }
-
-  // 2. 카탈로그 링크 또는 cr 브릿지 링크: 비로그인 시 nidlogin 리다이렉트를 방지하고 즉시 열리는 공식 검색 딥링크로 연결
-  if (
-    trimmed.includes("shopping.naver.com/v2/bridge") || 
-    trimmed.includes("cr.shopping.naver.com") || 
-    trimmed.includes("cr3.shopping.naver.com") || 
-    trimmed.includes("searchGate") ||
-    trimmed.includes("shopping.naver.com/catalog")
-  ) {
-    if (title && title.trim()) {
-      trimmed = `https://search.shopping.naver.com/search/all?query=${encodeURIComponent(title.trim())}`;
-    }
-  }
-
-  // 3. 네이버 쇼핑 오픈 검색 링크인 경우: sort=price_asc 강제 및 카드 가격 일치 범위 필터 인젝션
-  if (trimmed.includes("search.shopping.naver.com/search/all")) {
+  // 기존 검색어 추출
+  let extractedQuery = "";
+  if (trimmed.includes("?")) {
     try {
       const u = new URL(trimmed);
-      u.searchParams.set("sort", "price_asc");
-      if (price && price > 0 && !u.searchParams.has("minPrice")) {
-        const margin = Math.max(500, Math.round(price * 0.05));
-        u.searchParams.set("minPrice", Math.max(100, price - margin));
-        u.searchParams.set("maxPrice", price + margin);
-      }
-      return u.toString();
-    } catch (e) {
-      // 무시
-    }
+      extractedQuery = u.searchParams.get("query") || "";
+    } catch (e) {}
   }
 
-  return trimmed;
+  const baseQuery = (title || extractedQuery || "신라면 20개")
+    .replace(/[\[\]\(\)]/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+
+  // 순위별 고유 차별화 쿼리 (인위적 minPrice/maxPrice 제거 및 자연스러운 검색어)
+  let targetQuery = `${baseQuery} 최저가`;
+  if (rank === 2) {
+    targetQuery = `${baseQuery} 스마트스토어 공식`;
+  } else if (rank === 3) {
+    targetQuery = `${baseQuery} 가격비교`;
+  }
+
+  const safePortalUrl = `https://search.naver.com/search.naver?where=nexearch&query=${encodeURIComponent(targetQuery)}`;
+
+  // 이미 완성된 search.naver.com 통합검색 링크인 경우 그대로 유지
+  if (trimmed.startsWith("https://search.naver.com/search.naver?")) {
+    return trimmed;
+  }
+
+  // 스마트스토어, 브랜드스토어, 쇼핑 검색, 카탈로그, cr 브릿지 등
+  // 로그인(nidlogin) 및 영수증 인증(OCR/Captcha)을 유발하는 모든 링크를
+  // 비로그인 100% 오픈되는 네이버 공식 포털 가격정보 창으로 완전 단일화!
+  return safePortalUrl;
 }
 
 // 16대 인기 국민 생필품 추천 풀 (동적 셔플 & 로테이션용, /api/trending 데이터로 자동 확장)
@@ -537,12 +513,14 @@ function renderAll(data) {
     if (elements.productUnitTag) elements.productUnitTag.textContent = unit_count > 1 ? `${unit_count}개 패키지` : "온라인 최저가";
     if (elements.productBadgeText) elements.productBadgeText.textContent = unit_count > 1 ? `${unit_count}개입 실시간 검증` : "정품 인증 완료";
 
-    // 링크 설정 (로딩 중 클릭 잠금 해제)
+    // 링크 설정 (로딩 중 클릭 잠금 해제 및 안전 우회 링크)
     if (representative_item.url) {
-      const safeBuyUrl = normalizeProductUrl(representative_item.url, representative_item.title, representative_item.price);
+      const safeBuyUrl = normalizeProductUrl(representative_item.url, representative_item.title, representative_item.price, 1);
       elements.buyButton.href = safeBuyUrl;
+      elements.buyButton.rel = "noopener noreferrer";
+      elements.buyButton.referrerPolicy = "no-referrer";
       elements.buyButton.onclick = null; // 로딩 중 클릭 방지 잠금 해제
-      elements.directBuySubBtn.onclick = () => window.open(safeBuyUrl, "_blank");
+      elements.directBuySubBtn.onclick = () => window.open(safeBuyUrl, "_blank", "noopener,noreferrer");
     }
 
     // 할인 뱃지
@@ -595,7 +573,7 @@ function renderComparisonGrid(items, unit_count = 1) {
     const unitText = unit_count > 1 ? `<span class="text-xs text-slate-400 ml-1">(개당 ${formatCurrency(unitPrice)}원)</span>` : '';
     const reviewCnt = item.review_count ? formatCurrency(item.review_count) + "개" : "리뷰 정보 없음";
     const scoreVal = item.score ? `★ ${item.score.toFixed(2)}` : "평점 정보 없음";
-    const safeItemUrl = normalizeProductUrl(item.url, item.title, item.price);
+    const safeItemUrl = normalizeProductUrl(item.url, item.title, item.price, rank);
 
     const mallRaw = item.mall_name || item.mall || "온라인 최저가";
     let mallBadgeClass = "bg-slate-100 text-slate-700 border-slate-200/80";
@@ -655,8 +633,8 @@ function renderComparisonGrid(items, unit_count = 1) {
         <a 
           href="${safeItemUrl}" 
           target="_blank" 
-          rel="noopener" 
-          referrerpolicy="no-referrer-when-downgrade"
+          rel="noopener noreferrer" 
+          referrerpolicy="no-referrer"
           class="w-full py-2.5 text-center ${btnClass} text-xs font-extrabold rounded-xl transition-colors flex items-center justify-center space-x-1"
         >
           <span>구매 페이지 열기</span>

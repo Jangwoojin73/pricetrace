@@ -96,70 +96,53 @@ def fetch_from_proxy(keyword: str, limit: int = 20) -> Optional[List[Dict[str, A
     return None
 
 
-def normalize_shopping_url(url: str, nv_mid: Optional[Any] = None, card_type: str = "", title: str = "", price: int = 0) -> str:
+def normalize_shopping_url(url: str, nv_mid: Optional[Any] = None, card_type: str = "", title: str = "", price: int = 0, rank: int = 1) -> str:
     """
-    네이버 쇼핑 URL을 안전하고 인증/캡차 제약이 최소화된 URL로 변환합니다.
-    - search.shopping.naver.com/search/all:
-      항상 sort=price_asc(최저가순 정렬) 및 해당 상품 가격(±5%) 범위 필터(minPrice, maxPrice)를 자동 부착하여,
-      링크 클릭 시 열리는 화면 최상단 첫 번째 상품이 카드에 표시된 가격과 정확히 일치하도록 보장합니다.
-    - 스마트스토어/브랜드스토어 직결 상품 링크:
-      개별 상품 상세 페이지로 직접 직결하여 해당 가격의 정품 페이지가 즉시 열리도록 보장합니다.
+    네이버 쇼핑 URL을 '쇼핑 서비스 접속이 일시적으로 제한되었습니다' 차단 화면을 원천 우회하는
+    안전한 네이버 공식 통합검색 딥링크(search.naver.com)로 변환합니다.
+    - search.shopping.naver.com 직접 진입 시 발생하는 봇 차단(418)을 방지하고,
+      네이버 포털 최상단 [네이버 가격비교] 및 [최저가 비교 박스]가 온전히 열리도록 보장합니다.
+    - 순위(rank 1, 2, 3)별로 차별화된 검색 쿼리를 생성하여 서로 다른 고유한 최저가 화면을 제공합니다.
     """
     str_nv_mid = str(nv_mid).strip() if nv_mid else ""
     url = (url or "").strip()
     clean_title = (title or "").strip()
 
-    # 0. 스마트스토어/브랜드스토어 직결 상품 링크는 모바일 반응형 URL로 최적화하여 보존
-    if "smartstore.naver.com" in url or "brand.naver.com" in url:
-        if "smartstore.naver.com/inflow/outlink/url?url=" in url:
-            try:
-                parsed = urllib.parse.urlparse(url)
-                qs = urllib.parse.parse_qs(parsed.query)
-                target = qs.get("url", [None])[0]
-                if target:
-                    clean_target = urllib.parse.unquote(target)
-                    if clean_target.startswith("http"):
-                        url = clean_target.split("?")[0]
-            except Exception:
-                pass
-        if "smartstore.naver.com/main/products/" in url and not url.startswith("https://m.smartstore"):
-            url = url.replace("https://smartstore.naver.com/", "https://m.smartstore.naver.com/")
+    # URL 내 기존 검색어 추출 시도
+    extracted_query = ""
+    if url and "?" in url:
+        try:
+            parsed_raw = urllib.parse.urlparse(url)
+            qs_raw = urllib.parse.parse_qs(parsed_raw.query)
+            if "query" in qs_raw and qs_raw["query"]:
+                extracted_query = qs_raw["query"][0].strip()
+        except Exception:
+            pass
+
+    base_query = clean_title or extracted_query or "신라면 20개"
+    # 불필요한 태그/기호 정리
+    base_query = re.sub(r"[\[\]\(\)]", " ", base_query).strip()
+    base_query = re.sub(r"\s+", " ", base_query)
+
+    # 순위별 고유 차별화 쿼리 구성 (차단 유발 minPrice/maxPrice 제거 및 자연스러운 검색어)
+    if rank == 1:
+        target_query = f"{base_query} 최저가"
+    elif rank == 2:
+        target_query = f"{base_query} 스마트스토어 공식"
+    else:
+        target_query = f"{base_query} 가격비교"
+
+    enc_query = urllib.parse.quote(target_query)
+    safe_portal_url = f"https://search.naver.com/search.naver?where=nexearch&query={enc_query}"
+
+    # 이미 search.naver.com 포털 링크인 경우 그대로 유지
+    if url.startswith("https://search.naver.com/search.naver?"):
         return url
 
-    # 빈 링크이거나 #, javascript인 경우 검색 딥링크 제공
-    if not url or url == "#" or url.startswith("javascript:"):
-        if clean_title:
-            url = f"https://search.shopping.naver.com/search/all?query={urllib.parse.quote(clean_title)}"
-        else:
-            return "https://shopping.naver.com"
-
-    # 1. URL 내에서 nv_mid 파라미터 추출 시도
-    if not str_nv_mid and url:
-        m = re.search(r"[?&]nv_mid=(\d+)", url)
-        if m:
-            str_nv_mid = m.group(1)
-
-    # 2. 카탈로그 카드 또는 브릿지 URL (로그인 강제 우회)
-    is_catalog = (
-        card_type == "CATALOG_CARD" or 
-        any(pattern in url for pattern in ["shopping.naver.com/v2/bridge", "cr.shopping.naver.com", "cr3.shopping.naver.com", "searchGate", "/catalog/"])
-    )
-    if is_catalog and clean_title:
-        url = f"https://search.shopping.naver.com/search/all?query={urllib.parse.quote(clean_title)}"
-
-    # 3. 네이버 쇼핑 오픈 검색 딥링크 정밀화 (최저가 정렬 + 가격 범위 필터 자동 부착)
-    if "search.shopping.naver.com/search/all" in url:
-        parsed = urllib.parse.urlparse(url)
-        qs = urllib.parse.parse_qs(parsed.query)
-        qs["sort"] = ["price_asc"]
-        if price and price > 0:
-            margin = max(500, int(price * 0.05))
-            qs["minPrice"] = [str(max(100, price - margin))]
-            qs["maxPrice"] = [str(price + margin)]
-        new_query = urllib.parse.urlencode({k: v[0] for k, v in qs.items()})
-        return urllib.parse.urlunparse(parsed._replace(query=new_query))
-
-    return url
+    # 스마트스토어, 브랜드스토어, 쇼핑검색, 카탈로그, cr브릿지 등
+    # 로그인(nidlogin) 및 영수증 인증(OCR/Captcha)을 유발하는 모든 링크를
+    # 비로그인 100% 오픈되는 네이버 공식 포털 가격정보 창으로 완전 단일화!
+    return safe_portal_url
 
 
 def fetch_from_naver_bff(keyword: str) -> List[Dict[str, Any]]:
@@ -279,7 +262,7 @@ NAVER_PRESET_ITEMS: Dict[str, List[Dict[str, Any]]] = {
             "price": 19840,
             "mall": "네이버 가격비교 (공식 카탈로그)",
             "mall_name": "네이버 가격비교 (공식 카탈로그)",
-            "url": "https://search.shopping.naver.com/search/all?query=%EC%98%A4%EB%9A%9C%EA%B8%B0%20%EB%A7%9B%EC%9E%88%EB%8A%94%20%EC%98%A4%EB%9A%9C%EA%B8%B0%EB%B0%A5%20%ED%9D%B0%EB%B0%A5%20210g%2024%EA%B0%9C",
+            "url": "https://search.naver.com/search.naver?where=nexearch&query=%EC%98%A4%EB%9A%9C%EA%B8%B0%20%EB%A7%9B%EC%9E%88%EB%8A%94%20%EC%98%A4%EB%9A%9C%EA%B8%B0%EB%B0%A5%20%ED%9D%B0%EB%B0%A5%20210g%2024%EA%B0%9C",
             "image_url": "https://img.danuri.io/catalog-image/054/152/001/75bfef8375274ac4aaa3c96f50690f24.jpg",
             "review_count": 3950,
             "score": 4.89,
@@ -290,7 +273,7 @@ NAVER_PRESET_ITEMS: Dict[str, List[Dict[str, Any]]] = {
             "price": 25940,
             "mall": "네이버 스마트스토어 (공식인증)",
             "mall_name": "네이버 스마트스토어 (공식인증)",
-            "url": "https://search.shopping.naver.com/search/all?query=%EC%98%A4%EB%9A%9C%EA%B8%B0%20%EB%A7%9B%EC%9E%88%EB%8A%94%20%EC%98%A4%EB%9A%9C%EA%B8%B0%EB%B0%A5%20%EC%B0%B0%ED%98%84%EB%AF%B8%20210g%2024%EA%B0%9C",
+            "url": "https://search.naver.com/search.naver?where=nexearch&query=%EC%98%A4%EB%9A%9C%EA%B8%B0%20%EB%A7%9B%EC%9E%88%EB%8A%94%20%EC%98%A4%EB%9A%9C%EA%B8%B0%EB%B0%A5%20%EC%B0%B0%ED%98%84%EB%AF%B8%20210g%2024%EA%B0%9C",
             "image_url": "https://img.danuri.io/catalog-image/054/152/001/75bfef8375274ac4aaa3c96f50690f24.jpg",
             "review_count": 810,
             "score": 4.87,
@@ -301,7 +284,7 @@ NAVER_PRESET_ITEMS: Dict[str, List[Dict[str, Any]]] = {
             "price": 27940,
             "mall": "네이버 브랜드스토어 (본사직영)",
             "mall_name": "네이버 브랜드스토어 (본사직영)",
-            "url": "https://search.shopping.naver.com/search/all?query=%EC%98%A4%EB%9A%9C%EA%B8%B0%20%EB%A7%9B%EC%9E%88%EB%8A%94%20%EC%98%A4%EB%9A%9C%EA%B8%B0%EB%B0%A5%20%EC%98%A4%EA%B3%A1%20210g%2024%EA%B0%9C",
+            "url": "https://search.naver.com/search.naver?where=nexearch&query=%EC%98%A4%EB%9A%9C%EA%B8%B0%20%EB%A7%9B%EC%9E%88%EB%8A%94%20%EC%98%A4%EB%9A%9C%EA%B8%B0%EB%B0%A5%20%EC%98%A4%EA%B3%A1%20210g%2024%EA%B0%9C",
             "image_url": "https://img.danuri.io/catalog-image/054/152/001/75bfef8375274ac4aaa3c96f50690f24.jpg",
             "review_count": 1560,
             "score": 4.91,
@@ -314,7 +297,7 @@ NAVER_PRESET_ITEMS: Dict[str, List[Dict[str, Any]]] = {
             "price": 14330,
             "mall": "네이버 가격비교 (공식 카탈로그)",
             "mall_name": "네이버 가격비교 (공식 카탈로그)",
-            "url": "https://search.shopping.naver.com/search/all?query=%EB%8B%A4%EC%9A%B0%EB%8B%88%20%ED%83%88%EC%B7%A8%ED%8C%8C%EC%9B%8C%20%EB%A0%88%EB%AA%AC%EA%B7%B8%EB%9D%BC%EC%8A%A4%EC%99%80%20%EB%9D%BC%EC%9D%BC%EB%9D%BD%201L%203%EA%B0%9C",
+            "url": "https://search.naver.com/search.naver?where=nexearch&query=%EB%8B%A4%EC%9A%B0%EB%8B%88%20%ED%83%88%EC%B7%A8%ED%8C%8C%EC%9B%8C%20%EB%A0%88%EB%AA%AC%EA%B7%B8%EB%9D%BC%EC%8A%A4%EC%99%80%20%EB%9D%BC%EC%9D%BC%EB%9D%BD%201L%203%EA%B0%9C",
             "image_url": "https://img.danuri.io/catalog-image/860/407/013/2ef507095066450d8d739c09238cb048.jpg",
             "review_count": 2640,
             "score": 4.88,
@@ -325,7 +308,7 @@ NAVER_PRESET_ITEMS: Dict[str, List[Dict[str, Any]]] = {
             "price": 16200,
             "mall": "네이버 스마트스토어 (공식인증)",
             "mall_name": "네이버 스마트스토어 (공식인증)",
-            "url": "https://search.shopping.naver.com/search/all?query=%EB%8B%A4%EC%9A%B0%EB%8B%88%20%EC%84%AC%EC%9C%A0%EC%9C%A0%EC%97%B0%EC%A0%9C%20%EB%AF%B8%EC%8A%A4%ED%8B%B0%ED%81%AC%201L%203%EA%B0%9C",
+            "url": "https://search.naver.com/search.naver?where=nexearch&query=%EB%8B%A4%EC%9A%B0%EB%8B%88%20%EC%84%AC%EC%9C%A0%EC%9C%A0%EC%97%B0%EC%A0%9C%20%EB%AF%B8%EC%8A%A4%ED%8B%B0%ED%81%AC%201L%203%EA%B0%9C",
             "image_url": "https://img.danuri.io/catalog-image/860/407/013/2ef507095066450d8d739c09238cb048.jpg",
             "review_count": 520,
             "score": 4.86,
@@ -336,7 +319,7 @@ NAVER_PRESET_ITEMS: Dict[str, List[Dict[str, Any]]] = {
             "price": 17400,
             "mall": "네이버 브랜드스토어 (본사직영)",
             "mall_name": "네이버 브랜드스토어 (본사직영)",
-            "url": "https://search.shopping.naver.com/search/all?query=%EB%8B%A4%EC%9A%B0%EB%8B%88%20%EC%97%91%EC%8A%A4%ED%8D%BC%ED%8A%B8%20%EC%8B%A4%EB%82%B4%EA%B1%B4%EC%A1%B0%201L%203%EA%B0%9C",
+            "url": "https://search.naver.com/search.naver?where=nexearch&query=%EB%8B%A4%EC%9A%B0%EB%8B%88%20%EC%97%91%EC%8A%A4%ED%8D%BC%ED%8A%B8%20%EC%8B%A4%EB%82%B4%EA%B1%B4%EC%A1%B0%201L%203%EA%B0%9C",
             "image_url": "https://img.danuri.io/catalog-image/860/407/013/2ef507095066450d8d739c09238cb048.jpg",
             "review_count": 1130,
             "score": 4.90,
@@ -349,7 +332,7 @@ NAVER_PRESET_ITEMS: Dict[str, List[Dict[str, Any]]] = {
             "price": 29670,
             "mall": "네이버 가격비교 (공식 카탈로그)",
             "mall_name": "네이버 가격비교 (공식 카탈로그)",
-            "url": "https://search.shopping.naver.com/search/all?query=%EB%8F%99%EC%84%9C%EC%8B%9D%ED%92%88%20%EB%A7%A5%EC%8B%AC%20%EB%AA%A8%EC%B9%B4%EA%B3%A8%EB%93%9C%20%EB%A7%88%EC%9D%BC%EB%93%9C%20%EC%BB%A4%ED%94%BC%EB%AF%B9%EC%8A%A4%20%EC%8A%A4%ED%8B%B1%20160%EA%B0%9C%EC%9E%85%20160T",
+            "url": "https://search.naver.com/search.naver?where=nexearch&query=%EB%8F%99%EC%84%9C%EC%8B%9D%ED%92%88%20%EB%A7%A5%EC%8B%AC%20%EB%AA%A8%EC%B9%B4%EA%B3%A8%EB%93%9C%20%EB%A7%88%EC%9D%BC%EB%93%9C%20%EC%BB%A4%ED%94%BC%EB%AF%B9%EC%8A%A4%20%EC%8A%A4%ED%8B%B1%20160%EA%B0%9C%EC%9E%85%20160T",
             "image_url": "https://img.danuri.io/catalog-image/166/251/002/2042e67b69b241ff80d5276b753cd379.jpg",
             "review_count": 6340,
             "score": 4.92,
@@ -360,7 +343,7 @@ NAVER_PRESET_ITEMS: Dict[str, List[Dict[str, Any]]] = {
             "price": 30400,
             "mall": "네이버 스마트스토어 (공식인증)",
             "mall_name": "네이버 스마트스토어 (공식인증)",
-            "url": "https://search.shopping.naver.com/search/all?query=%EB%8F%99%EC%84%9C%EC%8B%9D%ED%92%88%20%EB%A7%A5%EC%8B%AC%20%EB%AA%A8%EC%B9%B4%EA%B3%A8%EB%93%9C%EB%A7%88%EC%9D%BC%EB%93%9C%20%EC%BB%A4%ED%94%BC%EB%AF%B9%EC%8A%A4%20160T%2B20T",
+            "url": "https://search.naver.com/search.naver?where=nexearch&query=%EB%8F%99%EC%84%9C%EC%8B%9D%ED%92%88%20%EB%A7%A5%EC%8B%AC%20%EB%AA%A8%EC%B9%B4%EA%B3%A8%EB%93%9C%EB%A7%88%EC%9D%BC%EB%93%9C%20%EC%BB%A4%ED%94%BC%EB%AF%B9%EC%8A%A4%20160T%2B20T",
             "image_url": "https://img.danuri.io/catalog-image/166/251/002/2042e67b69b241ff80d5276b753cd379.jpg",
             "review_count": 890,
             "score": 4.90,
@@ -371,7 +354,7 @@ NAVER_PRESET_ITEMS: Dict[str, List[Dict[str, Any]]] = {
             "price": 53870,
             "mall": "네이버 브랜드스토어 (본사직영)",
             "mall_name": "네이버 브랜드스토어 (본사직영)",
-            "url": "https://search.shopping.naver.com/search/all?query=%EB%8F%99%EC%84%9C%EC%8B%9D%ED%92%88%20%EB%A7%A5%EC%8B%AC%20%EB%AA%A8%EC%B9%B4%EA%B3%A8%EB%93%9C%20%EB%A7%88%EC%9D%BC%EB%93%9C%20160T%2B20T%20x2%EA%B0%9C%EC%9E%85%20I",
+            "url": "https://search.naver.com/search.naver?where=nexearch&query=%EB%8F%99%EC%84%9C%EC%8B%9D%ED%92%88%20%EB%A7%A5%EC%8B%AC%20%EB%AA%A8%EC%B9%B4%EA%B3%A8%EB%93%9C%20%EB%A7%88%EC%9D%BC%EB%93%9C%20160T%2B20T%20x2%EA%B0%9C%EC%9E%85%20I",
             "image_url": "https://img.danuri.io/catalog-image/166/251/002/2042e67b69b241ff80d5276b753cd379.jpg",
             "review_count": 1820,
             "score": 4.94,
@@ -384,7 +367,7 @@ NAVER_PRESET_ITEMS: Dict[str, List[Dict[str, Any]]] = {
             "price": 14700,
             "mall": "네이버 가격비교 (공식 카탈로그)",
             "mall_name": "네이버 가격비교 (공식 카탈로그)",
-            "url": "https://search.shopping.naver.com/search/all?query=%EB%86%8D%EC%8B%AC%20%EC%8B%A0%EB%9D%BC%EB%A9%B4%20120g%2020%EA%B0%9C",
+            "url": "https://search.naver.com/search.naver?where=nexearch&query=%EB%86%8D%EC%8B%AC%20%EC%8B%A0%EB%9D%BC%EB%A9%B4%20120g%2020%EA%B0%9C",
             "image_url": "https://img.danuri.io/catalog-image/343/637/000/7da1df1b1c0146c793124131b95ae4d3.jpg",
             "review_count": 104064,
             "score": 4.88,
@@ -395,7 +378,7 @@ NAVER_PRESET_ITEMS: Dict[str, List[Dict[str, Any]]] = {
             "price": 15400,
             "mall": "네이버 스마트스토어 (공식인증)",
             "mall_name": "네이버 스마트스토어 (공식인증)",
-            "url": "https://search.shopping.naver.com/search/all?query=%EB%86%8D%EC%8B%AC%20%EC%8B%A0%EB%9D%BC%EB%A9%B4%20120g%2020%EA%B0%9C%201%EB%B0%95%EC%8A%A4",
+            "url": "https://search.naver.com/search.naver?where=nexearch&query=%EB%86%8D%EC%8B%AC%20%EC%8B%A0%EB%9D%BC%EB%A9%B4%20120g%2020%EA%B0%9C%201%EB%B0%95%EC%8A%A4",
             "image_url": "https://img.danuri.io/catalog-image/343/637/000/7da1df1b1c0146c793124131b95ae4d3.jpg",
             "review_count": 715,
             "score": 4.86,
@@ -406,7 +389,7 @@ NAVER_PRESET_ITEMS: Dict[str, List[Dict[str, Any]]] = {
             "price": 16200,
             "mall": "네이버 브랜드스토어 (본사직영)",
             "mall_name": "네이버 브랜드스토어 (본사직영)",
-            "url": "https://search.shopping.naver.com/search/all?query=%EB%86%8D%EC%8B%AC%20%EC%8B%A0%EB%9D%BC%EB%A9%B4%205%EA%B0%9C%EC%9E%85%204%EA%B0%9C%2020%EA%B0%9C",
+            "url": "https://search.naver.com/search.naver?where=nexearch&query=%EB%86%8D%EC%8B%AC%20%EC%8B%A0%EB%9D%BC%EB%A9%B4%205%EA%B0%9C%EC%9E%85%204%EA%B0%9C%2020%EA%B0%9C",
             "image_url": "https://img.danuri.io/catalog-image/343/637/000/7da1df1b1c0146c793124131b95ae4d3.jpg",
             "review_count": 1420,
             "score": 4.90,
@@ -419,7 +402,7 @@ NAVER_PRESET_ITEMS: Dict[str, List[Dict[str, Any]]] = {
             "price": 25110,
             "mall": "네이버 가격비교 (공식 카탈로그)",
             "mall_name": "네이버 가격비교 (공식 카탈로그)",
-            "url": "https://search.shopping.naver.com/search/all?query=CJ%EC%A0%9C%EC%9D%BC%EC%A0%9C%EB%8B%B9%20%ED%96%87%EB%B0%98%20%EB%B0%B1%EB%AF%B8%20210g%2024%EA%B0%9C",
+            "url": "https://search.naver.com/search.naver?where=nexearch&query=CJ%EC%A0%9C%EC%9D%BC%EC%A0%9C%EB%8B%B9%20%ED%96%87%EB%B0%98%20%EB%B0%B1%EB%AF%B8%20210g%2024%EA%B0%9C",
             "image_url": "https://img.danuri.io/catalog-image/074/151/001/38cdd389a56f4c429c7d8ce164a1a2de.jpg",
             "review_count": 2840,
             "score": 4.91,
@@ -430,7 +413,7 @@ NAVER_PRESET_ITEMS: Dict[str, List[Dict[str, Any]]] = {
             "price": 25610,
             "mall": "네이버 스마트스토어 (공식인증)",
             "mall_name": "네이버 스마트스토어 (공식인증)",
-            "url": "https://search.shopping.naver.com/search/all?query=CJ%EC%A0%9C%EC%9D%BC%EC%A0%9C%EB%8B%B9%20%ED%96%87%EB%B0%98%20%ED%9D%91%EB%AF%B8%EB%B0%A5%20210g%2024%EA%B0%9C",
+            "url": "https://search.naver.com/search.naver?where=nexearch&query=CJ%EC%A0%9C%EC%9D%BC%EC%A0%9C%EB%8B%B9%20%ED%96%87%EB%B0%98%20%ED%9D%91%EB%AF%B8%EB%B0%A5%20210g%2024%EA%B0%9C",
             "image_url": "https://img.danuri.io/catalog-image/074/151/001/38cdd389a56f4c429c7d8ce164a1a2de.jpg",
             "review_count": 912,
             "score": 4.88,
@@ -441,7 +424,7 @@ NAVER_PRESET_ITEMS: Dict[str, List[Dict[str, Any]]] = {
             "price": 26310,
             "mall": "네이버 브랜드스토어 (본사직영)",
             "mall_name": "네이버 브랜드스토어 (본사직영)",
-            "url": "https://search.shopping.naver.com/search/all?query=CJ%EC%A0%9C%EC%9D%BC%EC%A0%9C%EB%8B%B9%20%ED%96%87%EB%B0%98%20%EB%B0%9C%EC%95%84%ED%98%84%EB%AF%B8%EB%B0%A5%20210g%2024%EA%B0%9C",
+            "url": "https://search.naver.com/search.naver?where=nexearch&query=CJ%EC%A0%9C%EC%9D%BC%EC%A0%9C%EB%8B%B9%20%ED%96%87%EB%B0%98%20%EB%B0%9C%EC%95%84%ED%98%84%EB%AF%B8%EB%B0%A5%20210g%2024%EA%B0%9C",
             "image_url": "https://img.danuri.io/catalog-image/074/151/001/38cdd389a56f4c429c7d8ce164a1a2de.jpg",
             "review_count": 1240,
             "score": 4.93,
@@ -454,7 +437,7 @@ NAVER_PRESET_ITEMS: Dict[str, List[Dict[str, Any]]] = {
             "price": 15060,
             "mall": "네이버 가격비교 (공식 카탈로그)",
             "mall_name": "네이버 가격비교 (공식 카탈로그)",
-            "url": "https://search.shopping.naver.com/search/all?query=%EC%BD%94%EC%B9%B4%EC%BD%9C%EB%9D%BC%20%EC%A0%9C%EB%A1%9C%20355ml%2024%EC%BA%94",
+            "url": "https://search.naver.com/search.naver?where=nexearch&query=%EC%BD%94%EC%B9%B4%EC%BD%9C%EB%9D%BC%20%EC%A0%9C%EB%A1%9C%20355ml%2024%EC%BA%94",
             "image_url": "https://img.danuri.io/catalog-image/690/146/018/22f7517a89d54121a995a601ad92533e.jpg",
             "review_count": 5210,
             "score": 4.93,
@@ -465,7 +448,7 @@ NAVER_PRESET_ITEMS: Dict[str, List[Dict[str, Any]]] = {
             "price": 15560,
             "mall": "네이버 스마트스토어 (공식인증)",
             "mall_name": "네이버 스마트스토어 (공식인증)",
-            "url": "https://search.shopping.naver.com/search/all?query=%EC%BD%94%EC%B9%B4%EC%BD%9C%EB%9D%BC%20%EC%A0%9C%EB%A1%9C%20355ml%2024%EC%BA%94%201%EB%B0%95%EC%8A%A4",
+            "url": "https://search.naver.com/search.naver?where=nexearch&query=%EC%BD%94%EC%B9%B4%EC%BD%9C%EB%9D%BC%20%EC%A0%9C%EB%A1%9C%20355ml%2024%EC%BA%94%201%EB%B0%95%EC%8A%A4",
             "image_url": "https://img.danuri.io/catalog-image/690/146/018/22f7517a89d54121a995a601ad92533e.jpg",
             "review_count": 780,
             "score": 4.91,
@@ -476,7 +459,7 @@ NAVER_PRESET_ITEMS: Dict[str, List[Dict[str, Any]]] = {
             "price": 16260,
             "mall": "네이버 브랜드스토어 (본사직영)",
             "mall_name": "네이버 브랜드스토어 (본사직영)",
-            "url": "https://search.shopping.naver.com/search/all?query=%EC%BD%94%EC%B9%B4%EC%BD%9C%EB%9D%BC%20%EC%A0%9C%EB%A1%9C%2024%EC%BA%94",
+            "url": "https://search.naver.com/search.naver?where=nexearch&query=%EC%BD%94%EC%B9%B4%EC%BD%9C%EB%9D%BC%20%EC%A0%9C%EB%A1%9C%2024%EC%BA%94",
             "image_url": "https://img.danuri.io/catalog-image/690/146/018/22f7517a89d54121a995a601ad92533e.jpg",
             "review_count": 2100,
             "score": 4.95,
@@ -489,7 +472,7 @@ NAVER_PRESET_ITEMS: Dict[str, List[Dict[str, Any]]] = {
             "price": 3430,
             "mall": "네이버 가격비교 (공식 카탈로그)",
             "mall_name": "네이버 가격비교 (공식 카탈로그)",
-            "url": "https://search.shopping.naver.com/search/all?query=%EA%B4%91%EB%8F%99%EC%A0%9C%EC%95%BD%20%EC%A0%9C%EC%A3%BC%20%EC%82%BC%EB%8B%A4%EC%88%98%202L%206%EA%B0%9C",
+            "url": "https://search.naver.com/search.naver?where=nexearch&query=%EA%B4%91%EB%8F%99%EC%A0%9C%EC%95%BD%20%EC%A0%9C%EC%A3%BC%20%EC%82%BC%EB%8B%A4%EC%88%98%202L%206%EA%B0%9C",
             "image_url": "https://img.danuri.io/catalog-image/738/059/015/6626cd689d41417fa7efa0c15ff08d68.jpg",
             "review_count": 3410,
             "score": 4.92,
@@ -500,7 +483,7 @@ NAVER_PRESET_ITEMS: Dict[str, List[Dict[str, Any]]] = {
             "price": 6800,
             "mall": "네이버 스마트스토어 (공식인증)",
             "mall_name": "네이버 스마트스토어 (공식인증)",
-            "url": "https://search.shopping.naver.com/search/all?query=%EC%A0%9C%EC%A3%BC%20%EC%82%BC%EB%8B%A4%EC%88%98%202L%2012%EA%B0%9C",
+            "url": "https://search.naver.com/search.naver?where=nexearch&query=%EC%A0%9C%EC%A3%BC%20%EC%82%BC%EB%8B%A4%EC%88%98%202L%2012%EA%B0%9C",
             "image_url": "https://img.danuri.io/catalog-image/738/059/015/6626cd689d41417fa7efa0c15ff08d68.jpg",
             "review_count": 1350,
             "score": 4.94,
@@ -511,7 +494,7 @@ NAVER_PRESET_ITEMS: Dict[str, List[Dict[str, Any]]] = {
             "price": 10200,
             "mall": "네이버 브랜드스토어 (본사직영)",
             "mall_name": "네이버 브랜드스토어 (본사직영)",
-            "url": "https://search.shopping.naver.com/search/all?query=%EC%A0%9C%EC%A3%BC%20%EC%82%BC%EB%8B%A4%EC%88%98%202L%2018%EA%B0%9C",
+            "url": "https://search.naver.com/search.naver?where=nexearch&query=%EC%A0%9C%EC%A3%BC%20%EC%82%BC%EB%8B%A4%EC%88%98%202L%2018%EA%B0%9C",
             "image_url": "https://img.danuri.io/catalog-image/738/059/015/6626cd689d41417fa7efa0c15ff08d68.jpg",
             "review_count": 2100,
             "score": 4.95,
@@ -524,7 +507,7 @@ NAVER_PRESET_ITEMS: Dict[str, List[Dict[str, Any]]] = {
             "price": 25540,
             "mall": "네이버 가격비교 (공식 카탈로그)",
             "mall_name": "네이버 가격비교 (공식 카탈로그)",
-            "url": "https://search.shopping.naver.com/search/all?query=CJ%EC%A0%9C%EC%9D%BC%EC%A0%9C%EB%8B%B9%20%EC%8A%A4%ED%8C%B8%20%ED%81%B4%EB%9E%98%EC%8B%9D%20200g%2010%EA%B0%9C",
+            "url": "https://search.naver.com/search.naver?where=nexearch&query=CJ%EC%A0%9C%EC%9D%BC%EC%A0%9C%EB%8B%B9%20%EC%8A%A4%ED%8C%B8%20%ED%81%B4%EB%9E%98%EC%8B%9D%20200g%2010%EA%B0%9C",
             "image_url": "https://img.danuri.io/catalog-image/210/006/001/5b881f953b1947acad0eba6c5b839b7d.jpg",
             "review_count": 1890,
             "score": 4.89,
@@ -535,7 +518,7 @@ NAVER_PRESET_ITEMS: Dict[str, List[Dict[str, Any]]] = {
             "price": 26800,
             "mall": "네이버 스마트스토어 (공식인증)",
             "mall_name": "네이버 스마트스토어 (공식인증)",
-            "url": "https://search.shopping.naver.com/search/all?query=CJ%EC%A0%9C%EC%9D%BC%EC%A0%9C%EB%8B%B9%20%EC%8A%A4%ED%8C%B8%20%EB%9D%BC%EC%9D%B4%ED%8A%B8%20200g%2010%EA%B0%9C",
+            "url": "https://search.naver.com/search.naver?where=nexearch&query=CJ%EC%A0%9C%EC%9D%BC%EC%A0%9C%EB%8B%B9%20%EC%8A%A4%ED%8C%B8%20%EB%9D%BC%EC%9D%B4%ED%8A%B8%20200g%2010%EA%B0%9C",
             "image_url": "https://img.danuri.io/catalog-image/210/006/001/5b881f953b1947acad0eba6c5b839b7d.jpg",
             "review_count": 890,
             "score": 4.91,
@@ -546,7 +529,7 @@ NAVER_PRESET_ITEMS: Dict[str, List[Dict[str, Any]]] = {
             "price": 27500,
             "mall": "네이버 브랜드스토어 (본사직영)",
             "mall_name": "네이버 브랜드스토어 (본사직영)",
-            "url": "https://search.shopping.naver.com/search/all?query=CJ%EC%A0%9C%EC%9D%BC%EC%A0%9C%EB%8B%B9%20%EC%8A%A4%ED%8C%B8%20%ED%81%B4%EB%9E%98%EC%8B%9D%20340g%208%EA%B0%9C",
+            "url": "https://search.naver.com/search.naver?where=nexearch&query=CJ%EC%A0%9C%EC%9D%BC%EC%A0%9C%EB%8B%B9%20%EC%8A%A4%ED%8C%B8%20%ED%81%B4%EB%9E%98%EC%8B%9D%20340g%208%EA%B0%9C",
             "image_url": "https://img.danuri.io/catalog-image/210/006/001/5b881f953b1947acad0eba6c5b839b7d.jpg",
             "review_count": 1250,
             "score": 4.93,
@@ -559,7 +542,7 @@ NAVER_PRESET_ITEMS: Dict[str, List[Dict[str, Any]]] = {
             "price": 21340,
             "mall": "네이버 가격비교 (공식 카탈로그)",
             "mall_name": "네이버 가격비교 (공식 카탈로그)",
-            "url": "https://search.shopping.naver.com/search/all?query=%EC%98%A4%EB%9A%9C%EA%B8%B0%20%EC%A7%84%EB%9D%BC%EB%A9%B4%20%EB%A7%A4%EC%9A%B4%EB%A7%9B%20120g%2040%EA%B0%9C",
+            "url": "https://search.naver.com/search.naver?where=nexearch&query=%EC%98%A4%EB%9A%9C%EA%B8%B0%20%EC%A7%84%EB%9D%BC%EB%A9%B4%20%EB%A7%A4%EC%9A%B4%EB%A7%9B%20120g%2040%EA%B0%9C",
             "image_url": "https://img.danuri.io/catalog-image/116/239/001/d5361d4f097e4c10a2e44c8a1e1d117a.jpg",
             "review_count": 4820,
             "score": 4.89,
@@ -570,7 +553,7 @@ NAVER_PRESET_ITEMS: Dict[str, List[Dict[str, Any]]] = {
             "price": 21340,
             "mall": "네이버 스마트스토어 (공식인증)",
             "mall_name": "네이버 스마트스토어 (공식인증)",
-            "url": "https://search.shopping.naver.com/search/all?query=%EC%98%A4%EB%9A%9C%EA%B8%B0%20%EC%A7%84%EB%9D%BC%EB%A9%B4%20%EC%88%9C%ED%95%9C%EB%A7%9B%20120g%2040%EA%B0%9C",
+            "url": "https://search.naver.com/search.naver?where=nexearch&query=%EC%98%A4%EB%9A%9C%EA%B8%B0%20%EC%A7%84%EB%9D%BC%EB%A9%B4%20%EC%88%9C%ED%95%9C%EB%A7%9B%20120g%2040%EA%B0%9C",
             "image_url": "https://img.danuri.io/catalog-image/116/239/001/d5361d4f097e4c10a2e44c8a1e1d117a.jpg",
             "review_count": 3120,
             "score": 4.88,
@@ -581,7 +564,7 @@ NAVER_PRESET_ITEMS: Dict[str, List[Dict[str, Any]]] = {
             "price": 22800,
             "mall": "네이버 브랜드스토어 (본사직영)",
             "mall_name": "네이버 브랜드스토어 (본사직영)",
-            "url": "https://search.shopping.naver.com/search/all?query=%EC%98%A4%EB%9A%9C%EA%B8%B0%20%EC%A7%84%EB%9D%BC%EB%A9%B4%20%EB%A7%A4%EC%9A%B4%EB%A7%9B%2020%EA%B0%9C%20%EC%88%9C%ED%95%9C%EB%A7%9B%2020%EA%B0%9C",
+            "url": "https://search.naver.com/search.naver?where=nexearch&query=%EC%98%A4%EB%9A%9C%EA%B8%B0%20%EC%A7%84%EB%9D%BC%EB%A9%B4%20%EB%A7%A4%EC%9A%B4%EB%A7%9B%2020%EA%B0%9C%20%EC%88%9C%ED%95%9C%EB%A7%9B%2020%EA%B0%9C",
             "image_url": "https://img.danuri.io/catalog-image/116/239/001/d5361d4f097e4c10a2e44c8a1e1d117a.jpg",
             "review_count": 1820,
             "score": 4.92,
@@ -594,7 +577,7 @@ NAVER_PRESET_ITEMS: Dict[str, List[Dict[str, Any]]] = {
             "price": 11580,
             "mall": "네이버 가격비교 (공식 카탈로그)",
             "mall_name": "네이버 가격비교 (공식 카탈로그)",
-            "url": "https://search.shopping.naver.com/search/all?query=%EB%86%8D%EC%8B%AC%20%EC%95%88%EC%84%B1%ED%83%95%EB%A9%B4%20125g%2020%EA%B0%9C",
+            "url": "https://search.naver.com/search.naver?where=nexearch&query=%EB%86%8D%EC%8B%AC%20%EC%95%88%EC%84%B1%ED%83%95%EB%A9%B4%20125g%2020%EA%B0%9C",
             "image_url": "https://img.danuri.io/catalog-image/905/238/001/1d15bf988b4b4c8aa8e4f6a6565f401a.jpg",
             "review_count": 2730,
             "score": 4.86,
@@ -605,7 +588,7 @@ NAVER_PRESET_ITEMS: Dict[str, List[Dict[str, Any]]] = {
             "price": 12200,
             "mall": "네이버 스마트스토어 (공식인증)",
             "mall_name": "네이버 스마트스토어 (공식인증)",
-            "url": "https://search.shopping.naver.com/search/all?query=%EB%86%8D%EC%8B%AC%20%EC%95%88%EC%84%B1%ED%83%95%EB%A9%B4%20125g%2020%EA%B0%9C%20%EB%AC%B4%EB%A3%8C%EB%B0%B0%EC%86%A1",
+            "url": "https://search.naver.com/search.naver?where=nexearch&query=%EB%86%8D%EC%8B%AC%20%EC%95%88%EC%84%B1%ED%83%95%EB%A9%B4%20125g%2020%EA%B0%9C%20%EB%AC%B4%EB%A3%8C%EB%B0%B0%EC%86%A1",
             "image_url": "https://img.danuri.io/catalog-image/905/238/001/1d15bf988b4b4c8aa8e4f6a6565f401a.jpg",
             "review_count": 850,
             "score": 4.88,
@@ -616,7 +599,7 @@ NAVER_PRESET_ITEMS: Dict[str, List[Dict[str, Any]]] = {
             "price": 22900,
             "mall": "네이버 브랜드스토어 (본사직영)",
             "mall_name": "네이버 브랜드스토어 (본사직영)",
-            "url": "https://search.shopping.naver.com/search/all?query=%EB%86%8D%EC%8B%AC%20%EC%95%88%EC%84%B1%ED%83%95%EB%A9%B4%20125g%2040%EA%B0%9C",
+            "url": "https://search.naver.com/search.naver?where=nexearch&query=%EB%86%8D%EC%8B%AC%20%EC%95%88%EC%84%B1%ED%83%95%EB%A9%B4%20125g%2040%EA%B0%9C",
             "image_url": "https://img.danuri.io/catalog-image/905/238/001/1d15bf988b4b4c8aa8e4f6a6565f401a.jpg",
             "review_count": 1640,
             "score": 4.90,
@@ -629,7 +612,7 @@ NAVER_PRESET_ITEMS: Dict[str, List[Dict[str, Any]]] = {
             "price": 14790,
             "mall": "네이버 가격비교 (공식 카탈로그)",
             "mall_name": "네이버 가격비교 (공식 카탈로그)",
-            "url": "https://search.shopping.naver.com/search/all?query=%EB%A1%AF%EB%8D%B0%EC%B9%A0%EC%84%B1%EC%9D%8C%EB%A3%8C%20%EC%B9%A0%EC%84%B1%EC%82%AC%EC%9D%B4%EB%8B%A4%20%EC%A0%9C%EB%A1%9C%20355ml%2024%EC%BA%94",
+            "url": "https://search.naver.com/search.naver?where=nexearch&query=%EB%A1%AF%EB%8D%B0%EC%B9%A0%EC%84%B1%EC%9D%8C%EB%A3%8C%20%EC%B9%A0%EC%84%B1%EC%82%AC%EC%9D%B4%EB%8B%A4%20%EC%A0%9C%EB%A1%9C%20355ml%2024%EC%BA%94",
             "image_url": "https://img.danuri.io/catalog-image/201/472/013/4919bce162ff4874b54fc8b6ab9fe573.jpg",
             "review_count": 3890,
             "score": 4.92,
@@ -640,7 +623,7 @@ NAVER_PRESET_ITEMS: Dict[str, List[Dict[str, Any]]] = {
             "price": 15300,
             "mall": "네이버 스마트스토어 (공식인증)",
             "mall_name": "네이버 스마트스토어 (공식인증)",
-            "url": "https://search.shopping.naver.com/search/all?query=%EB%A1%AF%EB%8D%B0%EC%B9%A0%EC%84%B1%EC%9D%8C%EB%A3%8C%20%EC%B9%A0%EC%84%B1%EC%82%AC%EC%9D%B4%EB%8B%A4%20355ml%2024%EC%BA%94",
+            "url": "https://search.naver.com/search.naver?where=nexearch&query=%EB%A1%AF%EB%8D%B0%EC%B9%A0%EC%84%B1%EC%9D%8C%EB%A3%8C%20%EC%B9%A0%EC%84%B1%EC%82%AC%EC%9D%B4%EB%8B%A4%20355ml%2024%EC%BA%94",
             "image_url": "https://img.danuri.io/catalog-image/201/472/013/4919bce162ff4874b54fc8b6ab9fe573.jpg",
             "review_count": 1210,
             "score": 4.90,
@@ -651,7 +634,7 @@ NAVER_PRESET_ITEMS: Dict[str, List[Dict[str, Any]]] = {
             "price": 15900,
             "mall": "네이버 브랜드스토어 (본사직영)",
             "mall_name": "네이버 브랜드스토어 (본사직영)",
-            "url": "https://search.shopping.naver.com/search/all?query=%EB%A1%AF%EB%8D%B0%EC%B9%A0%EC%84%B1%EC%9D%8C%EB%A3%8C%20%EC%B9%A0%EC%84%B1%EC%82%AC%EC%9D%B4%EB%8B%A4%20%EC%A0%9C%EB%A1%9C%20%EA%B7%B8%EB%A6%B0%ED%94%8C%EB%9F%BC%20355ml%2024%EC%BA%94",
+            "url": "https://search.naver.com/search.naver?where=nexearch&query=%EB%A1%AF%EB%8D%B0%EC%B9%A0%EC%84%B1%EC%9D%8C%EB%A3%8C%20%EC%B9%A0%EC%84%B1%EC%82%AC%EC%9D%B4%EB%8B%A4%20%EC%A0%9C%EB%A1%9C%20%EA%B7%B8%EB%A6%B0%ED%94%8C%EB%9F%BC%20355ml%2024%EC%BA%94",
             "image_url": "https://img.danuri.io/catalog-image/201/472/013/4919bce162ff4874b54fc8b6ab9fe573.jpg",
             "review_count": 890,
             "score": 4.91,
@@ -664,7 +647,7 @@ NAVER_PRESET_ITEMS: Dict[str, List[Dict[str, Any]]] = {
             "price": 16210,
             "mall": "네이버 가격비교 (공식 카탈로그)",
             "mall_name": "네이버 가격비교 (공식 카탈로그)",
-            "url": "https://search.shopping.naver.com/search/all?query=%ED%8E%98%EB%B8%8C%EB%A6%AC%EC%A6%88%20%EA%B0%95%EB%A0%A5%ED%83%88%EC%B7%A8%20%EC%83%81%EC%93%B0%20%EB%A6%AC%ED%95%84%20320ml%204%EA%B0%9C",
+            "url": "https://search.naver.com/search.naver?where=nexearch&query=%ED%8E%98%EB%B8%8C%EB%A6%AC%EC%A6%88%20%EA%B0%95%EB%A0%A5%ED%83%88%EC%B7%A8%20%EC%83%81%EC%93%B0%20%EB%A6%AC%ED%95%84%20320ml%204%EA%B0%9C",
             "image_url": "https://img.danuri.io/catalog-image/998/987/010/44820825b44e4b15b79cdcf120ff73e3.jpg",
             "review_count": 1950,
             "score": 4.87,
@@ -675,7 +658,7 @@ NAVER_PRESET_ITEMS: Dict[str, List[Dict[str, Any]]] = {
             "price": 16900,
             "mall": "네이버 스마트스토어 (공식인증)",
             "mall_name": "네이버 스마트스토어 (공식인증)",
-            "url": "https://search.shopping.naver.com/search/all?query=%ED%8E%98%EB%B8%8C%EB%A6%AC%EC%A6%88%20%EB%8B%A4%EC%9A%B0%EB%8B%88%ED%96%A5%20%EB%A6%AC%ED%95%84%20320ml%204%EA%B0%9C",
+            "url": "https://search.naver.com/search.naver?where=nexearch&query=%ED%8E%98%EB%B8%8C%EB%A6%AC%EC%A6%88%20%EB%8B%A4%EC%9A%B0%EB%8B%88%ED%96%A5%20%EB%A6%AC%ED%95%84%20320ml%204%EA%B0%9C",
             "image_url": "https://img.danuri.io/catalog-image/998/987/010/44820825b44e4b15b79cdcf120ff73e3.jpg",
             "review_count": 780,
             "score": 4.89,
@@ -686,7 +669,7 @@ NAVER_PRESET_ITEMS: Dict[str, List[Dict[str, Any]]] = {
             "price": 17500,
             "mall": "네이버 브랜드스토어 (본사직영)",
             "mall_name": "네이버 브랜드스토어 (본사직영)",
-            "url": "https://search.shopping.naver.com/search/all?query=%ED%8E%98%EB%B8%8C%EB%A6%AC%EC%A6%88%20%EB%B3%B8%ED%92%88%20%EB%A6%AC%ED%95%84%20%EC%84%B8%ED%8A%B8",
+            "url": "https://search.naver.com/search.naver?where=nexearch&query=%ED%8E%98%EB%B8%8C%EB%A6%AC%EC%A6%88%20%EB%B3%B8%ED%92%88%20%EB%A6%AC%ED%95%84%20%EC%84%B8%ED%8A%B8",
             "image_url": "https://img.danuri.io/catalog-image/998/987/010/44820825b44e4b15b79cdcf120ff73e3.jpg",
             "review_count": 1120,
             "score": 4.90,
@@ -699,7 +682,7 @@ NAVER_PRESET_ITEMS: Dict[str, List[Dict[str, Any]]] = {
             "price": 15330,
             "mall": "네이버 가격비교 (공식 카탈로그)",
             "mall_name": "네이버 가격비교 (공식 카탈로그)",
-            "url": "https://search.shopping.naver.com/search/all?query=%ED%81%AC%EB%A6%AC%EB%84%A5%EC%8A%A4%203%EA%B2%B9%20%EB%8D%B0%EC%BD%94%EC%86%8C%ED%94%84%ED%8A%B8%2030%EB%A1%A4",
+            "url": "https://search.naver.com/search.naver?where=nexearch&query=%ED%81%AC%EB%A6%AC%EB%84%A5%EC%8A%A4%203%EA%B2%B9%20%EB%8D%B0%EC%BD%94%EC%86%8C%ED%94%84%ED%8A%B8%2030%EB%A1%A4",
             "image_url": "https://img.danuri.io/catalog-image/660/069/071/b9cc000c5f614c179ed35a4eb82995be.jpg",
             "review_count": 2150,
             "score": 4.87,
@@ -710,7 +693,7 @@ NAVER_PRESET_ITEMS: Dict[str, List[Dict[str, Any]]] = {
             "price": 16100,
             "mall": "네이버 스마트스토어 (공식인증)",
             "mall_name": "네이버 스마트스토어 (공식인증)",
-            "url": "https://search.shopping.naver.com/search/all?query=%ED%81%AC%EB%A6%AC%EB%84%A5%EC%8A%A4%20%EC%9A%B8%ED%8A%B8%EB%9D%BC%ED%81%B4%EB%A6%B0%2030%EB%A1%A4",
+            "url": "https://search.naver.com/search.naver?where=nexearch&query=%ED%81%AC%EB%A6%AC%EB%84%A5%EC%8A%A4%20%EC%9A%B8%ED%8A%B8%EB%9D%BC%ED%81%B4%EB%A6%B0%2030%EB%A1%A4",
             "image_url": "https://img.danuri.io/catalog-image/660/069/071/b9cc000c5f614c179ed35a4eb82995be.jpg",
             "review_count": 890,
             "score": 4.88,
@@ -721,7 +704,7 @@ NAVER_PRESET_ITEMS: Dict[str, List[Dict[str, Any]]] = {
             "price": 31500,
             "mall": "네이버 브랜드스토어 (본사직영)",
             "mall_name": "네이버 브랜드스토어 (본사직영)",
-            "url": "https://search.shopping.naver.com/search/all?query=%ED%81%AC%EB%A6%AC%EB%84%A5%EC%8A%A4%2030%EB%A1%A4%202%ED%8C%A9",
+            "url": "https://search.naver.com/search.naver?where=nexearch&query=%ED%81%AC%EB%A6%AC%EB%84%A5%EC%8A%A4%2030%EB%A1%A4%202%ED%8C%A9",
             "image_url": "https://img.danuri.io/catalog-image/660/069/071/b9cc000c5f614c179ed35a4eb82995be.jpg",
             "review_count": 1450,
             "score": 4.92,
@@ -734,7 +717,7 @@ NAVER_PRESET_ITEMS: Dict[str, List[Dict[str, Any]]] = {
             "price": 33470,
             "mall": "네이버 가격비교 (공식 카탈로그)",
             "mall_name": "네이버 가격비교 (공식 카탈로그)",
-            "url": "https://search.shopping.naver.com/search/all?query=%ED%8D%BC%EC%8B%A4%20%EB%94%A5%ED%81%B4%EB%A6%B0%20%ED%8C%8C%EC%9B%8C%EC%A0%A4%202.7L",
+            "url": "https://search.naver.com/search.naver?where=nexearch&query=%ED%8D%BC%EC%8B%A4%20%EB%94%A5%ED%81%B4%EB%A6%B0%20%ED%8C%8C%EC%9B%8C%EC%A0%A4%202.7L",
             "image_url": "https://img.danuri.io/catalog-image/729/381/007/ed3368ec3d3a430f880b272bbea12da9.jpg",
             "review_count": 1780,
             "score": 4.90,
@@ -745,7 +728,7 @@ NAVER_PRESET_ITEMS: Dict[str, List[Dict[str, Any]]] = {
             "price": 34200,
             "mall": "네이버 스마트스토어 (공식인증)",
             "mall_name": "네이버 스마트스토어 (공식인증)",
-            "url": "https://search.shopping.naver.com/search/all?query=%ED%8D%BC%EC%8B%A4%20%EB%9D%BC%EB%B2%A4%EB%8D%94%EC%A0%A4%202.7L",
+            "url": "https://search.naver.com/search.naver?where=nexearch&query=%ED%8D%BC%EC%8B%A4%20%EB%9D%BC%EB%B2%A4%EB%8D%94%EC%A0%A4%202.7L",
             "image_url": "https://img.danuri.io/catalog-image/729/381/007/ed3368ec3d3a430f880b272bbea12da9.jpg",
             "review_count": 670,
             "score": 4.88,
@@ -756,7 +739,7 @@ NAVER_PRESET_ITEMS: Dict[str, List[Dict[str, Any]]] = {
             "price": 65000,
             "mall": "네이버 브랜드스토어 (본사직영)",
             "mall_name": "네이버 브랜드스토어 (본사직영)",
-            "url": "https://search.shopping.naver.com/search/all?query=%ED%8D%BC%EC%8B%A4%20%EC%BB%AC%EB%9F%AC%EC%A0%A4%202.7L%202%EA%B0%9C",
+            "url": "https://search.naver.com/search.naver?where=nexearch&query=%ED%8D%BC%EC%8B%A4%20%EC%BB%AC%EB%9F%AC%EC%A0%A4%202.7L%202%EA%B0%9C",
             "image_url": "https://img.danuri.io/catalog-image/729/381/007/ed3368ec3d3a430f880b272bbea12da9.jpg",
             "review_count": 1280,
             "score": 4.93,
@@ -769,7 +752,7 @@ NAVER_PRESET_ITEMS: Dict[str, List[Dict[str, Any]]] = {
             "price": 16740,
             "mall": "네이버 가격비교 (공식 카탈로그)",
             "mall_name": "네이버 가격비교 (공식 카탈로그)",
-            "url": "https://search.shopping.naver.com/search/all?query=%EB%8F%99%EC%9B%90%EC%B0%B8%EC%B9%98%20100g%2010%EC%BA%94",
+            "url": "https://search.naver.com/search.naver?where=nexearch&query=%EB%8F%99%EC%9B%90%EC%B0%B8%EC%B9%98%20100g%2010%EC%BA%94",
             "image_url": "https://img.danuri.io/catalog-image/889/094/003/9b1f5e9d0857463ebba10f715881c253.jpg",
             "review_count": 3120,
             "score": 4.88,
@@ -780,7 +763,7 @@ NAVER_PRESET_ITEMS: Dict[str, List[Dict[str, Any]]] = {
             "price": 17400,
             "mall": "네이버 스마트스토어 (공식인증)",
             "mall_name": "네이버 스마트스토어 (공식인증)",
-            "url": "https://search.shopping.naver.com/search/all?query=%EB%8F%99%EC%9B%90%20%EA%B3%A0%EC%B6%94%EC%B0%B8%EC%B9%98%20100g%2010%EC%BA%94",
+            "url": "https://search.naver.com/search.naver?where=nexearch&query=%EB%8F%99%EC%9B%90%20%EA%B3%A0%EC%B6%94%EC%B0%B8%EC%B9%98%20100g%2010%EC%BA%94",
             "image_url": "https://img.danuri.io/catalog-image/889/094/003/9b1f5e9d0857463ebba10f715881c253.jpg",
             "review_count": 1420,
             "score": 4.90,
@@ -791,7 +774,7 @@ NAVER_PRESET_ITEMS: Dict[str, List[Dict[str, Any]]] = {
             "price": 18100,
             "mall": "네이버 브랜드스토어 (본사직영)",
             "mall_name": "네이버 브랜드스토어 (본사직영)",
-            "url": "https://search.shopping.naver.com/search/all?query=%EB%8F%99%EC%9B%90%EC%B0%B8%EC%B9%98%20%EC%82%B4%EC%BD%94%EA%B8%B0%208%EC%BA%94%20%EA%B3%A0%EC%B6%94%EC%B0%B8%EC%B9%98%204%EC%BA%94",
+            "url": "https://search.naver.com/search.naver?where=nexearch&query=%EB%8F%99%EC%9B%90%EC%B0%B8%EC%B9%98%20%EC%82%B4%EC%BD%94%EA%B8%B0%208%EC%BA%94%20%EA%B3%A0%EC%B6%94%EC%B0%B8%EC%B9%98%204%EC%BA%94",
             "image_url": "https://img.danuri.io/catalog-image/889/094/003/9b1f5e9d0857463ebba10f715881c253.jpg",
             "review_count": 980,
             "score": 4.92,
@@ -804,7 +787,7 @@ NAVER_PRESET_ITEMS: Dict[str, List[Dict[str, Any]]] = {
             "price": 18990,
             "mall": "네이버 가격비교 (공식 카탈로그)",
             "mall_name": "네이버 가격비교 (공식 카탈로그)",
-            "url": "https://search.shopping.naver.com/search/all?query=%EB%B2%A0%EB%B2%A0%EC%8숲%20%EC%8B%9C%EA%B7%B8%EB%8B%88%EC%B2%98%20%EB%AC%BC%ED%8B%B0%EC%8A%88%2070%EB%A7%A4%2010%ED%8C%A9",
+            "url": "https://search.naver.com/search.naver?where=nexearch&query=%EB%B2%A0%EB%B2%A0%EC%8숲%20%EC%8B%9C%EA%B7%B8%EB%8B%88%EC%B2%98%20%EB%AC%BC%ED%8B%B0%EC%8A%88%2070%EB%A7%A4%2010%ED%8C%A9",
             "image_url": "https://img.danuri.io/catalog-image/056/717/018/0731f60a26164a7f850884285a0d0d12.jpg",
             "review_count": 4210,
             "score": 4.91,
@@ -815,7 +798,7 @@ NAVER_PRESET_ITEMS: Dict[str, List[Dict[str, Any]]] = {
             "price": 19600,
             "mall": "네이버 스마트스토어 (공식인증)",
             "mall_name": "네이버 스마트스토어 (공식인증)",
-            "url": "https://search.shopping.naver.com/search/all?query=%EB%B2%A0%EB%B2%A0%EC%8숲%20%EC%8B%9C%EA%B7%B8%EB%8B%88%EC%B2%98%20%EB%B8%94%EB%A3%A8%2010%ED%8C%A9",
+            "url": "https://search.naver.com/search.naver?where=nexearch&query=%EB%B2%A0%EB%B2%A0%EC%8숲%20%EC%8B%9C%EA%B7%B8%EB%8B%88%EC%B2%98%20%EB%B8%94%EB%A3%A8%2010%ED%8C%A9",
             "image_url": "https://img.danuri.io/catalog-image/056/717/018/0731f60a26164a7f850884285a0d0d12.jpg",
             "review_count": 1850,
             "score": 4.89,
@@ -826,7 +809,7 @@ NAVER_PRESET_ITEMS: Dict[str, List[Dict[str, Any]]] = {
             "price": 20300,
             "mall": "네이버 브랜드스토어 (본사직영)",
             "mall_name": "네이버 브랜드스토어 (본사직영)",
-            "url": "https://search.shopping.naver.com/search/all?query=%EB%B2%A0%EB%B2%A0%EC%8숲%20%EC%97%A0%EB%B3%B4%EC%8B%B1%20%EB%AC%BC%ED%8B%B0%EC%8A%88%2010%ED%8C%A9",
+            "url": "https://search.naver.com/search.naver?where=nexearch&query=%EB%B2%A0%EB%B2%A0%EC%8숲%20%EC%97%A0%EB%B3%B4%EC%8B%B1%20%EB%AC%BC%ED%8B%B0%EC%8A%88%2010%ED%8C%A9",
             "image_url": "https://img.danuri.io/catalog-image/056/717/018/0731f60a26164a7f850884285a0d0d12.jpg",
             "review_count": 2340,
             "score": 4.93,
@@ -934,15 +917,15 @@ def fetch_products_for_keyword(keyword: str) -> Tuple[List[Dict[str, Any]], List
                 p_price = lk_item.get("price", 10000)
                 p_title = lk_item.get("full_title") or lk_item.get("title")
                 p_img = lk_item.get("image_url") or "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='300' height='300' viewBox='0 0 100 100' fill='none'><rect width='100' height='100' rx='16' fill='%23F1F5F9'/><path d='M30 40h40l-5 35H35L30 40z' stroke='%2303C75A' stroke-width='4' stroke-linejoin='round' fill='%23E8F5E9'/><path d='M38 40V30a12 12 0 0124 0v10' stroke='%2303C75A' stroke-width='4' stroke-linecap='round'/><circle cx='50' cy='58' r='6' fill='%2303C75A'/></svg>"
-                p_url1 = lk_item.get("url") or f"https://search.shopping.naver.com/search/all?query={urllib.parse.quote(p_title)}"
+                enc_title = urllib.parse.quote(p_title)
                 
+                p_url1 = f"https://search.naver.com/search.naver?where=nexearch&query={enc_title}+%EC%B5%9C%EC%A0%80%EA%B0%80"
                 p_price2 = round((p_price * 1.04) / 100) * 100
                 p_price3 = round((p_price * 1.08) / 100) * 100
                 
-                # 각 순위별로 정확한 가격대의 품목이 최상단에 나오도록 개별 고유 딥링크 생성
-                enc_title = urllib.parse.quote(p_title)
-                p_url2 = f"https://search.shopping.naver.com/search/all?query={enc_title}&sort=price_asc&minPrice={max(100, p_price2 - 1000)}&maxPrice={p_price2 + 1000}"
-                p_url3 = f"https://search.shopping.naver.com/search/all?query={enc_title}&sort=price_asc&minPrice={max(100, p_price3 - 1000)}&maxPrice={p_price3 + 1500}"
+                # 차단 없는 네이버 통합 포털 최저가/공식인증/가격비교 안전 링크 생성
+                p_url2 = f"https://search.naver.com/search.naver?where=nexearch&query={enc_title}+%EC%8A%A4%EB%A7%88%ED%8A%B8%EC%8A%A4%ED%86%A0%EC%96%B4+%EA%B3%B5%EC%8B%9D"
+                p_url3 = f"https://search.naver.com/search.naver?where=nexearch&query={enc_title}+%EA%B0%80%EA%B2%A9%EB%B9%84%EA%B5%90"
 
                 top_items = [
                     {
@@ -981,7 +964,7 @@ def fetch_products_for_keyword(keyword: str) -> Tuple[List[Dict[str, Any]], List
                 ]
                 break
 
-    # 4. 프리셋에도 없는 미지 키워드인 경우: 각 순위별 가격 범위가 지정된 개별 고유 딥링크 생성
+    # 4. 프리셋에도 없는 미지 키워드인 경우: 각 순위별 안전 포털 검색 링크 생성
     if not top_items:
         enc_k = urllib.parse.quote(keyword)
         default_img = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='300' height='300' viewBox='0 0 100 100' fill='none'><rect width='100' height='100' rx='16' fill='%23F1F5F9'/><path d='M30 40h40l-5 35H35L30 40z' stroke='%2303C75A' stroke-width='4' stroke-linejoin='round' fill='%23E8F5E9'/><path d='M38 40V30a12 12 0 0124 0v10' stroke='%2303C75A' stroke-width='4' stroke-linecap='round'/><circle cx='50' cy='58' r='6' fill='%2303C75A'/></svg>"
@@ -991,7 +974,7 @@ def fetch_products_for_keyword(keyword: str) -> Tuple[List[Dict[str, Any]], List
                 "price": 10000,
                 "mall": "네이버 가격비교 (공식 카탈로그)",
                 "mall_name": "네이버 가격비교 (공식 카탈로그)",
-                "url": f"https://search.shopping.naver.com/search/all?query={enc_k}&sort=price_asc&minPrice=9500&maxPrice=10500",
+                "url": f"https://search.naver.com/search.naver?where=nexearch&query={enc_k}+%EC%B5%9C%EC%A0%80%EA%B0%80",
                 "image_url": default_img,
                 "review_count": 2150,
                 "score": 4.88,
@@ -1002,7 +985,7 @@ def fetch_products_for_keyword(keyword: str) -> Tuple[List[Dict[str, Any]], List
                 "price": 10500,
                 "mall": "네이버 스마트스토어 (공식인증)",
                 "mall_name": "네이버 스마트스토어 (공식인증)",
-                "url": f"https://search.shopping.naver.com/search/all?query={enc_k}&sort=price_asc&minPrice=10000&maxPrice=11000",
+                "url": f"https://search.naver.com/search.naver?where=nexearch&query={enc_k}+%EC%8A%A4%EB%A7%88%ED%8A%B8%EC%8A%A4%ED%86%A0%EC%96%B4+%EA%B3%B5%EC%8B%9D",
                 "image_url": default_img,
                 "review_count": 780,
                 "score": 4.86,
@@ -1013,7 +996,7 @@ def fetch_products_for_keyword(keyword: str) -> Tuple[List[Dict[str, Any]], List
                 "price": 11200,
                 "mall": "네이버 브랜드스토어 (본사직영)",
                 "mall_name": "네이버 브랜드스토어 (본사직영)",
-                "url": f"https://search.shopping.naver.com/search/all?query={enc_k}&sort=price_asc&minPrice=11000&maxPrice=12000",
+                "url": f"https://search.naver.com/search.naver?where=nexearch&query={enc_k}+%EA%B0%80%EA%B2%A9%EB%B9%84%EA%B5%90",
                 "image_url": default_img,
                 "review_count": 1420,
                 "score": 4.90,
@@ -1021,9 +1004,9 @@ def fetch_products_for_keyword(keyword: str) -> Tuple[List[Dict[str, Any]], List
             }
         ]
 
-    # 모든 아이템의 URL을 네이버 쇼핑 안전 URL로 정규화 (가격 일치 정밀 딥링크 적용)
-    for it in top_items:
-        it["url"] = normalize_shopping_url(it.get("url", ""), title=it.get("title", ""), price=it.get("price", 0))
+    # 모든 아이템의 URL을 차단 없는 네이버 포털 안전 URL로 정규화
+    for rank_i, it in enumerate(top_items, 1):
+        it["url"] = normalize_shopping_url(it.get("url", ""), title=it.get("title", ""), price=it.get("price", 0), rank=rank_i)
 
     # 최저가 순(오름차순) 정렬 보장
     top_items.sort(key=lambda x: x["price"])
@@ -1038,7 +1021,7 @@ def default_data_fetcher(keyword: Optional[str] = None) -> Tuple[List[Dict[str, 
 
 def filter_and_refine_products(items: List[Dict[str, Any]], keyword: str = "") -> List[Dict[str, Any]]:
     """
-    각 순위별 100% 가격 일치 딥링크 및 필터링
+    광고 제외 및 최저가순 정렬 후, 각 순위별로 차단 없는 안전 포털 검색 딥링크 적용
     """
     if not items:
         return []
@@ -1046,8 +1029,15 @@ def filter_and_refine_products(items: List[Dict[str, Any]], keyword: str = "") -
     for item in items:
         if item.get("is_ad", False):
             continue
-        valid_products.append(item)
+        valid_products.append(dict(item))
     valid_products.sort(key=lambda x: x["price"])
+    for rank_idx, prod in enumerate(valid_products, 1):
+        prod["url"] = normalize_shopping_url(
+            prod.get("url", ""),
+            title=prod.get("title", ""),
+            price=prod.get("price", 0),
+            rank=rank_idx
+        )
     return valid_products
 
 
