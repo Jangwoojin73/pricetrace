@@ -13,9 +13,37 @@ const state = {
   view: "welcome" // "welcome" | "result"
 };
 
-// URL 정규화 헬퍼 (로그인·영수증 인증 화면 원천 우회 및 순위별 안전 통합검색 딥링크 제공)
+// 판매자 도배 수식어 정제 헬퍼 (블로그/지난 이벤트 노출 원천 차단)
+function cleanSearchKeyword(title) {
+  if (!title) return "인기상품";
+  let t = String(title).replace(/\[.*?\]|\(.*?\)|<.*?>/g, " ");
+  const removeWords = [
+    "무료배송", "당일발송", "당일출고", "산지직송", "유명한곳", "특가", "초특가", 
+    "선물세트", "국내산", "국산", "원산지", "빅세일", "할인", "한정수량", "고당도",
+    "못난이", "가정용", "실속형", "프리미엄", "정품", "공식", "인증", "직송", "유명",
+    "인기", "추천", "대용량", "박스", "1박스", "세트", "한박스"
+  ];
+  for (const w of removeWords) {
+    t = t.split(w).join(" ");
+  }
+  t = t.replace(/[^\w\s가-힣0-9a-zA-Z]/g, " ");
+  const tokens = t.split(/\s+/).filter(tok => tok && tok.length >= 2);
+  if (tokens.length === 0) {
+    const cleanFallback = String(title).replace(/[^\w\s가-힣0-9]/g, " ").trim();
+    return cleanFallback.split(/\s+/).slice(0, 2).join(" ") || "인기상품";
+  }
+  return tokens.slice(0, 3).join(" ");
+}
+
+// URL 정규화 헬퍼 (진짜 구매 상세 페이지 최우선 보존 & 블로그 배제 쇼핑 딥링크 제공)
 function normalizeProductUrl(url, title = "", price = 0, rank = 1) {
   let trimmed = String(url || "").trim();
+
+  // 1. 브랜드스토어(brand.naver.com)는 로그인 없이 즉시 열리는 실제 구매 상세 페이지이므로 그대로 보존
+  // (스마트스토어는 외부 다이렉트 유입 시 nidlogin 로그인 창으로 튕기므로, 로그인 요구 없는 안전 쇼핑 딥링크로 정규화)
+  if (trimmed && trimmed.includes("brand.naver.com/") && trimmed.includes("/products/")) {
+    return trimmed;
+  }
 
   // 기존 검색어 추출
   let extractedQuery = "";
@@ -26,30 +54,19 @@ function normalizeProductUrl(url, title = "", price = 0, rank = 1) {
     } catch (e) {}
   }
 
-  const baseQuery = (title || extractedQuery || "신라면 20개")
-    .replace(/[\[\]\(\)]/g, " ")
-    .replace(/\s+/g, " ")
-    .trim();
+  // 장문의 셀러 수식어를 정제하여 블로그/과거 이벤트가 아닌 쇼핑 모듈이 뜨도록 보장
+  const baseTitle = title || extractedQuery || "신라면 20개";
+  const baseQuery = cleanSearchKeyword(baseTitle);
 
-  // 순위별 고유 차별화 쿼리 (인위적 minPrice/maxPrice 제거 및 자연스러운 검색어)
-  let targetQuery = `${baseQuery} 최저가`;
+  // 순위별 고유 차별화 쇼핑 쿼리 (블로그 배제 & 쇼핑 구매 모듈 최상단 노출)
+  let targetQuery = `${baseQuery} 쇼핑`;
   if (rank === 2) {
-    targetQuery = `${baseQuery} 스마트스토어 공식`;
+    targetQuery = `${baseQuery} 공식몰`;
   } else if (rank === 3) {
     targetQuery = `${baseQuery} 가격비교`;
   }
 
-  const safePortalUrl = `https://search.naver.com/search.naver?where=nexearch&query=${encodeURIComponent(targetQuery)}`;
-
-  // 이미 완성된 search.naver.com 통합검색 링크인 경우 그대로 유지
-  if (trimmed.startsWith("https://search.naver.com/search.naver?")) {
-    return trimmed;
-  }
-
-  // 스마트스토어, 브랜드스토어, 쇼핑 검색, 카탈로그, cr 브릿지 등
-  // 로그인(nidlogin) 및 영수증 인증(OCR/Captcha)을 유발하는 모든 링크를
-  // 비로그인 100% 오픈되는 네이버 공식 포털 가격정보 창으로 완전 단일화!
-  return safePortalUrl;
+  return `https://search.naver.com/search.naver?where=nexearch&query=${encodeURIComponent(targetQuery)}`;
 }
 
 // 16대 인기 국민 생필품 추천 풀 (동적 셔플 & 로테이션용, /api/trending 데이터로 자동 확장)

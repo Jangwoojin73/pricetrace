@@ -264,56 +264,11 @@ def fetch_price_data(keyword: str = "농심 신라면 봉지 20개입", target_p
         elif "신라면" in clean_kw or "라면" in clean_kw:
             refined_items = POOL_FALLBACK_DATA.get("신라면", []) or get_cached_items()
 
-    # 3.5. 오늘 실시간 수집된 네이버 베스트 랭킹 품목 매칭
-    if not refined_items and pricetrace_bot and getattr(pricetrace_bot, "LIVE_TRENDING_LOOKUP", None):
-        clean_kw = keyword.lower()
-        for lk_name, lk_item in pricetrace_bot.LIVE_TRENDING_LOOKUP.items():
-            if lk_name in clean_kw or clean_kw in lk_name:
-                p_price = lk_item.get("price", 10000)
-                p_title = lk_item.get("full_title") or lk_item.get("title")
-                p_img = lk_item.get("image_url") or "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='300' height='300' viewBox='0 0 100 100' fill='none'><rect width='100' height='100' rx='16' fill='%23F1F5F9'/><path d='M30 40h40l-5 35H35L30 40z' stroke='%2303C75A' stroke-width='4' stroke-linejoin='round' fill='%23E8F5E9'/><path d='M38 40V30a12 12 0 0124 0v10' stroke='%2303C75A' stroke-width='4' stroke-linecap='round'/><circle cx='50' cy='58' r='6' fill='%2303C75A'/></svg>"
-                enc_title = urllib.parse.quote(p_title)
-                p_url1 = f"https://search.naver.com/search.naver?where=nexearch&query={enc_title}+%EC%B5%9C%EC%A0%80%EA%B0%80"
-                p_price2 = round((p_price * 1.04) / 100) * 100
-                p_price3 = round((p_price * 1.08) / 100) * 100
-                
-                # 차단 없는 네이버 통합 포털 최저가/공식인증/가격비교 안전 링크 생성
-                p_url2 = f"https://search.naver.com/search.naver?where=nexearch&query={enc_title}+%EC%8A%A4%EB%A7%88%ED%8A%B8%EC%8A%A4%ED%86%A0%EC%96%B4+%EA%B3%B5%EC%8B%9D"
-                p_url3 = f"https://search.naver.com/search.naver?where=nexearch&query={enc_title}+%EA%B0%80%EA%B2%A9%EB%B9%84%EA%B5%90"
-
-                refined_items = [
-                    {
-                        "title": p_title,
-                        "price": p_price,
-                        "mall_name": "네이버 가격비교 (실시간 베스트 1위)",
-                        "url": p_url1,
-                        "image_url": p_img,
-                        "review_count": 12500,
-                        "score": 4.89,
-                        "is_ad": False
-                    },
-                    {
-                        "title": f"{p_title} (네이버 공식인증)",
-                        "price": p_price2,
-                        "mall_name": "네이버 스마트스토어 (공식인증)",
-                        "url": p_url2,
-                        "image_url": p_img,
-                        "review_count": 3200,
-                        "score": 4.88,
-                        "is_ad": False
-                    },
-                    {
-                        "title": f"{p_title} (본사직영 스토어)",
-                        "price": p_price3,
-                        "mall_name": "네이버 브랜드스토어 (본사직영)",
-                        "url": p_url3,
-                        "image_url": p_img,
-                        "review_count": 1850,
-                        "score": 4.91,
-                        "is_ad": False
-                    }
-                ]
-                break
+    # 3.5. 오늘 실시간 수집된 네이버 베스트 랭킹 품목 다중 순위 매칭 (실제 스마트스토어/브랜드스토어 직결 매핑)
+    if not refined_items and pricetrace_bot and hasattr(pricetrace_bot, "get_multi_ranked_trending_items"):
+        trending_items = pricetrace_bot.get_multi_ranked_trending_items(keyword, limit=3)
+        if trending_items:
+            refined_items = trending_items
 
     # 4. 일반 검색어 카탈로그 자동 생성 폴백 (각 순위별 안전 포털 검색 링크 생성)
     if not refined_items:
