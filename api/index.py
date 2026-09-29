@@ -69,9 +69,9 @@ POOL_FALLBACK_DATA = {
         {
             "title": "CJ제일제당 햇반 210g 24개",
             "price": 25110,
-            "mall": "다나와 가격비교",
-            "mall_name": "다나와 가격비교",
-            "url": "https://search.danawa.com/dsearch.php?query=%ED%96%87%EB%B0%98+24%EA%B0%9C",
+            "mall": "네이버 가격비교 (공식 카탈로그)",
+            "mall_name": "네이버 가격비교 (공식 카탈로그)",
+            "url": "https://search.shopping.naver.com/search/all?query=%ED%96%87%EB%B0%98+24%EA%B0%9C",
             "image_url": "https://img.danuri.io/catalog-image/074/151/001/38cdd389a56f4c429c7d8ce164a1a2de.jpg",
             "review_count": 2840,
             "score": 4.91,
@@ -80,9 +80,9 @@ POOL_FALLBACK_DATA = {
         {
             "title": "CJ제일제당 햇반 윤기가득쌀밥 210g 24개",
             "price": 23080,
-            "mall": "스마트스토어",
-            "mall_name": "스마트스토어",
-            "url": "https://search.danawa.com/dsearch.php?query=%ED%96%87%EB%B0%98+24%EA%B0%9C",
+            "mall": "네이버 스마트스토어 (공식인증)",
+            "mall_name": "네이버 스마트스토어 (공식인증)",
+            "url": "https://search.shopping.naver.com/search/all?query=%ED%96%87%EB%B0%98+24%EA%B0%9C",
             "image_url": "https://img.danuri.io/catalog-image/223/974/104/4b7a40991d644c419e7849c14f4bf68e.webp",
             "review_count": 912,
             "score": 4.88,
@@ -93,9 +93,9 @@ POOL_FALLBACK_DATA = {
         {
             "title": "코카콜라 제로 355ml 24캔 1박스",
             "price": 18900,
-            "mall": "다나와 가격비교",
-            "mall_name": "다나와 가격비교",
-            "url": "https://search.danawa.com/dsearch.php?query=%EC%BD%94%EC%B9%B4%EC%BD%9C%EB%9D%BC+%EC%A0%9C%EB%A1%9C+24%EC%BA%94",
+            "mall": "네이버 가격비교 (공식 카탈로그)",
+            "mall_name": "네이버 가격비교 (공식 카탈로그)",
+            "url": "https://search.shopping.naver.com/search/all?query=%EC%BD%94%EC%B9%B4%EC%BD%9C%EB%9D%BC+%EC%A0%9C%EB%A1%9C+24%EC%BA%94",
             "image_url": "https://img.danuri.io/catalog-image/201/472/013/4919bce162ff4874b54fc8b6ab9fe573.jpg",
             "review_count": 5210,
             "score": 4.93,
@@ -106,9 +106,9 @@ POOL_FALLBACK_DATA = {
         {
             "title": "제주 삼다수 2L 6개",
             "price": 5980,
-            "mall": "다나와 가격비교",
-            "mall_name": "다나와 가격비교",
-            "url": "https://search.danawa.com/dsearch.php?query=%EC%A0%9C%EC%A3%BC+%EC%82%BC%EB%8B%A4%EC%88%98+2L",
+            "mall": "네이버 가격비교 (공식 카탈로그)",
+            "mall_name": "네이버 가격비교 (공식 카탈로그)",
+            "url": "https://search.shopping.naver.com/search/all?query=%EC%A0%9C%EC%A3%BC+%EC%82%BC%EB%8B%A4%EC%88%98+2L",
             "image_url": "https://img.danuri.io/catalog-image/118/740/014/6ebf7c9c79434e7b874850b5d1b310ce.jpg",
             "review_count": 3410,
             "score": 4.92,
@@ -119,9 +119,9 @@ POOL_FALLBACK_DATA = {
         {
             "title": "CJ제일제당 스팸 클래식 200g 10개",
             "price": 25540,
-            "mall": "다나와 가격비교",
-            "mall_name": "다나와 가격비교",
-            "url": "https://search.danawa.com/dsearch.php?query=%EC%8A%A4%ED%8C%B8+10%EC%BA%94",
+            "mall": "네이버 가격비교 (공식 카탈로그)",
+            "mall_name": "네이버 가격비교 (공식 카탈로그)",
+            "url": "https://search.shopping.naver.com/search/all?query=%EC%8A%A4%ED%8C%B8+10%EC%BA%94",
             "image_url": "https://img.danuri.io/catalog-image/210/006/001/5b881f953b1947acad0eba6c5b839b7d.jpg",
             "review_count": 1890,
             "score": 4.89,
@@ -189,7 +189,7 @@ CACHE_TTL_SECONDS: int = 600  # 10분간 유효
 
 
 def fetch_price_data(keyword: str = "농심 신라면 봉지 20개입", target_price: int = 15000, force_refresh: bool = False) -> Dict[str, Any]:
-    """네이버 쇼핑 및 다나와 실시간 크롤링 또는 안전 캐시 반환 (10분 인메모리 캐시 탑재)"""
+    """네이버 쇼핑 공식 카탈로그 및 스마트스토어 실시간 크롤링 또는 안전 캐시 반환 (10분 인메모리 캐시 탑재)"""
     raw_items = []
     fetch_errors = []
     is_live = False
@@ -206,7 +206,7 @@ def fetch_price_data(keyword: str = "농심 신라면 봉지 20개입", target_p
     else:
         refined_items = []
 
-    # 2. 캐시 미스 시 실시간 다나와 크롤러 가동
+    # 2. 캐시 미스 시 실시간 네이버 쇼핑 공식 크롤러 가동
     if not refined_items:
         if pricetrace_bot:
             try:

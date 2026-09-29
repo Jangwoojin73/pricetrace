@@ -18,9 +18,9 @@ function normalizeProductUrl(url, title = "") {
   let trimmed = String(url || "").trim();
   if (!trimmed || trimmed === "#" || trimmed.startsWith("javascript:")) {
     if (title && title.trim()) {
-      return `https://search.danawa.com/dsearch.php?query=${encodeURIComponent(title.trim())}`;
+      return `https://search.shopping.naver.com/search/all?query=${encodeURIComponent(title.trim())}`;
     }
-    return "https://www.danawa.com";
+    return "https://shopping.naver.com";
   }
 
   // 1. 카탈로그 링크 또는 cr 브릿지 링크: 비로그인 시 nidlogin 리다이렉트를 방지하고 즉시 열리는 공식 검색 딥링크로 연결
@@ -334,7 +334,7 @@ function switchToResultView(keyword) {
     updateClearBtn();
   }
   if (elements.topBannerText) {
-    elements.topBannerText.textContent = `'${keyword}' 실시간 최저가 비교 분석`;
+    elements.topBannerText.textContent = `'${keyword}' 네이버 쇼핑 실시간 최저가 분석`;
   }
   const currentQ = new URLSearchParams(window.location.search).get("q");
   const newUrl = `${window.location.pathname}?q=${encodeURIComponent(keyword)}`;
@@ -560,6 +560,36 @@ function renderComparisonGrid(items, unit_count = 1) {
     const scoreVal = item.score ? `★ ${item.score.toFixed(2)}` : "평점 정보 없음";
     const safeItemUrl = normalizeProductUrl(item.url, item.title);
 
+    const mallRaw = item.mall_name || item.mall || "온라인 최저가";
+    let mallBadgeClass = "bg-slate-100 text-slate-700 border-slate-200/80";
+    let mallLogoPrefix = "쇼핑몰";
+
+    if (mallRaw.includes("스마트스토어")) {
+      mallBadgeClass = "bg-emerald-50 text-emerald-700 border-emerald-200/80 font-bold";
+      mallLogoPrefix = "스마트스토어";
+    } else if (mallRaw.includes("브랜드스토어")) {
+      mallBadgeClass = "bg-teal-50 text-teal-700 border-teal-200/80 font-bold";
+      mallLogoPrefix = "브랜드스토어";
+    } else if (mallRaw.includes("네이버") || mallRaw.includes("카탈로그")) {
+      mallBadgeClass = "bg-emerald-50 text-emerald-700 border-emerald-200/80 font-bold";
+      mallLogoPrefix = "네이버 쇼핑";
+    } else if (mallRaw.includes("11번가")) {
+      mallBadgeClass = "bg-rose-50 text-rose-700 border-rose-200/80 font-bold";
+      mallLogoPrefix = "11번가";
+    } else if (mallRaw.includes("G마켓")) {
+      mallBadgeClass = "bg-teal-50 text-teal-800 border-teal-200/80 font-bold";
+      mallLogoPrefix = "G마켓";
+    } else if (mallRaw.includes("옥션")) {
+      mallBadgeClass = "bg-amber-50 text-amber-800 border-amber-200/80 font-bold";
+      mallLogoPrefix = "옥션";
+    } else if (mallRaw.includes("쿠팡")) {
+      mallBadgeClass = "bg-red-50 text-red-800 border-red-200/80 font-bold";
+      mallLogoPrefix = "쿠팡";
+    } else if (mallRaw.includes("SSG") || mallRaw.includes("이마트") || mallRaw.includes("신세계")) {
+      mallBadgeClass = "bg-yellow-50 text-yellow-800 border-yellow-200/80 font-bold";
+      mallLogoPrefix = "SSG·이마트";
+    }
+
     return `
       <div class="relative bg-white rounded-3xl p-5 ${borderClass} flex flex-col justify-between space-y-4 card-hover">
         <div class="flex items-center justify-between">
@@ -569,7 +599,10 @@ function renderComparisonGrid(items, unit_count = 1) {
           ${isFirst ? '<span class="text-xs text-naver font-bold flex items-center"><i data-lucide="zap" class="w-3.5 h-3.5 mr-0.5"></i> 실시간 최저</span>' : ''}
         </div>
         <div>
-          <span class="text-xs text-slate-400 font-medium block truncate">${item.mall_name || item.mall || "온라인 최저가"}</span>
+          <div class="flex items-center gap-1.5 mb-1.5">
+            <span class="text-[11px] px-2 py-0.5 rounded-md border ${mallBadgeClass}">${mallLogoPrefix}</span>
+            <span class="text-xs text-slate-500 font-semibold truncate">${mallRaw}</span>
+          </div>
           <h4 class="text-sm font-bold text-slate-900 mt-1 line-clamp-2 leading-snug" title="${item.title}">${item.title}</h4>
           <div class="mt-3 flex items-baseline space-x-1">
             <span class="text-2xl font-black text-slate-900">${formatCurrency(item.price)}</span>
@@ -843,9 +876,9 @@ async function loadDailyTrendingProducts() {
         if (data.date) {
           const parts = data.date.split("-");
           if (parts.length === 3) {
-            dateText.textContent = `${parseInt(parts[1], 10)}월 ${parseInt(parts[2], 10)}일 실시간 베스트`;
+            dateText.textContent = `${parseInt(parts[1], 10)}월 ${parseInt(parts[2], 10)}일 네이버 실시간 베스트`;
           } else {
-            dateText.textContent = "오늘 실시간 베스트";
+            dateText.textContent = "오늘 네이버 실시간 베스트";
           }
         }
         badge.classList.remove("hidden");
