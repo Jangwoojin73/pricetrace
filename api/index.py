@@ -66,10 +66,13 @@ else:
     }
 ]
 
-try:
-    from server import POOL_FALLBACK_DATA
-except Exception:
-    POOL_FALLBACK_DATA = {
+if pricetrace_bot and hasattr(pricetrace_bot, "NAVER_PRESET_ITEMS"):
+    POOL_FALLBACK_DATA = pricetrace_bot.NAVER_PRESET_ITEMS
+else:
+    try:
+        from server import POOL_FALLBACK_DATA
+    except Exception:
+        POOL_FALLBACK_DATA = {
         "신라면": [
             {
                 "title": "농심 신라면 120g 20개",
@@ -217,26 +220,46 @@ def fetch_price_data(keyword: str = "농심 신라면 봉지 20개입", target_p
     # 3. 크롤링 실패 시 16대 생필품 세이프티 풀 폴백
     if not refined_items:
         clean_kw = keyword.lower()
-        if "신라면" in clean_kw:
+        if "신라면" in clean_kw or ("라면" in clean_kw and "진라면" not in clean_kw and "안성탕면" not in clean_kw and "짜파게티" not in clean_kw):
             refined_items = POOL_FALLBACK_DATA.get("신라면", []) or get_cached_items()
         else:
             for k, items in POOL_FALLBACK_DATA.items():
-                if k in clean_kw or (k == "참치" and "동원" in clean_kw) or (k == "물티슈" and "베베숲" in clean_kw):
-                    refined_items = items
+                is_matched = (
+                    k in clean_kw or
+                    (k == "오뚜기밥" and ("오뚜기" in clean_kw or "밥" in clean_kw)) or
+                    (k == "크리넥스" and ("데코소프트" in clean_kw or "화장지" in clean_kw or "롤" in clean_kw or "휴지" in clean_kw)) or
+                    (k == "퍼실" and ("세제" in clean_kw or "파워젤" in clean_kw or "액체세제" in clean_kw)) or
+                    (k == "참치" and ("동원" in clean_kw or "살코기" in clean_kw)) or
+                    (k == "물티슈" and ("베베숲" in clean_kw or "물티슈" in clean_kw)) or
+                    (k == "사이다" and ("칠성" in clean_kw or "사이다" in clean_kw)) or
+                    (k == "코카콜라" and ("콜라" in clean_kw or "코카" in clean_kw)) or
+                    (k == "삼다수" and ("삼다수" in clean_kw or "생수" in clean_kw or "2l" in clean_kw)) or
+                    (k == "맥심" and ("맥심" in clean_kw or "커피" in clean_kw or "모카골드" in clean_kw)) or
+                    (k == "스팸" and ("스팸" in clean_kw or "spam" in clean_kw)) or
+                    (k == "페브리즈" and ("페브리즈" in clean_kw or "섬유탈취제" in clean_kw)) or
+                    (k == "햇반" and ("햇반" in clean_kw or "cj" in clean_kw)) or
+                    (k == "짜파게티" and ("짜파게티" in clean_kw or "짜장" in clean_kw)) or
+                    (k == "안성탕면" and "안성탕면" in clean_kw) or
+                    (k == "진라면" and "진라면" in clean_kw) or
+                    (k == "다우니" and ("다우니" in clean_kw or "섬유유연제" in clean_kw))
+                )
+                if is_matched:
+                    refined_items = [dict(x) for x in items[:3]]
                     break
 
-    # 4. 일반 검색어 카탈로그 자동 생성 폴백
+    # 4. 일반 검색어 카탈로그 자동 생성 폴백 (중립적 쇼핑 플레이스홀더 사용)
     if not refined_items:
         enc_k = urllib.parse.quote(keyword)
         naver_url = f"https://search.shopping.naver.com/search/all?query={enc_k}"
+        neutral_img = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='300' height='300' viewBox='0 0 100 100' fill='none'><rect width='100' height='100' rx='16' fill='%23F1F5F9'/><path d='M30 40h40l-5 35H35L30 40z' stroke='%2303C75A' stroke-width='4' stroke-linejoin='round' fill='%23E8F5E9'/><path d='M38 40V30a12 12 0 0124 0v10' stroke='%2303C75A' stroke-width='4' stroke-linecap='round'/><circle cx='50' cy='58' r='6' fill='%2303C75A'/></svg>"
         refined_items = [
             {
                 "title": f"{keyword} (네이버 쇼핑 공식 가격비교)",
                 "price": 10000,
                 "mall_name": "네이버 가격비교 (공식 카탈로그)",
                 "url": naver_url,
-                "image_url": "https://shopping-phinf.pstatic.net/main_5301888/53018889018.20250214174431.jpg",
-                "review_count": 104064,
+                "image_url": neutral_img,
+                "review_count": 2150,
                 "score": 4.88,
                 "is_ad": False
             },
@@ -245,7 +268,7 @@ def fetch_price_data(keyword: str = "농심 신라면 봉지 20개입", target_p
                 "price": 10500,
                 "mall_name": "네이버 스마트스토어 (공식인증)",
                 "url": naver_url,
-                "image_url": "https://shopping-phinf.pstatic.net/main_5301888/53018889018.20250214174431.jpg",
+                "image_url": neutral_img,
                 "review_count": 1560,
                 "score": 4.86,
                 "is_ad": False
@@ -255,7 +278,7 @@ def fetch_price_data(keyword: str = "농심 신라면 봉지 20개입", target_p
                 "price": 11200,
                 "mall_name": "네이버 브랜드스토어 (본사직영)",
                 "url": naver_url,
-                "image_url": "https://shopping-phinf.pstatic.net/main_5301888/53018889018.20250214174431.jpg",
+                "image_url": neutral_img,
                 "review_count": 2600,
                 "score": 4.90,
                 "is_ad": False
