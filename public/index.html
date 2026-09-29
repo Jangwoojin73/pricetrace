@@ -352,8 +352,16 @@
           </div>
         </div>
         
-        <!-- 간편 알림 수신 상태 토글 -->
-        <div class="flex items-center space-x-3 shrink-0 self-end md:self-center">
+        <!-- 간편 알림 수신 상태 토글 및 목표가 설정 -->
+        <div class="flex flex-wrap items-center gap-2.5 shrink-0 self-end md:self-center">
+          <!-- 알림 ON/OFF 토글 스위치 -->
+          <div class="bg-white/80 backdrop-blur border border-slate-200/80 px-3.5 py-2 rounded-2xl flex items-center space-x-2">
+            <span id="alertToggleLabel" class="text-xs font-bold text-slate-700">알림 ON</span>
+            <label class="relative inline-flex items-center cursor-pointer" title="목표가 알림 켜기/끄기">
+              <input type="checkbox" id="alertToggleSwitch" class="sr-only peer" checked>
+              <div class="w-9 h-5 bg-slate-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-naver"></div>
+            </label>
+          </div>
           <div class="bg-white/80 backdrop-blur border border-slate-200/80 px-4 py-2.5 rounded-2xl text-right">
             <span class="block text-[11px] text-slate-500 font-medium">목표 알림 기준</span>
             <span class="text-base font-black text-slate-900" id="currentSetTargetPrice">15,000원</span>
@@ -644,10 +652,10 @@
             <div class="text-xs text-slate-200 font-bold">현재 상태 판단</div>
             <div class="text-lg font-black text-yellow-300 mt-1 flex items-center">
               <i data-lucide="check-circle" class="w-5 h-5 mr-1.5 text-yellow-300"></i>
-              <span>강력 구매 추천</span>
+              <span id="stat30DayDiagnosisBadge">강력 구매 추천</span>
             </div>
-            <p class="text-xs text-slate-100 mt-2 leading-relaxed">
-              현재 가격(<strong class="text-yellow-300 font-extrabold">13,200원</strong>)은 최근 30일 중 <strong class="text-yellow-300 font-extrabold">역대 최저가 구간</strong>에 해당하며, 목표가 대비 12% 저렴합니다.
+            <p id="stat30DayDiagnosisDesc" class="text-xs text-slate-100 mt-2 leading-relaxed">
+              현재 가격(<strong id="stat30DayCurrentPrice" class="text-yellow-300 font-extrabold">13,200원</strong>)은 최근 30일 중 <strong class="text-yellow-300 font-extrabold">역대 최저가 구간</strong>에 해당하며, 목표가 대비 12% 저렴합니다.
             </p>
           </div>
         </div>
@@ -655,15 +663,15 @@
         <div class="space-y-3">
           <div class="flex items-center justify-between text-xs text-slate-200 font-semibold border-b border-slate-700/60 pb-2">
             <span>30일 최고가</span>
-            <span class="font-extrabold text-white">16,200원</span>
+            <span id="stat30DayMax" class="font-extrabold text-white">16,200원</span>
           </div>
           <div class="flex items-center justify-between text-xs text-slate-200 font-semibold border-b border-slate-700/60 pb-2">
             <span>30일 평균가</span>
-            <span class="font-extrabold text-white">14,920원</span>
+            <span id="stat30DayAvg" class="font-extrabold text-white">14,920원</span>
           </div>
           <div class="flex items-center justify-between text-xs text-slate-200 font-semibold pb-1">
             <span>30일 최저가 (현재)</span>
-            <span class="font-black text-yellow-300 text-sm">13,200원</span>
+            <span id="stat30DayMin" class="font-black text-yellow-300 text-sm">13,200원</span>
           </div>
 
           <button id="directBuySubBtn" class="w-full mt-3 py-3 bg-naver hover:bg-naver-dark text-white text-xs font-black rounded-xl shadow-lg shadow-naver/30 transition-all flex items-center justify-center space-x-1.5">
@@ -741,6 +749,18 @@
           <button type="button" class="preset-price-btn px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-lg" data-price="14500">14,500원</button>
           <button type="button" class="preset-price-btn px-3 py-1.5 bg-naver/10 text-naver text-xs font-bold rounded-lg border border-naver/30" data-price="15000">15,000원 (기본)</button>
           <button type="button" class="preset-price-btn px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-lg" data-price="15500">15,500원</button>
+        </div>
+
+        <!-- 알림 켜기/끄기 설정 토글 -->
+        <div class="flex items-center justify-between p-3.5 bg-slate-50 border border-slate-200/80 rounded-2xl mt-2">
+          <div>
+            <div class="text-xs font-bold text-slate-800">목표가 도달 알림 활성화</div>
+            <div class="text-[11px] text-slate-500">목표가 이하로 떨어졌을 때 알림 배너 및 상태를 표시합니다.</div>
+          </div>
+          <label class="relative inline-flex items-center cursor-pointer shrink-0 ml-3" title="알림 활성화 토글">
+            <input type="checkbox" id="modalAlertToggle" class="sr-only peer" checked>
+            <div class="w-10 h-6 bg-slate-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-naver"></div>
+          </label>
         </div>
       </div>
 

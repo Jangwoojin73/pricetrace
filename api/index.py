@@ -53,6 +53,7 @@ DEFAULT_FALLBACK_ITEMS = [
     {
         "title": "농심 신라면120g 20개 1박스",
         "price": 13200,
+        "mall": "신성마켓몰",
         "mall_name": "신성마켓몰",
         "url": "https://m.smartstore.naver.com/main/products/8676675032",
         "review_count": 715,
@@ -60,6 +61,72 @@ DEFAULT_FALLBACK_ITEMS = [
         "is_ad": False
     }
 ]
+
+POOL_FALLBACK_DATA = {
+    "햇반": [
+        {
+            "title": "CJ제일제당 햇반 210g 24개",
+            "price": 25110,
+            "mall": "다나와 가격비교",
+            "mall_name": "다나와 가격비교",
+            "url": "https://search.danawa.com/dsearch.php?query=%ED%96%87%EB%B0%98+24%EA%B0%9C",
+            "image_url": "https://img.danuri.io/catalog-image/074/151/001/38cdd389a56f4c429c7d8ce164a1a2de.jpg",
+            "review_count": 2840,
+            "score": 4.91,
+            "is_ad": False
+        },
+        {
+            "title": "CJ제일제당 햇반 윤기가득쌀밥 210g 24개",
+            "price": 23080,
+            "mall": "스마트스토어",
+            "mall_name": "스마트스토어",
+            "url": "https://search.danawa.com/dsearch.php?query=%ED%96%87%EB%B0%98+24%EA%B0%9C",
+            "image_url": "https://img.danuri.io/catalog-image/223/974/104/4b7a40991d644c419e7849c14f4bf68e.webp",
+            "review_count": 912,
+            "score": 4.88,
+            "is_ad": False
+        }
+    ],
+    "코카콜라": [
+        {
+            "title": "코카콜라 제로 355ml 24캔 1박스",
+            "price": 18900,
+            "mall": "다나와 가격비교",
+            "mall_name": "다나와 가격비교",
+            "url": "https://search.danawa.com/dsearch.php?query=%EC%BD%94%EC%B9%B4%EC%BD%9C%EB%9D%BC+%EC%A0%9C%EB%A1%9C+24%EC%BA%94",
+            "image_url": "https://img.danuri.io/catalog-image/201/472/013/4919bce162ff4874b54fc8b6ab9fe573.jpg",
+            "review_count": 5210,
+            "score": 4.93,
+            "is_ad": False
+        }
+    ],
+    "삼다수": [
+        {
+            "title": "제주 삼다수 2L 6개",
+            "price": 5980,
+            "mall": "다나와 가격비교",
+            "mall_name": "다나와 가격비교",
+            "url": "https://search.danawa.com/dsearch.php?query=%EC%A0%9C%EC%A3%BC+%EC%82%BC%EB%8B%A4%EC%88%98+2L",
+            "image_url": "https://img.danuri.io/catalog-image/118/740/014/6ebf7c9c79434e7b874850b5d1b310ce.jpg",
+            "review_count": 3410,
+            "score": 4.92,
+            "is_ad": False
+        }
+    ],
+    "스팸": [
+        {
+            "title": "CJ제일제당 스팸 클래식 200g 10개",
+            "price": 25540,
+            "mall": "다나와 가격비교",
+            "mall_name": "다나와 가격비교",
+            "url": "https://search.danawa.com/dsearch.php?query=%EC%8A%A4%ED%8C%B8+10%EC%BA%94",
+            "image_url": "https://img.danuri.io/catalog-image/210/006/001/5b881f953b1947acad0eba6c5b839b7d.jpg",
+            "review_count": 1890,
+            "score": 4.89,
+            "is_ad": False
+        }
+    ]
+}
 
 
 def get_cached_items() -> List[Dict[str, Any]]:
@@ -97,22 +164,25 @@ def generate_mock_history(lowest_price: int, target_price: int) -> List[Dict[str
     return history
 
 
-def extract_unit_count(title: str) -> int:
-    """상품명에서 수량(20개, 30캔, 6입 등)을 자동 감지하여 정수로 반환"""
+def extract_unit_count(title: str, keyword: str = "") -> int:
+    """상품명(또는 검색어)에서 수량(20개, 30캔, 6입 등)을 자동 감지하여 정수로 반환"""
     import re
-    match = re.search(r'(\d+)\s*(개|봉|입|ea|캔|병|팩|box|박스)', title.lower())
-    if match:
-        try:
-            cnt = int(match.group(1))
-            if 1 <= cnt <= 200:
-                return cnt
-        except ValueError:
-            pass
+    for text in [title, keyword]:
+        if not text:
+            continue
+        match = re.search(r'(\d+)\s*(개|봉|입|ea|캔|병|팩|box|박스|롤|t)', text.lower())
+        if match:
+            try:
+                cnt = int(match.group(1))
+                if 1 <= cnt <= 200:
+                    return cnt
+            except ValueError:
+                pass
     return 1
 
 
 def fetch_price_data(keyword: str = "농심 신라면 봉지 20개입", target_price: int = 15000) -> Dict[str, Any]:
-    """네이버 쇼핑 실시간 크롤링 또는 안전 캐시 반환"""
+    """네이버 쇼핑 및 다나와 실시간 크롤링 또는 안전 캐시 반환"""
     raw_items = []
     fetch_errors = []
     is_live = False
@@ -128,10 +198,16 @@ def fetch_price_data(keyword: str = "농심 신라면 봉지 20개입", target_p
     if raw_items and pricetrace_bot:
         refined_items = pricetrace_bot.filter_and_refine_products(raw_items, keyword)
     else:
+        refined_items = []
+
+    if not refined_items:
         if "신라면" in keyword:
             refined_items = get_cached_items()
         else:
-            refined_items = []
+            for k, items in POOL_FALLBACK_DATA.items():
+                if k in keyword:
+                    refined_items = items
+                    break
 
     if not refined_items:
         if "신라면" in keyword:
@@ -165,7 +241,7 @@ def fetch_price_data(keyword: str = "농심 신라면 봉지 20개입", target_p
     lowest_price = top_items[0]["price"] if top_items else 0
     representative = top_items[0] if top_items else {}
 
-    unit_cnt = extract_unit_count(representative.get("title", ""))
+    unit_cnt = extract_unit_count(representative.get("title", ""), keyword=keyword)
     unit_price = round(lowest_price / unit_cnt) if lowest_price > 0 else 0
 
     if target_price <= 0:

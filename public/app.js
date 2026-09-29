@@ -6,6 +6,7 @@
 const state = {
   keyword: "",
   targetPrice: 15000,
+  alertEnabled: localStorage.getItem("pricetrace_alert_enabled") !== "false",
   data: null,
   chart: null,
   isLoading: false,
@@ -14,8 +15,13 @@ const state = {
 
 // URL 정규화 헬퍼 (로그인 강제 및 캡차 발생 최소화)
 function normalizeProductUrl(url, title = "") {
-  if (!url) return "#";
-  let trimmed = String(url).trim();
+  let trimmed = String(url || "").trim();
+  if (!trimmed || trimmed === "#" || trimmed.startsWith("javascript:")) {
+    if (title && title.trim()) {
+      return `https://search.danawa.com/dsearch.php?query=${encodeURIComponent(title.trim())}`;
+    }
+    return "https://www.danawa.com";
+  }
 
   // 1. 카탈로그 링크 또는 cr 브릿지 링크: 비로그인 시 nidlogin 리다이렉트를 방지하고 즉시 열리는 공식 검색 딥링크로 연결
   if (
@@ -269,7 +275,20 @@ const elements = {
   cancelConfigModalBtn: document.getElementById("cancelConfigModalBtn"),
   saveConfigModalBtn: document.getElementById("saveConfigModalBtn"),
   modalTargetPriceInput: document.getElementById("modalTargetPriceInput"),
-  presetPriceBtns: document.querySelectorAll(".preset-price-btn")
+  presetPriceBtns: document.querySelectorAll(".preset-price-btn"),
+
+  // 알림 토글
+  alertToggleSwitch: document.getElementById("alertToggleSwitch"),
+  modalAlertToggle: document.getElementById("modalAlertToggle"),
+  alertToggleLabel: document.getElementById("alertToggleLabel"),
+
+  // 30일 시세 통계 카드
+  stat30DayMax: document.getElementById("stat30DayMax"),
+  stat30DayAvg: document.getElementById("stat30DayAvg"),
+  stat30DayMin: document.getElementById("stat30DayMin"),
+  stat30DayCurrentPrice: document.getElementById("stat30DayCurrentPrice"),
+  stat30DayDiagnosisBadge: document.getElementById("stat30DayDiagnosisBadge"),
+  stat30DayDiagnosisDesc: document.getElementById("stat30DayDiagnosisDesc")
 };
 
 // 숫자 포맷팅 (원 단위)
@@ -278,7 +297,7 @@ function formatCurrency(num) {
 }
 
 // 뷰 전환: 초기 웰컴 화면
-function switchToWelcomeView() {
+function switchToWelcomeView(skipHistory = false) {
   state.view = "welcome";
   state.keyword = "";
   if (elements.welcomeView) elements.welcomeView.classList.remove("hidden");
@@ -290,7 +309,7 @@ function switchToWelcomeView() {
   if (elements.topBannerText) {
     elements.topBannerText.textContent = "네이버 쇼핑 공식 카탈로그 실시간 최저가 레이더";
   }
-  if (window.history.pushState && window.location.search) {
+  if (!skipHistory && window.history.pushState && window.location.search) {
     window.history.pushState({}, "", window.location.pathname);
   }
   if (window.lucide) {
@@ -307,6 +326,9 @@ function switchToResultView(keyword) {
   if (elements.currentSearchKeywordText) {
     elements.currentSearchKeywordText.textContent = keyword;
   }
+  if (elements.productTitle) {
+    elements.productTitle.textContent = `${keyword} (최저가 실시간 검색 중...)`;
+  }
   if (elements.searchInput && elements.searchInput.value !== keyword) {
     elements.searchInput.value = keyword;
     updateClearBtn();
@@ -314,8 +336,13 @@ function switchToResultView(keyword) {
   if (elements.topBannerText) {
     elements.topBannerText.textContent = `'${keyword}' 실시간 최저가 비교 분석`;
   }
-  if (window.history.pushState) {
-    const newUrl = `${window.location.pathname}?q=${encodeURIComponent(keyword)}`;
+  const currentQ = new URLSearchParams(window.location.search).get("q");
+  const newUrl = `${window.location.pathname}?q=${encodeURIComponent(keyword)}`;
+  if (currentQ === keyword) {
+    if (window.history.replaceState) {
+      window.history.replaceState({ keyword }, "", newUrl);
+    }
+  } else if (window.history.pushState) {
     window.history.pushState({ keyword }, "", newUrl);
   }
   if (window.lucide) {
@@ -388,13 +415,51 @@ function renderAll(data) {
   if (elements.mobileBtnTargetPriceDisplay) elements.mobileBtnTargetPriceDisplay.textContent = `${formatCurrency(target_price)}원`;
   elements.currentSetTargetPrice.textContent = `${formatCurrency(target_price)}원`;
   elements.lastUpdatedTime.textContent = timestamp ? timestamp.split(" ")[1] + " 갱신됨" : "방금 갱신됨";
+
+  // 검색 결과가 없는 경우 깔끔한 안내 화면
+  if (!data.success || lowest_price <= 0) {
+    elements.topBannerText.textContent = `${keyword} 검색 결과 없음`;
+    elements.alertBanner.className = "relative overflow-hidden rounded-3xl p-5 sm:p-6 transition-all duration-300 shadow-md bg-amber-50 border border-amber-200";
+    elements.alertIconBox.textContent = "🔍";
+    elements.alertStatusBadge.textContent = "결과 없음";
+    elements.alertMainMessage.textContent = data.alert_message || "해당 상품에 대한 최저가 정보를 찾지 못했습니다.";
+    elements.alertDescription.innerHTML = `검색어 철자를 확인하시거나 상단의 <strong>'#신라면 20개', '#햇반 24개', '#삼다수 2L'</strong> 등 인기 키워드를 눌러보세요.`;
+    elements.productTitle.textContent = `${keyword} (검색 결과 없음)`;
+    elements.lowestPriceDisplay.textContent = "-";
+    elements.unitPriceDisplay.textContent = "-";
+    elements.lowestMallName.textContent = "-";
+    if (elements.discountBadge) elements.discountBadge.className = "hidden";
+    if (elements.productMainImage) {
+      elements.productMainImage.src = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'><circle cx='11' cy='11' r='8'/><path d='m21 21-4.3-4.3'/></svg>";
+      elements.productMainImage.alt = "검색 결과 없음";
+    }
+    renderComparisonGrid([], 1);
+    if (elements.historyChartContainer) {
+      elements.historyChartContainer.innerHTML = '<div class="h-64 flex items-center justify-center text-slate-400">데이터가 없습니다.</div>';
+    }
+    return;
+  }
+
   elements.topBannerText.textContent = `${keyword} 최저가 ${formatCurrency(lowest_price)}원 감지됨!`;
 
-  // 특가 배너 스타일 토글
-  if (is_special_price) {
+  // 알림 토글 스위치 상태 UI 동기화
+  if (elements.alertToggleSwitch) elements.alertToggleSwitch.checked = state.alertEnabled;
+  if (elements.modalAlertToggle) elements.modalAlertToggle.checked = state.alertEnabled;
+  if (elements.alertToggleLabel) elements.alertToggleLabel.textContent = state.alertEnabled ? "알림 ON" : "알림 OFF";
+
+  // 특가 배너 스타일 토글 (알림 활성화 여부 반영)
+  if (!state.alertEnabled) {
+    elements.alertBanner.className = "relative overflow-hidden rounded-3xl p-5 sm:p-6 transition-all duration-300 shadow-md bg-slate-100 border border-slate-300 text-slate-800";
+    elements.alertIconBox.textContent = "🔕";
+    elements.alertStatusBadge.textContent = "알림 끔";
+    elements.alertStatusBadge.className = "px-2.5 py-0.5 rounded-full text-xs font-extrabold uppercase tracking-wide bg-slate-200 text-slate-700";
+    elements.alertMainMessage.textContent = "목표가 도달 알림이 꺼져 있습니다.";
+    elements.alertDescription.innerHTML = `현재 1위 최저가는 <strong>${formatCurrency(lowest_price)}원</strong>입니다. 우측 상단 토글을 켜면 목표가(${formatCurrency(target_price)}원) 도달 시 특가 안내를 받으실 수 있습니다.`;
+  } else if (is_special_price) {
     elements.alertBanner.className = "relative overflow-hidden rounded-3xl p-5 sm:p-6 transition-all duration-300 shadow-md banner-special";
     elements.alertIconBox.textContent = "🚨";
     elements.alertStatusBadge.textContent = "특가 감지";
+    elements.alertStatusBadge.className = "px-2.5 py-0.5 rounded-full text-xs font-extrabold uppercase tracking-wide";
     elements.alertMainMessage.textContent = "목표 가격 이하입니다! 지금이 구매 적기입니다.";
     const discountRate = target_price > 0 ? Math.round((discount_amount / target_price) * 100) : 0;
     elements.alertDescription.innerHTML = `현재 1위 최저가가 설정하신 목표가 <strong>${formatCurrency(target_price)}원</strong>보다 <strong>${formatCurrency(discount_amount)}원(${discountRate}%)</strong> 저렴합니다.`;
@@ -402,6 +467,7 @@ function renderAll(data) {
     elements.alertBanner.className = "relative overflow-hidden rounded-3xl p-5 sm:p-6 transition-all duration-300 shadow-md banner-normal";
     elements.alertIconBox.textContent = "ℹ️";
     elements.alertStatusBadge.textContent = "가격 관망";
+    elements.alertStatusBadge.className = "px-2.5 py-0.5 rounded-full text-xs font-extrabold uppercase tracking-wide";
     elements.alertMainMessage.textContent = "아직 목표 가격보다 비쌉니다. 알림을 대기하세요.";
     const diff = lowest_price - target_price;
     elements.alertDescription.innerHTML = `현재 1위 최저가가 설정하신 목표가 <strong>${formatCurrency(target_price)}원</strong>보다 <strong>${formatCurrency(diff)}원</strong> 높습니다.`;
@@ -418,7 +484,8 @@ function renderAll(data) {
     }
     elements.unitPriceDisplay.textContent = `약 ${formatCurrency(unit_price)}원`;
 
-    elements.lowestMallName.textContent = representative_item.mall_name || "네이버 가격비교";
+    const mallName = representative_item.mall_name || representative_item.mall || "온라인 최저가";
+    elements.lowestMallName.textContent = mallName;
     elements.productScore.textContent = (representative_item.score || 4.88).toFixed(2);
     elements.productReviewCount.textContent = `${formatCurrency(representative_item.review_count || 104)}건`;
 
@@ -429,7 +496,7 @@ function renderAll(data) {
     }
 
     // 태그 동적 업데이트
-    if (elements.productMallTag) elements.productMallTag.textContent = representative_item.mall_name || "네이버 쇼핑";
+    if (elements.productMallTag) elements.productMallTag.textContent = mallName;
     if (elements.productUnitTag) elements.productUnitTag.textContent = unit_count > 1 ? `${unit_count}개 패키지` : "온라인 최저가";
     if (elements.productBadgeText) elements.productBadgeText.textContent = unit_count > 1 ? `${unit_count}개입 실시간 검증` : "정품 인증 완료";
 
@@ -501,7 +568,7 @@ function renderComparisonGrid(items, unit_count = 1) {
           ${isFirst ? '<span class="text-xs text-naver font-bold flex items-center"><i data-lucide="zap" class="w-3.5 h-3.5 mr-0.5"></i> 실시간 최저</span>' : ''}
         </div>
         <div>
-          <span class="text-xs text-slate-400 font-medium block truncate">${item.mall_name || "스마트스토어"}</span>
+          <span class="text-xs text-slate-400 font-medium block truncate">${item.mall_name || item.mall || "온라인 최저가"}</span>
           <h4 class="text-sm font-bold text-slate-900 mt-1 line-clamp-2 leading-snug" title="${item.title}">${item.title}</h4>
           <div class="mt-3 flex items-baseline space-x-1">
             <span class="text-2xl font-black text-slate-900">${formatCurrency(item.price)}</span>
@@ -626,6 +693,34 @@ function renderChart(history, targetPrice) {
       }
     }
   });
+
+  // 30일 시세 통계 카드 및 구매 판단 가이드 동적 계산 및 갱신
+  if (priceData && priceData.length > 0) {
+    const maxP = Math.max(...priceData);
+    const minP = Math.min(...priceData);
+    const avgP = Math.round(priceData.reduce((acc, cur) => acc + cur, 0) / priceData.length);
+    const curP = priceData[priceData.length - 1];
+
+    if (elements.stat30DayMax) elements.stat30DayMax.textContent = `${formatCurrency(maxP)}원`;
+    if (elements.stat30DayAvg) elements.stat30DayAvg.textContent = `${formatCurrency(avgP)}원`;
+    if (elements.stat30DayMin) elements.stat30DayMin.textContent = `${formatCurrency(minP)}원`;
+    if (elements.stat30DayCurrentPrice) elements.stat30DayCurrentPrice.textContent = `${formatCurrency(curP)}원`;
+
+    if (elements.stat30DayDiagnosisBadge && elements.stat30DayDiagnosisDesc) {
+      if (curP <= minP * 1.03) {
+        elements.stat30DayDiagnosisBadge.textContent = "강력 구매 추천";
+        const diffRate = targetPrice > 0 ? Math.round(((targetPrice - curP) / targetPrice) * 100) : 0;
+        const diffText = diffRate > 0 ? `, 목표가 대비 ${diffRate}% 저렴합니다.` : '.';
+        elements.stat30DayDiagnosisDesc.innerHTML = `현재 가격(<strong class="text-yellow-300 font-extrabold">${formatCurrency(curP)}원</strong>)은 최근 30일 중 <strong class="text-yellow-300 font-extrabold">역대 최저가 구간</strong>에 해당하며${diffText}`;
+      } else if (curP <= avgP) {
+        elements.stat30DayDiagnosisBadge.textContent = "구매 적기";
+        elements.stat30DayDiagnosisDesc.innerHTML = `현재 가격(<strong class="text-yellow-300 font-extrabold">${formatCurrency(curP)}원</strong>)은 최근 30일 평균(${formatCurrency(avgP)}원)보다 저렴한 양호한 구간입니다.`;
+      } else {
+        elements.stat30DayDiagnosisBadge.textContent = "시세 관망 권장";
+        elements.stat30DayDiagnosisDesc.innerHTML = `현재 가격(<strong class="text-yellow-300 font-extrabold">${formatCurrency(curP)}원</strong>)은 최근 30일 평균(${formatCurrency(avgP)}원)보다 다소 높으므로 시세를 지켜보시는 것을 권장합니다.`;
+      }
+    }
+  }
 }
 
 // 5. 로딩 UI 토글
@@ -811,9 +906,35 @@ function initEventListeners() {
     }
   });
 
+  // 알림 ON/OFF 토글 핸들러
+  const handleAlertToggle = (isEnabled) => {
+    state.alertEnabled = isEnabled;
+    try {
+      localStorage.setItem("pricetrace_alert_enabled", isEnabled ? "true" : "false");
+    } catch (e) {}
+    if (elements.alertToggleSwitch) elements.alertToggleSwitch.checked = isEnabled;
+    if (elements.modalAlertToggle) elements.modalAlertToggle.checked = isEnabled;
+    if (elements.alertToggleLabel) elements.alertToggleLabel.textContent = isEnabled ? "알림 ON" : "알림 OFF";
+    if (state.data) {
+      renderAll(state.data);
+    }
+  };
+
+  if (elements.alertToggleSwitch) {
+    elements.alertToggleSwitch.addEventListener("change", (e) => {
+      handleAlertToggle(e.target.checked);
+    });
+  }
+  if (elements.modalAlertToggle) {
+    elements.modalAlertToggle.addEventListener("change", (e) => {
+      handleAlertToggle(e.target.checked);
+    });
+  }
+
   // 모달 열기/닫기
   const openModal = () => {
     elements.modalTargetPriceInput.value = state.targetPrice || 15000;
+    if (elements.modalAlertToggle) elements.modalAlertToggle.checked = state.alertEnabled;
     elements.configModal.classList.remove("hidden");
     setTimeout(() => {
       elements.modalTargetPriceInput.focus();
@@ -878,6 +999,9 @@ function initEventListeners() {
     const newTarget = parseInt(elements.modalTargetPriceInput.value, 10);
     if (!isNaN(newTarget) && newTarget > 0) {
       closeModal();
+      if (elements.modalAlertToggle) {
+        handleAlertToggle(elements.modalAlertToggle.checked);
+      }
       state.targetPrice = newTarget;
       if (elements.btnTargetPriceDisplay) {
         elements.btnTargetPriceDisplay.textContent = formatCurrency(newTarget) + "원";
@@ -902,7 +1026,7 @@ function initEventListeners() {
       updateClearBtn();
       loadPriceData(q.trim(), 0);
     } else {
-      switchToWelcomeView();
+      switchToWelcomeView(true);
       shuffleAndRenderRecommendations(false);
     }
   });

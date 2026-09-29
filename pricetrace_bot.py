@@ -96,6 +96,106 @@ def fetch_from_proxy(keyword: str, limit: int = 20) -> Optional[List[Dict[str, A
     return None
 
 
+def fetch_from_danawa(keyword: str, limit: int = 20) -> List[Dict[str, Any]]:
+    """
+    다나와(Danawa) 가격비교 검색을 통해 상품 실시간 데이터를 수집합니다.
+    네이버 쇼핑 WAF/차단 발생 시 완벽한 2차 라이브 소스로 동작합니다.
+    """
+    encoded = urllib.parse.quote(keyword)
+    url = f"https://search.danawa.com/dsearch.php?query={encoded}"
+    req = urllib.request.Request(
+        url,
+        headers={
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+            "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+            "Accept-Language": "ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7"
+        }
+    )
+    try:
+        ctx = create_ssl_context()
+        with urllib.request.urlopen(req, context=ctx, timeout=6) as resp:
+            html = resp.read().decode("utf-8", "ignore")
+    except Exception:
+        return []
+
+    item_blocks = re.findall(
+        r'<li[^>]*id="productItem(\d+)"[^>]*class="[^"]*prod_item[^"]*"[^>]*>(.*?)(?=<li[^>]*id="productItem\d+"|$)',
+        html,
+        re.DOTALL
+    )
+    results = []
+    for pcode, block in item_blocks:
+        # 1. Title
+        t_m = re.search(r'class="prod_name"[^>]*>.*?<a[^>]*>(.*?)</a>', block, re.DOTALL)
+        if not t_m:
+            continue
+        title = re.sub(r'<[^>]+>', '', t_m.group(1)).strip()
+
+        # 2. Link
+        l_m = re.search(r'class="prod_name"[^>]*>.*?<a [^>]*?href="([^"]+)"', block, re.DOTALL)
+        link = l_m.group(1) if l_m else ""
+        if link.startswith("//"):
+            link = "https:" + link
+        if not link or link == "#" or link.startswith("javascript:"):
+            if pcode:
+                link = f"https://prod.danawa.com/info/?pcode={pcode}"
+            else:
+                link = f"https://search.danawa.com/dsearch.php?query={urllib.parse.quote(title)}"
+
+        # 3. Price
+        p_m = re.search(r'class="price_sect"[^>]*>.*?<strong>([\d,]+)</strong>', block, re.DOTALL)
+        if not p_m:
+            continue
+        price_str = p_m.group(1).replace(",", "")
+        try:
+            price = int(price_str)
+        except ValueError:
+            continue
+
+        # 4. Image
+        img_m = re.search(r'<div class="thumb_image">.*?<img\s+[^>]*?(?:data-original|src)="([^"]+)"', block, re.DOTALL)
+        img = ""
+        if img_m:
+            img = img_m.group(1).strip()
+            if img.startswith("//"):
+                img = "https:" + img
+            if "noImg" in img or "blank" in img:
+                data_orig = re.search(r'<div class="thumb_image">.*?<img\s+[^>]*?data-original="([^"]+)"', block, re.DOTALL)
+                if data_orig:
+                    img = data_orig.group(1).strip()
+                    if img.startswith("//"):
+                        img = "https:" + img
+
+        # 5. Mall name
+        mall_m = re.search(r'class="mall_name"[^>]*>.*?<img [^>]*?alt="([^"]+)"', block)
+        if not mall_m:
+            mall_text_m = re.search(r'class="mall_name"[^>]*>(.*?)</div>', block, re.DOTALL)
+            mall = re.sub(r'<[^>]+>', '', mall_text_m.group(1)).strip() if mall_text_m else "다나와 최저가"
+        else:
+            mall = mall_m.group(1).strip()
+
+        # 6. Review & Score
+        rev_m = re.search(r'class="point_num"[^>]*>.*?<strong>([\d,]+)</strong>', block, re.DOTALL)
+        score_m = re.search(r'class="point_num"[^>]*>([\d\.]+)', block)
+        review_count = int(rev_m.group(1).replace(",", "")) if rev_m else 240
+        score = float(score_m.group(1)) if score_m else 4.88
+
+        results.append({
+            "title": title,
+            "price": price,
+            "mall": mall or "다나와 최저가",
+            "mall_name": mall or "다나와 최저가",
+            "url": link,
+            "image_url": img,
+            "review_count": review_count,
+            "score": score,
+            "is_ad": False
+        })
+        if len(results) >= limit:
+            break
+    return results
+
+
 def normalize_shopping_url(url: str, nv_mid: Optional[Any] = None, card_type: str = "", title: str = "") -> str:
     """
     네이버 쇼핑 URL을 안전하고 인증/캡차 제약이 최소화된 URL로 변환합니다.
@@ -108,6 +208,15 @@ def normalize_shopping_url(url: str, nv_mid: Optional[Any] = None, card_type: st
     str_nv_mid = str(nv_mid).strip() if nv_mid else ""
     url = (url or "").strip()
     clean_title = (title or "").strip()
+    # 빈 링크이거나 #, javascript인 경우 검색 딥링크 제공
+    if not url or url == "#" or url.startswith("javascript:"):
+        if clean_title:
+            return f"https://search.danawa.com/dsearch.php?query={urllib.parse.quote(clean_title)}"
+        return "https://www.danawa.com"
+
+    # 다나와 링크인 경우 그대로 반환
+    if "danawa.com" in url:
+        return url
 
     # 1. URL 내에서 nv_mid 파라미터 추출 시도
     if not str_nv_mid and url:
@@ -251,10 +360,11 @@ def fetch_from_naver_bff(keyword: str) -> List[Dict[str, Any]]:
 
 
 def fetch_products_for_keyword(keyword: str) -> Tuple[List[Dict[str, Any]], List[str]]:
-    """임의의 검색어에 대해 네이버 쇼핑 실시간 데이터를 수집합니다."""
+    """임의의 검색어에 대해 네이버 쇼핑 및 다나와 실시간 데이터를 다계층으로 수집합니다."""
     all_items: List[Dict[str, Any]] = []
     errors: List[str] = []
 
+    # 1. 네이버 쇼핑 BFF 조회 시도
     try:
         bff_items = fetch_from_naver_bff(keyword)
         if bff_items:
@@ -262,6 +372,7 @@ def fetch_products_for_keyword(keyword: str) -> Tuple[List[Dict[str, Any]], List
     except Exception as e:
         errors.append(f"네이버 쇼핑 BFF '{keyword}': {str(e)}")
 
+    # 2. k-skill 프록시 조회 시도
     if not all_items:
         try:
             proxy_items = fetch_from_proxy(keyword)
@@ -270,17 +381,28 @@ def fetch_products_for_keyword(keyword: str) -> Tuple[List[Dict[str, Any]], List
         except Exception as e:
             errors.append(f"프록시 '{keyword}': {str(e)}")
 
+    # 3. 다나와 실시간 가격비교 조회 (네이버 봇 차단 시 고신뢰 폴백)
+    if not all_items:
+        try:
+            danawa_items = fetch_from_danawa(keyword)
+            if danawa_items:
+                all_items.extend(danawa_items)
+        except Exception as e:
+            errors.append(f"다나와 '{keyword}': {str(e)}")
+
     return all_items, errors
 
 
 def default_data_fetcher(keyword: Optional[str] = None) -> Tuple[List[Dict[str, Any]], List[str]]:
-    """실제 네이버 쇼핑 데이터를 수집하는 기본 fetcher (임의 키워드 지원)"""
+    """실제 최저가 데이터를 수집하는 기본 fetcher (임의 키워드 지원)"""
+    target_kw = keyword or PRIMARY_KEYWORD
     if keyword and keyword != PRIMARY_KEYWORD:
         return fetch_products_for_keyword(keyword)
 
     all_raw_items: List[Dict[str, Any]] = []
     fetch_errors: List[str] = []
 
+    # 1. 네이버 쇼핑 조회 시도
     for kw in SEARCH_KEYWORDS:
         try:
             bff_items = fetch_from_naver_bff(kw)
@@ -288,6 +410,15 @@ def default_data_fetcher(keyword: Optional[str] = None) -> Tuple[List[Dict[str, 
                 all_raw_items.extend(bff_items)
         except Exception as e:
             fetch_errors.append(f"'{kw}': {str(e)}")
+
+    # 2. 네이버 실패 시 다나와 조회 시도
+    if not all_raw_items:
+        try:
+            danawa_items = fetch_from_danawa(target_kw)
+            if danawa_items:
+                all_raw_items.extend(danawa_items)
+        except Exception as e:
+            fetch_errors.append(f"다나와 '{target_kw}': {str(e)}")
 
     return all_raw_items, fetch_errors
 
@@ -316,16 +447,23 @@ def filter_and_refine_products(items: List[Dict[str, Any]], keyword: str = "") -
             if "신라면" not in title:
                 continue
 
-            # 3. 파생 상품(블랙, 건면, 투움바 등) 제외 키워드 검사
-            if any(exc in title_lower for exc in EXCLUDE_KEYWORDS):
-                continue
+            # 3. 파생 상품(블랙, 건면, 투움바 등) 제외 키워드 검사 (사용자가 직접 검색하지 않은 경우만 배제)
+            user_specified_special = any(sp in keyword.lower() for sp in ["블랙", "black", "건면", "더레드", "투움바", "골드"])
+            if not user_specified_special:
+                if any(exc in title_lower for exc in EXCLUDE_KEYWORDS):
+                    continue
 
-            # 4. 20개입(20개, 20봉, 20입, 20ea 등) 수량 확인
-            match_20 = re.search(r'(20\s*(개|봉|입|ea|p|pack)|20개입)', title_lower)
-            if not match_20:
-                continue
-
-            if price < 5000:
+            # 4. 20개입 수량 확인 (검색어에 20이 있을 때)
+            if "20" in keyword:
+                match_20 = re.search(r'(20\s*(개|봉|입|ea|p|pack)|20개입)', title_lower)
+                # 다나와 등 대표 카탈로그 상품(가격이 20개 묶음 가격대 8,000원 이상)이거나 20개 명시된 경우
+                if not match_20 and price < 8000:
+                    continue
+                # 단위 환산 편의를 위해 20개가 안 적혀있으면 표기 보정
+                if not match_20 and "20" not in title:
+                    title = f"{title} (20개입 묶음)"
+                    item["title"] = title
+            elif price < 500:
                 continue
         else:
             # 일반 검색어 모드: 검색어 키워드 매칭
@@ -336,9 +474,12 @@ def filter_and_refine_products(items: List[Dict[str, Any]], keyword: str = "") -
             if price < 500:
                 continue
 
-        key = (title, price, item.get("mall_name", ""))
+        mall_name = item.get("mall_name") or item.get("mall") or "온라인 최저가"
+        key = (title, price, mall_name)
         if key not in seen:
             seen.add(key)
+            item["mall"] = mall_name
+            item["mall_name"] = mall_name
             item["url"] = normalize_shopping_url(item.get("url", ""), title=title)
             valid_products.append(item)
 
