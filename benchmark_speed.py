@@ -26,7 +26,7 @@ def benchmark(url, label):
         print(f"[{label}] ERROR: {e}")
 
 if __name__ == '__main__':
-    print("=== 1. 콜드 검색 속도 (첫 검색 / 다나와 직결) ===")
+    print("=== 1. 콜드 검색 속도 (첫 검색 / 네이버 쇼핑 직결) ===")
     benchmark("http://127.0.0.1:8080/api/search?q=%EC%8B%A0%EB%9D%BC%EB%A9%B4", "신라면 콜드")
     benchmark("http://127.0.0.1:8080/api/search?q=%ED%96%87%EB%B0%98", "햇반 콜드")
     benchmark("http://127.0.0.1:8080/api/search?q=%EC%82%BC%EB%8B%A4%EC%88%98", "삼다수 콜드")
