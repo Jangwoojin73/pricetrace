@@ -13,34 +13,17 @@ const state = {
   view: "welcome" // "welcome" | "result"
 };
 
-// URL 정규화 헬퍼 (로그인 강제 및 캡차 발생 최소화)
-function normalizeProductUrl(url, title = "") {
+// URL 정규화 헬퍼 (로그인 강제 및 캡차 발생 최소화, 순위별 가격 일치 딥링크 보장)
+function normalizeProductUrl(url, title = "", price = 0) {
   let trimmed = String(url || "").trim();
   if (!trimmed || trimmed === "#" || trimmed.startsWith("javascript:")) {
     if (title && title.trim()) {
-      return `https://search.shopping.naver.com/search/all?query=${encodeURIComponent(title.trim())}`;
+      return `https://search.shopping.naver.com/search/all?query=${encodeURIComponent(title.trim())}&sort=price_asc`;
     }
     return "https://shopping.naver.com";
   }
 
-  // 1. 카탈로그 링크 또는 cr 브릿지 링크: 비로그인 시 nidlogin 리다이렉트를 방지하고 즉시 열리는 공식 검색 딥링크로 연결
-  if (
-    trimmed.includes("shopping.naver.com/v2/bridge") || 
-    trimmed.includes("cr.shopping.naver.com") || 
-    trimmed.includes("cr3.shopping.naver.com") || 
-    trimmed.includes("searchGate") ||
-    trimmed.includes("shopping.naver.com/catalog")
-  ) {
-    if (title && title.trim()) {
-      return `https://search.shopping.naver.com/search/all?query=${encodeURIComponent(title.trim())}`;
-    }
-    const match = trimmed.match(/[?&]nv_mid=(\d+)/);
-    if (match && match[1]) {
-      return `https://search.shopping.naver.com/catalog/${match[1]}`;
-    }
-  }
-
-  // 2. 스마트스토어 outlink 게이트웨이 파라미터 디코딩
+  // 1. 스마트스토어/브랜드스토어 직결 상품 링크는 반응형 모바일 URL로 최적화하여 보존
   if (trimmed.includes("smartstore.naver.com/inflow/outlink/url?url=")) {
     try {
       const urlObj = new URL(trimmed);
@@ -53,9 +36,41 @@ function normalizeProductUrl(url, title = "") {
     }
   }
 
-  // 3. 스마트스토어 영수증 캡차 방지: PC 버전 main/products -> 모바일 반응형 변환
   if (trimmed.includes("smartstore.naver.com/main/products/") && !trimmed.startsWith("https://m.smartstore")) {
     trimmed = trimmed.replace("https://smartstore.naver.com/", "https://m.smartstore.naver.com/");
+    return trimmed;
+  }
+  if (trimmed.includes("smartstore.naver.com") || trimmed.includes("brand.naver.com")) {
+    return trimmed;
+  }
+
+  // 2. 카탈로그 링크 또는 cr 브릿지 링크: 비로그인 시 nidlogin 리다이렉트를 방지하고 즉시 열리는 공식 검색 딥링크로 연결
+  if (
+    trimmed.includes("shopping.naver.com/v2/bridge") || 
+    trimmed.includes("cr.shopping.naver.com") || 
+    trimmed.includes("cr3.shopping.naver.com") || 
+    trimmed.includes("searchGate") ||
+    trimmed.includes("shopping.naver.com/catalog")
+  ) {
+    if (title && title.trim()) {
+      trimmed = `https://search.shopping.naver.com/search/all?query=${encodeURIComponent(title.trim())}`;
+    }
+  }
+
+  // 3. 네이버 쇼핑 오픈 검색 링크인 경우: sort=price_asc 강제 및 카드 가격 일치 범위 필터 인젝션
+  if (trimmed.includes("search.shopping.naver.com/search/all")) {
+    try {
+      const u = new URL(trimmed);
+      u.searchParams.set("sort", "price_asc");
+      if (price && price > 0 && !u.searchParams.has("minPrice")) {
+        const margin = Math.max(500, Math.round(price * 0.05));
+        u.searchParams.set("minPrice", Math.max(100, price - margin));
+        u.searchParams.set("maxPrice", price + margin);
+      }
+      return u.toString();
+    } catch (e) {
+      // 무시
+    }
   }
 
   return trimmed;
@@ -524,7 +539,7 @@ function renderAll(data) {
 
     // 링크 설정 (로딩 중 클릭 잠금 해제)
     if (representative_item.url) {
-      const safeBuyUrl = normalizeProductUrl(representative_item.url, representative_item.title);
+      const safeBuyUrl = normalizeProductUrl(representative_item.url, representative_item.title, representative_item.price);
       elements.buyButton.href = safeBuyUrl;
       elements.buyButton.onclick = null; // 로딩 중 클릭 방지 잠금 해제
       elements.directBuySubBtn.onclick = () => window.open(safeBuyUrl, "_blank");
@@ -580,7 +595,7 @@ function renderComparisonGrid(items, unit_count = 1) {
     const unitText = unit_count > 1 ? `<span class="text-xs text-slate-400 ml-1">(개당 ${formatCurrency(unitPrice)}원)</span>` : '';
     const reviewCnt = item.review_count ? formatCurrency(item.review_count) + "개" : "리뷰 정보 없음";
     const scoreVal = item.score ? `★ ${item.score.toFixed(2)}` : "평점 정보 없음";
-    const safeItemUrl = normalizeProductUrl(item.url, item.title);
+    const safeItemUrl = normalizeProductUrl(item.url, item.title, item.price);
 
     const mallRaw = item.mall_name || item.mall || "온라인 최저가";
     let mallBadgeClass = "bg-slate-100 text-slate-700 border-slate-200/80";

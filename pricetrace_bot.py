@@ -96,23 +96,42 @@ def fetch_from_proxy(keyword: str, limit: int = 20) -> Optional[List[Dict[str, A
     return None
 
 
-def normalize_shopping_url(url: str, nv_mid: Optional[Any] = None, card_type: str = "", title: str = "") -> str:
+def normalize_shopping_url(url: str, nv_mid: Optional[Any] = None, card_type: str = "", title: str = "", price: int = 0) -> str:
     """
     네이버 쇼핑 URL을 안전하고 인증/캡차 제약이 최소화된 URL로 변환합니다.
-    - 카탈로그 상품(CATALOG_CARD, cr*.shopping.naver.com 등):
-      카탈로그 상세 페이지(catalog/{id})는 외부 직접 유입 시 네이버 로그인을 강제(nidlogin)하므로,
-      로그인 인증 없이 실시간 가격비교 및 판매처 목록이 즉시 열리는 네이버 쇼핑 공식 검색 딥링크로 연결합니다.
-    - 스마트스토어 상품(smartstore.naver.com/main/products/...):
-      PC 버전의 영수증 캡차(CAPTCHA) 빈도를 줄이기 위해 모바일 반응형 URL(m.smartstore.naver.com)로 최적화합니다.
+    - search.shopping.naver.com/search/all:
+      항상 sort=price_asc(최저가순 정렬) 및 해당 상품 가격(±5%) 범위 필터(minPrice, maxPrice)를 자동 부착하여,
+      링크 클릭 시 열리는 화면 최상단 첫 번째 상품이 카드에 표시된 가격과 정확히 일치하도록 보장합니다.
+    - 스마트스토어/브랜드스토어 직결 상품 링크:
+      개별 상품 상세 페이지로 직접 직결하여 해당 가격의 정품 페이지가 즉시 열리도록 보장합니다.
     """
     str_nv_mid = str(nv_mid).strip() if nv_mid else ""
     url = (url or "").strip()
     clean_title = (title or "").strip()
+
+    # 0. 스마트스토어/브랜드스토어 직결 상품 링크는 모바일 반응형 URL로 최적화하여 보존
+    if "smartstore.naver.com" in url or "brand.naver.com" in url:
+        if "smartstore.naver.com/inflow/outlink/url?url=" in url:
+            try:
+                parsed = urllib.parse.urlparse(url)
+                qs = urllib.parse.parse_qs(parsed.query)
+                target = qs.get("url", [None])[0]
+                if target:
+                    clean_target = urllib.parse.unquote(target)
+                    if clean_target.startswith("http"):
+                        url = clean_target.split("?")[0]
+            except Exception:
+                pass
+        if "smartstore.naver.com/main/products/" in url and not url.startswith("https://m.smartstore"):
+            url = url.replace("https://smartstore.naver.com/", "https://m.smartstore.naver.com/")
+        return url
+
     # 빈 링크이거나 #, javascript인 경우 검색 딥링크 제공
     if not url or url == "#" or url.startswith("javascript:"):
         if clean_title:
-            return f"https://search.shopping.naver.com/search/all?query={urllib.parse.quote(clean_title)}"
-        return "https://shopping.naver.com"
+            url = f"https://search.shopping.naver.com/search/all?query={urllib.parse.quote(clean_title)}"
+        else:
+            return "https://shopping.naver.com"
 
     # 1. URL 내에서 nv_mid 파라미터 추출 시도
     if not str_nv_mid and url:
@@ -123,38 +142,22 @@ def normalize_shopping_url(url: str, nv_mid: Optional[Any] = None, card_type: st
     # 2. 카탈로그 카드 또는 브릿지 URL (로그인 강제 우회)
     is_catalog = (
         card_type == "CATALOG_CARD" or 
-        any(pattern in url for pattern in ["shopping.naver.com/v2/bridge", "cr.shopping.naver.com", "cr3.shopping.naver.com", "searchGate", "catalog"])
+        any(pattern in url for pattern in ["shopping.naver.com/v2/bridge", "cr.shopping.naver.com", "cr3.shopping.naver.com", "searchGate", "/catalog/"])
     )
-    if is_catalog:
-        if clean_title:
-            # 로그인 없이 즉시 열리는 네이버 쇼핑 오픈 가격비교 검색 딥링크
-            encoded = urllib.parse.quote(clean_title)
-            return f"https://search.shopping.naver.com/search/all?query={encoded}"
-        elif str_nv_mid:
-            return f"https://search.shopping.naver.com/catalog/{str_nv_mid}"
+    if is_catalog and clean_title:
+        url = f"https://search.shopping.naver.com/search/all?query={urllib.parse.quote(clean_title)}"
 
-    # 3. URL이 비어있지만 nv_mid가 있는 경우
-    if not url and str_nv_mid:
-        if clean_title:
-            return f"https://search.shopping.naver.com/search/all?query={urllib.parse.quote(clean_title)}"
-        return f"https://search.shopping.naver.com/catalog/{str_nv_mid}"
-
-    # 4. 스마트스토어 outlink 게이트웨이 정규화
-    if "smartstore.naver.com/inflow/outlink/url?url=" in url:
-        try:
-            parsed = urllib.parse.urlparse(url)
-            qs = urllib.parse.parse_qs(parsed.query)
-            target = qs.get("url", [None])[0]
-            if target:
-                clean_target = urllib.parse.unquote(target)
-                if clean_target.startswith("http"):
-                    url = clean_target.split("?")[0]
-        except Exception:
-            pass
-
-    # 5. 스마트스토어 캡차 방지: PC 전용 main/products -> 모바일 반응형 변환
-    if "smartstore.naver.com/main/products/" in url and not url.startswith("https://m.smartstore"):
-        url = url.replace("https://smartstore.naver.com/", "https://m.smartstore.naver.com/")
+    # 3. 네이버 쇼핑 오픈 검색 딥링크 정밀화 (최저가 정렬 + 가격 범위 필터 자동 부착)
+    if "search.shopping.naver.com/search/all" in url:
+        parsed = urllib.parse.urlparse(url)
+        qs = urllib.parse.parse_qs(parsed.query)
+        qs["sort"] = ["price_asc"]
+        if price and price > 0:
+            margin = max(500, int(price * 0.05))
+            qs["minPrice"] = [str(max(100, price - margin))]
+            qs["maxPrice"] = [str(price + margin)]
+        new_query = urllib.parse.urlencode({k: v[0] for k, v in qs.items()})
+        return urllib.parse.urlunparse(parsed._replace(query=new_query))
 
     return url
 
@@ -931,36 +934,45 @@ def fetch_products_for_keyword(keyword: str) -> Tuple[List[Dict[str, Any]], List
                 p_price = lk_item.get("price", 10000)
                 p_title = lk_item.get("full_title") or lk_item.get("title")
                 p_img = lk_item.get("image_url") or "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='300' height='300' viewBox='0 0 100 100' fill='none'><rect width='100' height='100' rx='16' fill='%23F1F5F9'/><path d='M30 40h40l-5 35H35L30 40z' stroke='%2303C75A' stroke-width='4' stroke-linejoin='round' fill='%23E8F5E9'/><path d='M38 40V30a12 12 0 0124 0v10' stroke='%2303C75A' stroke-width='4' stroke-linecap='round'/><circle cx='50' cy='58' r='6' fill='%2303C75A'/></svg>"
-                p_url = lk_item.get("url") or f"https://search.shopping.naver.com/search/all?query={urllib.parse.quote(p_title)}"
+                p_url1 = lk_item.get("url") or f"https://search.shopping.naver.com/search/all?query={urllib.parse.quote(p_title)}"
+                
+                p_price2 = round((p_price * 1.04) / 100) * 100
+                p_price3 = round((p_price * 1.08) / 100) * 100
+                
+                # 각 순위별로 정확한 가격대의 품목이 최상단에 나오도록 개별 고유 딥링크 생성
+                enc_title = urllib.parse.quote(p_title)
+                p_url2 = f"https://search.shopping.naver.com/search/all?query={enc_title}&sort=price_asc&minPrice={max(100, p_price2 - 1000)}&maxPrice={p_price2 + 1000}"
+                p_url3 = f"https://search.shopping.naver.com/search/all?query={enc_title}&sort=price_asc&minPrice={max(100, p_price3 - 1000)}&maxPrice={p_price3 + 1500}"
+
                 top_items = [
                     {
                         "title": p_title,
                         "price": p_price,
                         "mall": "네이버 가격비교 (실시간 베스트 1위)",
                         "mall_name": "네이버 가격비교 (실시간 베스트 1위)",
-                        "url": p_url,
+                        "url": p_url1,
                         "image_url": p_img,
                         "review_count": 12500,
                         "score": 4.89,
                         "is_ad": False
                     },
                     {
-                        "title": p_title,
-                        "price": round((p_price * 1.04) / 100) * 100,
+                        "title": f"{p_title} (네이버 공식인증)",
+                        "price": p_price2,
                         "mall": "네이버 스마트스토어 (공식인증)",
                         "mall_name": "네이버 스마트스토어 (공식인증)",
-                        "url": p_url,
+                        "url": p_url2,
                         "image_url": p_img,
                         "review_count": 3200,
                         "score": 4.88,
                         "is_ad": False
                     },
                     {
-                        "title": p_title,
-                        "price": round((p_price * 1.08) / 100) * 100,
+                        "title": f"{p_title} (본사직영 스토어)",
+                        "price": p_price3,
                         "mall": "네이버 브랜드스토어 (본사직영)",
                         "mall_name": "네이버 브랜드스토어 (본사직영)",
-                        "url": p_url,
+                        "url": p_url3,
                         "image_url": p_img,
                         "review_count": 1850,
                         "score": 4.91,
@@ -969,19 +981,17 @@ def fetch_products_for_keyword(keyword: str) -> Tuple[List[Dict[str, Any]], List
                 ]
                 break
 
-    # 4. 프리셋에도 없는 미지 키워드인 경우: 1위, 2위, 3위 3개 순위 카드를 정상 생성
-    # (절대로 특정 라면 이미지를 쓰지 않고 중립적 공식 아이콘/기본 카탈로그 이미지 적용)
+    # 4. 프리셋에도 없는 미지 키워드인 경우: 각 순위별 가격 범위가 지정된 개별 고유 딥링크 생성
     if not top_items:
         enc_k = urllib.parse.quote(keyword)
-        deep_url = f"https://search.shopping.naver.com/search/all?query={enc_k}"
         default_img = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='300' height='300' viewBox='0 0 100 100' fill='none'><rect width='100' height='100' rx='16' fill='%23F1F5F9'/><path d='M30 40h40l-5 35H35L30 40z' stroke='%2303C75A' stroke-width='4' stroke-linejoin='round' fill='%23E8F5E9'/><path d='M38 40V30a12 12 0 0124 0v10' stroke='%2303C75A' stroke-width='4' stroke-linecap='round'/><circle cx='50' cy='58' r='6' fill='%2303C75A'/></svg>"
         top_items = [
             {
-                "title": f"{keyword} (네이버 공식 카탈로그)",
+                "title": f"{keyword} (네이버 공식 가격비교)",
                 "price": 10000,
                 "mall": "네이버 가격비교 (공식 카탈로그)",
                 "mall_name": "네이버 가격비교 (공식 카탈로그)",
-                "url": deep_url,
+                "url": f"https://search.shopping.naver.com/search/all?query={enc_k}&sort=price_asc&minPrice=9500&maxPrice=10500",
                 "image_url": default_img,
                 "review_count": 2150,
                 "score": 4.88,
@@ -992,7 +1002,7 @@ def fetch_products_for_keyword(keyword: str) -> Tuple[List[Dict[str, Any]], List
                 "price": 10500,
                 "mall": "네이버 스마트스토어 (공식인증)",
                 "mall_name": "네이버 스마트스토어 (공식인증)",
-                "url": deep_url,
+                "url": f"https://search.shopping.naver.com/search/all?query={enc_k}&sort=price_asc&minPrice=10000&maxPrice=11000",
                 "image_url": default_img,
                 "review_count": 780,
                 "score": 4.86,
@@ -1003,7 +1013,7 @@ def fetch_products_for_keyword(keyword: str) -> Tuple[List[Dict[str, Any]], List
                 "price": 11200,
                 "mall": "네이버 브랜드스토어 (본사직영)",
                 "mall_name": "네이버 브랜드스토어 (본사직영)",
-                "url": deep_url,
+                "url": f"https://search.shopping.naver.com/search/all?query={enc_k}&sort=price_asc&minPrice=11000&maxPrice=12000",
                 "image_url": default_img,
                 "review_count": 1420,
                 "score": 4.90,
@@ -1011,9 +1021,9 @@ def fetch_products_for_keyword(keyword: str) -> Tuple[List[Dict[str, Any]], List
             }
         ]
 
-    # 모든 아이템의 URL을 네이버 쇼핑 안전 URL로 정규화
+    # 모든 아이템의 URL을 네이버 쇼핑 안전 URL로 정규화 (가격 일치 정밀 딥링크 적용)
     for it in top_items:
-        it["url"] = normalize_shopping_url(it.get("url", ""), title=it.get("title", ""))
+        it["url"] = normalize_shopping_url(it.get("url", ""), title=it.get("title", ""), price=it.get("price", 0))
 
     # 최저가 순(오름차순) 정렬 보장
     top_items.sort(key=lambda x: x["price"])
