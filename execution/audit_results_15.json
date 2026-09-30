@@ -1,0 +1,170 @@
+{
+  "all_passed": true,
+  "results": [
+    {
+      "category": "가공식품",
+      "keyword": "농심 신라면 봉지 20개입",
+      "passed": true,
+      "rep_title": "농심 신라면 120g 10개 + 너구리 10개 (총 20개)",
+      "rep_price": 17050,
+      "rep_url": "https://search.shopping.naver.com/search/all?query=%EB%86%8D%EC%8B%AC%20%EC%8B%A0%EB%9D%BC%EB%A9%B4%20120g%2010%EA%B0%9C%20%EB%84%88%EA%B5%AC%EB%A6%AC%2020%EA%B0%9C&frm=NVSCPRO",
+      "items_count": 3,
+      "is_sorted": true,
+      "mismatch_detected": false
+    },
+    {
+      "category": "즉석밥",
+      "keyword": "CJ제일제당 햇반 210g 24개",
+      "passed": true,
+      "rep_title": "CJ제일제당 햇반 백미 210g 24개",
+      "rep_price": 24900,
+      "rep_url": "https://search.shopping.naver.com/search/all?query=CJ%EC%A0%9C%EC%9D%BC%EC%A0%9C%EB%8B%B9%20%ED%96%87%EB%B0%98%20%EB%B0%B1%EB%AF%B8%20210g%2024%EA%B0%9C&frm=NVSCPRO",
+      "items_count": 3,
+      "is_sorted": true,
+      "mismatch_detected": false
+    },
+    {
+      "category": "음료",
+      "keyword": "코카콜라 제로 355ml 24캔",
+      "passed": true,
+      "rep_title": "코카콜라 제로 355ml 24캔 1박스",
+      "rep_price": 15060,
+      "rep_url": "https://search.shopping.naver.com/search/all?query=%EC%BD%94%EC%B9%B4%EC%BD%9C%EB%9D%BC%20%EC%A0%9C%EB%A1%9C%20355ml%2024%EC%BA%94&frm=NVSCPRO",
+      "items_count": 3,
+      "is_sorted": true,
+      "mismatch_detected": false
+    },
+    {
+      "category": "커피",
+      "keyword": "동서식품 맥심 모카골드 160T",
+      "passed": true,
+      "rep_title": "동서식품 맥심 모카골드 마일드 커피믹스 스틱 160개입",
+      "rep_price": 29670,
+      "rep_url": "https://search.shopping.naver.com/search/all?query=%EB%8F%99%EC%84%9C%EC%8B%9D%ED%92%88%20%EB%A7%A5%EC%8B%AC%20%EB%AA%A8%EC%B9%B4%EA%B3%A8%EB%93%9C%20%EB%A7%88%EC%9D%BC%EB%93%9C%20%EC%BB%A4%ED%94%BC%EB%AF%B9%EC%8A%A4%20160%EA%B0%9C&frm=NVSCPRO",
+      "items_count": 3,
+      "is_sorted": true,
+      "mismatch_detected": false
+    },
+    {
+      "category": "통조림",
+      "keyword": "동원참치 135g 10캔",
+      "passed": true,
+      "rep_title": "동원F&B 동원참치 라이트스탠다드 100g 10캔",
+      "rep_price": 16740,
+      "rep_url": "https://search.shopping.naver.com/search/all?query=%EB%8F%99%EC%9B%90F%20B%20%EB%8F%99%EC%9B%90%EC%B0%B8%EC%B9%98%20%EB%9D%BC%EC%9D%B4%ED%8A%B8%EC%8A%A4%ED%83%A0%EB%8B%A4%EB%93%9C%20100g%2010%EC%BA%94&frm=NVSCPRO",
+      "items_count": 3,
+      "is_sorted": true,
+      "mismatch_detected": false
+    },
+    {
+      "category": "통조림",
+      "keyword": "스팸 클래식 200g 10캔",
+      "passed": true,
+      "rep_title": "CJ제일제당 스팸 클래식 200g 10개",
+      "rep_price": 25540,
+      "rep_url": "https://search.shopping.naver.com/search/all?query=CJ%EC%A0%9C%EC%9D%BC%EC%A0%9C%EB%8B%B9%20%EC%8A%A4%ED%8C%B8%20%ED%81%B4%EB%9E%98%EC%8B%9D%20200g%2010%EA%B0%9C&frm=NVSCPRO",
+      "items_count": 3,
+      "is_sorted": true,
+      "mismatch_detected": false
+    },
+    {
+      "category": "신선과일",
+      "keyword": "사과",
+      "passed": true,
+      "rep_title": "사과 청송 안동 홍로 감홍 부사 고당도 못난이 가정용 꿀사과",
+      "rep_price": 19900,
+      "rep_url": "https://search.shopping.naver.com/search/all?query=%EC%82%AC%EA%B3%BC%20%EC%B2%AD%EC%86%A1%20%EC%95%88%EB%8F%99%20%ED%99%8D%EB%A1%9C%20%EA%B0%90%ED%99%8D&frm=NVSCPRO",
+      "items_count": 3,
+      "is_sorted": true,
+      "mismatch_detected": false
+    },
+    {
+      "category": "신선수산",
+      "keyword": "새우",
+      "passed": true,
+      "rep_title": "국산 활새우 제철 흰다리새우 새우철 생새우 왕새우 회 500g 1kg",
+      "rep_price": 14500,
+      "rep_url": "https://search.shopping.naver.com/search/all?query=%ED%99%9C%EC%83%88%EC%9A%B0%20%EC%A0%9C%EC%B2%A0%20%ED%9D%B0%EB%8B%A4%EB%A6%AC%EC%83%88%EC%9A%B0%20%EC%83%88%EC%9A%B0%EC%B2%A0%20%EC%83%9D%EC%83%88%EC%9A%B0%201kg&frm=NVSCPRO",
+      "items_count": 3,
+      "is_sorted": true,
+      "mismatch_detected": false
+    },
+    {
+      "category": "대용량화장지",
+      "keyword": "코스트코 커클랜드 휴지 3겹 30롤",
+      "passed": true,
+      "rep_title": "코스트코 커클랜드 시그니처 3겹 40m 30롤 1팩",
+      "rep_price": 26900,
+      "rep_url": "https://search.shopping.naver.com/search/all?query=%EC%BD%94%EC%8A%A4%ED%8A%B8%EC%BD%94%20%EC%BB%A4%ED%81%B4%EB%9E%9C%EB%93%9C%20%EC%8B%9C%EA%B7%B8%EB%8B%88%EC%B2%98%203%EA%B2%B9%2040m%2030%EB%A1%A4&frm=NVSCPRO",
+      "items_count": 3,
+      "is_sorted": true,
+      "mismatch_detected": false
+    },
+    {
+      "category": "화장지",
+      "keyword": "깨끗한나라 순수 3겹 30롤",
+      "passed": true,
+      "rep_title": "유한킴벌리 크리넥스 3겹 데코소프트 30롤 1팩",
+      "rep_price": 25900,
+      "rep_url": "https://search.shopping.naver.com/search/all?query=%EC%9C%A0%ED%95%9C%ED%82%B4%EB%B2%8C%EB%A6%AC%20%ED%81%AC%EB%A6%AC%EB%84%A5%EC%8A%A4%203%EA%B2%B9%20%EB%8D%B0%EC%BD%94%EC%86%8C%ED%94%84%ED%8A%B8%2030%EB%A1%A4&frm=NVSCPRO",
+      "items_count": 3,
+      "is_sorted": true,
+      "mismatch_detected": false
+    },
+    {
+      "category": "세탁세제",
+      "keyword": "퍼실 딥클린 파워젤 2.7L",
+      "passed": true,
+      "rep_title": "헨켈 퍼실 딥클린 파워젤 액체세제 2.7L",
+      "rep_price": 33470,
+      "rep_url": "https://search.shopping.naver.com/search/all?query=%ED%97%A8%EC%BC%88%20%ED%8D%BC%EC%8B%A4%20%EB%94%A5%ED%81%B4%EB%A6%B0%20%ED%8C%8C%EC%9B%8C%EC%A0%A4%20%EC%95%A1%EC%B2%B4%EC%84%B8%EC%A0%9C%202.7L&frm=NVSCPRO",
+      "items_count": 3,
+      "is_sorted": true,
+      "mismatch_detected": false
+    },
+    {
+      "category": "섬유탈취제",
+      "keyword": "페브리즈 섬유탈취제 다우니 4개",
+      "passed": true,
+      "rep_title": "다우니 탈취파워 레몬그라스와 라일락 1L 3개",
+      "rep_price": 14330,
+      "rep_url": "https://search.shopping.naver.com/search/all?query=%EB%8B%A4%EC%9A%B0%EB%8B%88%20%ED%83%88%EC%B7%A8%ED%8C%8C%EC%9B%8C%20%EB%A0%88%EB%AA%AC%EA%B7%B8%EB%9D%BC%EC%8A%A4%EC%99%80%20%EB%9D%BC%EC%9D%BC%EB%9D%BD%201L%203%EA%B0%9C&frm=NVSCPRO",
+      "items_count": 3,
+      "is_sorted": true,
+      "mismatch_detected": false
+    },
+    {
+      "category": "프라모델",
+      "keyword": "용호모형 1 100 후쿠오카 뉴",
+      "passed": true,
+      "rep_title": "[2차예약] 용호모형 1/100 후쿠오카 뉴 프라모델",
+      "rep_price": 61000,
+      "rep_url": "https://search.shopping.naver.com/search/all?query=%EC%9A%A9%ED%98%B8%EB%AA%A8%ED%98%95%201%20100%20%ED%9B%84%EC%BF%A0%EC%98%A4%EC%B9%B4%20%EB%89%B4&frm=NVSCPRO",
+      "items_count": 1,
+      "is_sorted": true,
+      "mismatch_detected": false
+    },
+    {
+      "category": "건담프라모델",
+      "keyword": "반다이 건담 MG 1 100",
+      "passed": true,
+      "rep_title": "반다이 건담 MG 1 100 (네이버 공식 가격비교)",
+      "rep_price": 10000,
+      "rep_url": "https://search.shopping.naver.com/search/all?query=%EB%B0%98%EB%8B%A4%EC%9D%B4%20%EA%B1%B4%EB%8B%B4%20MG%201%20100&frm=NVSCPRO",
+      "items_count": 3,
+      "is_sorted": true,
+      "mismatch_detected": false
+    },
+    {
+      "category": "디지털기기",
+      "keyword": "로지텍 마우스 G102",
+      "passed": true,
+      "rep_title": "로지텍 마우스 G102 (네이버 공식 가격비교)",
+      "rep_price": 10000,
+      "rep_url": "https://search.shopping.naver.com/search/all?query=%EB%A1%9C%EC%A7%80%ED%85%8D%20%EB%A7%88%EC%9A%B0%EC%8A%A4%20G102&frm=NVSCPRO",
+      "items_count": 3,
+      "is_sorted": true,
+      "mismatch_detected": false
+    }
+  ]
+}

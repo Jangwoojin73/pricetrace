@@ -96,6 +96,97 @@ def fetch_from_proxy(keyword: str, limit: int = 20) -> Optional[List[Dict[str, A
     return None
 
 
+# 검색 및 정제 시 완전히 배제할 광고/포장/상태 수식어 (Noise Words)
+NOISE_WORDS = {
+    "무료배송", "당일발송", "당일출고", "산지직송", "유명한곳", "초특가", "특가",
+    "선물세트", "국내산", "국산", "원산지", "빅세일", "할인", "한정수량", "고당도",
+    "못난이", "가정용", "실속형", "프리미엄", "정품", "공식", "인증", "직송", "유명",
+    "인기", "추천", "대용량", "맛있는", "착한", "신선한", "깨끗한", "진짜", "오리지널",
+    "1+1팩", "1+1", "1팩", "2팩", "1박스", "2박스", "세트", "한박스", "멀티팩", "패키지",
+    "1위", "2위", "3위", "베스트", "인기상품", "추천상품", "실시간", "모음", "골라담기",
+    "개입", "묶음", "가격비교", "카탈로그"
+}
+
+# 품목별 합성어/오매칭 배제 맵 (Key 품목 검색 시 오매칭되는 서픽스들)
+FALSE_COMPOUND_RULES = {
+    "사과": ["대추", "잼", "식초", "즙", "쨈", "칩", "파이", "당근", "비트", "젤리", "주스"],
+    "새우": ["깡", "칩", "젓", "링", "버거", "볶음밥", "딤섬", "만두", "볼", "까스"],
+    "김": ["치", "밥", "말이", "전", "가루", "조림", "파래", "치찌개"],
+    "배": ["주스", "즙", "청", "잼", "도라지", "꿀"],
+    "감": ["자", "식초", "말랭이", "자칩", "자튀김"],
+    "밤": ["식빵", "만쥬", "앙금", "조림", "라떼"],
+    "마늘": ["빵", "바게트", "치킨", "보쌈"],
+    "양파": ["링", "즙", "장아찌"],
+    "참치": ["액", "진국", "마요", "김밥"],
+    "라면": ["땅", "사리", "스프", "포차"],
+}
+
+
+def extract_clean_tokens(text: str) -> List[str]:
+    """
+    텍스트에서 순수 숫자, 단위, 불용어를 철저히 배제하고
+    의미 있는 고유명사/브랜드/품목명 토큰만을 추출합니다.
+    """
+    if not text:
+        return []
+    # 괄호, 특수기호 제거
+    t = re.sub(r"\[.*?\]|\(.*?\)|<.*?>", " ", str(text))
+    t = re.sub(r"[^\w\s가-힣0-9a-zA-Z]", " ", t)
+
+    tokens = []
+    for tok in t.lower().split():
+        if len(tok) < 2:
+            continue
+        # 순수 숫자(100, 20 등) 제외
+        if tok.isdigit():
+            continue
+        # 수량 단위가 붙은 숫자(20개, 30롤, 24캔 등) 제외
+        if re.match(r'^\d+(개|봉|입|롤|캔|병|박스|box|팩|t|kg|l|g|ml)$', tok):
+            continue
+        # 광고/상태 불용어 제외
+        if tok in NOISE_WORDS:
+            continue
+        tokens.append(tok)
+    return tokens
+
+
+def is_title_relevant(query: str, title: str) -> bool:
+    """
+    상품명(title)이 검색어(query)의 핵심 품목과 실제로 일치하는지 엄격히 검증합니다.
+    - 순수 숫자/수량 배제 후 핵심 토큰 추출
+    - 첫 번째 핵심 키워드(브랜드/대표품명) 필수 일치 (AND 조건)
+    - 합성어 오매칭(사과대추, 새우깡 등) 검사
+    """
+    q_tokens = extract_clean_tokens(query)
+    if not q_tokens:
+        return True
+
+    t_lower = (title or "").lower()
+
+    # 1. 핵심 키워드(첫 번째 의미 토큰) 필수 포함
+    core_kw = q_tokens[0]
+    if core_kw not in t_lower:
+        return False
+
+    # 2. 합성어 오매칭 규칙 적용
+    for base_word, suffixes in FALSE_COMPOUND_RULES.items():
+        if base_word in q_tokens:
+            for suffix in suffixes:
+                bad_word = base_word + suffix
+                if bad_word in t_lower:
+                    cleaned = t_lower.replace(bad_word, "")
+                    if base_word not in cleaned:
+                        return False
+
+    # 3. 토큰이 2개 이상인 경우 절반 이상의 의미 토큰이 포함되어야 함
+    if len(q_tokens) >= 2:
+        matched = sum(1 for tok in q_tokens if tok in t_lower)
+        if matched < max(1, len(q_tokens) // 2):
+            return False
+
+    return True
+
+
 def clean_search_keyword(title: str) -> str:
     """
     판매자의 긴 홍보 문구, 수식어, 품종 도배 단어를 정제하여
@@ -894,48 +985,15 @@ def fetch_products_for_keyword(keyword: str) -> Tuple[List[Dict[str, Any]], List
     errors: List[str] = []
     top_items: List[Dict[str, Any]] = []
 
-    # 키워드 관련성 필터: 검색어의 핵심 토큰이 상품 타이틀에 포함되는지 확인
-    # (예: '사과' 검색 시 '사과대추'가 섞이는 것을 방지)
-    kw_lower = keyword.lower()
-    kw_tokens = [tok for tok in re.split(r"\s+", kw_lower) if len(tok) >= 2]
-    # 핵심 품목명 토큰 추출 (수량/단위/브랜드가 아닌 실제 품목명)
-    noise_words = {"무료배송", "당일발송", "특가", "초특가", "국내산", "정품", "공식", "인증",
-                   "대용량", "박스", "세트", "팩", "개입", "묶음", "최저가", "가격비교"}
-    core_tokens = [tok for tok in kw_tokens if tok not in noise_words]
-    if not core_tokens:
-        core_tokens = kw_tokens
-
-    def is_relevant_item(item_title: str) -> bool:
-        """상품 타이틀이 검색 키워드와 관련 있는지 확인"""
-        title_lower = item_title.lower()
-
-        # 짧은 단일 키워드(예: '사과', '새우')의 경우 복합어 오매칭 방지
-        # '사과' 검색 시 '사과대추'는 제외 (사과 뒤에 바로 다른 품명이 붙은 합성어)
-        false_compound_suffixes = ["대추", "잼", "식초", "즙", "쨈", "칩", "파이"]
-        for tok in core_tokens:
-            if len(tok) <= 3:  # 짧은 핵심 키워드(2~3자)
-                for suffix in false_compound_suffixes:
-                    if tok + suffix in title_lower:
-                        # 합성어가 타이틀에 포함되어 있으면 순수 품목 매칭이 아님
-                        # 단, '사과'가 별도로 다른 위치에도 있는지 확인
-                        clean_check = title_lower.replace(tok + suffix, "")
-                        if tok not in clean_check:
-                            return False
-
-        # 핵심 토큰 중 매칭 비율 확인
-        matched_count = sum(1 for tok in core_tokens if tok in title_lower)
-        threshold = max(1, len(core_tokens) // 2)
-        return matched_count >= threshold
-
-    # 1. 네이버 쇼핑 공개 BFF API 조회 시도
+    # 1. 네이버 쇼핑 공개 BFF API 조회 시도 (전역 is_title_relevant 필터 적용)
     try:
         naver_bff_items = fetch_from_naver_bff(keyword)
         if naver_bff_items:
             for item in naver_bff_items:
                 if item.get("is_ad", False):
                     continue
-                # 키워드 관련성 필터 적용: 관련 없는 상품이 순위에 섞이는 것 방지
-                if not is_relevant_item(item.get("title", "")):
+                # 전역 표준 관련성 검증 적용: 관련 없는 상품이 순위에 섞이는 것 방지
+                if not is_title_relevant(keyword, item.get("title", "")):
                     continue
                 top_items.append(item)
                 if len(top_items) >= 3:
@@ -952,8 +1010,8 @@ def fetch_products_for_keyword(keyword: str) -> Tuple[List[Dict[str, Any]], List
                 for item in proxy_items:
                     if item.get("is_ad", False):
                         continue
-                    # 키워드 관련성 필터 적용
-                    if not is_relevant_item(item.get("title", "")):
+                    # 전역 표준 관련성 검증 적용
+                    if not is_title_relevant(keyword, item.get("title", "")):
                         continue
                     if not any(item.get("price") == ex.get("price") for ex in top_items):
                         top_items.append(item)
@@ -1032,7 +1090,7 @@ def fetch_products_for_keyword(keyword: str) -> Tuple[List[Dict[str, Any]], List
                 "price": 10000,
                 "mall": "네이버 가격비교 (공식 카탈로그)",
                 "mall_name": "네이버 가격비교 (공식 카탈로그)",
-                "url": f"https://search.shopping.naver.com/search/all?query={enc_k}+%EC%B5%9C%EC%A0%80%EA%B0%80",
+                "url": f"https://search.shopping.naver.com/search/all?query={enc_k}&frm=NVSCPRO",
                 "image_url": default_img,
                 "review_count": 2150,
                 "score": 4.88,
@@ -1043,7 +1101,7 @@ def fetch_products_for_keyword(keyword: str) -> Tuple[List[Dict[str, Any]], List
                 "price": 10500,
                 "mall": "네이버 스마트스토어 (공식인증)",
                 "mall_name": "네이버 스마트스토어 (공식인증)",
-                "url": f"https://search.shopping.naver.com/search/all?query={enc_k}+%EC%8A%A4%EB%A7%88%ED%8A%B8%EC%8A%A4%ED%86%A0%EC%96%B4+%EA%B3%B5%EC%8B%9D",
+                "url": f"https://search.shopping.naver.com/search/all?query={enc_k}&frm=NVSCPRO",
                 "image_url": default_img,
                 "review_count": 780,
                 "score": 4.86,
@@ -1054,7 +1112,7 @@ def fetch_products_for_keyword(keyword: str) -> Tuple[List[Dict[str, Any]], List
                 "price": 11200,
                 "mall": "네이버 브랜드스토어 (본사직영)",
                 "mall_name": "네이버 브랜드스토어 (본사직영)",
-                "url": f"https://search.shopping.naver.com/search/all?query={enc_k}+%EA%B0%80%EA%B2%A9%EB%B9%84%EA%B5%90",
+                "url": f"https://search.shopping.naver.com/search/all?query={enc_k}&frm=NVSCPRO",
                 "image_url": default_img,
                 "review_count": 1420,
                 "score": 4.90,
@@ -1428,32 +1486,22 @@ def get_multi_ranked_trending_items(keyword: str, limit: int = 3) -> List[Dict[s
     if not ALL_LIVE_BEST_PRODUCTS:
         fetch_live_naver_best_ranking(limit=16)
 
-    tokens = [tok for tok in re.split(r"\s+", keyword.lower()) if len(tok) >= 2 and tok not in ["경북", "국내산", "특가", "1위", "2위", "3위", "베스트"]]
+    tokens = extract_clean_tokens(keyword)
+    if not tokens:
+        return []
+
     matched = []
     category = None
 
-    # 합성어 오매칭 방지 (예: '사과' 검색 시 '사과대추' 제외)
-    false_compound_suffixes = ["대추", "잼", "식초", "즙", "쨈", "칩", "파이"]
-
     for p in ALL_LIVE_BEST_PRODUCTS:
-        t = (p.get("title") or "").lower()
-        if any(tok in t for tok in tokens):
-            # 합성어 체크: 짧은 키워드가 다른 품명과 합쳐진 경우 필터
-            is_false_compound = False
-            for tok in tokens:
-                if len(tok) <= 3:
-                    for suffix in false_compound_suffixes:
-                        if tok + suffix in t:
-                            clean_check = t.replace(tok + suffix, "")
-                            if tok not in clean_check:
-                                is_false_compound = True
-                                break
-                    if is_false_compound:
-                        break
-            if not is_false_compound:
-                matched.append(dict(p))
-                if not category:
-                    category = p.get("category")
+        t = p.get("title") or ""
+        # 전역 표준 관련성 검증 적용 (숫자 배제, 핵심어 필수 일치, 합성어 오매칭 방지)
+        if not is_title_relevant(keyword, t):
+            continue
+
+        matched.append(dict(p))
+        if not category:
+            category = p.get("category")
 
     # 가격 오름차순(최저가 우선) 정렬
     matched.sort(key=lambda x: x["price"])
