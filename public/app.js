@@ -10,7 +10,8 @@ const state = {
   data: null,
   chart: null,
   isLoading: false,
-  view: "welcome" // "welcome" | "result"
+  view: "welcome", // "welcome" | "result"
+  activeTab: "steady" // "steady" | "trending"
 };
 
 // 판매자 도배 수식어 정제 헬퍼 (네이버 가격비교 카탈로그 매칭 보장 & 핵심 단위 보존)
@@ -102,8 +103,8 @@ function normalizeProductUrl(url, title = "", price = 0, rank = 1, mallName = ""
   return `https://search.shopping.naver.com/search/all?query=${encodeURIComponent(finalQuery)}&frm=NVSCPRO`;
 }
 
-// 16대 인기 국민 생필품 추천 풀 (동적 셔플 & 로테이션용, /api/trending 데이터로 자동 확장)
-let RECOMMENDED_PRODUCTS_POOL = [
+// 1. 국민 필수 생필품 풀 (고정 16대 대표 품목)
+let STEADY_PRODUCTS_POOL = [
   {
     keyword: "농심 신라면 봉지 20개입",
     shortName: "신라면 20개",
@@ -250,6 +251,12 @@ let RECOMMENDED_PRODUCTS_POOL = [
   }
 ];
 
+// 2. 오늘 실시간 핫딜 풀 (/api/trending 에서 동적 로드)
+let TRENDING_PRODUCTS_POOL = [];
+
+// 하위 호환성을 위한 범용 추천 풀 참조
+let RECOMMENDED_PRODUCTS_POOL = STEADY_PRODUCTS_POOL;
+
 // DOM 요소 캐시
 const elements = {
   // 뷰 컨테이너
@@ -259,6 +266,14 @@ const elements = {
   currentSearchKeywordText: document.getElementById("currentSearchKeywordText"),
   welcomeCardsContainer: document.getElementById("welcomeCardsContainer"),
   refreshRecommendCardsBtn: document.getElementById("refreshRecommendCardsBtn"),
+
+  // 웰컴 듀얼 탭 스위처 & 헤더
+  tabSteadyBtn: document.getElementById("tabSteadyBtn"),
+  tabTrendingBtn: document.getElementById("tabTrendingBtn"),
+  tabSectionTitle: document.getElementById("tabSectionTitle"),
+  tabSectionSubtitle: document.getElementById("tabSectionSubtitle"),
+  dailyTrendingBadge: document.getElementById("dailyTrendingBadge"),
+  dailyTrendingDateText: document.getElementById("dailyTrendingDateText"),
 
   // 배너 및 헤더
   topBannerText: document.getElementById("topBannerText"),
@@ -851,8 +866,52 @@ function shuffleArray(arr) {
 
 let recommendationRotationTimer = null;
 
+// 6-1. 하이브리드 듀얼 탭 전환 (국민 생필품 vs 오늘 실시간 핫딜)
+function switchRecommendationTab(tab) {
+  state.activeTab = tab;
+
+  if (tab === "steady") {
+    // 탭 버튼 스타일 갱신
+    if (elements.tabSteadyBtn) {
+      elements.tabSteadyBtn.className = "flex-1 py-2.5 px-3 rounded-xl text-xs sm:text-sm flex items-center justify-center space-x-1.5 transition-all font-bold cursor-pointer bg-white text-emerald-700 shadow-xs border border-emerald-100";
+    }
+    if (elements.tabTrendingBtn) {
+      elements.tabTrendingBtn.className = "flex-1 py-2.5 px-3 rounded-xl text-xs sm:text-sm flex items-center justify-center space-x-1.5 transition-all font-medium cursor-pointer bg-transparent text-slate-600 hover:text-slate-900 hover:bg-slate-200/60";
+    }
+    // 섹션 타이틀 & 서브타이틀 갱신
+    if (elements.tabSectionTitle) {
+      elements.tabSectionTitle.textContent = "국민 필수 생필품 원클릭 최저가";
+    }
+    if (elements.tabSectionSubtitle) {
+      elements.tabSectionSubtitle.textContent = "한국인이 가장 많이 재구매하는 16대 필수품의 오늘 실시간 최저가입니다.";
+    }
+  } else {
+    // 탭 버튼 스타일 갱신 (핫딜 탭)
+    if (elements.tabTrendingBtn) {
+      elements.tabTrendingBtn.className = "flex-1 py-2.5 px-3 rounded-xl text-xs sm:text-sm flex items-center justify-center space-x-1.5 transition-all font-bold cursor-pointer bg-white text-amber-700 shadow-xs border border-amber-200/80";
+    }
+    if (elements.tabSteadyBtn) {
+      elements.tabSteadyBtn.className = "flex-1 py-2.5 px-3 rounded-xl text-xs sm:text-sm flex items-center justify-center space-x-1.5 transition-all font-medium cursor-pointer bg-transparent text-slate-600 hover:text-slate-900 hover:bg-slate-200/60";
+    }
+    // 섹션 타이틀 & 서브타이틀 갱신
+    if (elements.tabSectionTitle) {
+      elements.tabSectionTitle.textContent = "오늘 실시간 핫딜 & 급상승 랭킹";
+    }
+    if (elements.tabSectionSubtitle) {
+      elements.tabSectionSubtitle.textContent = "네이버 쇼핑 오늘 베스트 랭킹 급상승 제철 먹거리 및 핫딜 품목입니다.";
+    }
+  }
+
+  // 부드러운 전환 애니메이션과 함께 활성 풀에서 즉시 렌더링
+  shuffleAndRenderRecommendations(true);
+}
+
 function shuffleAndRenderRecommendations(animate = false) {
-  const shuffled = shuffleArray(RECOMMENDED_PRODUCTS_POOL);
+  const currentPool = (state.activeTab === "steady" || TRENDING_PRODUCTS_POOL.length === 0)
+    ? STEADY_PRODUCTS_POOL
+    : TRENDING_PRODUCTS_POOL;
+
+  const shuffled = shuffleArray(currentPool);
 
   // 1. 상단 인기 검색어 칩 (상위 5개) 렌더링
   if (elements.quickChipsContainer) {
@@ -862,7 +921,7 @@ function shuffleAndRenderRecommendations(animate = false) {
         type="button" 
         class="quick-chip px-2 py-0.5 rounded-lg bg-slate-100 hover:bg-blue-50 hover:text-blue-600 hover:border-blue-600/30 border border-transparent font-semibold transition-all cursor-pointer" 
         data-keyword="${item.keyword}"
-      >#${item.shortName}</button>
+      >#${item.shortName || item.keyword}</button>
     `).join("");
 
     // 칩 클릭 이벤트 연결
@@ -887,15 +946,16 @@ function shuffleAndRenderRecommendations(animate = false) {
     }
 
     setTimeout(() => {
+      const isSteady = state.activeTab === "steady";
       elements.welcomeCardsContainer.innerHTML = topCards.map(item => `
         <div class="welcome-card group bg-white rounded-3xl p-5 border border-slate-200/80 shadow-xs hover:shadow-lg hover:border-blue-600/40 transition-all duration-300 flex flex-col justify-between cursor-pointer" data-keyword="${item.keyword}">
           <div>
             <div class="flex items-center justify-between mb-3">
-              <span class="text-2xl p-2 rounded-2xl ${item.bgClass}">${item.icon}</span>
-              <span class="text-[11px] font-bold text-blue-700 bg-blue-50 px-2.5 py-1 rounded-full">${item.tag}</span>
+              <span class="text-2xl p-2 rounded-2xl ${item.bgClass || 'bg-slate-50 border-slate-100'}">${item.icon || '🛍️'}</span>
+              <span class="text-[11px] font-bold ${isSteady ? 'text-emerald-700 bg-emerald-50' : 'text-amber-700 bg-amber-50'} px-2.5 py-1 rounded-full">${item.tag || (isSteady ? '생필품' : '오늘 핫딜')}</span>
             </div>
-            <h3 class="text-base font-bold text-slate-900 group-hover:text-blue-600 transition-colors">${item.title}</h3>
-            <p class="text-xs text-slate-500 mt-1">${item.desc}</p>
+            <h3 class="text-base font-bold text-slate-900 group-hover:text-blue-600 transition-colors">${item.title || item.keyword}</h3>
+            <p class="text-xs text-slate-500 mt-1">${item.desc || '실시간 가격비교 최저가'}</p>
           </div>
           <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs font-bold text-blue-600">
             <span>${item.price && item.price > 0 ? `오늘 최저 ${formatCurrency(item.price)}원` : '실시간 최저가 확인'}</span>
@@ -931,19 +991,29 @@ async function loadDailyTrendingProducts() {
     const res = await fetch("/api/trending");
     if (!res.ok) return;
     const data = await res.json();
-    if (data && data.success && Array.isArray(data.items) && data.items.length > 0) {
-      RECOMMENDED_PRODUCTS_POOL = data.items;
+    if (data && data.success) {
+      if (Array.isArray(data.steady_items) && data.steady_items.length > 0) {
+        STEADY_PRODUCTS_POOL = data.steady_items;
+      } else if (Array.isArray(data.items) && data.items.length > 0) {
+        STEADY_PRODUCTS_POOL = data.items;
+      }
+
+      if (Array.isArray(data.trending_items) && data.trending_items.length > 0) {
+        TRENDING_PRODUCTS_POOL = data.trending_items;
+      }
+
+      RECOMMENDED_PRODUCTS_POOL = state.activeTab === "steady" ? STEADY_PRODUCTS_POOL : TRENDING_PRODUCTS_POOL;
 
       // 일별 실시간 뱃지 업데이트
-      const badge = document.getElementById("dailyTrendingBadge");
-      const dateText = document.getElementById("dailyTrendingDateText");
+      const badge = elements.dailyTrendingBadge || document.getElementById("dailyTrendingBadge");
+      const dateText = elements.dailyTrendingDateText || document.getElementById("dailyTrendingDateText");
       if (badge && dateText) {
         if (data.date) {
           const parts = data.date.split("-");
           if (parts.length === 3) {
-            dateText.textContent = `${parseInt(parts[1], 10)}월 ${parseInt(parts[2], 10)}일 네이버 실시간 베스트`;
+            dateText.textContent = `${parseInt(parts[1], 10)}월 ${parseInt(parts[2], 10)}일 네이버 실시간 검증`;
           } else {
-            dateText.textContent = "오늘 네이버 실시간 베스트";
+            dateText.textContent = "오늘 네이버 실시간 검증";
           }
         }
         badge.classList.remove("hidden");
@@ -972,6 +1042,22 @@ function startRecommendationRotation() {
 
 // 7. 이벤트 리스너 등록
 function initEventListeners() {
+  // 듀얼 탭 스위처 이벤트 등록
+  if (elements.tabSteadyBtn) {
+    elements.tabSteadyBtn.addEventListener("click", () => {
+      if (state.activeTab !== "steady") {
+        switchRecommendationTab("steady");
+      }
+    });
+  }
+
+  if (elements.tabTrendingBtn) {
+    elements.tabTrendingBtn.addEventListener("click", () => {
+      if (state.activeTab !== "trending") {
+        switchRecommendationTab("trending");
+      }
+    });
+  }
   // 추천 칩 셔플 버튼
   if (elements.shuffleChipsBtn) {
     elements.shuffleChipsBtn.addEventListener("click", () => {

@@ -1706,15 +1706,16 @@ def _crawl_single_trending_item(cat_def: Dict[str, Any]) -> Dict[str, Any]:
 
 def fetch_daily_trending_products(force_refresh: bool = False) -> Dict[str, Any]:
     """
-    [Option B 이중화 파이프라인] 일별 실시간 인기 랭킹 수집 엔진
-    1순위: 네이버 쇼핑 실제 실시간 베스트 랭킹(식품+생활/건강) 1~16위 실시간 스크래핑
-    2순위(세이프티 폴백): 외부 네트워크 제약이나 봇 차단 발생 시 16대 안전 풀로 백업
+    [하이브리드 듀얼 풀 수집 엔진]
+    1. steady_items: 통계상 가장 많이 주문하는 16대 국민 필수 생필품 (실시간 최저가 연동)
+    2. trending_items: 오늘 네이버 쇼핑 실시간 베스트 랭킹 16대 품목 (제철/급상승 핫딜)
+    3. items: 기본값 (steady_items)
     """
     today_str = datetime.now().strftime("%Y-%m-%d")
 
     # 1. 인메모리 캐시 검사
-    if not force_refresh and _TRENDING_MEMORY_CACHE.get("date") == today_str and _TRENDING_MEMORY_CACHE.get("items"):
-        for it in _TRENDING_MEMORY_CACHE.get("items", []):
+    if not force_refresh and _TRENDING_MEMORY_CACHE.get("date") == today_str and _TRENDING_MEMORY_CACHE.get("steady_items") and _TRENDING_MEMORY_CACHE.get("trending_items"):
+        for it in _TRENDING_MEMORY_CACHE.get("steady_items", []) + _TRENDING_MEMORY_CACHE.get("trending_items", []):
             kw = it.get("keyword", "").lower()
             if kw:
                 LIVE_TRENDING_LOOKUP[kw] = it
@@ -1728,10 +1729,10 @@ def fetch_daily_trending_products(force_refresh: bool = False) -> Dict[str, Any]
         try:
             with open(DAILY_TRENDING_CACHE_FILE, "r", encoding="utf-8") as f:
                 cached_data = json.load(f)
-                if cached_data.get("date") == today_str and len(cached_data.get("items", [])) >= 8:
+                if cached_data.get("date") == today_str and cached_data.get("steady_items") and cached_data.get("trending_items"):
                     _TRENDING_MEMORY_CACHE.clear()
                     _TRENDING_MEMORY_CACHE.update(cached_data)
-                    for it in cached_data.get("items", []):
+                    for it in cached_data.get("steady_items", []) + cached_data.get("trending_items", []):
                         kw = it.get("keyword", "").lower()
                         if kw:
                             LIVE_TRENDING_LOOKUP[kw] = it
@@ -1742,53 +1743,39 @@ def fetch_daily_trending_products(force_refresh: bool = False) -> Dict[str, Any]
         except Exception:
             pass
 
-    # 3. [Option B] 실제 네이버 쇼핑 베스트 랭킹 실시간 수집 시도
-    items = []
-    source = "naver_live_best"
+    # 3. 국민 16대 필수 생필품 풀 수집
+    steady_items = [_crawl_single_trending_item(c) for c in DAILY_TRENDING_CATEGORIES]
+
+    # 4. 네이버 실시간 베스트 랭킹 16대 수집
+    trending_items = []
     try:
         live_ranked = fetch_live_naver_best_ranking(limit=16)
         if live_ranked and len(live_ranked) >= 8:
-            items = live_ranked
-            source = "naver_live_best"
+            trending_items = live_ranked
     except Exception:
-        items = []
+        trending_items = []
 
-    # 4. [이중화 세이프티 폴백] 실시간 크롤링 실패 시 검증된 16대 생필품 안전 풀 백업
-    if not items or len(items) < 8:
-        try:
-            with ThreadPoolExecutor(max_workers=8) as executor:
-                items = list(executor.map(_crawl_single_trending_item, DAILY_TRENDING_CATEGORIES))
-            valid_items_count = sum(1 for it in items if it.get("price", 0) > 0)
-            source = "naver_curated_fallback" if valid_items_count >= 8 else "curated_safe_pool"
-        except Exception:
-            items = []
-            source = "curated_safe_pool"
+    if not trending_items:
+        trending_items = steady_items
 
-    # 최종 안전 기본 생성
-    if not items:
-        items = [
-            {
-                "keyword": c["query"],
-                "shortName": c["shortName"],
-                "tag": c["tag"],
-                "title": c["default_title"],
-                "full_title": c["default_title"],
-                "desc": f"{c['desc']}<br>실시간 최저가 비교",
-                "icon": c["icon"],
-                "bgClass": c["bgClass"],
-                "price": 0,
-                "category": c["category"]
-            }
-            for c in DAILY_TRENDING_CATEGORIES
-        ]
-        source = "fallback_curated"
+    # 룩업 테이블 등록 (두 풀 모두 검색 매칭 지원)
+    for it in steady_items + trending_items:
+        kw = it.get("keyword", "").lower()
+        if kw:
+            LIVE_TRENDING_LOOKUP[kw] = it
+            for t in kw.split():
+                if len(t) >= 2 and t not in ["국내산", "네이버", "실시간", "베스트"]:
+                    LIVE_TRENDING_LOOKUP[t] = it
 
     result_payload = {
         "success": True,
         "date": today_str,
-        "source": source,
-        "count": len(items),
-        "items": items,
+        "source": "hybrid_dual_pool",
+        "steady_count": len(steady_items),
+        "trending_count": len(trending_items),
+        "steady_items": steady_items,
+        "trending_items": trending_items,
+        "items": steady_items,
         "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     }
 
