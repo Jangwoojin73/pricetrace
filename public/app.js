@@ -344,8 +344,65 @@ const elements = {
   stat30DayMin: document.getElementById("stat30DayMin"),
   stat30DayCurrentPrice: document.getElementById("stat30DayCurrentPrice"),
   stat30DayDiagnosisBadge: document.getElementById("stat30DayDiagnosisBadge"),
-  stat30DayDiagnosisDesc: document.getElementById("stat30DayDiagnosisDesc")
+  stat30DayDiagnosisDesc: document.getElementById("stat30DayDiagnosisDesc"),
+
+  // 플로팅 토스트 알림 컴포넌트
+  toastNotification: document.getElementById("toastNotification"),
+  toastMessage: document.getElementById("toastMessage"),
+  toastIconBox: document.getElementById("toastIconBox")
 };
+
+// 현재 시각 문자열 포맷팅 (HH:MM:SS)
+function getCurrentTimeString() {
+  const now = new Date();
+  return [
+    String(now.getHours()).padStart(2, "0"),
+    String(now.getMinutes()).padStart(2, "0"),
+    String(now.getSeconds()).padStart(2, "0")
+  ].join(":");
+}
+
+// 플로팅 토스트 알림 표시 함수
+let toastTimeout = null;
+function showToast(message, type = "success", duration = 3000) {
+  const toast = elements.toastNotification || document.getElementById("toastNotification");
+  const msgEl = elements.toastMessage || document.getElementById("toastMessage");
+  const iconBox = elements.toastIconBox || document.getElementById("toastIconBox");
+  if (!toast || !msgEl) return;
+
+  if (toastTimeout) {
+    clearTimeout(toastTimeout);
+    toastTimeout = null;
+  }
+
+  msgEl.textContent = message;
+
+  if (iconBox) {
+    if (type === "loading") {
+      iconBox.className = "flex items-center justify-center w-6 h-6 rounded-full bg-blue-500/20 text-blue-400 shrink-0";
+      iconBox.innerHTML = '<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i>';
+    } else if (type === "info") {
+      iconBox.className = "flex items-center justify-center w-6 h-6 rounded-full bg-cyan-500/20 text-cyan-400 shrink-0";
+      iconBox.innerHTML = '<i data-lucide="info" class="w-4 h-4"></i>';
+    } else {
+      iconBox.className = "flex items-center justify-center w-6 h-6 rounded-full bg-emerald-500/20 text-emerald-400 shrink-0";
+      iconBox.innerHTML = '<i data-lucide="check-circle-2" class="w-4 h-4"></i>';
+    }
+    if (window.lucide) {
+      window.lucide.createIcons();
+    }
+  }
+
+  // 슬라이드 업 애니메이션
+  toast.classList.remove("translate-y-16", "opacity-0", "pointer-events-none");
+  toast.classList.add("translate-y-0", "opacity-100", "pointer-events-auto");
+
+  toastTimeout = setTimeout(() => {
+    toast.classList.remove("translate-y-0", "opacity-100", "pointer-events-auto");
+    toast.classList.add("translate-y-16", "opacity-0", "pointer-events-none");
+    toastTimeout = null;
+  }, duration);
+}
 
 // 숫자 포맷팅 (원 단위)
 function formatCurrency(num) {
@@ -446,6 +503,7 @@ async function loadPriceData(keyword, targetPrice = 0, forceRefresh = false) {
   keyword = keyword.trim();
   if (state.isLoading) return;
   state.isLoading = true;
+  state.keyword = keyword;
   setLoadingUI(true);
   switchToResultView(keyword);
 
@@ -463,9 +521,19 @@ async function loadPriceData(keyword, targetPrice = 0, forceRefresh = false) {
 
     // UI 렌더링
     renderAll(data);
+
+    if (forceRefresh) {
+      const timeStr = getCurrentTimeString();
+      showToast(`[${timeStr} 기준] 네이버 쇼핑 실시간 최신 정보로 갱신되었습니다!`, "success");
+    }
   } catch (error) {
     console.error("데이터 로딩 실패:", error);
-    showErrorNotification(error.message);
+    if (forceRefresh) {
+      const timeStr = getCurrentTimeString();
+      showToast(`[${timeStr}] 실시간 정보를 불러오는 데 실패했습니다: ${error.message}`, "info");
+    } else {
+      showErrorNotification(error.message);
+    }
   } finally {
     state.isLoading = false;
     setLoadingUI(false);
@@ -1117,11 +1185,20 @@ function initEventListeners() {
 
   // 실시간 갱신 버튼
   elements.refreshBtn.addEventListener("click", () => {
+    const timeStr = getCurrentTimeString();
+    if (state.isLoading) {
+      showToast(`[${timeStr}] 현재 최신 정보를 불러오는 중입니다. 잠시만 기다려주세요.`, "info", 2000);
+      return;
+    }
     if (state.keyword) {
+      showToast(`[${timeStr} 갱신 중] 네이버 실시간 최신 시세를 조회하고 있습니다...`, "loading", 2000);
       loadPriceData(state.keyword, state.targetPrice, true);
     } else {
       switchToWelcomeView();
       shuffleAndRenderRecommendations(true);
+      loadDailyTrendingProducts();
+      const tabName = state.activeTab === "trending" ? "오늘 실시간 핫딜" : "국민 필수 생필품";
+      showToast(`[${timeStr} 갱신] ${tabName} 추천 목록이 새로고침되었습니다.`, "success");
     }
   });
 

@@ -827,8 +827,18 @@
     </div>
   </div>
 
+  <!-- 플로팅 토스트 알림 컴포넌트 (실시간 갱신 & 피드백) -->
+  <div id="toastNotification" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 transition-all duration-300 transform translate-y-16 opacity-0 pointer-events-none">
+    <div class="flex items-center space-x-2.5 px-4 sm:px-5 py-3 bg-slate-900/95 backdrop-blur-md text-white text-xs sm:text-sm font-semibold rounded-2xl shadow-2xl border border-slate-700/80">
+      <span id="toastIconBox" class="flex items-center justify-center w-6 h-6 rounded-full bg-blue-500/20 text-blue-400 shrink-0">
+        <i data-lucide="check-circle-2" class="w-4 h-4"></i>
+      </span>
+      <span id="toastMessage" class="text-slate-100 font-medium">최신 정보로 갱신되었습니다.</span>
+    </div>
+  </div>
+
   <!-- 메인 스크립트 (브라우저 캐시 방지 버전 파라미터 적용) -->
-  <script src="app.js?v=20260930_1645"></script>
+  <script src="app.js?v=20260930_1740"></script>
   <script>
     // Lucide 아이콘 초기화
     lucide.createIcons();
