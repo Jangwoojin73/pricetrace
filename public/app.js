@@ -13,44 +13,59 @@ const state = {
   view: "welcome" // "welcome" | "result"
 };
 
-// 판매자 도배 수식어 정제 헬퍼 (블로그/지난 이벤트 노출 원천 차단)
-// 판매자 도배 수식어 정제 헬퍼 (블로그/지난 이벤트 노출 원천 차단 & 핵심 수량 규격 보존)
+// 판매자 도배 수식어 정제 헬퍼 (네이버 가격비교 카탈로그 매칭 보장 & 핵심 단위 보존)
 function cleanSearchKeyword(title) {
-  if (!title) return "인기상품";
+  if (!title) return "신라면 20개";
   let t = String(title).replace(/\[.*?\]|\(.*?\)|<.*?>/g, " ");
+  
+  // 포장/묶음 등 부가 수식어는 단위 추출 전에 미리 정제 (1+1팩, 1팩, 1박스 등)
   const removeWords = [
-    "무료배송", "당일발송", "당일출고", "산지직송", "유명한곳", "특가", "초특가", 
+    "무료배송", "당일발송", "당일출고", "산지직송", "유명한곳", "초특가", "특가", 
     "선물세트", "국내산", "국산", "원산지", "빅세일", "할인", "한정수량", "고당도",
     "못난이", "가정용", "실속형", "프리미엄", "정품", "공식", "인증", "직송", "유명",
-    "인기", "추천", "대용량", "박스", "1박스", "세트", "한박스"
+    "인기", "추천", "대용량", "1+1팩", "1+1", "1팩", "2팩", "1박스", "2박스", "세트", "한박스", "멀티팩"
   ];
   for (const w of removeWords) {
     t = t.split(w).join(" ");
   }
 
-  // 규격/수량 단위 자동 추출 (가장 마지막 총 수량 단위 매칭: 예: 5개입 x 4개 20개 -> 20개 추출)
-  const allUnitMatches = Array.from(String(title).matchAll(/(\d+\s*(?:개|봉|입|캔|병|팩|롤|T))/gi));
-  const unitSpec = allUnitMatches.length > 0 ? allUnitMatches[allUnitMatches.length - 1][1].replace(/\s+/g, "") : "";
+  // 핵심 단위 우선순위 추출 (롤 > 캔/T/병 > 개/봉 > kg/L/g) - 가장 마지막 총수량 단위 매칭
+  let unitSpec = "";
+  const rollMatches = Array.from(title.matchAll(/(\d+\s*롤)/gi));
+  const canMatches = Array.from(title.matchAll(/(\d+\s*(?:캔|T|병))/gi));
+  const countMatches = Array.from(title.matchAll(/(\d+\s*(?:개|봉|입))/gi));
+  const weightMatches = Array.from(title.matchAll(/(\d+(?:\.\d+)?\s*(?:kg|L))/gi));
+
+  if (rollMatches.length > 0) {
+    unitSpec = rollMatches[rollMatches.length - 1][1].replace(/\s+/g, "");
+  } else if (canMatches.length > 0) {
+    unitSpec = canMatches[canMatches.length - 1][1].replace(/\s+/g, "");
+  } else if (countMatches.length > 0) {
+    unitSpec = countMatches[countMatches.length - 1][1].replace(/\s+/g, "");
+  } else if (weightMatches.length > 0) {
+    unitSpec = weightMatches[weightMatches.length - 1][1].replace(/\s+/g, "");
+  }
 
   t = t.replace(/[^\w\s가-힣0-9a-zA-Z]/g, " ");
-  const tokens = t.split(/\s+/).filter(tok => tok && tok.length >= 2 && tok.toLowerCase() !== unitSpec.toLowerCase());
+  const tokens = t.split(/\s+/).filter(tok => tok && tok.length >= 2 && tok.toLowerCase() !== (unitSpec ? unitSpec.toLowerCase() : ""));
+  
   if (tokens.length === 0) {
     const cleanFallback = String(title).replace(/[^\w\s가-힣0-9]/g, " ").trim();
-    const fb = cleanFallback.split(/\s+/).slice(0, 2).join(" ") || "인기상품";
+    const fb = cleanFallback.split(/\s+/).slice(0, 2).join(" ") || "신라면 20개";
     return unitSpec ? `${fb} ${unitSpec}` : fb;
   }
-  const base = tokens.slice(0, 3).join(" ");
+  
+  const base = tokens.slice(0, 2).join(" ");
   if (unitSpec && !base.toLowerCase().includes(unitSpec.toLowerCase())) {
     return `${base} ${unitSpec}`;
   }
   return base;
 }
 
-// URL 정규화 헬퍼 (네이버 쇼핑 전용 직결 & 블로그 배제 쇼핑 딥링크 제공)
+// URL 정규화 헬퍼 (네이버 쇼핑 가격비교 뷰포트 직결 딥링크)
 function normalizeProductUrl(url, title = "", price = 0, rank = 1) {
   let trimmed = String(url || "").trim();
 
-  // 기존 검색어 추출
   let extractedQuery = "";
   if (trimmed.includes("?")) {
     try {
@@ -59,13 +74,12 @@ function normalizeProductUrl(url, title = "", price = 0, rank = 1) {
     } catch (e) {}
   }
 
-  // 장문의 셀러 수식어를 정제하여 블로그/과거 이벤트가 아닌 쇼핑 모듈이 뜨도록 보장
   const baseTitle = title || extractedQuery || "신라면 20개";
   const baseQuery = cleanSearchKeyword(baseTitle);
 
-  // 네이버 통합검색 쇼핑 탭 직결: 로그인 불필요 + 쇼핑 리스트 최상단 + 가격순 정렬
-  // (where=shp로 쇼핑 탭 직결하여 AI 브리핑/블로그 배제, 로그인/캡차 0%)
-  return `https://search.naver.com/search.naver?where=shp&query=${encodeURIComponent(baseQuery)}&sort=price_asc`;
+  // 네이버 쇼핑 전용 가격비교 페이지(search.shopping.naver.com) 직결 URL 생성
+  // 사용자가 실제 브라우저에서 접속 시 가격비교 상품 리스트가 바로 노출됩니다.
+  return `https://search.shopping.naver.com/search/all?query=${encodeURIComponent(baseQuery)}`;
 }
 
 // 16대 인기 국민 생필품 추천 풀 (동적 셔플 & 로테이션용, /api/trending 데이터로 자동 확장)
