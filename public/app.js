@@ -14,6 +14,7 @@ const state = {
 };
 
 // 판매자 도배 수식어 정제 헬퍼 (블로그/지난 이벤트 노출 원천 차단)
+// 판매자 도배 수식어 정제 헬퍼 (블로그/지난 이벤트 노출 원천 차단 & 핵심 수량 규격 보존)
 function cleanSearchKeyword(title) {
   if (!title) return "인기상품";
   let t = String(title).replace(/\[.*?\]|\(.*?\)|<.*?>/g, " ");
@@ -26,24 +27,28 @@ function cleanSearchKeyword(title) {
   for (const w of removeWords) {
     t = t.split(w).join(" ");
   }
+
+  // 규격/수량 단위 자동 추출 (예: 30롤, 20개, 24캔, 2L, 10캔 등)
+  const unitMatch = String(title).match(/(\d+\s*(?:개|봉|입|캔|병|팩|롤|L|kg|g|T))/i);
+  const unitSpec = unitMatch ? unitMatch[1].replace(/\s+/g, "") : "";
+
   t = t.replace(/[^\w\s가-힣0-9a-zA-Z]/g, " ");
-  const tokens = t.split(/\s+/).filter(tok => tok && tok.length >= 2);
+  const tokens = t.split(/\s+/).filter(tok => tok && tok.length >= 2 && tok.toLowerCase() !== unitSpec.toLowerCase());
   if (tokens.length === 0) {
     const cleanFallback = String(title).replace(/[^\w\s가-힣0-9]/g, " ").trim();
-    return cleanFallback.split(/\s+/).slice(0, 2).join(" ") || "인기상품";
+    const fb = cleanFallback.split(/\s+/).slice(0, 2).join(" ") || "인기상품";
+    return unitSpec ? `${fb} ${unitSpec}` : fb;
   }
-  return tokens.slice(0, 3).join(" ");
+  const base = tokens.slice(0, 3).join(" ");
+  if (unitSpec && !base.toLowerCase().includes(unitSpec.toLowerCase())) {
+    return `${base} ${unitSpec}`;
+  }
+  return base;
 }
 
-// URL 정규화 헬퍼 (진짜 구매 상세 페이지 최우선 보존 & 블로그 배제 쇼핑 딥링크 제공)
+// URL 정규화 헬퍼 (네이버 쇼핑 전용 직결 & 블로그 배제 쇼핑 딥링크 제공)
 function normalizeProductUrl(url, title = "", price = 0, rank = 1) {
   let trimmed = String(url || "").trim();
-
-  // 1. 브랜드스토어(brand.naver.com)는 로그인 없이 즉시 열리는 실제 구매 상세 페이지이므로 그대로 보존
-  // (스마트스토어는 외부 다이렉트 유입 시 nidlogin 로그인 창으로 튕기므로, 로그인 요구 없는 안전 쇼핑 딥링크로 정규화)
-  if (trimmed && trimmed.includes("brand.naver.com/") && trimmed.includes("/products/")) {
-    return trimmed;
-  }
 
   // 기존 검색어 추출
   let extractedQuery = "";
@@ -58,15 +63,9 @@ function normalizeProductUrl(url, title = "", price = 0, rank = 1) {
   const baseTitle = title || extractedQuery || "신라면 20개";
   const baseQuery = cleanSearchKeyword(baseTitle);
 
-  // 순위별 고유 차별화 쇼핑 쿼리 (블로그 배제 & 쇼핑 구매 모듈 최상단 노출)
-  let targetQuery = `${baseQuery} 쇼핑`;
-  if (rank === 2) {
-    targetQuery = `${baseQuery} 공식몰`;
-  } else if (rank === 3) {
-    targetQuery = `${baseQuery} 가격비교`;
-  }
-
-  return `https://search.naver.com/search.naver?where=nexearch&query=${encodeURIComponent(targetQuery)}`;
+  // 네이버 통합검색 쇼핑 탭 직결: 로그인 불필요 + 쇼핑 리스트 최상단 + 가격순 정렬
+  // (where=shp로 쇼핑 탭 직결하여 AI 브리핑/블로그 배제, 로그인/캡차 0%)
+  return `https://search.naver.com/search.naver?where=shp&query=${encodeURIComponent(baseQuery)}&sort=price_asc`;
 }
 
 // 16대 인기 국민 생필품 추천 풀 (동적 셔플 & 로테이션용, /api/trending 데이터로 자동 확장)
