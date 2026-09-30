@@ -28,9 +28,9 @@ function cleanSearchKeyword(title) {
     t = t.split(w).join(" ");
   }
 
-  // 규격/수량 단위 자동 추출 (예: 30롤, 20개, 24캔, 2L, 10캔 등)
-  const unitMatch = String(title).match(/(\d+\s*(?:개|봉|입|캔|병|팩|롤|L|kg|g|T))/i);
-  const unitSpec = unitMatch ? unitMatch[1].replace(/\s+/g, "") : "";
+  // 규격/수량 단위 자동 추출 (가장 마지막 총 수량 단위 매칭: 예: 5개입 x 4개 20개 -> 20개 추출)
+  const allUnitMatches = Array.from(String(title).matchAll(/(\d+\s*(?:개|봉|입|캔|병|팩|롤|T))/gi));
+  const unitSpec = allUnitMatches.length > 0 ? allUnitMatches[allUnitMatches.length - 1][1].replace(/\s+/g, "") : "";
 
   t = t.replace(/[^\w\s가-힣0-9a-zA-Z]/g, " ");
   const tokens = t.split(/\s+/).filter(tok => tok && tok.length >= 2 && tok.toLowerCase() !== unitSpec.toLowerCase());

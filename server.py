@@ -595,6 +595,8 @@ def fetch_price_data(keyword: str = "농심 신라면 봉지 20개입", target_p
             matched_key = "스팸"
         elif "참치" in clean_kw or "동원" in clean_kw:
             matched_key = "참치"
+        elif "커클랜드" in clean_kw or "코스트코" in clean_kw:
+            matched_key = "커클랜드"
         elif "크리넥스" in clean_kw or "데코소프트" in clean_kw or "화장지" in clean_kw or "휴지" in clean_kw or "롤" in clean_kw:
             matched_key = "크리넥스"
         elif "퍼실" in clean_kw or "파워젤" in clean_kw or ("세제" in clean_kw and "섬유유연제" not in clean_kw):

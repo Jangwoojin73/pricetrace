@@ -117,9 +117,9 @@ def clean_search_keyword(title: str) -> str:
     for w in remove_words:
         t = t.replace(w, " ")
     
-    # 3. 규격/수량 단위 자동 추출 (예: 30롤, 20개, 24캔, 2L, 10캔 등)
-    unit_match = re.search(r'(\d+\s*(?:개|봉|입|캔|병|팩|롤|L|kg|g|T))', title, re.IGNORECASE)
-    unit_spec = unit_match.group(1).replace(" ", "") if unit_match else ""
+    # 3. 규격/수량 단위 자동 추출 (가장 마지막 총 수량 단위 매칭: 예: 5개입 x 4개 20개 -> 20개 추출)
+    all_units = re.findall(r'(\d+\s*(?:개|봉|입|캔|병|팩|롤|T))', title, re.IGNORECASE)
+    unit_spec = all_units[-1].replace(" ", "") if all_units else ""
 
     # 4. 특수문자 제거
     t = re.sub(r"[^\w\s가-힣0-9a-zA-Z]", " ", t)
@@ -700,24 +700,48 @@ NAVER_PRESET_ITEMS: Dict[str, List[Dict[str, Any]]] = {
             "is_ad": False
         }
     ],
-    "크리넥스": [
+    "커클랜드": [
         {
-            "title": "깨끗한나라 순수 3겹 롤화장지 30롤 1팩",
-            "price": 32900,
-            "mall": "네이버 스마트스토어 (공식인증)",
-            "mall_name": "네이버 스마트스토어 (공식인증)",
-            "url": "https://smartstore.naver.com/kleannara/products/5234295952",
+            "title": "코스트코 커클랜드 시그니처 3겹 40m 30롤 1팩",
+            "price": 26900,
+            "mall": "네이버 가격비교 (공식 카탈로그)",
+            "mall_name": "네이버 가격비교 (공식 카탈로그)",
+            "url": "https://search.naver.com/search.naver?where=shp&sort=price_asc&query=%EC%BD%94%EC%8A%A4%ED%8A%B8%EC%BD%94+%EC%BB%A4%ED%81%B4%EB%9E%98%EB%93%9C+%ED%9C%B4%EC%A7%80+30%EB%A1%A4",
             "image_url": "https://img.danuri.io/catalog-image/660/069/071/b9cc000c5f614c179ed35a4eb82995be.jpg",
-            "review_count": 2150,
-            "score": 4.87,
+            "review_count": 4820,
+            "score": 4.92,
             "is_ad": False
         },
+        {
+            "title": "코스트코 커클랜드 프리미엄 3겹 화장지 30롤 1팩",
+            "price": 27500,
+            "mall": "네이버 스마트스토어 (공식인증)",
+            "mall_name": "네이버 스마트스토어 (공식인증)",
+            "url": "https://search.naver.com/search.naver?where=shp&sort=price_asc&query=%EC%BD%94%EC%8A%A4%ED%8A%B8%EC%BD%94+%EC%BB%A4%ED%81%B4%EB%9E%98%EB%93%9C+%ED%9C%B4%EC%A7%80+30%EB%A1%A4",
+            "image_url": "https://img.danuri.io/catalog-image/660/069/071/b9cc000c5f614c179ed35a4eb82995be.jpg",
+            "review_count": 1820,
+            "score": 4.90,
+            "is_ad": False
+        },
+        {
+            "title": "코스트코 커클랜드 3겹 화장지 30롤 2팩 (총 60롤)",
+            "price": 52900,
+            "mall": "네이버 브랜드스토어 (본사직영)",
+            "mall_name": "네이버 브랜드스토어 (본사직영)",
+            "url": "https://search.naver.com/search.naver?where=shp&sort=price_asc&query=%EC%BD%94%EC%8A%A4%ED%8A%B8%EC%BD%94+%EC%BB%A4%ED%81%B4%EB%9E%98%EB%93%9C+%ED%9C%B4%EC%A7%80+60%EB%A1%A4",
+            "image_url": "https://img.danuri.io/catalog-image/660/069/071/b9cc000c5f614c179ed35a4eb82995be.jpg",
+            "review_count": 940,
+            "score": 4.88,
+            "is_ad": False
+        }
+    ],
+    "크리넥스": [
         {
             "title": "유한킴벌리 크리넥스 3겹 데코소프트 30롤 1팩",
             "price": 25900,
             "mall": "네이버 브랜드스토어 (본사직영)",
             "mall_name": "네이버 브랜드스토어 (본사직영)",
-            "url": "https://brand.naver.com/yuhan-kimberly/products/5284008137",
+            "url": "https://search.naver.com/search.naver?where=shp&sort=price_asc&query=%EC%9C%A0%ED%95%9C%ED%82%B4%EB%B2%8C%EB%A6%AC+%ED%81%AC%EB%A6%AC%EB%84%A5%EC%8A%A4+30%EB%A1%A4",
             "image_url": "https://img.danuri.io/catalog-image/660/069/071/b9cc000c5f614c179ed35a4eb82995be.jpg",
             "review_count": 890,
             "score": 4.88,
@@ -728,10 +752,21 @@ NAVER_PRESET_ITEMS: Dict[str, List[Dict[str, Any]]] = {
             "price": 27900,
             "mall": "네이버 브랜드스토어 (본사직영)",
             "mall_name": "네이버 브랜드스토어 (본사직영)",
-            "url": "https://brand.naver.com/yuhan-kimberly/products/5284008138",
+            "url": "https://search.naver.com/search.naver?where=shp&sort=price_asc&query=%EC%9C%A0%ED%95%9C%ED%82%B4%EB%B2%8C%EB%A6%AC+%ED%81%AC%EB%A6%AC%EB%84%A5%EC%8A%A4+30%EB%A1%A4",
             "image_url": "https://img.danuri.io/catalog-image/660/069/071/b9cc000c5f614c179ed35a4eb82995be.jpg",
             "review_count": 1450,
             "score": 4.92,
+            "is_ad": False
+        },
+        {
+            "title": "깨끗한나라 순수 3겹 롤화장지 30롤 1팩",
+            "price": 32900,
+            "mall": "네이버 스마트스토어 (공식인증)",
+            "mall_name": "네이버 스마트스토어 (공식인증)",
+            "url": "https://search.naver.com/search.naver?where=shp&sort=price_asc&query=%EA%B9%A8%EB%81%97%ED%95%9C%EB%82%98%EB%9D%BC+%EC%88%9C%EC%88%98+30%EB%A1%A4",
+            "image_url": "https://img.danuri.io/catalog-image/660/069/071/b9cc000c5f614c179ed35a4eb82995be.jpg",
+            "review_count": 2150,
+            "score": 4.87,
             "is_ad": False
         }
     ],
@@ -949,6 +984,8 @@ def fetch_products_for_keyword(keyword: str) -> Tuple[List[Dict[str, Any]], List
             matched_key = "스팸"
         elif "참치" in clean_kw or "동원" in clean_kw:
             matched_key = "참치"
+        elif "커클랜드" in clean_kw or "코스트코" in clean_kw:
+            matched_key = "커클랜드"
         elif "크리넥스" in clean_kw or "데코소프트" in clean_kw or "화장지" in clean_kw or "휴지" in clean_kw or "롤" in clean_kw:
             matched_key = "크리넥스"
         elif "퍼실" in clean_kw or "파워젤" in clean_kw or ("세제" in clean_kw and "섬유유연제" not in clean_kw):
