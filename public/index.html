@@ -278,26 +278,49 @@
           </div>
         </div>
 
-        <!-- 듀얼 탭 스위처 -->
-        <div class="bg-slate-100/90 p-1.5 rounded-2xl flex space-x-1.5 mb-4 border border-slate-200/80 shadow-2xs">
-          <button 
-            type="button" 
-            id="tabSteadyBtn" 
-            class="flex-1 py-2.5 px-3 rounded-xl text-xs sm:text-sm flex items-center justify-center space-x-1.5 transition-all font-bold cursor-pointer bg-white text-emerald-700 shadow-xs border border-emerald-100"
-          >
-            <span>🏆</span>
-            <span>국민 필수 생필품 (TOP 16)</span>
-            <span class="hidden md:inline-block text-[11px] bg-emerald-100 text-emerald-800 font-semibold px-2 py-0.5 rounded-full ml-1">365일 고정</span>
-          </button>
-          <button 
-            type="button" 
-            id="tabTrendingBtn" 
-            class="flex-1 py-2.5 px-3 rounded-xl text-xs sm:text-sm flex items-center justify-center space-x-1.5 transition-all font-medium cursor-pointer bg-transparent text-slate-600 hover:text-slate-900 hover:bg-slate-200/60"
-          >
-            <span>🔥</span>
-            <span>오늘 실시간 핫딜 (TOP 16)</span>
-            <span class="hidden md:inline-block text-[11px] bg-amber-500 text-white font-semibold px-2 py-0.5 rounded-full ml-1">LIVE 제철</span>
-          </button>
+        <!-- 선명한 2분할 듀얼 탭 스위처 -->
+        <div class="mb-5">
+          <!-- 상단 탭 선택 가이드 바 -->
+          <div class="flex items-center justify-between px-1 mb-2">
+            <span class="text-xs font-bold text-slate-600 flex items-center gap-1.5">
+              <i data-lucide="sliders-horizontal" class="w-3.5 h-3.5 text-blue-600"></i>
+              <span>추천 모드 선택 (원하시는 탭을 클릭하여 전환)</span>
+            </span>
+            <span class="text-[11px] text-slate-400 font-medium hidden sm:inline">2가지 실시간 추천 모드 지원</span>
+          </div>
+
+          <!-- 2분할 탭 카드 트레이 -->
+          <div class="p-1.5 sm:p-2 bg-slate-200/80 rounded-2xl border-2 border-slate-300/80 shadow-inner grid grid-cols-2 gap-2 sm:gap-3">
+            <!-- 탭 1: 국민 필수 생필품 -->
+            <button 
+              type="button" 
+              id="tabSteadyBtn" 
+              class="relative flex items-center justify-center py-3 px-2 sm:px-4 rounded-xl text-xs sm:text-sm font-black cursor-pointer transition-all duration-200 bg-white text-emerald-900 shadow-md border-2 border-emerald-500 ring-2 ring-emerald-500/20 active:scale-[0.98]"
+            >
+              <div class="flex flex-col sm:flex-row items-center justify-center sm:space-x-2 text-center">
+                <div class="flex items-center space-x-1">
+                  <span class="text-sm sm:text-base">🏆</span>
+                  <span class="font-extrabold text-[12px] sm:text-sm tracking-tight">국민 필수 생필품</span>
+                </div>
+                <span id="tabSteadyBadge" class="mt-0.5 sm:mt-0 text-[10px] sm:text-[11px] bg-emerald-600 text-white font-bold px-2 py-0.5 rounded-full shadow-2xs">선택됨 ✓</span>
+              </div>
+            </button>
+
+            <!-- 탭 2: 오늘 실시간 핫딜 -->
+            <button 
+              type="button" 
+              id="tabTrendingBtn" 
+              class="relative flex items-center justify-center py-3 px-2 sm:px-4 rounded-xl text-xs sm:text-sm font-bold cursor-pointer transition-all duration-200 bg-slate-100 hover:bg-white text-slate-600 hover:text-slate-900 border-2 border-slate-300 hover:border-slate-400 shadow-xs active:scale-[0.98]"
+            >
+              <div class="flex flex-col sm:flex-row items-center justify-center sm:space-x-2 text-center">
+                <div class="flex items-center space-x-1">
+                  <span class="text-sm sm:text-base">🔥</span>
+                  <span class="font-bold text-[12px] sm:text-sm tracking-tight">오늘 실시간 핫딜</span>
+                </div>
+                <span id="tabTrendingBadge" class="mt-0.5 sm:mt-0 text-[10px] sm:text-[11px] bg-white text-slate-600 border border-slate-300 font-semibold px-2 py-0.5 rounded-full">선택하기 👆</span>
+              </div>
+            </button>
+          </div>
         </div>
 
         <div id="welcomeCardsContainer" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5 transition-opacity duration-200">
@@ -838,7 +861,7 @@
   </div>
 
   <!-- 메인 스크립트 (브라우저 캐시 방지 버전 파라미터 적용) -->
-  <script src="app.js?v=20260930_1740"></script>
+  <script src="app.js?v=20260930_1755"></script>
   <script>
     // Lucide 아이콘 초기화
     lucide.createIcons();

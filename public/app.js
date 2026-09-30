@@ -270,6 +270,8 @@ const elements = {
   // 웰컴 듀얼 탭 스위처 & 헤더
   tabSteadyBtn: document.getElementById("tabSteadyBtn"),
   tabTrendingBtn: document.getElementById("tabTrendingBtn"),
+  tabSteadyBadge: document.getElementById("tabSteadyBadge"),
+  tabTrendingBadge: document.getElementById("tabTrendingBadge"),
   tabSectionTitle: document.getElementById("tabSectionTitle"),
   tabSectionSubtitle: document.getElementById("tabSectionSubtitle"),
   dailyTrendingBadge: document.getElementById("dailyTrendingBadge"),
@@ -938,13 +940,24 @@ let recommendationRotationTimer = null;
 function switchRecommendationTab(tab) {
   state.activeTab = tab;
 
+  const steadyBadge = elements.tabSteadyBadge || document.getElementById("tabSteadyBadge");
+  const trendingBadge = elements.tabTrendingBadge || document.getElementById("tabTrendingBadge");
+
   if (tab === "steady") {
-    // 탭 버튼 스타일 갱신
+    // 탭 버튼 스타일 갱신 (국민 필수 생필품 활성화)
     if (elements.tabSteadyBtn) {
-      elements.tabSteadyBtn.className = "flex-1 py-2.5 px-3 rounded-xl text-xs sm:text-sm flex items-center justify-center space-x-1.5 transition-all font-bold cursor-pointer bg-white text-emerald-700 shadow-xs border border-emerald-100";
+      elements.tabSteadyBtn.className = "relative flex items-center justify-center py-3 px-2 sm:px-4 rounded-xl text-xs sm:text-sm font-black cursor-pointer transition-all duration-200 bg-white text-emerald-900 shadow-md border-2 border-emerald-500 ring-2 ring-emerald-500/20 active:scale-[0.98]";
     }
     if (elements.tabTrendingBtn) {
-      elements.tabTrendingBtn.className = "flex-1 py-2.5 px-3 rounded-xl text-xs sm:text-sm flex items-center justify-center space-x-1.5 transition-all font-medium cursor-pointer bg-transparent text-slate-600 hover:text-slate-900 hover:bg-slate-200/60";
+      elements.tabTrendingBtn.className = "relative flex items-center justify-center py-3 px-2 sm:px-4 rounded-xl text-xs sm:text-sm font-bold cursor-pointer transition-all duration-200 bg-slate-100 hover:bg-white text-slate-600 hover:text-slate-900 border-2 border-slate-300 hover:border-slate-400 shadow-xs active:scale-[0.98]";
+    }
+    if (steadyBadge) {
+      steadyBadge.className = "mt-0.5 sm:mt-0 text-[10px] sm:text-[11px] bg-emerald-600 text-white font-bold px-2 py-0.5 rounded-full shadow-2xs";
+      steadyBadge.textContent = "선택됨 ✓";
+    }
+    if (trendingBadge) {
+      trendingBadge.className = "mt-0.5 sm:mt-0 text-[10px] sm:text-[11px] bg-white text-slate-600 border border-slate-300 font-semibold px-2 py-0.5 rounded-full";
+      trendingBadge.textContent = "선택하기 👆";
     }
     // 섹션 타이틀 & 서브타이틀 갱신
     if (elements.tabSectionTitle) {
@@ -954,12 +967,20 @@ function switchRecommendationTab(tab) {
       elements.tabSectionSubtitle.textContent = "한국인이 가장 많이 재구매하는 16대 필수품의 오늘 실시간 최저가입니다.";
     }
   } else {
-    // 탭 버튼 스타일 갱신 (핫딜 탭)
+    // 탭 버튼 스타일 갱신 (오늘 실시간 핫딜 활성화)
     if (elements.tabTrendingBtn) {
-      elements.tabTrendingBtn.className = "flex-1 py-2.5 px-3 rounded-xl text-xs sm:text-sm flex items-center justify-center space-x-1.5 transition-all font-bold cursor-pointer bg-white text-amber-700 shadow-xs border border-amber-200/80";
+      elements.tabTrendingBtn.className = "relative flex items-center justify-center py-3 px-2 sm:px-4 rounded-xl text-xs sm:text-sm font-black cursor-pointer transition-all duration-200 bg-white text-amber-950 shadow-md border-2 border-amber-500 ring-2 ring-amber-500/20 active:scale-[0.98]";
     }
     if (elements.tabSteadyBtn) {
-      elements.tabSteadyBtn.className = "flex-1 py-2.5 px-3 rounded-xl text-xs sm:text-sm flex items-center justify-center space-x-1.5 transition-all font-medium cursor-pointer bg-transparent text-slate-600 hover:text-slate-900 hover:bg-slate-200/60";
+      elements.tabSteadyBtn.className = "relative flex items-center justify-center py-3 px-2 sm:px-4 rounded-xl text-xs sm:text-sm font-bold cursor-pointer transition-all duration-200 bg-slate-100 hover:bg-white text-slate-600 hover:text-slate-900 border-2 border-slate-300 hover:border-slate-400 shadow-xs active:scale-[0.98]";
+    }
+    if (trendingBadge) {
+      trendingBadge.className = "mt-0.5 sm:mt-0 text-[10px] sm:text-[11px] bg-amber-500 text-white font-bold px-2 py-0.5 rounded-full shadow-2xs";
+      trendingBadge.textContent = "선택됨 ✓";
+    }
+    if (steadyBadge) {
+      steadyBadge.className = "mt-0.5 sm:mt-0 text-[10px] sm:text-[11px] bg-white text-slate-600 border border-slate-300 font-semibold px-2 py-0.5 rounded-full";
+      steadyBadge.textContent = "선택하기 👆";
     }
     // 섹션 타이틀 & 서브타이틀 갱신
     if (elements.tabSectionTitle) {
