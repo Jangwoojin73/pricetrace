@@ -66,8 +66,17 @@ function cleanSearchKeyword(title) {
   return base;
 }
 
-// URL 정규화 헬퍼 (네이버 쇼핑 가격비교 뷰포트 직결 딥링크: &frm=NVSCPRO 적용)
-function normalizeProductUrl(url, title = "", price = 0, rank = 1) {
+// 판매처/쇼핑몰 상호명 정제 헬퍼 (수식어 및 불필요한 태그 제거)
+function extractCleanMallName(mallStr) {
+  if (!mallStr) return "";
+  let m = String(mallStr).replace(/\(.*?\)|\[.*?\]/g, " ").trim();
+  m = m.replace(/실시간\s*\d+위|공식\s*인증|본사직영|공식\s*카탈로그|네이버\s*가격비교|네이버\s*쇼핑|네이버|스마트스토어|브랜드스토어|온라인\s*최저가|공식몰/g, " ").trim();
+  m = m.replace(/[^\w\s가-힣0-9]/g, " ").trim();
+  return m;
+}
+
+// URL 정규화 헬퍼 (네이버 쇼핑 가격비교 뷰포트 직결 딥링크: &frm=NVSCPRO 적용 및 판매처 상호명 결합으로 최상단 1위 가격 일치 보장)
+function normalizeProductUrl(url, title = "", price = 0, rank = 1, mallName = "") {
   let trimmed = String(url || "").trim();
 
   let extractedQuery = "";
@@ -78,11 +87,19 @@ function normalizeProductUrl(url, title = "", price = 0, rank = 1) {
     } catch (e) {}
   }
 
-  const baseTitle = title || extractedQuery || "신라면 20개";
+  const baseTitle = extractedQuery || title || "신라면 20개";
   const baseQuery = cleanSearchKeyword(baseTitle);
+  const cleanMall = extractCleanMallName(mallName);
+
+  // 판매처(쇼핑몰) 상호명이 유효하고 검색어에 아직 포함되지 않은 경우 상호명을 앞에 결합
+  // 이를 통해 네이버 쇼핑 가격비교 창 최상단에 해당 판매처의 최저가 품목이 단독 1위로 노출됨 (타사 광고 상품 배제)
+  let finalQuery = baseQuery;
+  if (cleanMall && cleanMall.length >= 2 && !baseQuery.toLowerCase().includes(cleanMall.toLowerCase())) {
+    finalQuery = `${cleanMall} ${baseQuery}`;
+  }
 
   // 네이버 쇼핑 전용 가격비교 페이지(search.shopping.naver.com) 직결 URL 생성 (frm=NVSCPRO 필수 파라미터 포함)
-  return `https://search.shopping.naver.com/search/all?query=${encodeURIComponent(baseQuery)}&frm=NVSCPRO`;
+  return `https://search.shopping.naver.com/search/all?query=${encodeURIComponent(finalQuery)}&frm=NVSCPRO`;
 }
 
 // 16대 인기 국민 생필품 추천 풀 (동적 셔플 & 로테이션용, /api/trending 데이터로 자동 확장)
@@ -548,7 +565,7 @@ function renderAll(data) {
 
     // 링크 설정 (로딩 중 클릭 잠금 해제 및 안전 우회 링크)
     if (representative_item.url) {
-      const safeBuyUrl = normalizeProductUrl(representative_item.url, representative_item.title, representative_item.price, 1);
+      const safeBuyUrl = normalizeProductUrl(representative_item.url, representative_item.title, representative_item.price, 1, representative_item.mall_name || representative_item.mall);
       elements.buyButton.href = safeBuyUrl;
       elements.buyButton.rel = "noopener noreferrer";
       elements.buyButton.referrerPolicy = "no-referrer";
@@ -606,7 +623,7 @@ function renderComparisonGrid(items, unit_count = 1) {
     const unitText = unit_count > 1 ? `<span class="text-xs text-slate-400 ml-1">(개당 ${formatCurrency(unitPrice)}원)</span>` : '';
     const reviewCnt = item.review_count ? formatCurrency(item.review_count) + "개" : "리뷰 정보 없음";
     const scoreVal = item.score ? `★ ${item.score.toFixed(2)}` : "평점 정보 없음";
-    const safeItemUrl = normalizeProductUrl(item.url, item.title, item.price, rank);
+    const safeItemUrl = normalizeProductUrl(item.url, item.title, item.price, rank, item.mall_name || item.mall);
 
     const mallRaw = item.mall_name || item.mall || "온라인 최저가";
     let mallBadgeClass = "bg-slate-100 text-slate-700 border-slate-200/80";

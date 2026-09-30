@@ -239,10 +239,21 @@ def clean_search_keyword(title: str) -> str:
     return base
 
 
-def normalize_shopping_url(url: str, nv_mid: Optional[Any] = None, card_type: str = "", title: str = "", price: int = 0, rank: int = 1) -> str:
+def extract_clean_mall_name(mall_str: str) -> str:
+    """판매처/쇼핑몰 상호명 정제 헬퍼 (수식어 및 불필요한 태그 제거)"""
+    if not mall_str:
+        return ""
+    m = re.sub(r'\(.*?\)|\[.*?\]', ' ', mall_str).strip()
+    for sw in ["실시간", "1위", "2위", "3위", "공식", "인증", "직영", "스마트스토어", "브랜드스토어", "네이버", "쇼핑", "온라인", "최저가", "공식몰", "카탈로그", "가격비교"]:
+        m = m.replace(sw, " ").strip()
+    m = re.sub(r'[^\w\s가-힣0-9]', ' ', m).strip()
+    return " ".join(m.split())
+
+
+def normalize_shopping_url(url: str, nv_mid: Optional[Any] = None, card_type: str = "", title: str = "", price: int = 0, rank: int = 1, mall_name: str = "") -> str:
     """
     네이버 쇼핑 전용 가격비교 페이지(search.shopping.naver.com)로 직결하는 URL을 생성합니다.
-    frm=NVSCPRO 파라미터를 추가하여 네이버 쇼핑 전용 가격비교 화면으로 직결됩니다.
+    판매처(쇼핑몰) 상호명을 결합하여, 네이버 쇼핑 가격비교 창 최상단에 해당 판매처 최저가 품목이 단독 1위로 노출되도록 보장합니다.
     """
     clean_title = (title or "").strip()
 
@@ -259,8 +270,14 @@ def normalize_shopping_url(url: str, nv_mid: Optional[Any] = None, card_type: st
 
     base_title = clean_title or extracted_query or "신라면 20개"
     base_query = clean_search_keyword(base_title)
+    clean_mall = extract_clean_mall_name(mall_name)
 
-    enc_query = urllib.parse.quote(base_query)
+    # 판매처 상호명이 유효하고 검색어에 아직 포함되지 않은 경우 상호명을 앞에 결합
+    final_query = base_query
+    if clean_mall and len(clean_mall) >= 2 and clean_mall.lower() not in base_query.lower():
+        final_query = f"{clean_mall} {base_query}"
+
+    enc_query = urllib.parse.quote(final_query)
     # 네이버 쇼핑 전용 가격비교 페이지 직결 URL (&frm=NVSCPRO 필수 반영)
     safe_shopping_url = f"https://search.shopping.naver.com/search/all?query={enc_query}&frm=NVSCPRO"
     return safe_shopping_url
@@ -1122,7 +1139,13 @@ def fetch_products_for_keyword(keyword: str) -> Tuple[List[Dict[str, Any]], List
 
     # 모든 아이템의 URL을 차단 없는 네이버 포털 안전 URL로 정규화
     for rank_i, it in enumerate(top_items, 1):
-        it["url"] = normalize_shopping_url(it.get("url", ""), title=it.get("title", ""), price=it.get("price", 0), rank=rank_i)
+        it["url"] = normalize_shopping_url(
+            it.get("url", ""),
+            title=it.get("title", ""),
+            price=it.get("price", 0),
+            rank=rank_i,
+            mall_name=it.get("mall_name") or it.get("mall") or ""
+        )
 
     # 최저가 순(오름차순) 정렬 보장
     top_items.sort(key=lambda x: x["price"])
@@ -1152,7 +1175,8 @@ def filter_and_refine_products(items: List[Dict[str, Any]], keyword: str = "") -
             prod.get("url", ""),
             title=prod.get("title", ""),
             price=prod.get("price", 0),
-            rank=rank_idx
+            rank=rank_idx,
+            mall_name=prod.get("mall_name") or prod.get("mall") or ""
         )
     return valid_products
 
@@ -1525,7 +1549,13 @@ def get_multi_ranked_trending_items(keyword: str, limit: int = 3) -> List[Dict[s
             "price": item.get("price", 0),
             "mall": mall_text,
             "mall_name": mall_text,
-            "url": item.get("url", ""),
+            "url": normalize_shopping_url(
+                item.get("url", ""),
+                title=item.get("title", ""),
+                price=item.get("price", 0),
+                rank=rank_idx,
+                mall_name=mall_display
+            ),
             "image_url": item.get("image_url", ""),
             "review_count": item.get("review_count", 0),
             "score": item.get("score", 4.88),

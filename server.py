@@ -665,7 +665,13 @@ def fetch_price_data(keyword: str = "농심 신라면 봉지 20개입", target_p
     # 모든 아이템의 URL 정규화 보장 (차단 없는 네이버 포털 안전 URL)
     if pricetrace_bot:
         for idx, it in enumerate(refined_items, 1):
-            it["url"] = pricetrace_bot.normalize_shopping_url(it.get("url", ""), title=it.get("title", ""), price=it.get("price", 0), rank=idx)
+            it["url"] = pricetrace_bot.normalize_shopping_url(
+                it.get("url", ""),
+                title=it.get("title", ""),
+                price=it.get("price", 0),
+                rank=idx,
+                mall_name=it.get("mall_name") or it.get("mall") or ""
+            )
 
     top_items = refined_items[:3]
     lowest_price = top_items[0]["price"] if top_items else 0
