@@ -47,22 +47,23 @@ function cleanSearchKeyword(title) {
   }
 
   t = t.replace(/[^\w\s가-힣0-9a-zA-Z]/g, " ");
-  const tokens = t.split(/\s+/).filter(tok => tok && tok.length >= 2 && tok.toLowerCase() !== (unitSpec ? unitSpec.toLowerCase() : ""));
+  const tokens = t.split(/\s+/).filter(tok => tok && tok.length >= 1 && tok.toLowerCase() !== (unitSpec ? unitSpec.toLowerCase() : ""));
   
   if (tokens.length === 0) {
     const cleanFallback = String(title).replace(/[^\w\s가-힣0-9]/g, " ").trim();
-    const fb = cleanFallback.split(/\s+/).slice(0, 2).join(" ") || "신라면 20개";
+    const fb = cleanFallback.split(/\s+/).slice(0, 4).join(" ") || "신라면 20개";
     return unitSpec ? `${fb} ${unitSpec}` : fb;
   }
   
-  const base = tokens.slice(0, 2).join(" ");
+  // 핵심 상품명 및 특성(제로, 다우니, 항균 플러스, 용량 등)을 최대 4~5단어까지 온전히 보존
+  const base = tokens.slice(0, 5).join(" ");
   if (unitSpec && !base.toLowerCase().includes(unitSpec.toLowerCase())) {
     return `${base} ${unitSpec}`;
   }
   return base;
 }
 
-// URL 정규화 헬퍼 (네이버 쇼핑 가격비교 뷰포트 직결 딥링크)
+// URL 정규화 헬퍼 (네이버 쇼핑 가격비교 뷰포트 직결 딥링크: &frm=NVSCPRO 적용)
 function normalizeProductUrl(url, title = "", price = 0, rank = 1) {
   let trimmed = String(url || "").trim();
 
@@ -77,9 +78,8 @@ function normalizeProductUrl(url, title = "", price = 0, rank = 1) {
   const baseTitle = title || extractedQuery || "신라면 20개";
   const baseQuery = cleanSearchKeyword(baseTitle);
 
-  // 네이버 쇼핑 전용 가격비교 페이지(search.shopping.naver.com) 직결 URL 생성
-  // 사용자가 실제 브라우저에서 접속 시 가격비교 상품 리스트가 바로 노출됩니다.
-  return `https://search.shopping.naver.com/search/all?query=${encodeURIComponent(baseQuery)}`;
+  // 네이버 쇼핑 전용 가격비교 페이지(search.shopping.naver.com) 직결 URL 생성 (frm=NVSCPRO 필수 파라미터 포함)
+  return `https://search.shopping.naver.com/search/all?query=${encodeURIComponent(baseQuery)}&frm=NVSCPRO`;
 }
 
 // 16대 인기 국민 생필품 추천 풀 (동적 셔플 & 로테이션용, /api/trending 데이터로 자동 확장)
@@ -1146,7 +1146,7 @@ function initEventListeners() {
 }
 
 // 초기 실행
-document.addEventListener("DOMContentLoaded", () => {
+function initApp() {
   initEventListeners();
 
   // 인기 추천 풀 셔플 렌더링 및 자동 로테이션 시작
@@ -1167,4 +1167,10 @@ document.addEventListener("DOMContentLoaded", () => {
   } else {
     switchToWelcomeView();
   }
-});
+}
+
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", initApp);
+} else {
+  initApp();
+}
