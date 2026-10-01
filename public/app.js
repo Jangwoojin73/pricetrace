@@ -76,10 +76,41 @@ function extractCleanMallName(mallStr) {
   return m;
 }
 
-// URL 정규화 헬퍼 (네이버 쇼핑 가격비교 뷰포트 직결 딥링크: &frm=NVSCPRO 적용 및 판매처 상호명 결합으로 최상단 1위 가격 일치 보장)
+// URL 정규화 헬퍼 (네이버 쇼핑 공식 카탈로그 직결 및 최저가순 정렬 보장)
 function normalizeProductUrl(url, title = "", price = 0, rank = 1, mallName = "") {
   let trimmed = String(url || "").trim();
 
+  // 1. 네이버 공식 카탈로그 링크는 최상단에 100% 최저가가 고정 노출되고 광고가 없으므로 절대 변경하지 않고 직결 유지
+  if (trimmed.includes("/catalog/")) {
+    return trimmed;
+  }
+
+  // 2. 스마트스토어 및 브랜드스토어 개별 상품 직결 링크 유지
+  if (trimmed.includes("/products/") || trimmed.includes("smartstore.naver.com") || trimmed.includes("brand.naver.com")) {
+    return trimmed;
+  }
+
+  // 3. 이미 낮은 가격순(sort=price_asc)이 지정된 경우 직결 유지
+  if (trimmed.includes("sort=price_asc")) {
+    return trimmed;
+  }
+
+  // 4. 기존 네이버 쇼핑 검색 URL인 경우 &sort=price_asc&frm=NVSCPRO 파라미터 강제 보정
+  if (trimmed.includes("search.shopping.naver.com/search/all")) {
+    try {
+      const u = new URL(trimmed);
+      u.searchParams.set("sort", "price_asc");
+      u.searchParams.set("frm", "NVSCPRO");
+      return u.toString();
+    } catch (e) {
+      let sep = trimmed.includes("?") ? "&" : "?";
+      if (!trimmed.includes("sort=price_asc")) trimmed += `${sep}sort=price_asc`;
+      if (!trimmed.includes("frm=NVSCPRO")) trimmed += "&frm=NVSCPRO";
+      return trimmed;
+    }
+  }
+
+  // 5. 검색어 및 판매처 기반 검색 링크 생성 시 반드시 낮은 가격순(&sort=price_asc&frm=NVSCPRO) 반영
   let extractedQuery = "";
   if (trimmed.includes("?")) {
     try {
@@ -92,15 +123,13 @@ function normalizeProductUrl(url, title = "", price = 0, rank = 1, mallName = ""
   const baseQuery = cleanSearchKeyword(baseTitle);
   const cleanMall = extractCleanMallName(mallName);
 
-  // 판매처(쇼핑몰) 상호명이 유효하고 검색어에 아직 포함되지 않은 경우 상호명을 앞에 결합
-  // 이를 통해 네이버 쇼핑 가격비교 창 최상단에 해당 판매처의 최저가 품목이 단독 1위로 노출됨 (타사 광고 상품 배제)
   let finalQuery = baseQuery;
   if (cleanMall && cleanMall.length >= 2 && !baseQuery.toLowerCase().includes(cleanMall.toLowerCase())) {
     finalQuery = `${cleanMall} ${baseQuery}`;
   }
 
-  // 네이버 쇼핑 전용 가격비교 페이지(search.shopping.naver.com) 직결 URL 생성 (frm=NVSCPRO 필수 파라미터 포함)
-  return `https://search.shopping.naver.com/search/all?query=${encodeURIComponent(finalQuery)}&frm=NVSCPRO`;
+  // 네이버 쇼핑 전용 가격비교 페이지(search.shopping.naver.com) 직결 URL 생성 (&sort=price_asc&frm=NVSCPRO 필수 포함)
+  return `https://search.shopping.naver.com/search/all?query=${encodeURIComponent(finalQuery)}&sort=price_asc&frm=NVSCPRO`;
 }
 
 // 1. 국민 필수 생필품 풀 (고정 16대 대표 품목)
