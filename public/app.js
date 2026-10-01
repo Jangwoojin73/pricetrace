@@ -1540,11 +1540,21 @@ function setupPwaInstallation() {
     });
   }
 
-  // iOS 기기이면서 standalone이 아닌 경우 모바일 설치 버튼 노출
+  // iOS 기기이면서 standalone이 아닌 경우 모바일 설치 버튼 및 하단 가이드 배너 노출
   if (isIos && !isStandalone) {
     if (mobileInstallAppBtn) {
       mobileInstallAppBtn.classList.remove("hidden");
       mobileInstallAppBtn.classList.add("flex");
+    }
+    if (!sessionStorage.getItem("pwa_banner_dismissed") && pwaInstallBanner) {
+      const bannerDesc = pwaInstallBanner.querySelector("p");
+      const bannerBtn = document.getElementById("pwaBannerInstallBtn");
+      if (bannerDesc) bannerDesc.textContent = "Safari 공유 메뉴에서 홈 화면에 추가";
+      if (bannerBtn) bannerBtn.textContent = "방법 보기";
+      setTimeout(() => {
+        pwaInstallBanner.classList.remove("hidden");
+        if (window.lucide) window.lucide.createIcons();
+      }, 1500);
     }
   }
 
