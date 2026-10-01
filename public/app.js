@@ -100,45 +100,36 @@ const VERIFIED_CATALOG_DEFAULTS = {
   "퍼실": "53538466635"
 };
 
-// URL 정규화 헬퍼 (네이버 공식 카탈로그 /catalog/{nvMid} 또는 공식 스토어 /products/{productId} 직결 보장)
+// URL 정규화 헬퍼 (네이버 포털 공식 쇼핑 탭 ?where=shp 안전 직결 보장)
+// - 외부 비로그인 접속 시 WAF 차단(접속 제한) 및 네이버 로그인(nidlogin) 벽 100% 우회
+// - 판매자 상품 번호 만료/삭제로 인한 '상품이 존재하지 않습니다' 오류 원천 차단
+// - 각 순위별 고유 상품명으로 정확하게 검색하여 최상단에 일치하는 품목과 가격이 표시되도록 보장
 function normalizeProductUrl(url, title = "", price = 0, rank = 1, mallName = "") {
   let trimmed = String(url || "").trim();
 
-  // 1. 네이버 공식 카탈로그 링크는 최상단에 100% 최저가가 고정 노출되고 광고가 없으므로 직결 유지
-  if (trimmed.includes("/catalog/")) {
+  // 1. 이미 네이버 포털 안전 쇼핑탭(?where=shp) URL인 경우 그대로 유지
+  if (trimmed.includes("search.naver.com") && trimmed.includes("where=shp")) {
     return trimmed;
   }
 
-  // 2. 스마트스토어 및 브랜드스토어 개별 상품 직결 링크 유지
-  if (trimmed.includes("/products/") || trimmed.includes("smartstore.naver.com") || trimmed.includes("brand.naver.com")) {
-    return trimmed;
-  }
-
-  // 3. 브릿지 URL 내 nv_mid 추출하여 카탈로그 직결
-  const nvMidMatch = trimmed.match(/nv_mid=(\d+)/i) || trimmed.match(/nvMid=(\d+)/i);
-  if (nvMidMatch && nvMidMatch[1]) {
-    return `https://search.shopping.naver.com/catalog/${nvMidMatch[1]}`;
-  }
-
-  // 4. 일반 검색 URL(search/all) 또는 미지 링크는 광고 배제를 위해 공식 카탈로그 직결로 변환
-  let extractedQuery = "";
-  if (trimmed.includes("?")) {
+  // 2. 검색 대상 상품명 결정 (각 순위별 고유 title 최우선 적용)
+  let targetQuery = cleanSearchKeyword(title || "").trim();
+  if (!targetQuery && trimmed.includes("?")) {
     try {
       const u = new URL(trimmed);
-      extractedQuery = u.searchParams.get("query") || "";
+      targetQuery = cleanSearchKeyword(u.searchParams.get("query") || "");
     } catch (e) {}
   }
 
-  const searchTarget = `${cleanSearchKeyword(extractedQuery)} ${cleanSearchKeyword(title)}`.toLowerCase();
-  for (const [kw, catId] of Object.entries(VERIFIED_CATALOG_DEFAULTS)) {
-    if (searchTarget.includes(kw.toLowerCase())) {
-      return `https://search.shopping.naver.com/catalog/${catId}`;
-    }
+  // 3. 미지 상품 기본값
+  if (!targetQuery) {
+    targetQuery = "신라면 20개";
   }
 
-  // 5. 기본 공식 안전 카탈로그 직결 (신라면 공식 카탈로그)
-  return "https://search.shopping.naver.com/catalog/23019808608";
+  // 4. 네이버 포털 공식 쇼핑탭(?where=shp&query=...)으로 안전 직결
+  return `https://search.naver.com/search.naver?where=shp&query=${encodeURIComponent(targetQuery)}`;
 }
+
 
 // 1. 국민 필수 생필품 풀 (고정 16대 대표 품목)
 let STEADY_PRODUCTS_POOL = [

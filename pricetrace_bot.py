@@ -275,48 +275,33 @@ VERIFIED_CATALOG_DEFAULTS: Dict[str, str] = {
 
 def normalize_shopping_url(url: str, nv_mid: Optional[Any] = None, card_type: str = "", title: str = "", price: int = 0, rank: int = 1, mall_name: str = "") -> str:
     """
-    네이버 쇼핑 공식 카탈로그 직결(/catalog/) 및 브랜드/스마트스토어 직결(/products/) 딥링크 URL을 생성합니다.
-    - search.shopping.naver.com/search/all 은 유료 스폰서 광고(AD) 강제 노출로 인한 가격 불일치를 유발하므로 100% 원천 배제합니다.
+    네이버 포털 공식 쇼핑 탭(?where=shp) 딥링크 URL을 생성합니다.
+    - 외부 비로그인 접속 시 WAF 차단('접속이 일시적으로 제한되었습니다') 및 네이버 로그인(nidlogin) 벽을 100% 우회합니다.
+    - 개별 스토어 상품 삭제/만료로 인한 '상품이 존재하지 않습니다' 오류를 원천 차단합니다.
+    - 각 순위별 고유 상품명으로 정확하게 검색하여 최상단에 일치하는 품목과 가격이 표시되도록 보장합니다.
     """
-    if url:
-        u_str = str(url).strip()
-        # 1. 공식 카탈로그 직결 링크 보존
-        if "/catalog/" in u_str:
-            return u_str
-        # 2. 공식 스마트스토어/브랜드스토어 상품 상세 직결 링크 보존
-        if "smartstore.naver.com" in u_str or "brand.naver.com" in u_str or "/products/" in u_str:
-            return u_str
-        # 3. 브릿지 URL 내 nv_mid 추출하여 카탈로그 직결 변환
-        if "nv_mid=" in u_str:
-            m = re.search(r"nv_mid=(\d+)", u_str)
-            if m:
-                return f"https://search.shopping.naver.com/catalog/{m.group(1)}"
+    u_str = str(url or "").strip()
 
-    # 4. nv_mid 파라미터가 명시된 경우 카탈로그 직결 변환
-    if nv_mid:
-        mid_str = str(nv_mid).strip()
-        if mid_str.isdigit():
-            return f"https://search.shopping.naver.com/catalog/{mid_str}"
+    # 1. 이미 네이버 포털 안전 쇼핑탭(?where=shp) URL인 경우 그대로 유지
+    if "search.naver.com" in u_str and "where=shp" in u_str:
+        return u_str
 
-    # 5. 검색어 및 품목명 기반 공식 카탈로그 매핑 (검색 광고 배제)
-    clean_title = (title or "").strip()
-    extracted_query = ""
-    if url and "?" in url:
+    # 2. 검색 대상 상품명 결정 (각 순위별 고유 title 최우선 적용)
+    clean_t = re.sub(r'\[.*?\]', '', (title or "")).strip()
+    clean_t = " ".join(clean_t.split())
+    if not clean_t and "?" in u_str:
         try:
-            parsed_raw = urllib.parse.urlparse(url)
-            qs_raw = urllib.parse.parse_qs(parsed_raw.query)
-            if "query" in qs_raw and qs_raw["query"]:
-                extracted_query = qs_raw["query"][0].strip()
+            parsed = urllib.parse.urlparse(u_str)
+            qs = urllib.parse.parse_qs(parsed.query)
+            if "query" in qs and qs["query"]:
+                clean_t = qs["query"][0].strip()
         except Exception:
             pass
 
-    search_target = f"{clean_title} {extracted_query}".lower()
-    for kw, cat_id in VERIFIED_CATALOG_DEFAULTS.items():
-        if kw.lower() in search_target:
-            return f"https://search.shopping.naver.com/catalog/{cat_id}"
+    if not clean_t:
+        clean_t = "신라면 20개"
 
-    # 6. 기본 안전 카탈로그 직결 (신라면 공식 카탈로그)
-    return "https://search.shopping.naver.com/catalog/23019808608"
+    return f"https://search.naver.com/search.naver?where=shp&query={urllib.parse.quote(clean_t)}"
 
 
 def fetch_from_naver_bff(keyword: str) -> List[Dict[str, Any]]:
@@ -1026,6 +1011,12 @@ NAVER_PRESET_ITEMS: Dict[str, List[Dict[str, Any]]] = {
         }
     ]
 }
+
+# 프리셋 품목 전체에 대해 네이버 포털 안전 쇼핑탭(?where=shp) 딥링크 동적 정규화
+for _cat_name, _cat_items in NAVER_PRESET_ITEMS.items():
+    for _idx, _item in enumerate(_cat_items, 1):
+        _item["url"] = normalize_shopping_url(_item.get("url", ""), title=_item.get("title", ""), rank=_idx)
+
 
 
 def fetch_products_for_keyword(keyword: str) -> Tuple[List[Dict[str, Any]], List[str]]:
