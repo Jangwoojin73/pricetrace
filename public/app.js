@@ -76,59 +76,79 @@ function extractCleanMallName(mallStr) {
   return m;
 }
 
-// 네이버 쇼핑 공식 카탈로그 ID 매핑 (광고 0% 및 최상단 최저가 영구 고정)
+// 네이버 쇼핑 공식 가격비교 카탈로그 ID 매핑 (스폰서 광고 0% 완전 배제 및 최상단 최저가 고정)
 const VERIFIED_CATALOG_DEFAULTS = {
-  "신라면": "23019808608",
-  "햇반": "23640030588",
-  "오뚜기밥": "24505370535",
+  "오뚜기밥 오곡": "51929172895",
+  "오뚜기밥 발아현미": "51929469998",
+  "오뚜기밥": "51929535738",
+  "신라면": "53018889018",
+  "햇반 흑미": "51929034288",
+  "햇반 발아현미": "89501897469",
+  "햇반": "55379805802",
   "진라면": "53000554643",
   "안성탕면": "52999538087",
-  "코카콜라": "39564882619",
+  "코카콜라": "53880193888",
   "사이다": "53733319502",
   "칠성사이다": "53733319502",
+  "삼다수 12": "82892881441",
   "삼다수": "82876074943",
+  "스팸 25": "53736015632",
   "스팸": "53787429685",
   "맥심": "59845338200",
+  "다우니 미스티크": "58403363432",
   "다우니": "53544719855",
+  "페브리즈 다우니": "53666075951",
   "페브리즈": "60465138611",
   "참치": "82650749969",
   "동원참치": "82650749969",
+  "크리넥스 울트라": "53549708834",
   "크리넥스": "85169383126",
   "휴지": "85169383126",
+  "커클랜드 프리미엄": "82357174887",
   "커클랜드": "53549213469",
+  "물티슈 블루": "51929477954",
   "물티슈": "51929236553",
   "퍼실": "53538466635"
 };
 
-// URL 정규화 헬퍼 (네이버 포털 공식 쇼핑 탭 ?where=shp 안전 직결 보장)
-// - 외부 비로그인 접속 시 WAF 차단(접속 제한) 및 네이버 로그인(nidlogin) 벽 100% 우회
-// - 판매자 상품 번호 만료/삭제로 인한 '상품이 존재하지 않습니다' 오류 원천 차단
-// - 각 순위별 고유 상품명으로 정확하게 검색하여 최상단에 일치하는 품목과 가격이 표시되도록 보장
+// URL 정규화 헬퍼 (네이버 공식 가격비교 카탈로그 /catalog/{id} 직결 보장)
+// - 스폰서 검색 광고(AD)를 0% 완전 배제하여, 최상단에 실제 최저가와 상품명이 고정 노출됩니다.
+// - 쇼핑몰별 가격비교 리스트와 구매 페이지로 즉시 연결됩니다.
 function normalizeProductUrl(url, title = "", price = 0, rank = 1, mallName = "") {
   let trimmed = String(url || "").trim();
 
-  // 1. 이미 네이버 포털 안전 쇼핑탭(?where=shp) URL인 경우 그대로 유지
-  if (trimmed.includes("search.naver.com") && trimmed.includes("where=shp")) {
+  // 1. 이미 네이버 공식 카탈로그 링크인 경우 직결 유지
+  if (trimmed.includes("/catalog/")) {
     return trimmed;
   }
 
-  // 2. 검색 대상 상품명 결정 (각 순위별 고유 title 최우선 적용)
-  let targetQuery = cleanSearchKeyword(title || "").trim();
-  if (!targetQuery && trimmed.includes("?")) {
+  // 2. URL 내 nv_mid 추출하여 카탈로그 직결
+  const nvMidMatch = trimmed.match(/nv_mid=(\d+)/i) || trimmed.match(/nvMid=(\d+)/i);
+  if (nvMidMatch && nvMidMatch[1]) {
+    return `https://search.shopping.naver.com/catalog/${nvMidMatch[1]}`;
+  }
+
+  // 3. 상품명 및 검색어 기반 공식 카탈로그 매핑 (스폰서 광고 0% 배제)
+  let extractedQuery = "";
+  if (trimmed.includes("?")) {
     try {
       const u = new URL(trimmed);
-      targetQuery = cleanSearchKeyword(u.searchParams.get("query") || "");
+      extractedQuery = u.searchParams.get("query") || "";
     } catch (e) {}
   }
 
-  // 3. 미지 상품 기본값
-  if (!targetQuery) {
-    targetQuery = "신라면 20개";
+  const searchTarget = `${cleanSearchKeyword(title)} ${cleanSearchKeyword(extractedQuery)}`.toLowerCase();
+  for (const [kw, catId] of Object.entries(VERIFIED_CATALOG_DEFAULTS)) {
+    if (searchTarget.includes(kw.toLowerCase())) {
+      return `https://search.shopping.naver.com/catalog/${catId}`;
+    }
   }
 
-  // 4. 네이버 포털 공식 쇼핑탭(?where=shp&query=...)으로 안전 직결
-  return `https://search.naver.com/search.naver?where=shp&query=${encodeURIComponent(targetQuery)}`;
+  // 4. 미지 품목인 경우 네이버 쇼핑 전용 가격비교 직결
+  let targetQuery = cleanSearchKeyword(title || extractedQuery || "신라면 20개").trim();
+  return `https://search.shopping.naver.com/search/all?query=${encodeURIComponent(targetQuery)}&frm=NVSCPRO`;
 }
+
 
 
 // 1. 국민 필수 생필품 풀 (고정 16대 대표 품목)

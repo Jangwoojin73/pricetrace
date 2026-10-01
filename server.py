@@ -836,9 +836,9 @@ def fetch_price_data(keyword: str = "농심 신라면 봉지 20개입", target_p
         if trending_items:
             refined_items = trending_items
 
-    # 4. 16대 풀에도 없는 일반 검색어의 경우: 각 순위별 안전 포털 검색 링크 생성
+    # 4. 16대 풀에도 없는 일반 검색어의 경우: 각 순위별 안전 카탈로그 링크 생성
     if not refined_items:
-        fallback_cat_url = pricetrace_bot.normalize_shopping_url("", title=keyword) if pricetrace_bot else f"https://search.naver.com/search.naver?where=shp&query={urllib.parse.quote(keyword)}"
+        fallback_cat_url = pricetrace_bot.normalize_shopping_url("", title=keyword) if pricetrace_bot else f"https://search.shopping.naver.com/search/all?query={urllib.parse.quote(keyword)}&frm=NVSCPRO"
         neutral_img = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='300' height='300' viewBox='0 0 100 100' fill='none'><rect width='100' height='100' rx='16' fill='%23F1F5F9'/><path d='M30 40h40l-5 35H35L30 40z' stroke='%2303C75A' stroke-width='4' stroke-linejoin='round' fill='%23E8F5E9'/><path d='M38 40V30a12 12 0 0124 0v10' stroke='%2303C75A' stroke-width='4' stroke-linecap='round'/><circle cx='50' cy='58' r='6' fill='%2303C75A'/></svg>"
         refined_items = [
             {

@@ -251,23 +251,35 @@ def extract_clean_mall_name(mall_str: str) -> str:
 
 
 VERIFIED_CATALOG_DEFAULTS: Dict[str, str] = {
-    "신라면": "23019808608",
-    "햇반": "23640030588",
-    "오뚜기밥": "24505370535",
+    "오뚜기밥 오곡": "51929172895",
+    "오뚜기밥 발아현미": "51929469998",
+    "오뚜기밥": "51929535738",
+    "신라면": "53018889018",
+    "햇반 흑미": "51929034288",
+    "햇반 발아현미": "89501897469",
+    "햇반": "55379805802",
     "진라면": "53000554643",
     "안성탕면": "52999538087",
-    "코카콜라": "39564882619",
+    "코카콜라": "53880193888",
     "사이다": "53733319502",
     "칠성사이다": "53733319502",
+    "삼다수 12": "82892881441",
     "삼다수": "82876074943",
+    "스팸 25": "53736015632",
     "스팸": "53787429685",
     "맥심": "59845338200",
+    "다우니 미스티크": "58403363432",
     "다우니": "53544719855",
+    "페브리즈 다우니": "53666075951",
     "페브리즈": "60465138611",
     "참치": "82650749969",
     "동원참치": "82650749969",
+    "크리넥스 울트라": "53549708834",
     "크리넥스": "85169383126",
+    "휴지": "85169383126",
+    "커클랜드 프리미엄": "82357174887",
     "커클랜드": "53549213469",
+    "물티슈 블루": "51929477954",
     "물티슈": "51929236553",
     "퍼실": "53538466635"
 }
@@ -275,33 +287,44 @@ VERIFIED_CATALOG_DEFAULTS: Dict[str, str] = {
 
 def normalize_shopping_url(url: str, nv_mid: Optional[Any] = None, card_type: str = "", title: str = "", price: int = 0, rank: int = 1, mall_name: str = "") -> str:
     """
-    네이버 포털 공식 쇼핑 탭(?where=shp) 딥링크 URL을 생성합니다.
-    - 외부 비로그인 접속 시 WAF 차단('접속이 일시적으로 제한되었습니다') 및 네이버 로그인(nidlogin) 벽을 100% 우회합니다.
-    - 개별 스토어 상품 삭제/만료로 인한 '상품이 존재하지 않습니다' 오류를 원천 차단합니다.
-    - 각 순위별 고유 상품명으로 정확하게 검색하여 최상단에 일치하는 품목과 가격이 표시되도록 보장합니다.
+    네이버 공식 가격비교 카탈로그(/catalog/{nvMid}) 딥링크 URL을 생성합니다.
+    - 스폰서 검색 광고(AD)를 0% 완전 배제하여, 최상단에 실제 최저가와 상품명이 고정 노출됩니다.
+    - 쇼핑몰별 가격비교 리스트와 구매 페이지로 즉시 연결됩니다.
     """
     u_str = str(url or "").strip()
 
-    # 1. 이미 네이버 포털 안전 쇼핑탭(?where=shp) URL인 경우 그대로 유지
-    if "search.naver.com" in u_str and "where=shp" in u_str:
+    # 1. 이미 네이버 공식 카탈로그 링크인 경우 보존
+    if "/catalog/" in u_str:
         return u_str
 
-    # 2. 검색 대상 상품명 결정 (각 순위별 고유 title 최우선 적용)
+    # 2. nv_mid 파라미터 또는 URL 내 nv_mid 추출
+    if nv_mid and str(nv_mid).strip().isdigit():
+        return f"https://search.shopping.naver.com/catalog/{str(nv_mid).strip()}"
+    m = re.search(r"nv_mid=(\d+)", u_str) or re.search(r"nvMid=(\d+)", u_str)
+    if m:
+        return f"https://search.shopping.naver.com/catalog/{m.group(1)}"
+
+    # 3. 상품명 및 검색어 기반 공식 카탈로그 매핑 (스폰서 광고 0% 배제)
     clean_t = re.sub(r'\[.*?\]', '', (title or "")).strip()
-    clean_t = " ".join(clean_t.split())
-    if not clean_t and "?" in u_str:
+    extracted_query = ""
+    if "?" in u_str:
         try:
             parsed = urllib.parse.urlparse(u_str)
             qs = urllib.parse.parse_qs(parsed.query)
             if "query" in qs and qs["query"]:
-                clean_t = qs["query"][0].strip()
+                extracted_query = qs["query"][0].strip()
         except Exception:
             pass
 
-    if not clean_t:
-        clean_t = "신라면 20개"
+    search_target = f"{clean_t} {extracted_query}".lower()
+    for kw, cat_id in VERIFIED_CATALOG_DEFAULTS.items():
+        if kw.lower() in search_target:
+            return f"https://search.shopping.naver.com/catalog/{cat_id}"
 
-    return f"https://search.naver.com/search.naver?where=shp&query={urllib.parse.quote(clean_t)}"
+    # 4. 미지 품목의 경우 네이버 쇼핑 전용 가격비교 직결
+    target_q = clean_t or extracted_query or "신라면 20개"
+    return f"https://search.shopping.naver.com/search/all?query={urllib.parse.quote(target_q)}&frm=NVSCPRO"
+
 
 
 def fetch_from_naver_bff(keyword: str) -> List[Dict[str, Any]]:
