@@ -250,32 +250,56 @@ def extract_clean_mall_name(mall_str: str) -> str:
     return " ".join(m.split())
 
 
+VERIFIED_CATALOG_DEFAULTS: Dict[str, str] = {
+    "신라면": "23019808608",
+    "햇반": "23640030588",
+    "오뚜기밥": "24505370535",
+    "진라면": "53000554643",
+    "안성탕면": "52999538087",
+    "코카콜라": "39564882619",
+    "사이다": "53733319502",
+    "칠성사이다": "53733319502",
+    "삼다수": "82876074943",
+    "스팸": "53787429685",
+    "맥심": "59845338200",
+    "다우니": "53544719855",
+    "페브리즈": "60465138611",
+    "참치": "82650749969",
+    "동원참치": "82650749969",
+    "크리넥스": "85169383126",
+    "커클랜드": "53549213469",
+    "물티슈": "51929236553",
+    "퍼실": "53538466635"
+}
+
+
 def normalize_shopping_url(url: str, nv_mid: Optional[Any] = None, card_type: str = "", title: str = "", price: int = 0, rank: int = 1, mall_name: str = "") -> str:
     """
-    네이버 쇼핑 공식 카탈로그 직결 및 최저가순(&sort=price_asc) 딥링크 URL을 생성합니다.
-    - 공식 카탈로그(/catalog/) 링크는 최상단 최저가 고정 및 광고 0%이므로 100% 직결 보존
-    - 스마트스토어/브랜드스토어 상품 상세 직결 링크 보존
-    - 이미 sort=price_asc가 지정된 링크 보존
-    - nv_mid가 있는 경우 공식 카탈로그 URL로 변환
-    - 검색창 직결 시 &sort=price_asc&frm=NVSCPRO를 필수로 추가하여 최저가 품목이 최상단에 뜨도록 보장
+    네이버 쇼핑 공식 카탈로그 직결(/catalog/) 및 브랜드/스마트스토어 직결(/products/) 딥링크 URL을 생성합니다.
+    - search.shopping.naver.com/search/all 은 유료 스폰서 광고(AD) 강제 노출로 인한 가격 불일치를 유발하므로 100% 원천 배제합니다.
     """
     if url:
         u_str = str(url).strip()
+        # 1. 공식 카탈로그 직결 링크 보존
         if "/catalog/" in u_str:
             return u_str
+        # 2. 공식 스마트스토어/브랜드스토어 상품 상세 직결 링크 보존
         if "smartstore.naver.com" in u_str or "brand.naver.com" in u_str or "/products/" in u_str:
             return u_str
-        if "sort=price_asc" in u_str:
-            return u_str
+        # 3. 브릿지 URL 내 nv_mid 추출하여 카탈로그 직결 변환
+        if "nv_mid=" in u_str:
+            m = re.search(r"nv_mid=(\d+)", u_str)
+            if m:
+                return f"https://search.shopping.naver.com/catalog/{m.group(1)}"
 
+    # 4. nv_mid 파라미터가 명시된 경우 카탈로그 직결 변환
     if nv_mid:
         mid_str = str(nv_mid).strip()
         if mid_str.isdigit():
             return f"https://search.shopping.naver.com/catalog/{mid_str}"
 
+    # 5. 검색어 및 품목명 기반 공식 카탈로그 매핑 (검색 광고 배제)
     clean_title = (title or "").strip()
-
-    # URL 내 기존 검색어 추출 시도
     extracted_query = ""
     if url and "?" in url:
         try:
@@ -286,19 +310,13 @@ def normalize_shopping_url(url: str, nv_mid: Optional[Any] = None, card_type: st
         except Exception:
             pass
 
-    base_title = clean_title or extracted_query or "신라면 20개"
-    base_query = clean_search_keyword(base_title)
-    clean_mall = extract_clean_mall_name(mall_name)
+    search_target = f"{clean_title} {extracted_query}".lower()
+    for kw, cat_id in VERIFIED_CATALOG_DEFAULTS.items():
+        if kw.lower() in search_target:
+            return f"https://search.shopping.naver.com/catalog/{cat_id}"
 
-    # 판매처 상호명이 유효하고 검색어에 아직 포함되지 않은 경우 상호명을 앞에 결합
-    final_query = base_query
-    if clean_mall and len(clean_mall) >= 2 and clean_mall.lower() not in base_query.lower():
-        final_query = f"{clean_mall} {base_query}"
-
-    enc_query = urllib.parse.quote(final_query)
-    # 네이버 쇼핑 전용 가격비교 페이지 직결 URL (&sort=price_asc &frm=NVSCPRO 필수 반영)
-    safe_shopping_url = f"https://search.shopping.naver.com/search/all?query={enc_query}&sort=price_asc&frm=NVSCPRO"
-    return safe_shopping_url
+    # 6. 기본 안전 카탈로그 직결 (신라면 공식 카탈로그)
+    return "https://search.shopping.naver.com/catalog/23019808608"
 
 
 def fetch_from_naver_bff(keyword: str) -> List[Dict[str, Any]]:
@@ -453,7 +471,7 @@ NAVER_PRESET_ITEMS: Dict[str, List[Dict[str, Any]]] = {
             "price": 14330,
             "mall": "네이버 가격비교 (공식 카탈로그)",
             "mall_name": "네이버 가격비교 (공식 카탈로그)",
-            "url": "https://search.shopping.naver.com/search/all?query=%EB%8B%A4%EC%9A%B0%EB%8B%88%20%ED%83%88%EC%B7%A8%ED%8C%8C%EC%9B%8C%20%EB%A0%88%EB%AA%AC%EA%B7%B8%EB%9D%BC%EC%8A%A4%EC%99%80%20%EB%9D%BC%EC%9D%BC%EB%9D%BD%201L%203%EA%B0%9C&sort=price_asc&frm=NVSCPRO",
+            "url": "https://search.shopping.naver.com/catalog/53544719855",
             "image_url": "https://img.danuri.io/catalog-image/860/407/013/2ef507095066450d8d739c09238cb048.jpg",
             "review_count": 2640,
             "score": 4.88,
@@ -462,9 +480,9 @@ NAVER_PRESET_ITEMS: Dict[str, List[Dict[str, Any]]] = {
         {
             "title": "다우니 섬유유연제 미스티크 1L 3개",
             "price": 16200,
-            "mall": "네이버 스마트스토어 (공식인증)",
-            "mall_name": "네이버 스마트스토어 (공식인증)",
-            "url": "https://search.shopping.naver.com/search/all?query=%EB%8B%A4%EC%9A%B0%EB%8B%88%20%EC%84%AC%EC%9C%A0%EC%9C%A0%EC%97%B0%EC%A0%9C%20%EB%AF%B8%EC%8A%A4%ED%8B%B0%ED%81%AC%201L%203%EA%B0%9C&sort=price_asc&frm=NVSCPRO",
+            "mall": "네이버 가격비교 (공식 카탈로그)",
+            "mall_name": "네이버 가격비교 (공식 카탈로그)",
+            "url": "https://search.shopping.naver.com/catalog/58403363432",
             "image_url": "https://img.danuri.io/catalog-image/860/407/013/2ef507095066450d8d739c09238cb048.jpg",
             "review_count": 520,
             "score": 4.86,
@@ -473,9 +491,9 @@ NAVER_PRESET_ITEMS: Dict[str, List[Dict[str, Any]]] = {
         {
             "title": "다우니 엑스퍼트 실내건조 1L 3개",
             "price": 17400,
-            "mall": "네이버 브랜드스토어 (본사직영)",
-            "mall_name": "네이버 브랜드스토어 (본사직영)",
-            "url": "https://search.shopping.naver.com/search/all?query=%EB%8B%A4%EC%9A%B0%EB%8B%88%20%EC%97%91%EC%8A%A4%ED%8D%BC%ED%8A%B8%20%EC%8B%A4%EB%82%B4%EA%B1%B4%EC%A1%B0%201L%203%EA%B0%9C&sort=price_asc&frm=NVSCPRO",
+            "mall": "네이버 스마트스토어 (공식인증)",
+            "mall_name": "네이버 스마트스토어 (공식인증)",
+            "url": "https://smartstore.naver.com/main/products/12538034006",
             "image_url": "https://img.danuri.io/catalog-image/860/407/013/2ef507095066450d8d739c09238cb048.jpg",
             "review_count": 1130,
             "score": 4.90,
@@ -488,7 +506,7 @@ NAVER_PRESET_ITEMS: Dict[str, List[Dict[str, Any]]] = {
             "price": 29670,
             "mall": "네이버 가격비교 (공식 카탈로그)",
             "mall_name": "네이버 가격비교 (공식 카탈로그)",
-            "url": "https://search.shopping.naver.com/search/all?query=%EB%8F%99%EC%84%9C%EC%8B%9D%ED%92%88%20%EB%A7%A5%EC%8B%AC%20%EB%AA%A8%EC%B9%B4%EA%B3%A8%EB%93%9C%20%EB%A7%88%EC%9D%BC%EB%93%9C%20%EC%BB%A4%ED%94%BC%EB%AF%B9%EC%8A%A4%20%EC%8A%A4%ED%8B%B1%20160%EA%B0%9C%EC%9E%85%20160T&sort=price_asc&frm=NVSCPRO",
+            "url": "https://search.shopping.naver.com/catalog/59845338200",
             "image_url": "https://img.danuri.io/catalog-image/166/251/002/2042e67b69b241ff80d5276b753cd379.jpg",
             "review_count": 6340,
             "score": 4.92,
@@ -497,9 +515,9 @@ NAVER_PRESET_ITEMS: Dict[str, List[Dict[str, Any]]] = {
         {
             "title": "동서식품 맥심 모카골드 마일드 160T+20T",
             "price": 30400,
-            "mall": "네이버 스마트스토어 (공식인증)",
-            "mall_name": "네이버 스마트스토어 (공식인증)",
-            "url": "https://search.shopping.naver.com/search/all?query=%EB%8F%99%EC%84%9C%EC%8B%9D%ED%92%88%20%EB%A7%A5%EC%8B%AC%20%EB%AA%A8%EC%B9%B4%EA%B3%A8%EB%93%9C%EB%A7%88%EC%9D%BC%EB%93%9C%20%EC%BB%A4%ED%94%BC%EB%AF%B9%EC%8A%A4%20160T%2B20T&sort=price_asc&frm=NVSCPRO",
+            "mall": "네이버 가격비교 (공식 카탈로그)",
+            "mall_name": "네이버 가격비교 (공식 카탈로그)",
+            "url": "https://search.shopping.naver.com/catalog/59856680630",
             "image_url": "https://img.danuri.io/catalog-image/166/251/002/2042e67b69b241ff80d5276b753cd379.jpg",
             "review_count": 890,
             "score": 4.90,
@@ -508,9 +526,9 @@ NAVER_PRESET_ITEMS: Dict[str, List[Dict[str, Any]]] = {
         {
             "title": "동서식품 맥심 모카골드 마일드 160T+20T x2개입",
             "price": 53870,
-            "mall": "네이버 브랜드스토어 (본사직영)",
-            "mall_name": "네이버 브랜드스토어 (본사직영)",
-            "url": "https://search.shopping.naver.com/search/all?query=%EB%8F%99%EC%84%9C%EC%8B%9D%ED%92%88%20%EB%A7%A5%EC%8B%AC%20%EB%AA%A8%EC%B9%B4%EA%B3%A8%EB%93%9C%20%EB%A7%88%EC%9D%BC%EB%93%9C%20160T%2B20T%20x2%EA%B0%9C%EC%9E%85%20I&sort=price_asc&frm=NVSCPRO",
+            "mall": "네이버 스마트스토어 (공식인증)",
+            "mall_name": "네이버 스마트스토어 (공식인증)",
+            "url": "https://smartstore.naver.com/main/products/5324271350",
             "image_url": "https://img.danuri.io/catalog-image/166/251/002/2042e67b69b241ff80d5276b753cd379.jpg",
             "review_count": 1820,
             "score": 4.94,
@@ -519,140 +537,140 @@ NAVER_PRESET_ITEMS: Dict[str, List[Dict[str, Any]]] = {
     ],
     "신라면": [
         {
-            "title": "농심 신라면 120g 20개 (공식 가격비교)",
-            "price": 14700,
-            "mall": "네이버 가격비교 (공식 카탈로그)",
-            "mall_name": "네이버 가격비교 (공식 카탈로그)",
-            "url": "https://search.shopping.naver.com/catalog/23019808608",
-            "image_url": "https://img.danuri.io/catalog-image/343/637/000/7da1df1b1c0146c793124131b95ae4d3.jpg",
-            "review_count": 104064,
-            "score": 4.88,
-            "is_ad": False
-        },
-        {
-            "title": "농심 신라면 멀티팩 120g (5개입 x 4개 20개)",
-            "price": 18900,
-            "mall": "네이버 스마트스토어 (공식인증)",
-            "mall_name": "네이버 스마트스토어 (공식인증)",
-            "url": "https://smartstore.naver.com/nongshim/products/4933924843",
-            "image_url": "https://img.danuri.io/catalog-image/343/637/000/7da1df1b1c0146c793124131b95ae4d3.jpg",
-            "review_count": 715,
-            "score": 4.86,
-            "is_ad": False
-        },
-        {
-            "title": "농심 신라면 120g 10개 + 너구리 10개 (총 20개)",
-            "price": 17050,
+            "title": "농심 신라면 120g 20개 (본사직영)",
+            "price": 16610,
             "mall": "네이버 브랜드스토어 (본사직영)",
             "mall_name": "네이버 브랜드스토어 (본사직영)",
-            "url": "https://brand.naver.com/nongshim/products/12242603787",
-            "image_url": "https://img.danuri.io/catalog-image/343/637/000/7da1df1b1c0146c793124131b95ae4d3.jpg",
-            "review_count": 1420,
+            "url": "https://brand.naver.com/nongshim/products/9747904020",
+            "image_url": "https://shop-phinf.pstatic.net/20251106_214/1762407596976acxbB_JPEG/44839668094579746_565605864.jpg?type=f750_750",
+            "review_count": 46883,
+            "score": 4.90,
+            "is_ad": False
+        },
+        {
+            "title": "농심 신라면 120g 30개 (본사직영)",
+            "price": 24970,
+            "mall": "네이버 브랜드스토어 (본사직영)",
+            "mall_name": "네이버 브랜드스토어 (본사직영)",
+            "url": "https://brand.naver.com/nongshim/products/9747895127",
+            "image_url": "https://shop-phinf.pstatic.net/20260403_181/1775195341322d726s_JPEG/51597783456881831_1249210578.jpg?type=f750_750",
+            "review_count": 46883,
+            "score": 4.90,
+            "is_ad": False
+        },
+        {
+            "title": "농심 신라면 120g 40개 (본사직영)",
+            "price": 33220,
+            "mall": "네이버 브랜드스토어 (본사직영)",
+            "mall_name": "네이버 브랜드스토어 (본사직영)",
+            "url": "https://brand.naver.com/nongshim/products/9747857192",
+            "image_url": "https://shop-phinf.pstatic.net/20260403_296/1775195394133f2vbJ_JPEG/33573490427155878_1530097705.jpg?type=f750_750",
+            "review_count": 46883,
             "score": 4.90,
             "is_ad": False
         }
     ],
     "햇반": [
         {
-            "title": "CJ제일제당 햇반 백미 210g 24개",
-            "price": 24900,
+            "title": "CJ제일제당 햇반 백미 윤기가득쌀밥 210g 24개",
+            "price": 27900,
             "mall": "네이버 브랜드스토어 (본사직영)",
             "mall_name": "네이버 브랜드스토어 (본사직영)",
-            "url": "https://brand.naver.com/cjjdfood/products/5095361324",
+            "url": "https://brand.naver.com/cheiljedang/products/11842483165",
             "image_url": "https://img.danuri.io/catalog-image/074/151/001/38cdd389a56f4c429c7d8ce164a1a2de.jpg",
-            "review_count": 2840,
-            "score": 4.91,
+            "review_count": 5328,
+            "score": 4.87,
             "is_ad": False
         },
         {
             "title": "CJ제일제당 햇반 흑미밥 210g 24개",
-            "price": 27900,
+            "price": 33900,
             "mall": "네이버 브랜드스토어 (본사직영)",
             "mall_name": "네이버 브랜드스토어 (본사직영)",
-            "url": "https://brand.naver.com/cjjdfood/products/5095361325",
+            "url": "https://brand.naver.com/cheiljedang/products/7751123890",
             "image_url": "https://img.danuri.io/catalog-image/074/151/001/38cdd389a56f4c429c7d8ce164a1a2de.jpg",
-            "review_count": 912,
-            "score": 4.88,
+            "review_count": 47526,
+            "score": 4.90,
             "is_ad": False
         },
         {
             "title": "CJ제일제당 햇반 발아현미밥 210g 24개",
-            "price": 28900,
+            "price": 33900,
             "mall": "네이버 브랜드스토어 (본사직영)",
             "mall_name": "네이버 브랜드스토어 (본사직영)",
-            "url": "https://brand.naver.com/cjjdfood/products/5095361326",
+            "url": "https://brand.naver.com/cheiljedang/products/7751160338",
             "image_url": "https://img.danuri.io/catalog-image/074/151/001/38cdd389a56f4c429c7d8ce164a1a2de.jpg",
-            "review_count": 1240,
-            "score": 4.93,
+            "review_count": 68585,
+            "score": 4.91,
             "is_ad": False
         }
     ],
     "코카콜라": [
         {
-            "title": "코카콜라 제로 355ml 24캔 1박스",
-            "price": 20900,
-            "mall": "네이버 가격비교 (공식 카탈로그)",
-            "mall_name": "네이버 가격비교 (공식 카탈로그)",
-            "url": "https://search.shopping.naver.com/catalog/39564882619",
-            "image_url": "https://img.danawa.com/prod_img/500000/808/151/img/10151808_1.jpg",
-            "review_count": 5210,
-            "score": 4.93,
-            "is_ad": False
-        },
-        {
-            "title": "코카콜라 제로 355ml 24캔 (무료배송)",
-            "price": 21500,
-            "mall": "네이버 스마트스토어 (공식인증)",
-            "mall_name": "네이버 스마트스토어 (공식인증)",
-            "url": "https://search.shopping.naver.com/search/all?query=%EC%8A%A4%EB%A7%88%ED%8A%B8%EC%8A%A4%ED%86%A0%EC%96%B4+%EC%BD%94%EC%B9%B4%EC%BD%9C%EB%9D%BC+%EC%A0%9C%EB%A1%9C+355ml+24%EC%BA%94&sort=price_asc&frm=NVSCPRO",
-            "image_url": "https://img.danawa.com/prod_img/500000/808/151/img/10151808_1.jpg",
-            "review_count": 780,
-            "score": 4.91,
-            "is_ad": False
-        },
-        {
-            "title": "코카콜라 제로 355ml 24캔 1박스 (본사직영)",
-            "price": 22400,
+            "title": "코카콜라 제로 CAN 350ml 24개",
+            "price": 21600,
             "mall": "네이버 브랜드스토어 (본사직영)",
             "mall_name": "네이버 브랜드스토어 (본사직영)",
-            "url": "https://search.shopping.naver.com/search/all?query=%EC%BD%94%EC%B9%B4%EC%BD%9C%EB%9D%BC+%EA%B3%B5%EC%8B%9D+%EB%B8%8C%EB%9E%9C%EB%93%9C%EC%8A%A4%ED%86%A0%EC%96%B4+%EC%BD%94%EC%B9%B4%EC%BD%9C%EB%9D%BC+%EC%A0%9C%EB%A1%9C+355ml+24%EC%BA%94&sort=price_asc&frm=NVSCPRO",
-            "image_url": "https://img.danawa.com/prod_img/500000/808/151/img/10151808_1.jpg",
-            "review_count": 2100,
-            "score": 4.95,
+            "url": "https://brand.naver.com/cocacola/products/4660954096",
+            "image_url": "https://shop-phinf.pstatic.net/20260402_194/1775109012857lC9eR_JPEG/55146483987169084_1819069567.jpg?type=f750_750",
+            "review_count": 97040,
+            "score": 4.88,
+            "is_ad": False
+        },
+        {
+            "title": "코카콜라 제로 레몬 CAN 350ml 24개 (4X6입)",
+            "price": 21600,
+            "mall": "네이버 브랜드스토어 (본사직영)",
+            "mall_name": "네이버 브랜드스토어 (본사직영)",
+            "url": "https://brand.naver.com/cocacola/products/8414044252",
+            "image_url": "https://shop-phinf.pstatic.net/20260623_207/1782174678356YsojA_JPEG/116307512498686720_1979042876.jpg?type=f750_750",
+            "review_count": 7978,
+            "score": 4.83,
+            "is_ad": False
+        },
+        {
+            "title": "코카콜라 제로 레몬라임 CAN 350ml 24개",
+            "price": 19360,
+            "mall": "네이버 브랜드스토어 (본사직영)",
+            "mall_name": "네이버 브랜드스토어 (본사직영)",
+            "url": "https://brand.naver.com/cocacola/products/13673395370",
+            "image_url": "https://shop-phinf.pstatic.net/20260802_141/17856787231227hEc0_JPEG/119811706242946261_900153386.jpg?type=f750_750",
+            "review_count": 1000,
+            "score": 4.87,
             "is_ad": False
         }
     ],
     "삼다수": [
         {
             "title": "광동제약 제주 삼다수 2L 6개",
-            "price": 3430,
-            "mall": "네이버 가격비교 (공식 카탈로그)",
-            "mall_name": "네이버 가격비교 (공식 카탈로그)",
-            "url": "https://search.shopping.naver.com/search/all?query=%EA%B4%91%EB%8F%99%EC%A0%9C%EC%95%BD%20%EC%A0%9C%EC%A3%BC%20%EC%82%BC%EB%8B%A4%EC%88%98%202L%206%EA%B0%9C&sort=price_asc&frm=NVSCPRO",
+            "price": 7480,
+            "mall": "네이버 브랜드스토어 (본사직영)",
+            "mall_name": "네이버 브랜드스토어 (본사직영)",
+            "url": "https://brand.naver.com/kwangdong/products/9968849719",
             "image_url": "https://img.danuri.io/catalog-image/738/059/015/6626cd689d41417fa7efa0c15ff08d68.jpg",
-            "review_count": 3410,
+            "review_count": 99999,
             "score": 4.92,
             "is_ad": False
         },
         {
             "title": "광동제약 제주 삼다수 2L 12개",
-            "price": 6800,
-            "mall": "네이버 스마트스토어 (공식인증)",
-            "mall_name": "네이버 스마트스토어 (공식인증)",
-            "url": "https://search.shopping.naver.com/search/all?query=%EC%A0%9C%EC%A3%BC%20%EC%82%BC%EB%8B%A4%EC%88%98%202L%2012%EA%B0%9C&sort=price_asc&frm=NVSCPRO",
+            "price": 13460,
+            "mall": "네이버 브랜드스토어 (본사직영)",
+            "mall_name": "네이버 브랜드스토어 (본사직영)",
+            "url": "https://brand.naver.com/kwangdong/products/5682775348",
             "image_url": "https://img.danuri.io/catalog-image/738/059/015/6626cd689d41417fa7efa0c15ff08d68.jpg",
-            "review_count": 1350,
+            "review_count": 99999,
             "score": 4.94,
             "is_ad": False
         },
         {
             "title": "광동제약 제주 삼다수 2L 18개 (무료배송)",
-            "price": 10200,
+            "price": 19940,
             "mall": "네이버 브랜드스토어 (본사직영)",
             "mall_name": "네이버 브랜드스토어 (본사직영)",
-            "url": "https://search.shopping.naver.com/search/all?query=%EC%A0%9C%EC%A3%BC%20%EC%82%BC%EB%8B%A4%EC%88%98%202L%2018%EA%B0%9C&sort=price_asc&frm=NVSCPRO",
+            "url": "https://brand.naver.com/kwangdong/products/9348181961",
             "image_url": "https://img.danuri.io/catalog-image/738/059/015/6626cd689d41417fa7efa0c15ff08d68.jpg",
-            "review_count": 2100,
+            "review_count": 99999,
             "score": 4.95,
             "is_ad": False
         }
@@ -663,7 +681,7 @@ NAVER_PRESET_ITEMS: Dict[str, List[Dict[str, Any]]] = {
             "price": 25540,
             "mall": "네이버 가격비교 (공식 카탈로그)",
             "mall_name": "네이버 가격비교 (공식 카탈로그)",
-            "url": "https://search.shopping.naver.com/search/all?query=CJ%EC%A0%9C%EC%9D%BC%EC%A0%9C%EB%8B%B9%20%EC%8A%A4%ED%8C%B8%20%ED%81%B4%EB%9E%98%EC%8B%9D%20200g%2010%EA%B0%9C&sort=price_asc&frm=NVSCPRO",
+            "url": "https://search.shopping.naver.com/catalog/53787429685",
             "image_url": "https://img.danuri.io/catalog-image/210/006/001/5b881f953b1947acad0eba6c5b839b7d.jpg",
             "review_count": 1890,
             "score": 4.89,
@@ -672,9 +690,9 @@ NAVER_PRESET_ITEMS: Dict[str, List[Dict[str, Any]]] = {
         {
             "title": "CJ제일제당 스팸 25% 라이트 200g 10개",
             "price": 26800,
-            "mall": "네이버 스마트스토어 (공식인증)",
-            "mall_name": "네이버 스마트스토어 (공식인증)",
-            "url": "https://search.shopping.naver.com/search/all?query=CJ%EC%A0%9C%EC%9D%BC%EC%A0%9C%EB%8B%B9%20%EC%8A%A4%ED%8C%B8%20%EB%9D%BC%EC%9D%B4%ED%8A%B8%20200g%2010%EA%B0%9C&sort=price_asc&frm=NVSCPRO",
+            "mall": "네이버 가격비교 (공식 카탈로그)",
+            "mall_name": "네이버 가격비교 (공식 카탈로그)",
+            "url": "https://search.shopping.naver.com/catalog/53736015632",
             "image_url": "https://img.danuri.io/catalog-image/210/006/001/5b881f953b1947acad0eba6c5b839b7d.jpg",
             "review_count": 890,
             "score": 4.91,
@@ -683,9 +701,9 @@ NAVER_PRESET_ITEMS: Dict[str, List[Dict[str, Any]]] = {
         {
             "title": "CJ제일제당 스팸 클래식 340g 8개",
             "price": 27500,
-            "mall": "네이버 브랜드스토어 (본사직영)",
-            "mall_name": "네이버 브랜드스토어 (본사직영)",
-            "url": "https://search.shopping.naver.com/search/all?query=CJ%EC%A0%9C%EC%9D%BC%EC%A0%9C%EB%8B%B9%20%EC%8A%A4%ED%8C%B8%20%ED%81%B4%EB%9E%98%EC%8B%9D%20340g%208%EA%B0%9C&sort=price_asc&frm=NVSCPRO",
+            "mall": "네이버 스마트스토어 (공식인증)",
+            "mall_name": "네이버 스마트스토어 (공식인증)",
+            "url": "https://smartstore.naver.com/main/products/6420396285",
             "image_url": "https://img.danuri.io/catalog-image/210/006/001/5b881f953b1947acad0eba6c5b839b7d.jpg",
             "review_count": 1250,
             "score": 4.93,
@@ -694,36 +712,36 @@ NAVER_PRESET_ITEMS: Dict[str, List[Dict[str, Any]]] = {
     ],
     "진라면": [
         {
-            "title": "오뚜기 진라면 매운맛 120g 40개",
-            "price": 21340,
-            "mall": "네이버 가격비교 (공식 카탈로그)",
-            "mall_name": "네이버 가격비교 (공식 카탈로그)",
-            "url": "https://search.shopping.naver.com/search/all?query=%EC%98%A4%EB%9A%9C%EA%B8%B0%20%EC%A7%84%EB%9D%BC%EB%A9%B4%20%EB%A7%A4%EC%9A%B4%EB%A7%9B%20120g%2040%EA%B0%9C&sort=price_asc&frm=NVSCPRO",
+            "title": "오뚜기 진라면 매운맛 120g 20개 1BOX",
+            "price": 15680,
+            "mall": "네이버 브랜드스토어 (본사직영)",
+            "mall_name": "네이버 브랜드스토어 (본사직영)",
+            "url": "https://brand.naver.com/otokimall/products/11277700179",
             "image_url": "https://img.danuri.io/catalog-image/116/239/001/d5361d4f097e4c10a2e44c8a1e1d117a.jpg",
-            "review_count": 4820,
-            "score": 4.89,
+            "review_count": 136,
+            "score": 4.84,
             "is_ad": False
         },
         {
-            "title": "오뚜기 진라면 순한맛 120g 40개",
-            "price": 21340,
-            "mall": "네이버 스마트스토어 (공식인증)",
-            "mall_name": "네이버 스마트스토어 (공식인증)",
-            "url": "https://search.shopping.naver.com/search/all?query=%EC%98%A4%EB%9A%9C%EA%B8%B0%20%EC%A7%84%EB%9D%BC%EB%A9%B4%20%EC%88%9C%ED%95%9C%EB%A7%9B%20120g%2040%EA%B0%9C&sort=price_asc&frm=NVSCPRO",
+            "title": "오뚜기 진라면 매운맛 120g 20개 (본사직영)",
+            "price": 14000,
+            "mall": "네이버 브랜드스토어 (본사직영)",
+            "mall_name": "네이버 브랜드스토어 (본사직영)",
+            "url": "https://brand.naver.com/otokimall/products/11280762931",
             "image_url": "https://img.danuri.io/catalog-image/116/239/001/d5361d4f097e4c10a2e44c8a1e1d117a.jpg",
-            "review_count": 3120,
+            "review_count": 4943,
             "score": 4.88,
             "is_ad": False
         },
         {
-            "title": "오뚜기 진라면 매운맛 20개 + 순한맛 20개 반반세트",
-            "price": 22800,
+            "title": "오뚜기 진라면 매운맛 120g 40개 (본사직영)",
+            "price": 28900,
             "mall": "네이버 브랜드스토어 (본사직영)",
             "mall_name": "네이버 브랜드스토어 (본사직영)",
-            "url": "https://search.shopping.naver.com/search/all?query=%EC%98%A4%EB%9A%9C%EA%B8%B0%20%EC%A7%84%EB%9D%BC%EB%A9%B4%20%EB%A7%A4%EC%9A%B4%EB%A7%9B%2020%EA%B0%9C%20%EC%88%9C%ED%95%9C%EB%A7%9B%2020%EA%B0%9C&sort=price_asc&frm=NVSCPRO",
+            "url": "https://brand.naver.com/otokimall/products/5995388117",
             "image_url": "https://img.danuri.io/catalog-image/116/239/001/d5361d4f097e4c10a2e44c8a1e1d117a.jpg",
-            "review_count": 1820,
-            "score": 4.92,
+            "review_count": 4943,
+            "score": 4.88,
             "is_ad": False
         }
     ],
@@ -733,7 +751,7 @@ NAVER_PRESET_ITEMS: Dict[str, List[Dict[str, Any]]] = {
             "price": 11580,
             "mall": "네이버 가격비교 (공식 카탈로그)",
             "mall_name": "네이버 가격비교 (공식 카탈로그)",
-            "url": "https://search.shopping.naver.com/search/all?query=%EB%86%8D%EC%8B%AC%20%EC%95%88%EC%84%B1%ED%83%95%EB%A9%B4%20125g%2020%EA%B0%9C&sort=price_asc&frm=NVSCPRO",
+            "url": "https://search.shopping.naver.com/catalog/52999538087",
             "image_url": "https://img.danuri.io/catalog-image/905/238/001/1d15bf988b4b4c8aa8e4f6a6565f401a.jpg",
             "review_count": 2730,
             "score": 4.86,
@@ -742,9 +760,9 @@ NAVER_PRESET_ITEMS: Dict[str, List[Dict[str, Any]]] = {
         {
             "title": "농심 안성탕면 125g 20개 (무료배송 특가)",
             "price": 12200,
-            "mall": "네이버 스마트스토어 (공식인증)",
-            "mall_name": "네이버 스마트스토어 (공식인증)",
-            "url": "https://search.shopping.naver.com/search/all?query=%EB%86%8D%EC%8B%AC%20%EC%95%88%EC%84%B1%ED%83%95%EB%A9%B4%20125g%2020%EA%B0%9C%20%EB%AC%B4%EB%A3%8C%EB%B0%B0%EC%86%A1&sort=price_asc&frm=NVSCPRO",
+            "mall": "네이버 브랜드스토어 (본사직영)",
+            "mall_name": "네이버 브랜드스토어 (본사직영)",
+            "url": "https://brand.naver.com/nongshim/products/12218846556",
             "image_url": "https://img.danuri.io/catalog-image/905/238/001/1d15bf988b4b4c8aa8e4f6a6565f401a.jpg",
             "review_count": 850,
             "score": 4.88,
@@ -753,9 +771,9 @@ NAVER_PRESET_ITEMS: Dict[str, List[Dict[str, Any]]] = {
         {
             "title": "농심 안성탕면 125g 40개 대용량 박스",
             "price": 22900,
-            "mall": "네이버 브랜드스토어 (본사직영)",
-            "mall_name": "네이버 브랜드스토어 (본사직영)",
-            "url": "https://search.shopping.naver.com/search/all?query=%EB%86%8D%EC%8B%AC%20%EC%95%88%EC%84%B1%ED%83%95%EB%A9%B4%20125g%2040%EA%B0%9C&sort=price_asc&frm=NVSCPRO",
+            "mall": "네이버 가격비교 (공식 카탈로그)",
+            "mall_name": "네이버 가격비교 (공식 카탈로그)",
+            "url": "https://search.shopping.naver.com/catalog/59846341757",
             "image_url": "https://img.danuri.io/catalog-image/905/238/001/1d15bf988b4b4c8aa8e4f6a6565f401a.jpg",
             "review_count": 1640,
             "score": 4.90,
@@ -768,7 +786,7 @@ NAVER_PRESET_ITEMS: Dict[str, List[Dict[str, Any]]] = {
             "price": 14790,
             "mall": "네이버 가격비교 (공식 카탈로그)",
             "mall_name": "네이버 가격비교 (공식 카탈로그)",
-            "url": "https://search.shopping.naver.com/search/all?query=%EB%A1%AF%EB%8D%B0%EC%B9%A0%EC%84%B1%EC%9D%8C%EB%A3%8C%20%EC%B9%A0%EC%84%B1%EC%82%AC%EC%9D%B4%EB%8B%A4%20%EC%A0%9C%EB%A1%9C%20355ml%2024%EC%BA%94&sort=price_asc&frm=NVSCPRO",
+            "url": "https://search.shopping.naver.com/catalog/53733319502",
             "image_url": "https://img.danuri.io/catalog-image/201/472/013/4919bce162ff4874b54fc8b6ab9fe573.jpg",
             "review_count": 3890,
             "score": 4.92,
@@ -777,9 +795,9 @@ NAVER_PRESET_ITEMS: Dict[str, List[Dict[str, Any]]] = {
         {
             "title": "롯데칠성음료 칠성사이다 355ml 24캔 뚱캔",
             "price": 15300,
-            "mall": "네이버 스마트스토어 (공식인증)",
-            "mall_name": "네이버 스마트스토어 (공식인증)",
-            "url": "https://search.shopping.naver.com/search/all?query=%EB%A1%AF%EB%8D%B0%EC%B9%A0%EC%84%B1%EC%9D%8C%EB%A3%8C%20%EC%B9%A0%EC%84%B1%EC%82%AC%EC%9D%B4%EB%8B%A4%20355ml%2024%EC%BA%94&sort=price_asc&frm=NVSCPRO",
+            "mall": "네이버 가격비교 (공식 카탈로그)",
+            "mall_name": "네이버 가격비교 (공식 카탈로그)",
+            "url": "https://search.shopping.naver.com/catalog/59488212431",
             "image_url": "https://img.danuri.io/catalog-image/201/472/013/4919bce162ff4874b54fc8b6ab9fe573.jpg",
             "review_count": 1210,
             "score": 4.90,
@@ -788,9 +806,9 @@ NAVER_PRESET_ITEMS: Dict[str, List[Dict[str, Any]]] = {
         {
             "title": "롯데칠성음료 칠성사이다 제로 그린플럼 355ml 24캔",
             "price": 15900,
-            "mall": "네이버 브랜드스토어 (본사직영)",
-            "mall_name": "네이버 브랜드스토어 (본사직영)",
-            "url": "https://search.shopping.naver.com/search/all?query=%EB%A1%AF%EB%8D%B0%EC%B9%A0%EC%84%B1%EC%9D%8C%EB%A3%8C%20%EC%B9%A0%EC%84%B1%EC%82%AC%EC%9D%B4%EB%8B%A4%20%EC%A0%9C%EB%A1%9C%20%EA%B7%B8%EB%A6%B0%ED%94%8C%EB%9F%BC%20355ml%2024%EC%BA%94&sort=price_asc&frm=NVSCPRO",
+            "mall": "네이버 스마트스토어 (공식인증)",
+            "mall_name": "네이버 스마트스토어 (공식인증)",
+            "url": "https://smartstore.naver.com/main/products/9566992534",
             "image_url": "https://img.danuri.io/catalog-image/201/472/013/4919bce162ff4874b54fc8b6ab9fe573.jpg",
             "review_count": 890,
             "score": 4.91,
@@ -803,7 +821,7 @@ NAVER_PRESET_ITEMS: Dict[str, List[Dict[str, Any]]] = {
             "price": 16210,
             "mall": "네이버 가격비교 (공식 카탈로그)",
             "mall_name": "네이버 가격비교 (공식 카탈로그)",
-            "url": "https://search.shopping.naver.com/search/all?query=%ED%8E%98%EB%B8%8C%EB%A6%AC%EC%A6%88%20%EA%B0%95%EB%A0%A5%ED%83%88%EC%B7%A8%20%EC%83%81%EC%93%B0%20%EB%A6%AC%ED%95%84%20320ml%204%EA%B0%9C&sort=price_asc&frm=NVSCPRO",
+            "url": "https://search.shopping.naver.com/catalog/60465138611",
             "image_url": "https://img.danuri.io/catalog-image/998/987/010/44820825b44e4b15b79cdcf120ff73e3.jpg",
             "review_count": 1950,
             "score": 4.87,
@@ -812,9 +830,9 @@ NAVER_PRESET_ITEMS: Dict[str, List[Dict[str, Any]]] = {
         {
             "title": "페브리즈 섬유탈취제 다우니 에이프릴향 리필 320ml 4개",
             "price": 16900,
-            "mall": "네이버 스마트스토어 (공식인증)",
-            "mall_name": "네이버 스마트스토어 (공식인증)",
-            "url": "https://search.shopping.naver.com/search/all?query=%ED%8E%98%EB%B8%8C%EB%A6%AC%EC%A6%88%20%EB%8B%A4%EC%9A%B0%EB%8B%88%ED%96%A5%20%EB%A6%AC%ED%95%84%20320ml%204%EA%B0%9C&sort=price_asc&frm=NVSCPRO",
+            "mall": "네이버 가격비교 (공식 카탈로그)",
+            "mall_name": "네이버 가격비교 (공식 카탈로그)",
+            "url": "https://search.shopping.naver.com/catalog/53666075951",
             "image_url": "https://img.danuri.io/catalog-image/998/987/010/44820825b44e4b15b79cdcf120ff73e3.jpg",
             "review_count": 780,
             "score": 4.89,
@@ -823,9 +841,9 @@ NAVER_PRESET_ITEMS: Dict[str, List[Dict[str, Any]]] = {
         {
             "title": "페브리즈 항균 플러스 깨끗한 잔향 본품 370ml + 리필 320ml 3개",
             "price": 17500,
-            "mall": "네이버 브랜드스토어 (본사직영)",
-            "mall_name": "네이버 브랜드스토어 (본사직영)",
-            "url": "https://search.shopping.naver.com/search/all?query=%ED%8E%98%EB%B8%8C%EB%A6%AC%EC%A6%88%20%EB%B3%B8%ED%92%88%20%EB%A6%AC%ED%95%84%20%EC%84%B8%ED%8A%B8&sort=price_asc&frm=NVSCPRO",
+            "mall": "네이버 스마트스토어 (공식인증)",
+            "mall_name": "네이버 스마트스토어 (공식인증)",
+            "url": "https://smartstore.naver.com/main/products/9653782866",
             "image_url": "https://img.danuri.io/catalog-image/998/987/010/44820825b44e4b15b79cdcf120ff73e3.jpg",
             "review_count": 1120,
             "score": 4.90,
@@ -838,7 +856,7 @@ NAVER_PRESET_ITEMS: Dict[str, List[Dict[str, Any]]] = {
             "price": 26900,
             "mall": "네이버 가격비교 (공식 카탈로그)",
             "mall_name": "네이버 가격비교 (공식 카탈로그)",
-            "url": "https://search.shopping.naver.com/search/all?query=%EC%BD%94%EC%8A%A4%ED%8A%B8%EC%BD%94+%EC%BB%A4%ED%81%B4%EB%9E%98%EB%93%9C+%ED%9C%B4%EC%A7%80+30%EB%A1%A4&sort=price_asc&frm=NVSCPRO",
+            "url": "https://search.shopping.naver.com/catalog/53549213469",
             "image_url": "https://img.danuri.io/catalog-image/660/069/071/b9cc000c5f614c179ed35a4eb82995be.jpg",
             "review_count": 4820,
             "score": 4.92,
@@ -847,9 +865,9 @@ NAVER_PRESET_ITEMS: Dict[str, List[Dict[str, Any]]] = {
         {
             "title": "코스트코 커클랜드 프리미엄 3겹 화장지 30롤 1팩",
             "price": 27500,
-            "mall": "네이버 스마트스토어 (공식인증)",
-            "mall_name": "네이버 스마트스토어 (공식인증)",
-            "url": "https://search.shopping.naver.com/search/all?query=%EC%BD%94%EC%8A%A4%ED%8A%B8%EC%BD%94+%EC%BB%A4%ED%81%B4%EB%9E%98%EB%93%9C+%ED%9C%B4%EC%A7%80+30%EB%A1%A4&sort=price_asc&frm=NVSCPRO",
+            "mall": "네이버 가격비교 (공식 카탈로그)",
+            "mall_name": "네이버 가격비교 (공식 카탈로그)",
+            "url": "https://search.shopping.naver.com/catalog/82357174887",
             "image_url": "https://img.danuri.io/catalog-image/660/069/071/b9cc000c5f614c179ed35a4eb82995be.jpg",
             "review_count": 1820,
             "score": 4.90,
@@ -858,9 +876,9 @@ NAVER_PRESET_ITEMS: Dict[str, List[Dict[str, Any]]] = {
         {
             "title": "코스트코 커클랜드 3겹 화장지 30롤 2팩 (총 60롤)",
             "price": 52900,
-            "mall": "네이버 브랜드스토어 (본사직영)",
-            "mall_name": "네이버 브랜드스토어 (본사직영)",
-            "url": "https://search.shopping.naver.com/search/all?query=%EC%BD%94%EC%8A%A4%ED%8A%B8%EC%BD%94+%EC%BB%A4%ED%81%B4%EB%9E%98%EB%93%9C+%ED%9C%B4%EC%A7%80+60%EB%A1%A4&sort=price_asc&frm=NVSCPRO",
+            "mall": "네이버 스마트스토어 (공식인증)",
+            "mall_name": "네이버 스마트스토어 (공식인증)",
+            "url": "https://smartstore.naver.com/main/products/13770948879",
             "image_url": "https://img.danuri.io/catalog-image/660/069/071/b9cc000c5f614c179ed35a4eb82995be.jpg",
             "review_count": 940,
             "score": 4.88,
@@ -871,9 +889,9 @@ NAVER_PRESET_ITEMS: Dict[str, List[Dict[str, Any]]] = {
         {
             "title": "유한킴벌리 크리넥스 3겹 데코소프트 30롤 1팩",
             "price": 25900,
-            "mall": "네이버 브랜드스토어 (본사직영)",
-            "mall_name": "네이버 브랜드스토어 (본사직영)",
-            "url": "https://search.shopping.naver.com/search/all?query=%EC%9C%A0%ED%95%9C%ED%82%B4%EB%B2%8C%EB%A6%AC+%ED%81%AC%EB%A6%AC%EB%84%A5%EC%8A%A4+30%EB%A1%A4&sort=price_asc&frm=NVSCPRO",
+            "mall": "네이버 가격비교 (공식 카탈로그)",
+            "mall_name": "네이버 가격비교 (공식 카탈로그)",
+            "url": "https://search.shopping.naver.com/catalog/85169383126",
             "image_url": "https://img.danuri.io/catalog-image/660/069/071/b9cc000c5f614c179ed35a4eb82995be.jpg",
             "review_count": 890,
             "score": 4.88,
@@ -882,9 +900,9 @@ NAVER_PRESET_ITEMS: Dict[str, List[Dict[str, Any]]] = {
         {
             "title": "유한킴벌리 크리넥스 3겹 울트라클린 30롤 1팩",
             "price": 27900,
-            "mall": "네이버 브랜드스토어 (본사직영)",
-            "mall_name": "네이버 브랜드스토어 (본사직영)",
-            "url": "https://search.shopping.naver.com/search/all?query=%EC%9C%A0%ED%95%9C%ED%82%B4%EB%B2%8C%EB%A6%AC+%ED%81%AC%EB%A6%AC%EB%84%A5%EC%8A%A4+30%EB%A1%A4&sort=price_asc&frm=NVSCPRO",
+            "mall": "네이버 가격비교 (공식 카탈로그)",
+            "mall_name": "네이버 가격비교 (공식 카탈로그)",
+            "url": "https://search.shopping.naver.com/catalog/53549708834",
             "image_url": "https://img.danuri.io/catalog-image/660/069/071/b9cc000c5f614c179ed35a4eb82995be.jpg",
             "review_count": 1450,
             "score": 4.92,
@@ -895,7 +913,7 @@ NAVER_PRESET_ITEMS: Dict[str, List[Dict[str, Any]]] = {
             "price": 32900,
             "mall": "네이버 스마트스토어 (공식인증)",
             "mall_name": "네이버 스마트스토어 (공식인증)",
-            "url": "https://search.shopping.naver.com/search/all?query=%EA%B9%A8%EB%81%97%ED%95%9C%EB%82%98%EB%9D%BC+%EC%88%9C%EC%88%98+30%EB%A1%A4&sort=price_asc&frm=NVSCPRO",
+            "url": "https://smartstore.naver.com/main/products/6310311552",
             "image_url": "https://img.danuri.io/catalog-image/660/069/071/b9cc000c5f614c179ed35a4eb82995be.jpg",
             "review_count": 2150,
             "score": 4.87,
@@ -978,7 +996,7 @@ NAVER_PRESET_ITEMS: Dict[str, List[Dict[str, Any]]] = {
             "price": 18990,
             "mall": "네이버 가격비교 (공식 카탈로그)",
             "mall_name": "네이버 가격비교 (공식 카탈로그)",
-            "url": "https://search.shopping.naver.com/search/all?query=%EB%B2%A0%EB%B2%A0%EC%88%B2%20%EC%8B%9C%EA%B7%B8%EB%8B%88%EC%B2%98%20%EB%AC%BC%ED%8B%B0%EC%8A%88%2070%EB%A7%A4%2010%ED%8C%A9&sort=price_asc&frm=NVSCPRO",
+            "url": "https://search.shopping.naver.com/catalog/51929236553",
             "image_url": "https://img.danuri.io/catalog-image/056/717/018/0731f60a26164a7f850884285a0d0d12.jpg",
             "review_count": 4210,
             "score": 4.91,
@@ -987,9 +1005,9 @@ NAVER_PRESET_ITEMS: Dict[str, List[Dict[str, Any]]] = {
         {
             "title": "베베숲 시그니처 블루 물티슈 캡형 70매 10팩",
             "price": 19600,
-            "mall": "네이버 스마트스토어 (공식인증)",
-            "mall_name": "네이버 스마트스토어 (공식인증)",
-            "url": "https://search.shopping.naver.com/search/all?query=%EB%B2%A0%EB%B2%A0%EC%88%B2%20%EC%8B%9C%EA%B7%B8%EB%8B%88%EC%B2%98%20%EB%B8%94%EB%A3%A8%2010%ED%8C%A9&sort=price_asc&frm=NVSCPRO",
+            "mall": "네이버 가격비교 (공식 카탈로그)",
+            "mall_name": "네이버 가격비교 (공식 카탈로그)",
+            "url": "https://search.shopping.naver.com/catalog/51929477954",
             "image_url": "https://img.danuri.io/catalog-image/056/717/018/0731f60a26164a7f850884285a0d0d12.jpg",
             "review_count": 1850,
             "score": 4.89,
@@ -998,9 +1016,9 @@ NAVER_PRESET_ITEMS: Dict[str, List[Dict[str, Any]]] = {
         {
             "title": "베베숲 프리미엄 엠보싱 물티슈 캡형 80매 10팩",
             "price": 20300,
-            "mall": "네이버 브랜드스토어 (본사직영)",
-            "mall_name": "네이버 브랜드스토어 (본사직영)",
-            "url": "https://search.shopping.naver.com/search/all?query=%EB%B2%A0%EB%B2%A0%EC%88%B2%20%EC%97%A0%EB%B3%B4%EC%8B%B1%20%EB%AC%BC%ED%8B%B0%EC%8A%88%2010%ED%8C%A9&sort=price_asc&frm=NVSCPRO",
+            "mall": "네이버 스마트스토어 (공식인증)",
+            "mall_name": "네이버 스마트스토어 (공식인증)",
+            "url": "https://smartstore.naver.com/main/products/13747956025",
             "image_url": "https://img.danuri.io/catalog-image/056/717/018/0731f60a26164a7f850884285a0d0d12.jpg",
             "review_count": 2340,
             "score": 4.93,
@@ -1115,9 +1133,9 @@ def fetch_products_for_keyword(keyword: str) -> Tuple[List[Dict[str, Any]], List
         if trending_items:
             top_items = trending_items
 
-    # 4. 프리셋에도 없는 미지 키워드인 경우: 각 순위별 안전 포털 검색 링크 생성
+    # 4. 프리셋에도 없는 미지 키워드인 경우: 각 순위별 안전 카탈로그 링크 생성
     if not top_items:
-        enc_k = urllib.parse.quote(keyword)
+        fallback_cat_url = normalize_shopping_url("", title=keyword)
         default_img = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='300' height='300' viewBox='0 0 100 100' fill='none'><rect width='100' height='100' rx='16' fill='%23F1F5F9'/><path d='M30 40h40l-5 35H35L30 40z' stroke='%2303C75A' stroke-width='4' stroke-linejoin='round' fill='%23E8F5E9'/><path d='M38 40V30a12 12 0 0124 0v10' stroke='%2303C75A' stroke-width='4' stroke-linecap='round'/><circle cx='50' cy='58' r='6' fill='%2303C75A'/></svg>"
         top_items = [
             {
@@ -1125,7 +1143,7 @@ def fetch_products_for_keyword(keyword: str) -> Tuple[List[Dict[str, Any]], List
                 "price": 10000,
                 "mall": "네이버 가격비교 (공식 카탈로그)",
                 "mall_name": "네이버 가격비교 (공식 카탈로그)",
-                "url": f"https://search.shopping.naver.com/search/all?query={enc_k}&sort=price_asc&frm=NVSCPRO",
+                "url": fallback_cat_url,
                 "image_url": default_img,
                 "review_count": 2150,
                 "score": 4.88,
@@ -1136,7 +1154,7 @@ def fetch_products_for_keyword(keyword: str) -> Tuple[List[Dict[str, Any]], List
                 "price": 10500,
                 "mall": "네이버 스마트스토어 (공식인증)",
                 "mall_name": "네이버 스마트스토어 (공식인증)",
-                "url": f"https://search.shopping.naver.com/search/all?query={enc_k}&sort=price_asc&frm=NVSCPRO",
+                "url": fallback_cat_url,
                 "image_url": default_img,
                 "review_count": 780,
                 "score": 4.86,
@@ -1147,7 +1165,7 @@ def fetch_products_for_keyword(keyword: str) -> Tuple[List[Dict[str, Any]], List
                 "price": 11200,
                 "mall": "네이버 브랜드스토어 (본사직영)",
                 "mall_name": "네이버 브랜드스토어 (본사직영)",
-                "url": f"https://search.shopping.naver.com/search/all?query={enc_k}&sort=price_asc&frm=NVSCPRO",
+                "url": fallback_cat_url,
                 "image_url": default_img,
                 "review_count": 1420,
                 "score": 4.90,
@@ -1625,7 +1643,7 @@ def fetch_live_naver_best_ranking(limit: int = 16) -> List[Dict[str, Any]]:
                     elif raw_link and "/main/products/" not in raw_link and ("/products/" in raw_link):
                         direct_link = raw_link
                     else:
-                        direct_link = f"https://search.shopping.naver.com/search/all?query={urllib.parse.quote(search_kw)}&sort=price_asc&frm=NVSCPRO"
+                        direct_link = normalize_shopping_url("", title=raw_title)
 
                     rank = p.get("rank", p_idx + 1)
                     rc_str = re.sub(r'[^\d]', '', str(p.get("reviewCount", "0")))

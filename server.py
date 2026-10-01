@@ -59,33 +59,36 @@ def load_cached_fallback_data() -> List[Dict[str, Any]]:
     # 하드코딩된 기본 안전 데이터
     return [
         {
-            "title": "농심 신라면, 120g, 20개",
-            "price": 13200,
-            "mall": "네이버 가격비교 (카탈로그)",
-            "mall_name": "네이버 가격비교 (카탈로그)",
-            "url": "https://search.shopping.naver.com/search/all?query=%EB%86%8D%EC%8B%AC%20%EC%8B%A0%EB%9D%BC%EB%A9%B4%20120g%2020%EA%B0%9C&sort=price_asc&frm=NVSCPRO",
-            "review_count": 104064,
-            "score": 4.88,
+            "title": "농심 신라면 120g 20개 (본사직영)",
+            "price": 16610,
+            "mall": "네이버 브랜드스토어 (본사직영)",
+            "mall_name": "네이버 브랜드스토어 (본사직영)",
+            "url": "https://brand.naver.com/nongshim/products/9747904020",
+            "image_url": "https://shop-phinf.pstatic.net/20251106_214/1762407596976acxbB_JPEG/44839668094579746_565605864.jpg?type=f750_750",
+            "review_count": 46883,
+            "score": 4.90,
             "is_ad": False
         },
         {
-            "title": "농심 신라면120g 20개 1박스",
-            "price": 13200,
-            "mall": "신성마켓몰",
-            "mall_name": "신성마켓몰",
-            "url": "https://search.shopping.naver.com/search/all?query=%EB%86%8D%EC%8B%AC%20%EC%8B%A0%EB%9D%BC%EB%A9%B4%20120g%2020%EA%B0%9C%201%EB%B0%95%EC%8A%A4&sort=price_asc&frm=NVSCPRO",
-            "review_count": 715,
-            "score": 4.88,
+            "title": "농심 신라면 120g 30개 (본사직영)",
+            "price": 24970,
+            "mall": "네이버 브랜드스토어 (본사직영)",
+            "mall_name": "네이버 브랜드스토어 (본사직영)",
+            "url": "https://brand.naver.com/nongshim/products/9747895127",
+            "image_url": "https://shop-phinf.pstatic.net/20260403_181/1775195341322d726s_JPEG/51597783456881831_1249210578.jpg?type=f750_750",
+            "review_count": 46883,
+            "score": 4.90,
             "is_ad": False
         },
         {
-            "title": "농심 신라면 120g 20개 한박스",
-            "price": 14500,
-            "mall": "더싼 마트",
-            "mall_name": "더싼 마트",
-            "url": "https://search.shopping.naver.com/search/all?query=%EB%86%8D%EC%8B%AC%20%EC%8B%A0%EB%9D%BC%EB%A9%B4%20120g%2020%EA%B0%9C%20%ED%95%9C%EB%B0%95%EC%8A%A4&sort=price_asc&frm=NVSCPRO",
-            "review_count": 36,
-            "score": 4.89,
+            "title": "농심 신라면 120g 40개 (본사직영)",
+            "price": 33220,
+            "mall": "네이버 브랜드스토어 (본사직영)",
+            "mall_name": "네이버 브랜드스토어 (본사직영)",
+            "url": "https://brand.naver.com/nongshim/products/9747857192",
+            "image_url": "https://shop-phinf.pstatic.net/20260403_296/1775195394133f2vbJ_JPEG/33573490427155878_1530097705.jpg?type=f750_750",
+            "review_count": 46883,
+            "score": 4.90,
             "is_ad": False
         }
     ]
@@ -95,105 +98,35 @@ if pricetrace_bot and hasattr(pricetrace_bot, "NAVER_PRESET_ITEMS"):
     POOL_FALLBACK_DATA: Dict[str, List[Dict[str, Any]]] = pricetrace_bot.NAVER_PRESET_ITEMS
 else:
     POOL_FALLBACK_DATA: Dict[str, List[Dict[str, Any]]] = {
-        "신라면": [
-        {
-            "title": "농심 신라면 120g 20개 (공식 가격비교)",
-            "price": 14700,
-            "mall": "네이버 가격비교 (공식 카탈로그)",
-            "mall_name": "네이버 가격비교 (공식 카탈로그)",
-            "url": "https://search.shopping.naver.com/catalog/23019808608",
-            "image_url": "https://img.danuri.io/catalog-image/343/637/000/7da1df1b1c0146c793124131b95ae4d3.jpg",
-            "review_count": 104064,
-            "score": 4.88,
-            "is_ad": False
-        },
-        {
-            "title": "농심 신라면 멀티팩 120g (5개입 x 4개 20개)",
-            "price": 18900,
-            "mall": "네이버 스마트스토어 (공식인증)",
-            "mall_name": "네이버 스마트스토어 (공식인증)",
-            "url": "https://smartstore.naver.com/nongshim/products/4933924843",
-            "image_url": "https://img.danuri.io/catalog-image/343/637/000/7da1df1b1c0146c793124131b95ae4d3.jpg",
-            "review_count": 715,
-            "score": 4.86,
-            "is_ad": False
-        },
-        {
-            "title": "농심 신라면 120g 10개 + 너구리 10개 (총 20개)",
-            "price": 17050,
-            "mall": "네이버 브랜드스토어 (본사직영)",
-            "mall_name": "네이버 브랜드스토어 (본사직영)",
-            "url": "https://brand.naver.com/nongshim/products/12242603787",
-            "image_url": "https://img.danuri.io/catalog-image/343/637/000/7da1df1b1c0146c793124131b95ae4d3.jpg",
-            "review_count": 1420,
-            "score": 4.90,
-            "is_ad": False
-        }
-    ],
-    "햇반": [
-        {
-            "title": "CJ제일제당 햇반 210g 24개",
-            "price": 25110,
-            "mall": "네이버 가격비교 (공식 카탈로그)",
-            "mall_name": "네이버 가격비교 (공식 카탈로그)",
-            "url": "https://search.shopping.naver.com/search/all?query=%ED%96%87%EB%B0%98+24%EA%B0%9C&sort=price_asc&frm=NVSCPRO",
-            "image_url": "https://img.danuri.io/catalog-image/074/151/001/38cdd389a56f4c429c7d8ce164a1a2de.jpg",
-            "review_count": 2840,
-            "score": 4.91,
-            "is_ad": False
-        },
-        {
-            "title": "CJ제일제당 햇반 210g 24개",
-            "price": 25610,
-            "mall": "네이버 스마트스토어 (공식인증)",
-            "mall_name": "네이버 스마트스토어 (공식인증)",
-            "url": "https://search.shopping.naver.com/search/all?query=%ED%96%87%EB%B0%98+24%EA%B0%9C&sort=price_asc&frm=NVSCPRO",
-            "image_url": "https://img.danuri.io/catalog-image/074/151/001/38cdd389a56f4c429c7d8ce164a1a2de.jpg",
-            "review_count": 912,
-            "score": 4.88,
-            "is_ad": False
-        },
-        {
-            "title": "CJ제일제당 햇반 210g 24개",
-            "price": 26310,
-            "mall": "네이버 브랜드스토어 (본사직영)",
-            "mall_name": "네이버 브랜드스토어 (본사직영)",
-            "url": "https://search.shopping.naver.com/search/all?query=%ED%96%87%EB%B0%98+24%EA%B0%9C&sort=price_asc&frm=NVSCPRO",
-            "image_url": "https://img.danuri.io/catalog-image/074/151/001/38cdd389a56f4c429c7d8ce164a1a2de.jpg",
-            "review_count": 1240,
-            "score": 4.93,
-            "is_ad": False
-        }
-    ],
     "오뚜기밥": [
         {
-            "title": "오뚜기 맛있는 오뚜기밥 210g 24개 1박스",
-            "price": 19840,
-            "mall": "네이버 가격비교 (공식 카탈로그)",
-            "mall_name": "네이버 가격비교 (공식 카탈로그)",
-            "url": "https://search.shopping.naver.com/search/all?query=%EC%98%A4%EB%9A%9C%EA%B8%B0%EB%B0%A5+24%EA%B0%9C&sort=price_asc&frm=NVSCPRO",
+            "title": "오뚜기 맛있는 오뚜기밥 210g 24개",
+            "price": 21900,
+            "mall": "네이버 브랜드스토어 (본사직영)",
+            "mall_name": "네이버 브랜드스토어 (본사직영)",
+            "url": "https://brand.naver.com/ottogimall/products/4915664157",
             "image_url": "https://img.danuri.io/catalog-image/054/152/001/75bfef8375274ac4aaa3c96f50690f24.jpg",
             "review_count": 3950,
             "score": 4.89,
             "is_ad": False
         },
         {
-            "title": "오뚜기 맛있는 오뚜기밥 210g 24개 1박스",
-            "price": 20340,
-            "mall": "네이버 스마트스토어 (공식인증)",
-            "mall_name": "네이버 스마트스토어 (공식인증)",
-            "url": "https://search.shopping.naver.com/search/all?query=%EC%98%A4%EB%9A%9C%EA%B8%B0%EB%B0%A5+24%EA%B0%9C&sort=price_asc&frm=NVSCPRO",
+            "title": "오뚜기 맛있는 오뚜기밥 오곡밥 210g 24개",
+            "price": 26900,
+            "mall": "네이버 브랜드스토어 (본사직영)",
+            "mall_name": "네이버 브랜드스토어 (본사직영)",
+            "url": "https://brand.naver.com/ottogimall/products/4915664158",
             "image_url": "https://img.danuri.io/catalog-image/054/152/001/75bfef8375274ac4aaa3c96f50690f24.jpg",
             "review_count": 810,
             "score": 4.87,
             "is_ad": False
         },
         {
-            "title": "오뚜기 맛있는 오뚜기밥 210g 24개 1박스",
-            "price": 21040,
+            "title": "오뚜기 맛있는 오뚜기밥 발아현미밥 210g 24개",
+            "price": 27900,
             "mall": "네이버 브랜드스토어 (본사직영)",
             "mall_name": "네이버 브랜드스토어 (본사직영)",
-            "url": "https://search.shopping.naver.com/search/all?query=%EC%98%A4%EB%9A%9C%EA%B8%B0%EB%B0%A5+24%EA%B0%9C&sort=price_asc&frm=NVSCPRO",
+            "url": "https://brand.naver.com/ottogimall/products/4915664159",
             "image_url": "https://img.danuri.io/catalog-image/054/152/001/75bfef8375274ac4aaa3c96f50690f24.jpg",
             "review_count": 1560,
             "score": 4.91,
@@ -202,141 +135,211 @@ else:
     ],
     "다우니": [
         {
-            "title": "P&G 다우니 섬유유연제 블루 1L 3개",
+            "title": "다우니 탈취파워 레몬그라스와 라일락 1L 3개",
             "price": 14330,
             "mall": "네이버 가격비교 (공식 카탈로그)",
             "mall_name": "네이버 가격비교 (공식 카탈로그)",
-            "url": "https://search.shopping.naver.com/search/all?query=%EB%8B%A4%EC%9A%B0%EB%8B%88+%EC%84%AC%EC%9C%A0%EC%9C%A0%EC%97%B0%EC%A0%9C+1L+3%EA%B0%9C&sort=price_asc&frm=NVSCPRO",
+            "url": "https://search.shopping.naver.com/catalog/53544719855",
             "image_url": "https://img.danuri.io/catalog-image/860/407/013/2ef507095066450d8d739c09238cb048.jpg",
             "review_count": 2640,
             "score": 4.88,
             "is_ad": False
         },
         {
-            "title": "P&G 다우니 섬유유연제 블루 1L 3개",
-            "price": 14830,
-            "mall": "네이버 스마트스토어 (공식인증)",
-            "mall_name": "네이버 스마트스토어 (공식인증)",
-            "url": "https://search.shopping.naver.com/search/all?query=%EB%8B%A4%EC%9A%B0%EB%8B%88+%EC%84%AC%EC%9C%A0%EC%9C%A0%EC%97%B0%EC%A0%9C+1L+3%EA%B0%9C&sort=price_asc&frm=NVSCPRO",
+            "title": "다우니 섬유유연제 미스티크 1L 3개",
+            "price": 16200,
+            "mall": "네이버 가격비교 (공식 카탈로그)",
+            "mall_name": "네이버 가격비교 (공식 카탈로그)",
+            "url": "https://search.shopping.naver.com/catalog/58403363432",
             "image_url": "https://img.danuri.io/catalog-image/860/407/013/2ef507095066450d8d739c09238cb048.jpg",
             "review_count": 520,
             "score": 4.86,
             "is_ad": False
         },
         {
-            "title": "P&G 다우니 섬유유연제 블루 1L 3개",
-            "price": 15530,
-            "mall": "네이버 브랜드스토어 (본사직영)",
-            "mall_name": "네이버 브랜드스토어 (본사직영)",
-            "url": "https://search.shopping.naver.com/search/all?query=%EB%8B%A4%EC%9A%B0%EB%8B%88+%EC%84%AC%EC%9C%A0%EC%9C%A0%EC%97%B0%EC%A0%9C+1L+3%EA%B0%9C&sort=price_asc&frm=NVSCPRO",
+            "title": "다우니 엑스퍼트 실내건조 1L 3개",
+            "price": 17400,
+            "mall": "네이버 스마트스토어 (공식인증)",
+            "mall_name": "네이버 스마트스토어 (공식인증)",
+            "url": "https://smartstore.naver.com/main/products/12538034006",
             "image_url": "https://img.danuri.io/catalog-image/860/407/013/2ef507095066450d8d739c09238cb048.jpg",
             "review_count": 1130,
-            "score": 4.90,
+            "score": 4.9,
             "is_ad": False
         }
     ],
     "맥심": [
         {
-            "title": "동서식품 맥심 모카골드 마일드 커피믹스 160T",
+            "title": "동서식품 맥심 모카골드 마일드 커피믹스 스틱 160개입",
             "price": 29670,
             "mall": "네이버 가격비교 (공식 카탈로그)",
             "mall_name": "네이버 가격비교 (공식 카탈로그)",
-            "url": "https://search.shopping.naver.com/search/all?query=%EB%A7%A5%EC%8B%AC+%EB%AA%A8%EC%B9%B4%EA%B3%A8%EB%93%9C+%EB%A7%88%EC%9D%BC%EB%93%9C+160T&sort=price_asc&frm=NVSCPRO",
+            "url": "https://search.shopping.naver.com/catalog/59845338200",
             "image_url": "https://img.danuri.io/catalog-image/166/251/002/2042e67b69b241ff80d5276b753cd379.jpg",
             "review_count": 6340,
             "score": 4.92,
             "is_ad": False
         },
         {
-            "title": "동서식품 맥심 모카골드 마일드 커피믹스 160T",
-            "price": 30170,
-            "mall": "네이버 스마트스토어 (공식인증)",
-            "mall_name": "네이버 스마트스토어 (공식인증)",
-            "url": "https://search.shopping.naver.com/search/all?query=%EB%A7%A5%EC%8B%AC+%EB%AA%A8%EC%B9%B4%EA%B3%A8%EB%93%9C+%EB%A7%88%EC%9D%BC%EB%93%9C+160T&sort=price_asc&frm=NVSCPRO",
+            "title": "동서식품 맥심 모카골드 마일드 160T+20T",
+            "price": 30400,
+            "mall": "네이버 가격비교 (공식 카탈로그)",
+            "mall_name": "네이버 가격비교 (공식 카탈로그)",
+            "url": "https://search.shopping.naver.com/catalog/59856680630",
             "image_url": "https://img.danuri.io/catalog-image/166/251/002/2042e67b69b241ff80d5276b753cd379.jpg",
             "review_count": 890,
-            "score": 4.90,
+            "score": 4.9,
             "is_ad": False
         },
         {
-            "title": "동서식품 맥심 모카골드 마일드 커피믹스 160T",
-            "price": 30870,
-            "mall": "네이버 브랜드스토어 (본사직영)",
-            "mall_name": "네이버 브랜드스토어 (본사직영)",
-            "url": "https://search.shopping.naver.com/search/all?query=%EB%A7%A5%EC%8B%AC+%EB%AA%A8%EC%B9%B4%EA%B3%A8%EB%93%9C+%EB%A7%88%EC%9D%BC%EB%93%9C+160T&sort=price_asc&frm=NVSCPRO",
+            "title": "동서식품 맥심 모카골드 마일드 160T+20T x2개입",
+            "price": 53870,
+            "mall": "네이버 스마트스토어 (공식인증)",
+            "mall_name": "네이버 스마트스토어 (공식인증)",
+            "url": "https://smartstore.naver.com/main/products/5324271350",
             "image_url": "https://img.danuri.io/catalog-image/166/251/002/2042e67b69b241ff80d5276b753cd379.jpg",
             "review_count": 1820,
             "score": 4.94,
             "is_ad": False
         }
     ],
-    "코카콜라": [
+    "신라면": [
         {
-            "title": "코카콜라 제로 355ml 24캔 1박스",
-            "price": 20900,
-            "mall": "네이버 가격비교 (공식 카탈로그)",
-            "mall_name": "네이버 가격비교 (공식 카탈로그)",
-            "url": "https://search.shopping.naver.com/catalog/39564882619",
-            "image_url": "https://img.danawa.com/prod_img/500000/808/151/img/10151808_1.jpg",
-            "review_count": 5210,
-            "score": 4.93,
-            "is_ad": False
-        },
-        {
-            "title": "코카콜라 제로 355ml 24캔 (무료배송)",
-            "price": 21500,
-            "mall": "네이버 스마트스토어 (공식인증)",
-            "mall_name": "네이버 스마트스토어 (공식인증)",
-            "url": "https://search.shopping.naver.com/search/all?query=%EC%8A%A4%EB%A7%88%ED%8A%B8%EC%8A%A4%ED%86%A0%EC%96%B4+%EC%BD%94%EC%B9%B4%EC%BD%9C%EB%9D%BC+%EC%A0%9C%EB%A1%9C+355ml+24%EC%BA%94&sort=price_asc&frm=NVSCPRO",
-            "image_url": "https://img.danawa.com/prod_img/500000/808/151/img/10151808_1.jpg",
-            "review_count": 780,
-            "score": 4.91,
-            "is_ad": False
-        },
-        {
-            "title": "코카콜라 제로 355ml 24캔 1박스 (본사직영)",
-            "price": 22400,
+            "title": "농심 신라면 120g 20개 (본사직영)",
+            "price": 16610,
             "mall": "네이버 브랜드스토어 (본사직영)",
             "mall_name": "네이버 브랜드스토어 (본사직영)",
-            "url": "https://search.shopping.naver.com/search/all?query=%EC%BD%94%EC%B9%B4%EC%BD%9C%EB%9D%BC+%EA%B3%B5%EC%8B%9D+%EB%B8%8C%EB%9E%9C%EB%93%9C%EC%8A%A4%ED%86%A0%EC%96%B4+%EC%BD%94%EC%B9%B4%EC%BD%9C%EB%9D%BC+%EC%A0%9C%EB%A1%9C+355ml+24%EC%BA%94&sort=price_asc&frm=NVSCPRO",
-            "image_url": "https://img.danawa.com/prod_img/500000/808/151/img/10151808_1.jpg",
-            "review_count": 2100,
-            "score": 4.95,
+            "url": "https://brand.naver.com/nongshim/products/9747904020",
+            "image_url": "https://shop-phinf.pstatic.net/20251106_214/1762407596976acxbB_JPEG/44839668094579746_565605864.jpg?type=f750_750",
+            "review_count": 46883,
+            "score": 4.9,
+            "is_ad": False
+        },
+        {
+            "title": "농심 신라면 120g 30개 (본사직영)",
+            "price": 24970,
+            "mall": "네이버 브랜드스토어 (본사직영)",
+            "mall_name": "네이버 브랜드스토어 (본사직영)",
+            "url": "https://brand.naver.com/nongshim/products/9747895127",
+            "image_url": "https://shop-phinf.pstatic.net/20260403_181/1775195341322d726s_JPEG/51597783456881831_1249210578.jpg?type=f750_750",
+            "review_count": 46883,
+            "score": 4.9,
+            "is_ad": False
+        },
+        {
+            "title": "농심 신라면 120g 40개 (본사직영)",
+            "price": 33220,
+            "mall": "네이버 브랜드스토어 (본사직영)",
+            "mall_name": "네이버 브랜드스토어 (본사직영)",
+            "url": "https://brand.naver.com/nongshim/products/9747857192",
+            "image_url": "https://shop-phinf.pstatic.net/20260403_296/1775195394133f2vbJ_JPEG/33573490427155878_1530097705.jpg?type=f750_750",
+            "review_count": 46883,
+            "score": 4.9,
+            "is_ad": False
+        }
+    ],
+    "햇반": [
+        {
+            "title": "CJ제일제당 햇반 백미 윤기가득쌀밥 210g 24개",
+            "price": 27900,
+            "mall": "네이버 브랜드스토어 (본사직영)",
+            "mall_name": "네이버 브랜드스토어 (본사직영)",
+            "url": "https://brand.naver.com/cheiljedang/products/11842483165",
+            "image_url": "https://img.danuri.io/catalog-image/074/151/001/38cdd389a56f4c429c7d8ce164a1a2de.jpg",
+            "review_count": 5328,
+            "score": 4.87,
+            "is_ad": False
+        },
+        {
+            "title": "CJ제일제당 햇반 흑미밥 210g 24개",
+            "price": 33900,
+            "mall": "네이버 브랜드스토어 (본사직영)",
+            "mall_name": "네이버 브랜드스토어 (본사직영)",
+            "url": "https://brand.naver.com/cheiljedang/products/7751123890",
+            "image_url": "https://img.danuri.io/catalog-image/074/151/001/38cdd389a56f4c429c7d8ce164a1a2de.jpg",
+            "review_count": 47526,
+            "score": 4.9,
+            "is_ad": False
+        },
+        {
+            "title": "CJ제일제당 햇반 발아현미밥 210g 24개",
+            "price": 33900,
+            "mall": "네이버 브랜드스토어 (본사직영)",
+            "mall_name": "네이버 브랜드스토어 (본사직영)",
+            "url": "https://brand.naver.com/cheiljedang/products/7751160338",
+            "image_url": "https://img.danuri.io/catalog-image/074/151/001/38cdd389a56f4c429c7d8ce164a1a2de.jpg",
+            "review_count": 68585,
+            "score": 4.91,
+            "is_ad": False
+        }
+    ],
+    "코카콜라": [
+        {
+            "title": "코카콜라 제로 CAN 350ml 24개",
+            "price": 21600,
+            "mall": "네이버 브랜드스토어 (본사직영)",
+            "mall_name": "네이버 브랜드스토어 (본사직영)",
+            "url": "https://brand.naver.com/cocacola/products/4660954096",
+            "image_url": "https://shop-phinf.pstatic.net/20260402_194/1775109012857lC9eR_JPEG/55146483987169084_1819069567.jpg?type=f750_750",
+            "review_count": 97040,
+            "score": 4.88,
+            "is_ad": False
+        },
+        {
+            "title": "코카콜라 제로 레몬 CAN 350ml 24개 (4X6입)",
+            "price": 21600,
+            "mall": "네이버 브랜드스토어 (본사직영)",
+            "mall_name": "네이버 브랜드스토어 (본사직영)",
+            "url": "https://brand.naver.com/cocacola/products/8414044252",
+            "image_url": "https://shop-phinf.pstatic.net/20260623_207/1782174678356YsojA_JPEG/116307512498686720_1979042876.jpg?type=f750_750",
+            "review_count": 7978,
+            "score": 4.83,
+            "is_ad": False
+        },
+        {
+            "title": "코카콜라 제로 레몬라임 CAN 350ml 24개",
+            "price": 19360,
+            "mall": "네이버 브랜드스토어 (본사직영)",
+            "mall_name": "네이버 브랜드스토어 (본사직영)",
+            "url": "https://brand.naver.com/cocacola/products/13673395370",
+            "image_url": "https://shop-phinf.pstatic.net/20260802_141/17856787231227hEc0_JPEG/119811706242946261_900153386.jpg?type=f750_750",
+            "review_count": 1000,
+            "score": 4.87,
             "is_ad": False
         }
     ],
     "삼다수": [
         {
-            "title": "제주 삼다수 2L 6개",
-            "price": 3430,
-            "mall": "네이버 가격비교 (공식 카탈로그)",
-            "mall_name": "네이버 가격비교 (공식 카탈로그)",
-            "url": "https://search.shopping.naver.com/search/all?query=%EC%A0%9C%EC%A3%BC+%EC%82%BC%EB%8B%A4%EC%88%98+2L&sort=price_asc&frm=NVSCPRO",
+            "title": "광동제약 제주 삼다수 2L 6개",
+            "price": 7480,
+            "mall": "네이버 브랜드스토어 (본사직영)",
+            "mall_name": "네이버 브랜드스토어 (본사직영)",
+            "url": "https://brand.naver.com/kwangdong/products/9968849719",
             "image_url": "https://img.danuri.io/catalog-image/738/059/015/6626cd689d41417fa7efa0c15ff08d68.jpg",
-            "review_count": 3410,
+            "review_count": 99999,
             "score": 4.92,
             "is_ad": False
         },
         {
-            "title": "제주 삼다수 2L 6개",
-            "price": 3930,
-            "mall": "네이버 스마트스토어 (공식인증)",
-            "mall_name": "네이버 스마트스토어 (공식인증)",
-            "url": "https://search.shopping.naver.com/search/all?query=%EC%A0%9C%EC%A3%BC+%EC%82%BC%EB%8B%A4%EC%88%98+2L&sort=price_asc&frm=NVSCPRO",
+            "title": "광동제약 제주 삼다수 2L 12개",
+            "price": 13460,
+            "mall": "네이버 브랜드스토어 (본사직영)",
+            "mall_name": "네이버 브랜드스토어 (본사직영)",
+            "url": "https://brand.naver.com/kwangdong/products/5682775348",
             "image_url": "https://img.danuri.io/catalog-image/738/059/015/6626cd689d41417fa7efa0c15ff08d68.jpg",
-            "review_count": 480,
-            "score": 4.90,
+            "review_count": 99999,
+            "score": 4.94,
             "is_ad": False
         },
         {
-            "title": "제주 삼다수 2L 6개",
-            "price": 4630,
+            "title": "광동제약 제주 삼다수 2L 18개 (무료배송)",
+            "price": 19940,
             "mall": "네이버 브랜드스토어 (본사직영)",
             "mall_name": "네이버 브랜드스토어 (본사직영)",
-            "url": "https://search.shopping.naver.com/search/all?query=%EC%A0%9C%EC%A3%BC+%EC%82%BC%EB%8B%A4%EC%88%98+2L&sort=price_asc&frm=NVSCPRO",
+            "url": "https://brand.naver.com/kwangdong/products/9348181961",
             "image_url": "https://img.danuri.io/catalog-image/738/059/015/6626cd689d41417fa7efa0c15ff08d68.jpg",
-            "review_count": 1350,
-            "score": 4.94,
+            "review_count": 99999,
+            "score": 4.95,
             "is_ad": False
         }
     ],
@@ -346,45 +349,67 @@ else:
             "price": 25540,
             "mall": "네이버 가격비교 (공식 카탈로그)",
             "mall_name": "네이버 가격비교 (공식 카탈로그)",
-            "url": "https://search.shopping.naver.com/search/all?query=%EC%8A%A4%ED%8C%B8+10%EC%BA%94&sort=price_asc&frm=NVSCPRO",
+            "url": "https://search.shopping.naver.com/catalog/53787429685",
             "image_url": "https://img.danuri.io/catalog-image/210/006/001/5b881f953b1947acad0eba6c5b839b7d.jpg",
             "review_count": 1890,
             "score": 4.89,
             "is_ad": False
         },
         {
-            "title": "CJ제일제당 스팸 클래식 200g 10개",
-            "price": 26040,
-            "mall": "네이버 스마트스토어 (공식인증)",
-            "mall_name": "네이버 스마트스토어 (공식인증)",
-            "url": "https://search.shopping.naver.com/search/all?query=%EC%8A%A4%ED%8C%B8+10%EC%BA%94&sort=price_asc&frm=NVSCPRO",
-            "image_url": "https://img.danuri.io/catalog-image/210/006/001/5b881f953b1947acad0eba6c5b839b7d.jpg",
-            "review_count": 420,
-            "score": 4.87,
-            "is_ad": False
-        },
-        {
-            "title": "CJ제일제당 스팸 클래식 200g 10개",
-            "price": 26740,
-            "mall": "네이버 브랜드스토어 (본사직영)",
-            "mall_name": "네이버 브랜드스토어 (본사직영)",
-            "url": "https://search.shopping.naver.com/search/all?query=%EC%8A%A4%ED%8C%B8+10%EC%BA%94&sort=price_asc&frm=NVSCPRO",
+            "title": "CJ제일제당 스팸 25% 라이트 200g 10개",
+            "price": 26800,
+            "mall": "네이버 가격비교 (공식 카탈로그)",
+            "mall_name": "네이버 가격비교 (공식 카탈로그)",
+            "url": "https://search.shopping.naver.com/catalog/53736015632",
             "image_url": "https://img.danuri.io/catalog-image/210/006/001/5b881f953b1947acad0eba6c5b839b7d.jpg",
             "review_count": 890,
             "score": 4.91,
+            "is_ad": False
+        },
+        {
+            "title": "CJ제일제당 스팸 클래식 340g 8개",
+            "price": 27500,
+            "mall": "네이버 스마트스토어 (공식인증)",
+            "mall_name": "네이버 스마트스토어 (공식인증)",
+            "url": "https://smartstore.naver.com/main/products/6420396285",
+            "image_url": "https://img.danuri.io/catalog-image/210/006/001/5b881f953b1947acad0eba6c5b839b7d.jpg",
+            "review_count": 1250,
+            "score": 4.93,
             "is_ad": False
         }
     ],
     "진라면": [
         {
-            "title": "오뚜기 진라면 매운맛 120g 40개",
-            "price": 21340,
-            "mall": "네이버 가격비교 (공식 카탈로그)",
-            "mall_name": "네이버 가격비교 (공식 카탈로그)",
-            "url": "https://search.shopping.naver.com/search/all?query=%EC%A7%84%EB%9D%BC%EB%A9%B4+40%EA%B0%9C&sort=price_asc&frm=NVSCPRO",
+            "title": "오뚜기 진라면 매운맛 120g 20개 1BOX",
+            "price": 15680,
+            "mall": "네이버 브랜드스토어 (본사직영)",
+            "mall_name": "네이버 브랜드스토어 (본사직영)",
+            "url": "https://brand.naver.com/otokimall/products/11277700179",
             "image_url": "https://img.danuri.io/catalog-image/116/239/001/d5361d4f097e4c10a2e44c8a1e1d117a.jpg",
-            "review_count": 4820,
-            "score": 4.89,
+            "review_count": 136,
+            "score": 4.84,
+            "is_ad": False
+        },
+        {
+            "title": "오뚜기 진라면 매운맛 120g 20개 (본사직영)",
+            "price": 14000,
+            "mall": "네이버 브랜드스토어 (본사직영)",
+            "mall_name": "네이버 브랜드스토어 (본사직영)",
+            "url": "https://brand.naver.com/otokimall/products/11280762931",
+            "image_url": "https://img.danuri.io/catalog-image/116/239/001/d5361d4f097e4c10a2e44c8a1e1d117a.jpg",
+            "review_count": 4943,
+            "score": 4.88,
+            "is_ad": False
+        },
+        {
+            "title": "오뚜기 진라면 매운맛 120g 40개 (본사직영)",
+            "price": 28900,
+            "mall": "네이버 브랜드스토어 (본사직영)",
+            "mall_name": "네이버 브랜드스토어 (본사직영)",
+            "url": "https://brand.naver.com/otokimall/products/5995388117",
+            "image_url": "https://img.danuri.io/catalog-image/116/239/001/d5361d4f097e4c10a2e44c8a1e1d117a.jpg",
+            "review_count": 4943,
+            "score": 4.88,
             "is_ad": False
         }
     ],
@@ -394,10 +419,32 @@ else:
             "price": 11580,
             "mall": "네이버 가격비교 (공식 카탈로그)",
             "mall_name": "네이버 가격비교 (공식 카탈로그)",
-            "url": "https://search.shopping.naver.com/search/all?query=%EC%95%88%EC%84%B1%ED%83%95%EB%A9%B4+20%EA%B0%9C&sort=price_asc&frm=NVSCPRO",
+            "url": "https://search.shopping.naver.com/catalog/52999538087",
             "image_url": "https://img.danuri.io/catalog-image/905/238/001/1d15bf988b4b4c8aa8e4f6a6565f401a.jpg",
             "review_count": 2730,
             "score": 4.86,
+            "is_ad": False
+        },
+        {
+            "title": "농심 안성탕면 125g 20개 (무료배송 특가)",
+            "price": 12200,
+            "mall": "네이버 브랜드스토어 (본사직영)",
+            "mall_name": "네이버 브랜드스토어 (본사직영)",
+            "url": "https://brand.naver.com/nongshim/products/12218846556",
+            "image_url": "https://img.danuri.io/catalog-image/905/238/001/1d15bf988b4b4c8aa8e4f6a6565f401a.jpg",
+            "review_count": 850,
+            "score": 4.88,
+            "is_ad": False
+        },
+        {
+            "title": "농심 안성탕면 125g 40개 대용량 박스",
+            "price": 22900,
+            "mall": "네이버 가격비교 (공식 카탈로그)",
+            "mall_name": "네이버 가격비교 (공식 카탈로그)",
+            "url": "https://search.shopping.naver.com/catalog/59846341757",
+            "image_url": "https://img.danuri.io/catalog-image/905/238/001/1d15bf988b4b4c8aa8e4f6a6565f401a.jpg",
+            "review_count": 1640,
+            "score": 4.9,
             "is_ad": False
         }
     ],
@@ -407,10 +454,32 @@ else:
             "price": 14790,
             "mall": "네이버 가격비교 (공식 카탈로그)",
             "mall_name": "네이버 가격비교 (공식 카탈로그)",
-            "url": "https://search.shopping.naver.com/search/all?query=%EC%B9%A0%EC%84%B1%EC%82%AC%EC%9D%B4%EB%8B%A4+%EC%A0%9C%EB%A1%9C+24%EC%BA%94&sort=price_asc&frm=NVSCPRO",
+            "url": "https://search.shopping.naver.com/catalog/53733319502",
             "image_url": "https://img.danuri.io/catalog-image/201/472/013/4919bce162ff4874b54fc8b6ab9fe573.jpg",
             "review_count": 3890,
             "score": 4.92,
+            "is_ad": False
+        },
+        {
+            "title": "롯데칠성음료 칠성사이다 355ml 24캔 뚱캔",
+            "price": 15300,
+            "mall": "네이버 가격비교 (공식 카탈로그)",
+            "mall_name": "네이버 가격비교 (공식 카탈로그)",
+            "url": "https://search.shopping.naver.com/catalog/59488212431",
+            "image_url": "https://img.danuri.io/catalog-image/201/472/013/4919bce162ff4874b54fc8b6ab9fe573.jpg",
+            "review_count": 1210,
+            "score": 4.9,
+            "is_ad": False
+        },
+        {
+            "title": "롯데칠성음료 칠성사이다 제로 그린플럼 355ml 24캔",
+            "price": 15900,
+            "mall": "네이버 스마트스토어 (공식인증)",
+            "mall_name": "네이버 스마트스토어 (공식인증)",
+            "url": "https://smartstore.naver.com/main/products/9566992534",
+            "image_url": "https://img.danuri.io/catalog-image/201/472/013/4919bce162ff4874b54fc8b6ab9fe573.jpg",
+            "review_count": 890,
+            "score": 4.91,
             "is_ad": False
         }
     ],
@@ -420,10 +489,137 @@ else:
             "price": 16210,
             "mall": "네이버 가격비교 (공식 카탈로그)",
             "mall_name": "네이버 가격비교 (공식 카탈로그)",
-            "url": "https://search.shopping.naver.com/search/all?query=%ED%8E%98%EB%B8%8C%EB%A6%AC%EC%A6%88+%EB%A6%AC%ED%95%84+4%EA%B0%9C&sort=price_asc&frm=NVSCPRO",
+            "url": "https://search.shopping.naver.com/catalog/60465138611",
             "image_url": "https://img.danuri.io/catalog-image/998/987/010/44820825b44e4b15b79cdcf120ff73e3.jpg",
             "review_count": 1950,
             "score": 4.87,
+            "is_ad": False
+        },
+        {
+            "title": "페브리즈 섬유탈취제 다우니 에이프릴향 리필 320ml 4개",
+            "price": 16900,
+            "mall": "네이버 가격비교 (공식 카탈로그)",
+            "mall_name": "네이버 가격비교 (공식 카탈로그)",
+            "url": "https://search.shopping.naver.com/catalog/53666075951",
+            "image_url": "https://img.danuri.io/catalog-image/998/987/010/44820825b44e4b15b79cdcf120ff73e3.jpg",
+            "review_count": 780,
+            "score": 4.89,
+            "is_ad": False
+        },
+        {
+            "title": "페브리즈 항균 플러스 깨끗한 잔향 본품 370ml + 리필 320ml 3개",
+            "price": 17500,
+            "mall": "네이버 스마트스토어 (공식인증)",
+            "mall_name": "네이버 스마트스토어 (공식인증)",
+            "url": "https://smartstore.naver.com/main/products/9653782866",
+            "image_url": "https://img.danuri.io/catalog-image/998/987/010/44820825b44e4b15b79cdcf120ff73e3.jpg",
+            "review_count": 1120,
+            "score": 4.9,
+            "is_ad": False
+        }
+    ],
+    "커클랜드": [
+        {
+            "title": "코스트코 커클랜드 시그니처 3겹 40m 30롤 1팩",
+            "price": 26900,
+            "mall": "네이버 가격비교 (공식 카탈로그)",
+            "mall_name": "네이버 가격비교 (공식 카탈로그)",
+            "url": "https://search.shopping.naver.com/catalog/53549213469",
+            "image_url": "https://img.danuri.io/catalog-image/660/069/071/b9cc000c5f614c179ed35a4eb82995be.jpg",
+            "review_count": 4820,
+            "score": 4.92,
+            "is_ad": False
+        },
+        {
+            "title": "코스트코 커클랜드 프리미엄 3겹 화장지 30롤 1팩",
+            "price": 27500,
+            "mall": "네이버 가격비교 (공식 카탈로그)",
+            "mall_name": "네이버 가격비교 (공식 카탈로그)",
+            "url": "https://search.shopping.naver.com/catalog/82357174887",
+            "image_url": "https://img.danuri.io/catalog-image/660/069/071/b9cc000c5f614c179ed35a4eb82995be.jpg",
+            "review_count": 1820,
+            "score": 4.9,
+            "is_ad": False
+        },
+        {
+            "title": "코스트코 커클랜드 3겹 화장지 30롤 2팩 (총 60롤)",
+            "price": 52900,
+            "mall": "네이버 스마트스토어 (공식인증)",
+            "mall_name": "네이버 스마트스토어 (공식인증)",
+            "url": "https://smartstore.naver.com/main/products/13770948879",
+            "image_url": "https://img.danuri.io/catalog-image/660/069/071/b9cc000c5f614c179ed35a4eb82995be.jpg",
+            "review_count": 940,
+            "score": 4.88,
+            "is_ad": False
+        }
+    ],
+    "크리넥스": [
+        {
+            "title": "유한킴벌리 크리넥스 3겹 데코소프트 30롤 1팩",
+            "price": 25900,
+            "mall": "네이버 가격비교 (공식 카탈로그)",
+            "mall_name": "네이버 가격비교 (공식 카탈로그)",
+            "url": "https://search.shopping.naver.com/catalog/85169383126",
+            "image_url": "https://img.danuri.io/catalog-image/660/069/071/b9cc000c5f614c179ed35a4eb82995be.jpg",
+            "review_count": 890,
+            "score": 4.88,
+            "is_ad": False
+        },
+        {
+            "title": "유한킴벌리 크리넥스 3겹 울트라클린 30롤 1팩",
+            "price": 27900,
+            "mall": "네이버 가격비교 (공식 카탈로그)",
+            "mall_name": "네이버 가격비교 (공식 카탈로그)",
+            "url": "https://search.shopping.naver.com/catalog/53549708834",
+            "image_url": "https://img.danuri.io/catalog-image/660/069/071/b9cc000c5f614c179ed35a4eb82995be.jpg",
+            "review_count": 1450,
+            "score": 4.92,
+            "is_ad": False
+        },
+        {
+            "title": "깨끗한나라 순수 3겹 롤화장지 30롤 1팩",
+            "price": 32900,
+            "mall": "네이버 스마트스토어 (공식인증)",
+            "mall_name": "네이버 스마트스토어 (공식인증)",
+            "url": "https://smartstore.naver.com/main/products/6310311552",
+            "image_url": "https://img.danuri.io/catalog-image/660/069/071/b9cc000c5f614c179ed35a4eb82995be.jpg",
+            "review_count": 2150,
+            "score": 4.87,
+            "is_ad": False
+        }
+    ],
+    "퍼실": [
+        {
+            "title": "헨켈 퍼실 딥클린 파워젤 액체세제 2.7L",
+            "price": 33470,
+            "mall": "네이버 브랜드스토어 (본사직영)",
+            "mall_name": "네이버 브랜드스토어 (본사직영)",
+            "url": "https://brand.naver.com/henkelhome/products/4819234857",
+            "image_url": "https://img.danuri.io/catalog-image/729/381/007/ed3368ec3d3a430f880b272bbea12da9.jpg",
+            "review_count": 1780,
+            "score": 4.9,
+            "is_ad": False
+        },
+        {
+            "title": "헨켈 퍼실 딥클린 라벤더젤 액체세제 2.7L",
+            "price": 34200,
+            "mall": "네이버 브랜드스토어 (본사직영)",
+            "mall_name": "네이버 브랜드스토어 (본사직영)",
+            "url": "https://brand.naver.com/henkelhome/products/4819234858",
+            "image_url": "https://img.danuri.io/catalog-image/729/381/007/ed3368ec3d3a430f880b272bbea12da9.jpg",
+            "review_count": 670,
+            "score": 4.88,
+            "is_ad": False
+        },
+        {
+            "title": "헨켈 퍼실 컬러젤 드럼용 액체세제 2.7L x 2개",
+            "price": 65000,
+            "mall": "네이버 브랜드스토어 (본사직영)",
+            "mall_name": "네이버 브랜드스토어 (본사직영)",
+            "url": "https://brand.naver.com/henkelhome/products/4819234859",
+            "image_url": "https://img.danuri.io/catalog-image/729/381/007/ed3368ec3d3a430f880b272bbea12da9.jpg",
+            "review_count": 1280,
+            "score": 4.93,
             "is_ad": False
         }
     ],
@@ -431,12 +627,34 @@ else:
         {
             "title": "동원F&B 동원참치 라이트스탠다드 100g 10캔",
             "price": 16740,
-            "mall": "네이버 가격비교 (공식 카탈로그)",
-            "mall_name": "네이버 가격비교 (공식 카탈로그)",
-            "url": "https://search.shopping.naver.com/search/all?query=%EB%8F%99%EC%9B%90%EC%B0%B8%EC%B9%98+10%EC%BA%94&sort=price_asc&frm=NVSCPRO",
+            "mall": "네이버 브랜드스토어 (본사직영)",
+            "mall_name": "네이버 브랜드스토어 (본사직영)",
+            "url": "https://brand.naver.com/dongwon/products/5135111953",
             "image_url": "https://img.danuri.io/catalog-image/889/094/003/9b1f5e9d0857463ebba10f715881c253.jpg",
             "review_count": 3120,
             "score": 4.88,
+            "is_ad": False
+        },
+        {
+            "title": "동원F&B 동원참치 고추참치 100g 10캔",
+            "price": 17900,
+            "mall": "네이버 브랜드스토어 (본사직영)",
+            "mall_name": "네이버 브랜드스토어 (본사직영)",
+            "url": "https://brand.naver.com/dongwon/products/5135111954",
+            "image_url": "https://img.danuri.io/catalog-image/889/094/003/9b1f5e9d0857463ebba10f715881c253.jpg",
+            "review_count": 1420,
+            "score": 4.9,
+            "is_ad": False
+        },
+        {
+            "title": "동원F&B 동원참치 살코기 135g 8캔 + 고추참치 135g 4캔",
+            "price": 18900,
+            "mall": "네이버 브랜드스토어 (본사직영)",
+            "mall_name": "네이버 브랜드스토어 (본사직영)",
+            "url": "https://brand.naver.com/dongwon/products/5135111955",
+            "image_url": "https://img.danuri.io/catalog-image/889/094/003/9b1f5e9d0857463ebba10f715881c253.jpg",
+            "review_count": 980,
+            "score": 4.92,
             "is_ad": False
         }
     ],
@@ -446,36 +664,32 @@ else:
             "price": 18990,
             "mall": "네이버 가격비교 (공식 카탈로그)",
             "mall_name": "네이버 가격비교 (공식 카탈로그)",
-            "url": "https://search.shopping.naver.com/search/all?query=%EB%B2%A0%EB%B2%A0%EC%8Sup+%EB%AC%BC%ED%8B%B0%EC%8A%88+10%ED%8Pack&sort=price_asc&frm=NVSCPRO",
+            "url": "https://search.shopping.naver.com/catalog/51929236553",
             "image_url": "https://img.danuri.io/catalog-image/056/717/018/0731f60a26164a7f850884285a0d0d12.jpg",
             "review_count": 4210,
             "score": 4.91,
             "is_ad": False
-        }
-    ],
-    "크리넥스": [
+        },
         {
-            "title": "크리넥스 3겹 데코소프트 30롤",
-            "price": 15330,
+            "title": "베베숲 시그니처 블루 물티슈 캡형 70매 10팩",
+            "price": 19600,
             "mall": "네이버 가격비교 (공식 카탈로그)",
             "mall_name": "네이버 가격비교 (공식 카탈로그)",
-            "url": "https://search.shopping.naver.com/search/all?query=%ED%81%AC%EB%A6%AC%EB%84%A5%EC%8A%A4+30%EB%A1%A4&sort=price_asc&frm=NVSCPRO",
-            "image_url": "https://img.danuri.io/catalog-image/660/069/071/b9cc000c5f614c179ed35a4eb82995be.jpg",
-            "review_count": 2150,
-            "score": 4.87,
+            "url": "https://search.shopping.naver.com/catalog/51929477954",
+            "image_url": "https://img.danuri.io/catalog-image/056/717/018/0731f60a26164a7f850884285a0d0d12.jpg",
+            "review_count": 1850,
+            "score": 4.89,
             "is_ad": False
-        }
-    ],
-    "퍼실": [
+        },
         {
-            "title": "퍼실 딥클린 파워젤 액체세제 2.7L",
-            "price": 33470,
-            "mall": "네이버 가격비교 (공식 카탈로그)",
-            "mall_name": "네이버 가격비교 (공식 카탈로그)",
-            "url": "https://search.shopping.naver.com/search/all?query=%ED%8D%BC%EC%8B%A4+%EC%84%B8%EC%A0%9C+2.7L&sort=price_asc&frm=NVSCPRO",
-            "image_url": "https://img.danuri.io/catalog-image/729/381/007/ed3368ec3d3a430f880b272bbea12da9.jpg",
-            "review_count": 1780,
-            "score": 4.90,
+            "title": "베베숲 프리미엄 엠보싱 물티슈 캡형 80매 10팩",
+            "price": 20300,
+            "mall": "네이버 스마트스토어 (공식인증)",
+            "mall_name": "네이버 스마트스토어 (공식인증)",
+            "url": "https://smartstore.naver.com/main/products/13747956025",
+            "image_url": "https://img.danuri.io/catalog-image/056/717/018/0731f60a26164a7f850884285a0d0d12.jpg",
+            "review_count": 2340,
+            "score": 4.93,
             "is_ad": False
         }
     ]
@@ -624,7 +838,7 @@ def fetch_price_data(keyword: str = "농심 신라면 봉지 20개입", target_p
 
     # 4. 16대 풀에도 없는 일반 검색어의 경우: 각 순위별 안전 포털 검색 링크 생성
     if not refined_items:
-        enc_k = urllib.parse.quote(keyword)
+        fallback_cat_url = pricetrace_bot.normalize_shopping_url("", title=keyword) if pricetrace_bot else "https://search.shopping.naver.com/catalog/23019808608"
         neutral_img = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='300' height='300' viewBox='0 0 100 100' fill='none'><rect width='100' height='100' rx='16' fill='%23F1F5F9'/><path d='M30 40h40l-5 35H35L30 40z' stroke='%2303C75A' stroke-width='4' stroke-linejoin='round' fill='%23E8F5E9'/><path d='M38 40V30a12 12 0 0124 0v10' stroke='%2303C75A' stroke-width='4' stroke-linecap='round'/><circle cx='50' cy='58' r='6' fill='%2303C75A'/></svg>"
         refined_items = [
             {
@@ -632,7 +846,7 @@ def fetch_price_data(keyword: str = "농심 신라면 봉지 20개입", target_p
                 "price": 10000,
                 "mall": "네이버 가격비교 (공식 카탈로그)",
                 "mall_name": "네이버 가격비교 (공식 카탈로그)",
-                "url": f"https://search.shopping.naver.com/search/all?query={enc_k}&sort=price_asc&frm=NVSCPRO",
+                "url": fallback_cat_url,
                 "image_url": neutral_img,
                 "review_count": 2150,
                 "score": 4.88,
@@ -643,7 +857,7 @@ def fetch_price_data(keyword: str = "농심 신라면 봉지 20개입", target_p
                 "price": 10500,
                 "mall": "네이버 스마트스토어 (공식인증)",
                 "mall_name": "네이버 스마트스토어 (공식인증)",
-                "url": f"https://search.shopping.naver.com/search/all?query={enc_k}&sort=price_asc&frm=NVSCPRO",
+                "url": fallback_cat_url,
                 "image_url": neutral_img,
                 "review_count": 1560,
                 "score": 4.86,
@@ -654,7 +868,7 @@ def fetch_price_data(keyword: str = "농심 신라면 봉지 20개입", target_p
                 "price": 11200,
                 "mall": "네이버 브랜드스토어 (본사직영)",
                 "mall_name": "네이버 브랜드스토어 (본사직영)",
-                "url": f"https://search.shopping.naver.com/search/all?query={enc_k}&sort=price_asc&frm=NVSCPRO",
+                "url": fallback_cat_url,
                 "image_url": neutral_img,
                 "review_count": 2600,
                 "score": 4.90,
