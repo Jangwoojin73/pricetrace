@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="ko" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>오프라인 상태 - PriceTrace</title>
+  <meta name="theme-color" content="#2563eb">
+  <link rel="icon" type="image/png" href="/icons/icon-192x192.png">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+  <style>
+    body {
+      font-family: "Pretendard", -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
+    }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex items-center justify-center p-6 selection:bg-blue-600 selection:text-white">
+  <div class="max-w-md w-full bg-slate-900/90 border border-slate-800 rounded-3xl p-8 shadow-2xl backdrop-blur-xl text-center space-y-6">
+    <div class="w-20 h-20 mx-auto rounded-2xl bg-gradient-to-tr from-blue-600 to-indigo-600 p-0.5 shadow-lg shadow-blue-500/20 flex items-center justify-center">
+      <div class="w-full h-full bg-slate-950 rounded-[14px] flex items-center justify-center">
+        <svg class="w-10 h-10 text-blue-400 animate-pulse" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M18.364 5.636a9 9 0 010 12.728m0 0l-2.829-2.829m2.829 2.829L21 21M15.536 8.464a5 5 0 010 7.072m0 0l-2.829-2.829m-4.243 4.243a9 9 0 01-12.728 0m0 0l2.829-2.829m-2.829 2.829L3 21m2.829-5.657a5 5 0 010-7.072m0 0l2.829 2.829" />
+        </svg>
+      </div>
+    </div>
+    
+    <div class="space-y-2">
+      <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-amber-500/10 text-amber-400 border border-amber-500/20">
+        <span class="w-2 h-2 rounded-full bg-amber-400 animate-ping"></span>
+        오프라인 모드
+      </span>
+      <h1 class="text-2xl font-black tracking-tight text-white">네트워크 연결 끊김</h1>
+      <p class="text-sm text-slate-400 leading-relaxed">
+        인터넷 연결이 원활하지 않습니다.<br>
+        Wi-Fi 또는 모바일 데이터 상태를 확인해주세요.
+      </p>
+    </div>
+
+    <div class="bg-slate-950/60 rounded-2xl p-4 border border-slate-800/80 text-left text-xs text-slate-400 space-y-1.5">
+      <div class="flex items-center gap-2 text-slate-300 font-medium">
+        <svg class="w-4 h-4 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+        PWA 캐시 엔진 활성화됨
+      </div>
+      <p class="pl-6 text-slate-500">네트워크가 재연결되면 실시간 최저가 조회가 자동으로 정상화됩니다.</p>
+    </div>
+
+    <button onclick="window.location.reload()" class="w-full py-3.5 px-6 rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold text-sm shadow-lg shadow-blue-600/30 transition-all duration-200 active:scale-95 flex items-center justify-center gap-2">
+      <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+      </svg>
+      다시 시도하기
+    </button>
+  </div>
+</body>
+</html>

@@ -1435,9 +1435,147 @@ function initEventListeners() {
   });
 }
 
+// ==========================================
+// PWA (Progressive Web App) 핵심 기능 모듈
+// ==========================================
+let deferredPrompt = null;
+
+function registerPwaServiceWorker() {
+  if ("serviceWorker" in navigator) {
+    window.addEventListener("load", () => {
+      navigator.serviceWorker
+        .register("/sw.js")
+        .then((reg) => {
+          console.log("[PWA] Service Worker 등록 성공 (Scope:", reg.scope, ")");
+        })
+        .catch((err) => {
+          console.warn("[PWA] Service Worker 등록 실패:", err);
+        });
+    });
+  }
+}
+
+function setupPwaInstallation() {
+  const installAppBtn = document.getElementById("installAppBtn");
+  const mobileInstallAppBtn = document.getElementById("mobileInstallAppBtn");
+  const pwaInstallBanner = document.getElementById("pwaInstallBanner");
+  const pwaBannerInstallBtn = document.getElementById("pwaBannerInstallBtn");
+  const pwaBannerDismissBtn = document.getElementById("pwaBannerDismissBtn");
+  const iosInstallModal = document.getElementById("iosInstallModal");
+  const closeIosInstallModalBtn = document.getElementById("closeIosInstallModalBtn");
+  const confirmIosInstallBtn = document.getElementById("confirmIosInstallBtn");
+
+  const isIos = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+  const isStandalone = window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone === true;
+
+  if (isStandalone) {
+    console.log("[PWA] 현재 독립 실행형(Standalone) 모드로 구동 중입니다.");
+    return;
+  }
+
+  // 1. Android/Chrome/Edge beforeinstallprompt 이벤트 캡처
+  window.addEventListener("beforeinstallprompt", (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+    console.log("[PWA] beforeinstallprompt 이벤트 감지됨.");
+
+    if (installAppBtn) {
+      installAppBtn.classList.remove("hidden");
+      installAppBtn.classList.add("flex");
+    }
+    if (mobileInstallAppBtn) {
+      mobileInstallAppBtn.classList.remove("hidden");
+      mobileInstallAppBtn.classList.add("flex");
+    }
+
+    // 세션 중 닫지 않았으면 플로팅 배너 1.5초 후 표시
+    if (!sessionStorage.getItem("pwa_banner_dismissed") && pwaInstallBanner) {
+      setTimeout(() => {
+        pwaInstallBanner.classList.remove("hidden");
+        if (window.lucide) window.lucide.createIcons();
+      }, 1500);
+    }
+  });
+
+  // 2. 설치 프롬프트 트리거 공통 함수
+  const triggerInstall = async () => {
+    if (deferredPrompt) {
+      deferredPrompt.prompt();
+      const { outcome } = await deferredPrompt.userChoice;
+      console.log(`[PWA] 설치 프롬프트 결과: ${outcome}`);
+      deferredPrompt = null;
+      if (pwaInstallBanner) pwaInstallBanner.classList.add("hidden");
+      if (installAppBtn) installAppBtn.classList.add("hidden");
+      if (mobileInstallAppBtn) mobileInstallAppBtn.classList.add("hidden");
+    } else if (isIos) {
+      if (iosInstallModal) {
+        iosInstallModal.classList.remove("hidden");
+        if (window.lucide) window.lucide.createIcons();
+      }
+    } else {
+      showToast('브라우저 우측 상단 메뉴에서 "앱 설치"를 선택해주세요.', "info");
+    }
+  };
+
+  if (installAppBtn) installAppBtn.addEventListener("click", triggerInstall);
+  if (mobileInstallAppBtn) mobileInstallAppBtn.addEventListener("click", triggerInstall);
+  if (pwaBannerInstallBtn) pwaBannerInstallBtn.addEventListener("click", triggerInstall);
+
+  if (pwaBannerDismissBtn) {
+    pwaBannerDismissBtn.addEventListener("click", () => {
+      if (pwaInstallBanner) pwaInstallBanner.classList.add("hidden");
+      sessionStorage.setItem("pwa_banner_dismissed", "true");
+    });
+  }
+
+  // iOS 모달 닫기
+  if (closeIosInstallModalBtn) {
+    closeIosInstallModalBtn.addEventListener("click", () => {
+      if (iosInstallModal) iosInstallModal.classList.add("hidden");
+    });
+  }
+  if (confirmIosInstallBtn) {
+    confirmIosInstallBtn.addEventListener("click", () => {
+      if (iosInstallModal) iosInstallModal.classList.add("hidden");
+    });
+  }
+
+  // iOS 기기이면서 standalone이 아닌 경우 모바일 설치 버튼 노출
+  if (isIos && !isStandalone) {
+    if (mobileInstallAppBtn) {
+      mobileInstallAppBtn.classList.remove("hidden");
+      mobileInstallAppBtn.classList.add("flex");
+    }
+  }
+
+  // 앱 설치 완료 이벤트 수신
+  window.addEventListener("appinstalled", () => {
+    console.log("[PWA] PriceTrace 앱 설치 완료");
+    showToast("🎉 PriceTrace 앱이 성공적으로 설치되었습니다!", "success");
+    if (pwaInstallBanner) pwaInstallBanner.classList.add("hidden");
+    if (installAppBtn) installAppBtn.classList.add("hidden");
+    if (mobileInstallAppBtn) mobileInstallAppBtn.classList.add("hidden");
+  });
+}
+
+function setupNetworkStatusMonitor() {
+  window.addEventListener("online", () => {
+    showToast("🟢 네트워크가 재연결되었습니다. 최저가 조회가 정상화됩니다.", "success");
+  });
+
+  window.addEventListener("offline", () => {
+    showToast("⚠️ 네트워크 연결 끊김: PWA 오프라인 캐시 모드로 작동합니다.", "info");
+  });
+}
+
 // 초기 실행
 function initApp() {
   initEventListeners();
+
+  // PWA 서비스 워커 및 설치 경험 모듈 구동
+  registerPwaServiceWorker();
+  setupPwaInstallation();
+  setupNetworkStatusMonitor();
 
   // 인기 추천 풀 셔플 렌더링 및 자동 로테이션 시작
   shuffleAndRenderRecommendations(false);

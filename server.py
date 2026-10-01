@@ -931,6 +931,13 @@ def fetch_price_data(keyword: str = "농심 신라면 봉지 20개입", target_p
 class PriceTraceHandler(SimpleHTTPRequestHandler):
     """정적 파일 서빙 및 API 요청 처리 핸들러"""
 
+    extensions_map = SimpleHTTPRequestHandler.extensions_map.copy()
+    extensions_map.update({
+        ".json": "application/json",
+        ".webmanifest": "application/manifest+json",
+        ".js": "application/javascript",
+    })
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, directory=PUBLIC_DIR, **kwargs)
 
@@ -968,6 +975,13 @@ class PriceTraceHandler(SimpleHTTPRequestHandler):
         return super().do_GET()
 
     def end_headers(self):
+        parsed = urllib.parse.urlparse(self.path)
+        path = parsed.path
+        if path == "/sw.js":
+            self.send_header("Service-Worker-Allowed", "/")
+            self.send_header("Content-Type", "application/javascript; charset=utf-8")
+        elif path == "/manifest.json":
+            self.send_header("Content-Type", "application/manifest+json; charset=utf-8")
         self.send_header("Cache-Control", "no-cache, no-store, must-revalidate")
         self.send_header("Pragma", "no-cache")
         self.send_header("Expires", "0")

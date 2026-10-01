@@ -2,11 +2,25 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
   <title>PriceTrace | 네이버 쇼핑 실시간 최저가 레이더</title>
   
+  <!-- PWA Web App Manifest & Mobile Meta -->
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#2563eb">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="PriceTrace">
+  <meta name="application-name" content="PriceTrace">
+  <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png">
+  <link rel="apple-touch-icon" sizes="192x192" href="/icons/icon-192x192.png">
+  <link rel="apple-touch-icon" sizes="512x512" href="/icons/icon-512x512.png">
+
   <!-- Favicon -->
   <link rel="icon" type="image/svg+xml" href="/logo_jwj.svg">
+  <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192x192.png">
 
   <!-- Pretendard 폰트 (한국어 표준 고품질 웹폰트) -->
   <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" />
@@ -111,6 +125,15 @@
         <div class="flex md:hidden items-center space-x-1.5 shrink-0">
           <button 
             type="button" 
+            id="mobileInstallAppBtn" 
+            title="앱으로 설치하기"
+            class="hidden items-center space-x-1 px-2.5 py-1.5 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 text-white text-xs font-bold active:scale-95 transition-all shadow-sm shadow-blue-500/30 cursor-pointer"
+          >
+            <i data-lucide="download" class="w-3.5 h-3.5 text-white"></i>
+            <span>설치</span>
+          </button>
+          <button 
+            type="button" 
             id="mobileRefreshBtn" 
             title="실시간 갱신"
             class="p-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 active:scale-95 transition-all cursor-pointer"
@@ -182,6 +205,15 @@
 
       <!-- 데스크톱 전용 우측 컨트롤 버튼 (hidden md:flex) -->
       <div class="hidden md:flex items-center space-x-2 shrink-0">
+        <button 
+          id="installAppBtn" 
+          title="PriceTrace 앱으로 설치"
+          class="hidden items-center space-x-1.5 px-3.5 py-2.5 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white text-xs font-bold shadow-md shadow-blue-600/25 transition-all active:scale-95 cursor-pointer"
+        >
+          <i data-lucide="download" class="w-4 h-4 text-white"></i>
+          <span>앱 설치</span>
+        </button>
+
         <button 
           id="refreshBtn" 
           title="네이버 쇼핑 실시간 최신화"
@@ -860,8 +892,72 @@
     </div>
   </div>
 
-  <!-- 메인 스크립트 (브라우저 캐시 방지 버전 파라미터 적용) -->
-  <script src="app.js?v=20261001_0945"></script>
+  <!-- PWA 모바일/데스크톱 플로팅 설치 유도 배너 (A2HS) -->
+  <div id="pwaInstallBanner" class="hidden fixed bottom-5 left-4 right-4 sm:left-auto sm:right-6 sm:max-w-md z-40 bg-slate-900/95 backdrop-blur-xl border border-slate-700/80 rounded-2xl p-4 shadow-2xl text-white transition-all duration-300">
+    <div class="flex items-center gap-3">
+      <div class="w-11 h-11 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-600 p-0.5 shrink-0 shadow-md shadow-blue-500/30 flex items-center justify-center">
+        <img src="/icons/icon-192x192.png" alt="PriceTrace" class="w-full h-full object-cover rounded-[10px]">
+      </div>
+      <div class="flex-1 min-w-0">
+        <div class="flex items-center gap-1.5">
+          <span class="font-extrabold text-sm text-white truncate">PriceTrace 앱 설치</span>
+          <span class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-blue-500/20 text-blue-300 border border-blue-500/30 shrink-0">PWA</span>
+        </div>
+        <p class="text-xs text-slate-400 truncate mt-0.5">홈 화면에서 주소창 없이 0.1초 만에 실행</p>
+      </div>
+      <div class="flex items-center gap-1.5 shrink-0">
+        <button id="pwaBannerInstallBtn" class="px-3.5 py-2 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white text-xs font-bold shadow-md shadow-blue-600/30 active:scale-95 transition-all cursor-pointer">
+          설치
+        </button>
+        <button id="pwaBannerDismissBtn" class="p-1.5 text-slate-400 hover:text-white rounded-lg transition-colors cursor-pointer" title="닫기">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- iOS Safari 전용 홈 화면 추가 안내 모달 -->
+  <div id="iosInstallModal" class="hidden fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-sm flex items-end sm:items-center justify-center p-4">
+    <div class="w-full max-w-sm bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-2xl text-white space-y-4">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-2.5">
+          <div class="w-9 h-9 rounded-xl bg-blue-600/20 border border-blue-500/30 flex items-center justify-center">
+            <i data-lucide="smartphone" class="w-5 h-5 text-blue-400"></i>
+          </div>
+          <h3 class="font-black text-base text-white">홈 화면에 앱 추가하기</h3>
+        </div>
+        <button id="closeIosInstallModalBtn" class="p-1 text-slate-400 hover:text-white rounded-lg">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+      
+      <p class="text-xs text-slate-300 leading-relaxed">
+        Safari 브라우저에서 아래 순서대로 진행하시면 홈 화면에서 독립 앱으로 즉시 실행됩니다:
+      </p>
+
+      <div class="space-y-2.5 text-xs text-slate-300">
+        <div class="flex items-center gap-3 p-2.5 rounded-xl bg-slate-800/60 border border-slate-700/50">
+          <span class="w-6 h-6 rounded-full bg-blue-600 text-white font-bold flex items-center justify-center text-xs shrink-0">1</span>
+          <span>Safari 하단 중앙의 <strong class="text-white">공유 버튼</strong>(<i data-lucide="share" class="w-3.5 h-3.5 inline mx-0.5 text-blue-400"></i>)을 탭합니다.</span>
+        </div>
+        <div class="flex items-center gap-3 p-2.5 rounded-xl bg-slate-800/60 border border-slate-700/50">
+          <span class="w-6 h-6 rounded-full bg-blue-600 text-white font-bold flex items-center justify-center text-xs shrink-0">2</span>
+          <span>공유 시트 메뉴에서 <strong class="text-white">'홈 화면에 추가'</strong>를 선택합니다.</span>
+        </div>
+        <div class="flex items-center gap-3 p-2.5 rounded-xl bg-slate-800/60 border border-slate-700/50">
+          <span class="w-6 h-6 rounded-full bg-blue-600 text-white font-bold flex items-center justify-center text-xs shrink-0">3</span>
+          <span>우측 상단의 <strong class="text-white">'추가'</strong>를 누르면 설치가 완료됩니다!</span>
+        </div>
+      </div>
+
+      <button id="confirmIosInstallBtn" class="w-full py-3 rounded-2xl bg-blue-600 hover:bg-blue-500 font-bold text-xs text-white shadow-lg shadow-blue-600/30 transition-all">
+        확인했습니다
+      </button>
+    </div>
+  </div>
+
+  <!-- 메인 스크립트 (PWA 업데이트 반영) -->
+  <script src="app.js?v=20261001_pwa"></script>
   <script>
     // Lucide 아이콘 초기화
     lucide.createIcons();
