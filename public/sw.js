@@ -1,5 +1,5 @@
 // PriceTrace PWA Service Worker
-const CACHE_VERSION = 'v1.0.0';
+const CACHE_VERSION = 'v1.1.0';
 const STATIC_CACHE = `pricetrace-static-${CACHE_VERSION}`;
 const DYNAMIC_CACHE = `pricetrace-dynamic-${CACHE_VERSION}`;
 
@@ -10,6 +10,7 @@ const STATIC_ASSETS = [
   '/app.js',
   '/manifest.json',
   '/offline.html',
+  '/favicon.ico',
   '/logo_jwj.svg',
   '/icons/icon-192x192.png',
   '/icons/icon-192x192-maskable.png',
