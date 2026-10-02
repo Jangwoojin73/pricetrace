@@ -1,5 +1,5 @@
 // PriceTrace PWA Service Worker
-const CACHE_VERSION = 'v1.1.0';
+const CACHE_VERSION = 'v1.2.0';
 const STATIC_CACHE = `pricetrace-static-${CACHE_VERSION}`;
 const DYNAMIC_CACHE = `pricetrace-dynamic-${CACHE_VERSION}`;
 
