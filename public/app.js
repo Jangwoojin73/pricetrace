@@ -1470,6 +1470,17 @@ function setupPwaInstallation() {
 
   if (isStandalone) {
     console.log("[PWA] 현재 독립 실행형(Standalone) 모드로 구동 중입니다.");
+    if (installAppBtn) {
+      installAppBtn.classList.remove("flex");
+      installAppBtn.classList.add("hidden");
+    }
+    if (mobileInstallAppBtn) {
+      mobileInstallAppBtn.classList.remove("flex");
+      mobileInstallAppBtn.classList.add("hidden");
+    }
+    if (pwaInstallBanner) {
+      pwaInstallBanner.classList.add("hidden");
+    }
     return;
   }
 

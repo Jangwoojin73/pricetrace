@@ -116,3 +116,13 @@ html {
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
+
+/* PWA 스탠드얼론(독립 실행 창) 모드에서는 앱 설치 버튼 및 설치 유도 배너 원천 숨김 */
+@media all and (display-mode: standalone) {
+  #installAppBtn,
+  #mobileInstallAppBtn,
+  #pwaInstallBanner,
+  #iosInstallModal {
+    display: none !important;
+  }
+}
