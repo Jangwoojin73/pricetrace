@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PriceTrace 시니어·초심자 맞춤 QR 홍보 포스터 (세로 4:3)</title>
+  
+  <!-- Pretendard 폰트 (가독성 최고) -->
+  <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+  
+  <!-- Lucide 아이콘 -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <style>
+    :root {
+      /* 청금석 (Lapis Lazuli) 고대비 프리미엄 컬러 */
+      --lapis-deep: #0a192f;       /* 깊은 청금석 네이비 (고대비) */
+      --lapis-primary: #1e3e62;    /* 로열 라피스 */
+      --lapis-cobalt: #1d4ed8;     /* 쨍한 코발트 블루 */
+      --lapis-sky: #2563eb;        /* 명확한 블루 */
+      --lapis-gold: #b45309;       /* 눈에 잘 띄는 앰버 골드 */
+      --lapis-gold-bg: #fef3c7;
+      
+      --bg-canvas: #f1f5f9;        /* 배경 캔버스 */
+      --card-bg: #ffffff;          /* 퓨어 화이트 */
+      --text-main: #0f172a;        /* 또렷한 흑색 */
+      --text-sub: #334155;         /* 진한 회색 (가독성 보장) */
+      --border-strong: #cbd5e1;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", sans-serif;
+      word-break: keep-all;
+    }
+
+    body {
+      background-color: #0b1329;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      padding: 24px 16px;
+      color: var(--text-main);
+    }
+
+    /* 플로팅 컨트롤 바 (화면 전용, 인쇄 시 숨김) */
+    .control-bar {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 18px;
+      background: rgba(15, 23, 42, 0.95);
+      backdrop-filter: blur(12px);
+      padding: 8px 20px;
+      border-radius: 9999px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+      z-index: 100;
+    }
+
+    .aspect-badge {
+      font-size: 13px;
+      font-weight: 800;
+      color: #93c5fd;
+      background: rgba(37, 99, 235, 0.3);
+      padding: 4px 12px;
+      border-radius: 9999px;
+    }
+
+    .btn-action {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 16px;
+      border-radius: 9999px;
+      font-size: 13px;
+      font-weight: 800;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s ease;
+      text-decoration: none;
+    }
+
+    .btn-print {
+      background: #2563eb;
+      color: #ffffff;
+    }
+
+    .btn-print:hover {
+      background: #1d4ed8;
+    }
+
+    .btn-home {
+      background: rgba(255, 255, 255, 0.15);
+      color: #ffffff;
+    }
+
+    /* ==========================================================
+       포스터 캔버스 본체: 세로 4:3 비율 (840px × 1120px)
+       ========================================================== */
+    .poster-canvas {
+      width: 840px;
+      height: 1120px;
+      aspect-ratio: 3 / 4;
+      background-color: var(--bg-canvas);
+      border-radius: 28px;
+      overflow: hidden;
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.65), 0 0 0 2px rgba(255, 255, 255, 0.15);
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      flex-shrink: 0;
+    }
+
+    /* 1. 상단 청금석 브랜드 헤더 (글씨 크고 시원하게) */
+    .poster-header {
+      background: linear-gradient(165deg, #09182d 0%, #153860 60%, #1d4ed8 100%);
+      padding: 28px 32px 22px 32px;
+      text-align: center;
+      position: relative;
+      color: #ffffff;
+      flex-shrink: 0;
+    }
+
+    .brand-top-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      margin-bottom: 8px;
+    }
+
+    .brand-emblem-wrap {
+      width: 68px;
+      height: 68px;
+      border-radius: 50%;
+      background: #ffffff;
+      padding: 6px;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3), 0 0 0 3px #f59e0b;
+      flex-shrink: 0;
+    }
+
+    .brand-emblem {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    .brand-title-box {
+      text-align: left;
+    }
+
+    .brand-title {
+      font-size: 38px;
+      font-weight: 900;
+      letter-spacing: -1px;
+      line-height: 1;
+      color: #ffffff;
+    }
+
+    .brand-title span.trace {
+      color: #60a5fa;
+    }
+
+    .brand-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #f59e0b;
+      color: #0f172a;
+      padding: 4px 12px;
+      border-radius: 8px;
+      font-size: 13.5px;
+      font-weight: 900;
+      margin-top: 4px;
+    }
+
+    .brand-main-copy {
+      font-size: 21px;
+      font-weight: 800;
+      color: #ffffff;
+      line-height: 1.35;
+      margin-top: 8px;
+      letter-spacing: -0.5px;
+    }
+
+    .brand-main-copy mark {
+      background: rgba(245, 158, 11, 0.35);
+      color: #fef08a;
+      padding: 2px 6px;
+      border-radius: 6px;
+    }
+
+    /* 2. 포스터 본문 컨테이너 (간결하고 큼직한 3단 카드) */
+    .poster-body {
+      padding: 20px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      background-color: var(--bg-canvas);
+      flex: 1;
+      justify-content: space-between;
+    }
+
+    /* 카드 공통 스타일 (크고 흰 카드) */
+    .senior-card {
+      background: var(--card-bg);
+      border-radius: 22px;
+      padding: 20px 24px;
+      box-shadow: 0 4px 16px rgba(15, 23, 42, 0.06);
+      border: 2px solid #e2e8f0;
+      position: relative;
+    }
+
+    /* 번호 배지 */
+    .step-num {
+      position: absolute;
+      top: -12px;
+      left: 20px;
+      background: #1d4ed8;
+      color: #ffffff;
+      font-size: 15px;
+      font-weight: 900;
+      padding: 3px 14px;
+      border-radius: 9999px;
+      box-shadow: 0 4px 10px rgba(29, 78, 216, 0.35);
+      border: 2px solid #ffffff;
+    }
+
+    /* [1단계 카드: QR 코드 촬영하기] */
+    .card-qr-step {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      padding: 20px 28px;
+      background: linear-gradient(135deg, #ffffff 0%, #f8faff 100%);
+      border: 2.5px solid #bfdbfe;
+    }
+
+    .qr-text-side {
+      flex: 1;
+    }
+
+    .qr-main-title {
+      font-size: 24px;
+      font-weight: 900;
+      color: #0f172a;
+      letter-spacing: -0.6px;
+      line-height: 1.25;
+      margin-bottom: 8px;
+    }
+
+    .qr-main-title span.point {
+      color: #1d4ed8;
+      text-decoration: underline;
+      text-underline-offset: 4px;
+    }
+
+    .qr-sub-desc {
+      font-size: 15.5px;
+      font-weight: 700;
+      color: #334155;
+      line-height: 1.45;
+      margin-bottom: 12px;
+    }
+
+    .qr-guide-bubble {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: #ecfdf5;
+      border: 1.5px solid #a7f3d0;
+      color: #065f46;
+      padding: 7px 14px;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 800;
+    }
+
+    .qr-image-box {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background: #ffffff;
+      padding: 12px;
+      border-radius: 18px;
+      border: 2px solid #cbd5e1;
+      box-shadow: 0 8px 24px rgba(30, 62, 98, 0.12);
+      flex-shrink: 0;
+    }
+
+    .qr-image {
+      width: 175px;
+      height: 175px;
+      object-fit: contain;
+    }
+
+    .qr-caption {
+      font-size: 13px;
+      font-weight: 800;
+      color: #1e3e62;
+      margin-top: 6px;
+    }
+
+    /* [2단계 카드: 3대 핵심 혜택 (큼직하고 쉬운 3단 바)] */
+    .card-benefit-step {
+      padding: 22px 24px 18px 24px;
+    }
+
+    .benefit-title {
+      font-size: 21px;
+      font-weight: 900;
+      color: #0f172a;
+      letter-spacing: -0.5px;
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .benefit-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .benefit-item {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      background: #f8fafc;
+      border: 1.5px solid #e2e8f0;
+      border-radius: 16px;
+      padding: 12px 18px;
+    }
+
+    .benefit-icon {
+      width: 46px;
+      height: 46px;
+      border-radius: 14px;
+      background: #eff6ff;
+      border: 1.5px solid #bfdbfe;
+      color: #1d4ed8;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      flex-shrink: 0;
+    }
+
+    .benefit-icon.gold {
+      background: #fef3c7;
+      border-color: #fde68a;
+      color: #b45309;
+    }
+
+    .benefit-icon.green {
+      background: #ecfdf5;
+      border-color: #a7f3d0;
+      color: #059669;
+    }
+
+    .benefit-text-wrap {
+      flex: 1;
+    }
+
+    .benefit-head {
+      font-size: 17px;
+      font-weight: 800;
+      color: #0f172a;
+      letter-spacing: -0.3px;
+      margin-bottom: 2px;
+    }
+
+    .benefit-desc {
+      font-size: 14px;
+      color: #475569;
+      font-weight: 600;
+    }
+
+    /* [3단계 카드: 스마트폰 홈 화면에 쏙 넣기] */
+    .card-home-step {
+      background: linear-gradient(135deg, #f0fdf4 0%, #e0f2fe 100%);
+      border: 2px solid #86efac;
+      padding: 18px 22px;
+    }
+
+    .home-step-title {
+      font-size: 19px;
+      font-weight: 900;
+      color: #065f46;
+      letter-spacing: -0.4px;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .os-columns {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .os-box-senior {
+      background: #ffffff;
+      border-radius: 14px;
+      padding: 12px 16px;
+      border: 1.5px solid #cbd5e1;
+    }
+
+    .os-name-tag {
+      font-size: 14px;
+      font-weight: 900;
+      color: #0f172a;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 6px;
+      padding-bottom: 5px;
+      border-bottom: 1px solid #f1f5f9;
+    }
+
+    .os-step-text {
+      font-size: 13.5px;
+      font-weight: 700;
+      color: #1e293b;
+      line-height: 1.45;
+    }
+
+    .os-step-text strong {
+      color: #1d4ed8;
+      background: #eff6ff;
+      padding: 1px 5px;
+      border-radius: 4px;
+    }
+
+    /* 하단 푸터 (큰 무료 안내 문구) */
+    .poster-footer {
+      text-align: center;
+      padding-bottom: 10px;
+      font-size: 13px;
+      font-weight: 800;
+      color: #64748b;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .free-pill {
+      background: #dbeafe;
+      color: #1e40af;
+      padding: 2px 8px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+    /* 인쇄 최적화 (세로 4:3) */
+    @media print {
+      body {
+        background-color: #ffffff;
+        padding: 0;
+      }
+      .control-bar {
+        display: none !important;
+      }
+      .poster-canvas {
+        width: 100%;
+        height: auto;
+        aspect-ratio: 3 / 4;
+        border-radius: 0;
+        box-shadow: none;
+        border: none;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 플로팅 컨트롤 바 (웹 열람 전용) -->
+  <div class="control-bar">
+    <span class="aspect-badge">👵👴 시니어·초심자 큰글씨 버전</span>
+    <button class="btn-action btn-print" onclick="window.print()">
+      <i data-lucide="printer" style="width: 15px; height: 15px;"></i>
+      <span>인쇄하기 / PDF</span>
+    </button>
+    <a href="https://pricetrace-nu.vercel.app/" target="_blank" class="btn-action btn-home">
+      <i data-lucide="external-link" style="width: 15px; height: 15px;"></i>
+      <span>홈페이지 바로가기</span>
+    </a>
+  </div>
+
+  <!-- ============================================== -->
+  <!-- 포스터 메인 캔버스: 세로 4:3 (840px × 1120px) -->
+  <!-- ============================================== -->
+  <div class="poster-canvas">
+
+    <!-- 1. 청금석 브랜드 헤더 -->
+    <header class="poster-header">
+      <div class="brand-top-row">
+        <div class="brand-emblem-wrap">
+          <img src="/logo_jwj.svg" alt="PriceTrace 로고" class="brand-emblem">
+        </div>
+        <div class="brand-title-box">
+          <div class="brand-title">Price<span class="trace">Trace</span></div>
+          <div class="brand-badge">
+            <i data-lucide="check-circle" style="width: 14px; height: 14px;"></i>
+            <span>네이버 쇼핑 공식 실시간 최저가</span>
+          </div>
+        </div>
+      </div>
+
+      <h1 class="brand-main-copy">
+        속임수 광고는 빼고, <mark>진짜 제일 싼 곳</mark>만 찾아드립니다!
+      </h1>
+    </header>
+
+    <!-- 2. 본문 영역 (초간단 3단계) -->
+    <main class="poster-body">
+
+      <!-- ============================================== -->
+      <!-- [1단계] 큰 QR코드 촬영 카드 -->
+      <!-- ============================================== -->
+      <section class="senior-card card-qr-step">
+        <div class="step-num">1단계 : 접속하기</div>
+        
+        <div class="qr-text-side">
+          <h2 class="qr-main-title">
+            스마트폰 카메라로<br>
+            <span class="point">QR코드를 비추세요!</span>
+          </h2>
+          <p class="qr-sub-desc">
+            복잡한 앱 설치 없이, 카메라만 켜서 비추면 <strong>1초 만에</strong> 바로 열립니다.
+          </p>
+          <div class="qr-guide-bubble">
+            <i data-lucide="camera" style="width: 18px; height: 18px;"></i>
+            <span>별도 설치 없이 100% 무료 이용</span>
+          </div>
+        </div>
+
+        <div class="qr-image-box">
+          <img src="/pricetrace_qr.png?v=20261002_qr" alt="PriceTrace QR코드" class="qr-image">
+          <span class="qr-caption">카메라를 여기에 비추세요 👆</span>
+        </div>
+      </section>
+
+      <!-- ============================================== -->
+      <!-- [2단계] 왜 좋은가요? 3대 핵심 혜택 -->
+      <!-- ============================================== -->
+      <section class="senior-card card-benefit-step">
+        <div class="step-num">2단계 : 스마트하게 쓰기</div>
+        <h2 class="benefit-title">
+          <i data-lucide="sparkles" style="width: 22px; height: 22px; color: #1d4ed8;"></i>
+          <span>이런 점이 정말 편리해요!</span>
+        </h2>
+
+        <div class="benefit-list">
+          
+          <!-- 혜택 1 -->
+          <div class="benefit-item">
+            <div class="benefit-icon">
+              <i data-lucide="shield-check" style="width: 24px; height: 24px;"></i>
+            </div>
+            <div class="benefit-text-wrap">
+              <h3 class="benefit-head">가짜 광고 100% 제외</h3>
+              <p class="benefit-desc">돈 내고 올린 유료 광고나 낚시성 미끼 상품을 완전히 걸러냅니다.</p>
+            </div>
+          </div>
+
+          <!-- 혜택 2 -->
+          <div class="benefit-item">
+            <div class="benefit-icon gold">
+              <i data-lucide="calculator" style="width: 24px; height: 24px;"></i>
+            </div>
+            <div class="benefit-text-wrap">
+              <h3 class="benefit-head">1개당 가격 자동 계산</h3>
+              <p class="benefit-desc">신라면 20봉지, 휴지 30롤 등 <strong>1개당 얼마인지</strong> 바로 계산해줍니다.</p>
+            </div>
+          </div>
+
+          <!-- 혜택 3 -->
+          <div class="benefit-item">
+            <div class="benefit-icon green">
+              <i data-lucide="trending-down" style="width: 24px; height: 24px;"></i>
+            </div>
+            <div class="benefit-text-wrap">
+              <h3 class="benefit-head">지금 사도 되는지 확인</h3>
+              <p class="benefit-desc">최근 30일간 가격이 올랐는지 내렸는지 알기 쉽게 그래프로 보여줍니다.</p>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ============================================== -->
+      <!-- [3단계] 스마트폰 홈 화면에 추가하기 -->
+      <!-- ============================================== -->
+      <section class="senior-card card-home-step">
+        <div class="step-num" style="background: #059669;">3단계 : 매일 쓰기</div>
+        
+        <h2 class="home-step-title">
+          <i data-lucide="smartphone" style="width: 22px; height: 22px;"></i>
+          <span>스마트폰 바탕화면에 '바로가기'로 저장하세요!</span>
+        </h2>
+
+        <div class="os-columns">
+          
+          <!-- 갤럭시/안드로이드 -->
+          <div class="os-box-senior">
+            <div class="os-name-tag">
+              <i data-lucide="smartphone" style="width: 16px; height: 16px; color: #16a34a;"></i>
+              <span>갤럭시 (삼성인터넷·크롬)</span>
+            </div>
+            <div class="os-step-text">
+              오른쪽 메뉴 <strong>[ ⋮ 또는 ≡ ]</strong> 누르고<br>
+              ➔ <strong>[홈 화면에 추가]</strong> 선택
+            </div>
+          </div>
+
+          <!-- 아이폰 -->
+          <div class="os-box-senior">
+            <div class="os-name-tag">
+              <i data-lucide="apple" style="width: 16px; height: 16px; color: #dc2626;"></i>
+              <span>아이폰 (Safari 사파리)</span>
+            </div>
+            <div class="os-step-text">
+              아래쪽 공유 버튼 <strong>[ ⬆️ ]</strong> 누르고<br>
+              ➔ <strong>[홈 화면에 추가]</strong> 선택
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+    </main>
+
+    <!-- 3. 포스터 푸터 -->
+    <footer class="poster-footer">
+      <span class="free-pill">100% 무료</span>
+      <span>인터넷 주소: <strong>https://pricetrace-nu.vercel.app/</strong></span>
+    </footer>
+
+  </div>
+
+  <script>
+    // Lucide 아이콘 초기화
+    lucide.createIcons();
+  </script>
+</body>
+</html>
