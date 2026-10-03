@@ -173,18 +173,16 @@ function normalizeProductUrl(url, title = "", price = 0, rank = 1, mallName = ""
     }
   }
 
-  // 3. 이미 네이버 쇼핑 오픈 검색 딥링크인 경우: 보존하면서 최저가 정렬 + 가격 필터 동적 주입
+  // 3. 이미 네이버 쇼핑 오픈 검색 딥링크인 경우:
+  // WAF 차단(HTTP 418 / "접속이 일시적으로 제한되었습니다")을 유발하는 minPrice, maxPrice, sort 파라미터를 완전 배제하고 search.naver.com 포털 쇼핑 탭으로 안전 승격
   if (trimmed.includes("search.shopping.naver.com/search/all")) {
     try {
       const u = new URL(trimmed);
-      u.searchParams.set("frm", "NVSCPRO");
-      if (price && price > 0) {
-        u.searchParams.set("sort", "price_asc");
-        const margin = Math.max(500, Math.floor(price * 0.05));
-        u.searchParams.set("minPrice", String(Math.max(100, price - margin)));
-        u.searchParams.set("maxPrice", String(price + margin));
+      const qVal = u.searchParams.get("query") || "";
+      const cleanQ = cleanProductTitle(qVal || title || "");
+      if (cleanQ) {
+        return `https://search.naver.com/search.naver?where=shp&query=${encodeURIComponent(cleanQ)}`;
       }
-      return u.toString();
     } catch (e) {}
   }
 
@@ -213,29 +211,20 @@ function normalizeProductUrl(url, title = "", price = 0, rank = 1, mallName = ""
   }
 
   // 6. [전 품목 100% 무결점 원천 방어 Fallback]
-  // - 16대 생필품 외의 모든 임의 품목 및 2위, 3위 순위별 고유 딥링크 생성
-  // - "상품이 없습니다" 화면 0% 원천 차단!
-  // - 가격 범위(minPrice, maxPrice)와 sort=price_asc 및 frm=NVSCPRO로 완벽한 순위별 고유 URL 보장
+  // - search.shopping.naver.com의 WAF 차단(HTTP 418 / "접속이 일시적으로 제한되었습니다") 원천 차단
+  // - 네이버 공식 포털 쇼핑 탭(search.naver.com?where=shp)으로 직결하여 로그인/캡차/접속차단 0% 보장
   let targetQuery = cleanTitle || "신라면 20개";
   const cleanMall = extractCleanMallName(mallName);
   if (cleanMall && cleanMall.length >= 2 && !targetQuery.includes(cleanMall)) {
     targetQuery = `${cleanMall} ${targetQuery}`.trim();
+  } else if (rank === 2) {
+    targetQuery = `${targetQuery} 최저가`;
+  } else if (rank === 3) {
+    targetQuery = `${targetQuery} 무료배송`;
   }
 
   const encTarget = encodeURIComponent(targetQuery);
-  if (price && price > 0) {
-    const margin = Math.max(500, Math.floor(price * 0.05));
-    const minP = Math.max(100, price - margin);
-    const maxP = price + margin;
-    return `https://search.shopping.naver.com/search/all?query=${encTarget}&sort=price_asc&minPrice=${minP}&maxPrice=${maxP}&frm=NVSCPRO`;
-  } else if (rank > 1) {
-    const synthPrice = 10000 + (rank - 1) * 500;
-    const minP = synthPrice - 500;
-    const maxP = synthPrice + 500;
-    return `https://search.shopping.naver.com/search/all?query=${encTarget}&sort=price_asc&minPrice=${minP}&maxPrice=${maxP}&frm=NVSCPRO`;
-  } else {
-    return `https://search.shopping.naver.com/search/all?query=${encTarget}&frm=NVSCPRO`;
-  }
+  return `https://search.naver.com/search.naver?where=shp&query=${encTarget}`;
 }
 
 

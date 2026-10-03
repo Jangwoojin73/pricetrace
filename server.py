@@ -865,8 +865,8 @@ def fetch_price_data(keyword: str = "농심 신라면 봉지 20개입", target_p
                 pad_title = f"{clean_base_title} (스마트스토어)"
             else:
                 pad_title = f"{clean_base_title} (브랜드스토어)"
-            pad_url = (pricetrace_bot.normalize_shopping_url("", title=clean_base_title, price=calc_price, rank=idx+1, mall_name=mall_nm)
-                       if pricetrace_bot else f"https://search.shopping.naver.com/search/all?query={urllib.parse.quote(clean_base_title)}&sort=price_asc&minPrice={max(100, calc_price-500)}&maxPrice={calc_price+500}&frm=NVSCPRO")
+            pad_url = (pricetrace_bot.normalize_shopping_url("", title=pad_title, price=calc_price, rank=idx+1, mall_name=mall_nm)
+                       if pricetrace_bot else f"https://search.naver.com/search.naver?where=shp&query={urllib.parse.quote(pad_title)}")
             refined_items.append({
                 "title": pad_title,
                 "price": calc_price,

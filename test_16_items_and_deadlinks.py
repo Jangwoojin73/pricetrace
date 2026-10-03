@@ -76,8 +76,8 @@ class TestPriceTraceFixes(unittest.TestCase):
                     self.assertNotIn("Adapter", url, f"Corrupted query found in {key} rank {idx}: {url}")
                     self.assertNotIn("%29", url.split("?")[-1] if "?" in url else "", f"Dangling parenthesis found in {key} rank {idx}: {url}")
 
-                    # URL은 공식 카탈로그(catalog/...) 또는 가격비교 검색(frm=NVSCPRO)이어야 함
-                    valid_url_type = ("/catalog/" in url and not "/catalog/8" in url) or ("frm=NVSCPRO" in url)
+                    # URL은 공식 카탈로그(catalog/...) 또는 가격비교 검색(frm=NVSCPRO 또는 where=shp)이어야 함
+                    valid_url_type = ("/catalog/" in url and not "/catalog/8" in url) or ("frm=NVSCPRO" in url) or ("where=shp" in url)
                     self.assertTrue(valid_url_type, f"Invalid URL structure for {key} rank {idx}: {url}")
                     urls.append(url)
 

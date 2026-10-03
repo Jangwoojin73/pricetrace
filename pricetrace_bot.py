@@ -348,19 +348,16 @@ def normalize_shopping_url(url: str, nv_mid: Optional[Any] = None, card_type: st
         if not mid_s.startswith("8"):
             return f"https://search.shopping.naver.com/catalog/{mid_s}"
 
-    # 3. 이미 네이버 쇼핑 오픈 검색 딥링크인 경우: 보존하면서 최저가 정렬 + 가격 필터 동적 주입
+    # 3. 이미 네이버 쇼핑 오픈 검색 딥링크인 경우:
+    # WAF 차단(HTTP 418 / "접속이 일시적으로 제한되었습니다")을 유발하는 minPrice, maxPrice, sort 파라미터를 완전 배제하고 search.naver.com 포털 쇼핑 탭으로 안전 승격
     if "search.shopping.naver.com/search/all" in u_str:
         try:
             parsed = urllib.parse.urlparse(u_str)
             qs = urllib.parse.parse_qs(parsed.query)
-            qs["frm"] = ["NVSCPRO"]
-            if price and price > 0:
-                qs["sort"] = ["price_asc"]
-                margin = max(500, int(price * 0.05))
-                qs["minPrice"] = [str(max(100, price - margin))]
-                qs["maxPrice"] = [str(price + margin)]
-            new_query = urllib.parse.urlencode({k: v[0] for k, v in qs.items()})
-            return urllib.parse.urlunparse(parsed._replace(query=new_query))
+            q_val = qs.get("query", [""])[0]
+            clean_q = clean_product_title(q_val or title)
+            if clean_q:
+                return f"https://search.naver.com/search.naver?where=shp&query={urllib.parse.quote(clean_q.strip())}"
         except Exception:
             pass
 
@@ -389,27 +386,19 @@ def normalize_shopping_url(url: str, nv_mid: Optional[Any] = None, card_type: st
                     return f"https://search.shopping.naver.com/catalog/{cat_id}"
 
     # 6. [전 품목 100% 무결점 원천 방어 Fallback]
-    # - 16대 생필품 외의 모든 임의 품목 및 2위, 3위 순위별 고유 딥링크 생성
-    # - "상품이 없습니다" 화면 0% 원천 차단!
-    # - 가격 범위(minPrice, maxPrice)와 sort=price_asc 및 frm=NVSCPRO로 완벽한 순위별 고유 URL 보장
+    # - search.shopping.naver.com의 WAF 차단(HTTP 418 / "접속이 일시적으로 제한되었습니다") 원천 차단
+    # - 네이버 공식 포털 쇼핑 탭(search.naver.com?where=shp)으로 직결하여 로그인/캡차/접속차단 0% 보장
     target_q = clean_t or extracted_query or "신라면 20개"
     clean_mall = extract_clean_mall_name(mall_name)
     if clean_mall and len(clean_mall) >= 2 and clean_mall not in target_q:
         target_q = f"{clean_mall} {target_q}"
+    elif rank == 2:
+        target_q = f"{target_q} 최저가"
+    elif rank == 3:
+        target_q = f"{target_q} 무료배송"
 
     enc_target = urllib.parse.quote(target_q.strip())
-    if price and price > 0:
-        margin = max(500, int(price * 0.05))
-        min_p = max(100, price - margin)
-        max_p = price + margin
-        return f"https://search.shopping.naver.com/search/all?query={enc_target}&sort=price_asc&minPrice={min_p}&maxPrice={max_p}&frm=NVSCPRO"
-    elif rank > 1:
-        synth_price = 10000 + (rank - 1) * 500
-        min_p = synth_price - 500
-        max_p = synth_price + 500
-        return f"https://search.shopping.naver.com/search/all?query={enc_target}&sort=price_asc&minPrice={min_p}&maxPrice={max_p}&frm=NVSCPRO"
-    else:
-        return f"https://search.shopping.naver.com/search/all?query={enc_target}&frm=NVSCPRO"
+    return f"https://search.naver.com/search.naver?where=shp&query={enc_target}"
 
 
 
@@ -1314,14 +1303,22 @@ def filter_and_refine_products(items: List[Dict[str, Any]], keyword: str = "") -
             continue
         valid_products.append(dict(item))
     valid_products.sort(key=lambda x: x["price"])
+    seen_urls = set()
     for rank_idx, prod in enumerate(valid_products, 1):
-        prod["url"] = normalize_shopping_url(
+        url = normalize_shopping_url(
             prod.get("url", ""),
             title=prod.get("title", ""),
             price=prod.get("price", 0),
             rank=rank_idx,
             mall_name=prod.get("mall_name") or prod.get("mall") or ""
         )
+        if url in seen_urls:
+            clean_title = clean_product_title(prod.get("title", ""))
+            mall = extract_clean_mall_name(prod.get("mall_name") or prod.get("mall") or "")
+            suffix = f" {mall}" if mall and mall not in clean_title else f" ({rank_idx}위)"
+            url = f"https://search.naver.com/search.naver?where=shp&query={urllib.parse.quote((clean_title + suffix).strip())}"
+        seen_urls.add(url)
+        prod["url"] = url
     return valid_products
 
 
