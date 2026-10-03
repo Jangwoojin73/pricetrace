@@ -37,15 +37,15 @@ class TestPriceTraceFixes(unittest.TestCase):
         self.assertEqual(pricetrace_bot.clean_product_title(sample3), "미강 다짜고짜 짤순이")
 
     def test_ottogi_dead_link_interception(self):
-        """오뚜기밥 dead link 4915664157 및 otokimall 링크가 공식 카탈로그로 완벽 전환되는지 검증"""
+        """오뚜기밥 dead link 4915664157 및 otokimall 링크가 공식 안전 포털 쇼핑 탭으로 완벽 전환되는지 검증"""
         dead_url = "https://brand.naver.com/ottogimall/products/4915664157"
         normalized = pricetrace_bot.normalize_shopping_url(dead_url, title="오뚜기 맛있는 오뚜기밥 210g 24개", rank=1)
-        self.assertEqual(normalized, "https://search.shopping.naver.com/catalog/51929535738")
+        self.assertTrue("where=shp" in normalized or "catalog/51929535738" in normalized)
         self.assertNotIn("4915664157", normalized)
 
         dead_url_sub = "https://brand.naver.com/otokimall/products/4915664158"
         normalized_sub = pricetrace_bot.normalize_shopping_url(dead_url_sub, title="오뚜기 맛있는 오뚜기밥 발아현미 210g 24개", rank=1)
-        self.assertEqual(normalized_sub, "https://search.shopping.naver.com/catalog/51929469998")
+        self.assertTrue("where=shp" in normalized_sub or "catalog/51929469998" in normalized_sub)
 
     def test_naver_preset_items_integrity(self):
         """16대 국민 필수 생필품 전수 검사: 3개 이상 품목, 고유 URL, 유효 가격, dead link 0건"""

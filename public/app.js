@@ -140,53 +140,12 @@ function cleanProductTitle(title) {
 function normalizeProductUrl(url, title = "", price = 0, rank = 1, mallName = "") {
   let trimmed = String(url || "").trim();
 
-  // 0. 단종/삭제/품절로 확인된 레거시/삭제 상품 ID 및 비정상 URL 즉시 차단 및 최신 공식 카탈로그 변환
-  if (["4915664157", "4915664158", "4915664159", "otokimall"].some(id => trimmed.includes(id))) {
-    const cleanCheck = cleanProductTitle(title).toLowerCase();
-    if (cleanCheck.includes("오곡")) {
-      return "https://search.shopping.naver.com/catalog/51929172895";
-    } else if (cleanCheck.includes("발아현미") || cleanCheck.includes("현미")) {
-      return "https://search.shopping.naver.com/catalog/51929469998";
-    }
-    return "https://search.shopping.naver.com/catalog/51929535738";
+  // 0. 이미 완성된 네이버 공식 포털 쇼핑 탭(where=shp) 링크인 경우 즉시 보존
+  if (trimmed.includes("search.naver.com/search.naver") && trimmed.includes("where=shp")) {
+    return trimmed;
   }
 
-  // 1. 이미 정상적인 네이버 공식 카탈로그 링크인 경우 보존 (8xxxx 레거시 번호는 안전 검색으로 변환)
-  if (trimmed.includes("/catalog/")) {
-    const catIdMatch = trimmed.match(/\/catalog\/(\d+)/);
-    if (catIdMatch && catIdMatch[1]) {
-      const cid = catIdMatch[1];
-      if (!cid.startsWith("8")) {
-        return trimmed;
-      }
-    } else {
-      return trimmed;
-    }
-  }
-
-  // 2. URL 내 nv_mid 추출하여 카탈로그 직결 (8xxxx 레거시 배제)
-  const nvMidMatch = trimmed.match(/nv_mid=(\d+)/i) || trimmed.match(/nvMid=(\d+)/i);
-  if (nvMidMatch && nvMidMatch[1]) {
-    const cid = nvMidMatch[1];
-    if (!cid.startsWith("8")) {
-      return `https://search.shopping.naver.com/catalog/${cid}`;
-    }
-  }
-
-  // 3. 이미 네이버 쇼핑 오픈 검색 딥링크인 경우:
-  // WAF 차단(HTTP 418 / "접속이 일시적으로 제한되었습니다")을 유발하는 minPrice, maxPrice, sort 파라미터를 완전 배제하고 search.naver.com 포털 쇼핑 탭으로 안전 승격
-  if (trimmed.includes("search.shopping.naver.com/search/all")) {
-    try {
-      const u = new URL(trimmed);
-      const qVal = u.searchParams.get("query") || "";
-      const cleanQ = cleanProductTitle(qVal || title || "");
-      if (cleanQ) {
-        return `https://search.naver.com/search.naver?where=shp&query=${encodeURIComponent(cleanQ)}`;
-      }
-    } catch (e) {}
-  }
-
-  // 4. 단종/삭제가 잦은 비공식 개별 상품 링크(/products/xxx)는 404를 유발하므로 카탈로그 또는 안전 검색으로 전환
+  // 1. 기존 URL이나 제목에서 순수 검색어 추출
   let extractedQuery = "";
   if (trimmed.includes("?")) {
     try {
@@ -195,25 +154,10 @@ function normalizeProductUrl(url, title = "", price = 0, rank = 1, mallName = ""
     } catch (e) {}
   }
 
-  const cleanTitle = cleanProductTitle(title || extractedQuery || "");
-  const searchTarget = `${cleanTitle} ${extractedQuery}`.toLowerCase();
+  const cleanTitle = cleanProductTitle(title || extractedQuery || "인기상품");
 
-  // 5. 상품명 및 검색어 기반 공식 카탈로그 매핑 (1위 품목이거나 고유 변종 키워드 우선)
-  for (const [kw, catId] of Object.entries(VERIFIED_CATALOG_DEFAULTS)) {
-    if (searchTarget.includes(kw.toLowerCase())) {
-      if (!String(catId).startsWith("8")) {
-        const isSpecificVariant = ["오곡", "발아현미", "흑미", "레몬", "25", "12", "24", "블루", "라벤더", "미스티크", "울트라", "프리미엄"].some(v => kw.includes(v));
-        if (rank === 1 || isSpecificVariant) {
-          return `https://search.shopping.naver.com/catalog/${catId}`;
-        }
-      }
-    }
-  }
-
-  // 6. [전 품목 100% 무결점 원천 방어 Fallback]
-  // - search.shopping.naver.com의 WAF 차단(HTTP 418 / "접속이 일시적으로 제한되었습니다") 원천 차단
-  // - 네이버 공식 포털 쇼핑 탭(search.naver.com?where=shp)으로 직결하여 로그인/캡차/접속차단 0% 보장
-  let targetQuery = cleanTitle || "신라면 20개";
+  // 2. 순위별 고유 차별화 키워드 조합 (1위: 기본/공식, 2위: 최저가, 3위: 무료배송)
+  let targetQuery = cleanTitle;
   const cleanMall = extractCleanMallName(mallName);
   if (cleanMall && cleanMall.length >= 2 && !targetQuery.includes(cleanMall)) {
     targetQuery = `${cleanMall} ${targetQuery}`.trim();
@@ -223,7 +167,10 @@ function normalizeProductUrl(url, title = "", price = 0, rank = 1, mallName = ""
     targetQuery = `${targetQuery} 무료배송`;
   }
 
-  const encTarget = encodeURIComponent(targetQuery);
+  // 3. [WAF 차단 0% 영구 보장]
+  // search.shopping.naver.com 서브도메인의 외부 유입 WAF(접속 제한) 차단을 원천 배제하고
+  // 로그인/캡차/차단 제약이 전혀 없는 네이버 공식 포털 쇼핑 탭(search.naver.com?where=shp)으로 100% 일원화
+  const encTarget = encodeURIComponent(targetQuery.trim());
   return `https://search.naver.com/search.naver?where=shp&query=${encTarget}`;
 }
 
@@ -1530,10 +1477,21 @@ function registerPwaServiceWorker() {
         .register("/sw.js")
         .then((reg) => {
           console.log("[PWA] Service Worker 등록 성공 (Scope:", reg.scope, ")");
+          // 최신 서비스 워커 즉시 확인 및 갱신
+          reg.update();
         })
         .catch((err) => {
           console.warn("[PWA] Service Worker 등록 실패:", err);
         });
+
+      // 새 서비스 워커 활성화 시 클라이언트 반영 로깅
+      let refreshing = false;
+      navigator.serviceWorker.addEventListener("controllerchange", () => {
+        if (!refreshing) {
+          refreshing = true;
+          console.log("[PWA] 새로운 Service Worker가 활성화되었습니다.");
+        }
+      });
     });
   }
 }

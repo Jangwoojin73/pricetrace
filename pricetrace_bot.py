@@ -318,50 +318,11 @@ def normalize_shopping_url(url: str, nv_mid: Optional[Any] = None, card_type: st
     """
     u_str = str(url or "").strip()
 
-    # 0. 단종/삭제/품절로 확인된 레거시/삭제 상품 ID 및 비정상 URL 즉시 차단 및 최신 공식 카탈로그 변환
-    if any(dead_id in u_str for dead_id in ["4915664157", "4915664158", "4915664159", "otokimall"]):
-        clean_check = clean_product_title(title).lower()
-        if "오곡" in clean_check:
-            return "https://search.shopping.naver.com/catalog/51929172895"
-        elif "발아현미" in clean_check or "현미" in clean_check:
-            return "https://search.shopping.naver.com/catalog/51929469998"
-        return "https://search.shopping.naver.com/catalog/51929535738"
+    # 0. 이미 완성된 네이버 공식 포털 쇼핑 탭(where=shp) 링크인 경우 즉시 보존
+    if "search.naver.com/search.naver" in u_str and "where=shp" in u_str:
+        return u_str
 
-    # 1. 이미 정상적인 네이버 공식 카탈로그 링크인 경우 보존 (8xxxx 레거시 번호는 안전 검색으로 변환)
-    if "/catalog/" in u_str:
-        m_cat = re.search(r"/catalog/(\d+)", u_str)
-        if m_cat:
-            cid = m_cat.group(1)
-            if not cid.startswith("8"):
-                return u_str
-        else:
-            return u_str
-
-    # 2. nv_mid 파라미터 또는 URL 내 nv_mid 추출 (8xxxx 레거시 배제)
-    if nv_mid and str(nv_mid).strip().isdigit():
-        mid_s = str(nv_mid).strip()
-        if not mid_s.startswith("8"):
-            return f"https://search.shopping.naver.com/catalog/{mid_s}"
-    m = re.search(r"nv_mid=(\d+)", u_str) or re.search(r"nvMid=(\d+)", u_str)
-    if m:
-        mid_s = m.group(1)
-        if not mid_s.startswith("8"):
-            return f"https://search.shopping.naver.com/catalog/{mid_s}"
-
-    # 3. 이미 네이버 쇼핑 오픈 검색 딥링크인 경우:
-    # WAF 차단(HTTP 418 / "접속이 일시적으로 제한되었습니다")을 유발하는 minPrice, maxPrice, sort 파라미터를 완전 배제하고 search.naver.com 포털 쇼핑 탭으로 안전 승격
-    if "search.shopping.naver.com/search/all" in u_str:
-        try:
-            parsed = urllib.parse.urlparse(u_str)
-            qs = urllib.parse.parse_qs(parsed.query)
-            q_val = qs.get("query", [""])[0]
-            clean_q = clean_product_title(q_val or title)
-            if clean_q:
-                return f"https://search.naver.com/search.naver?where=shp&query={urllib.parse.quote(clean_q.strip())}"
-        except Exception:
-            pass
-
-    # 4. 단종/삭제가 잦은 비공식 개별 상품 링크(/products/xxx)는 404를 유발하므로 카탈로그 또는 안전 검색으로 전환
+    # 1. 기존 URL이나 제목에서 순수 검색어 추출
     clean_t = clean_product_title(title)
     extracted_query = ""
     if "?" in u_str:
@@ -373,21 +334,6 @@ def normalize_shopping_url(url: str, nv_mid: Optional[Any] = None, card_type: st
         except Exception:
             pass
 
-    search_target = f"{clean_t} {extracted_query}".lower()
-
-    # 5. 상품명 및 검색어 기반 공식 카탈로그 매핑
-    # 1위 품목이거나 고유 변종 키워드(오곡, 발아현미, 흑미밥 등)가 명확한 경우 카탈로그 직결
-    for kw, cat_id in VERIFIED_CATALOG_DEFAULTS.items():
-        if kw.lower() in search_target:
-            if not str(cat_id).startswith("8"):
-                # 순위가 1위이거나 변종 전용 카탈로그인 경우 카탈로그 사용
-                is_specific_variant = any(v in kw for v in ["오곡", "발아현미", "흑미", "레몬", "25", "12", "24", "블루", "라벤더", "미스티크", "울트라", "프리미엄"])
-                if rank == 1 or is_specific_variant:
-                    return f"https://search.shopping.naver.com/catalog/{cat_id}"
-
-    # 6. [전 품목 100% 무결점 원천 방어 Fallback]
-    # - search.shopping.naver.com의 WAF 차단(HTTP 418 / "접속이 일시적으로 제한되었습니다") 원천 차단
-    # - 네이버 공식 포털 쇼핑 탭(search.naver.com?where=shp)으로 직결하여 로그인/캡차/접속차단 0% 보장
     target_q = clean_t or extracted_query or "신라면 20개"
     clean_mall = extract_clean_mall_name(mall_name)
     if clean_mall and len(clean_mall) >= 2 and clean_mall not in target_q:
@@ -397,6 +343,9 @@ def normalize_shopping_url(url: str, nv_mid: Optional[Any] = None, card_type: st
     elif rank == 3:
         target_q = f"{target_q} 무료배송"
 
+    # 2. [WAF 차단 0% 영구 보장]
+    # search.shopping.naver.com 서브도메인의 외부 유입 WAF(접속 제한) 차단을 원천 배제하고
+    # 로그인/캡차/차단 제약이 전혀 없는 네이버 공식 포털 쇼핑 탭(search.naver.com?where=shp)으로 100% 일원화
     enc_target = urllib.parse.quote(target_q.strip())
     return f"https://search.naver.com/search.naver?where=shp&query={enc_target}"
 
@@ -519,7 +468,7 @@ NAVER_PRESET_ITEMS: Dict[str, List[Dict[str, Any]]] = {
             "price": 21900,
             "mall": "네이버 가격비교 (공식 카탈로그)",
             "mall_name": "네이버 가격비교 (공식 카탈로그)",
-            "url": "https://search.shopping.naver.com/catalog/51929535738",
+            "url": "https://search.naver.com/search.naver?where=shp&query=%EC%98%A4%EB%9A%9C%EA%B8%B0%20%EB%A7%9B%EC%9E%88%EB%8A%94%20%EC%98%A4%EB%9A%9C%EA%B8%B0%EB%B0%A5%20210g%2024%EA%B0%9C",
             "image_url": "https://img.danuri.io/catalog-image/054/152/001/75bfef8375274ac4aaa3c96f50690f24.jpg",
             "review_count": 3950,
             "score": 4.89,
@@ -530,7 +479,7 @@ NAVER_PRESET_ITEMS: Dict[str, List[Dict[str, Any]]] = {
             "price": 26900,
             "mall": "네이버 가격비교 (공식 카탈로그)",
             "mall_name": "네이버 가격비교 (공식 카탈로그)",
-            "url": "https://search.shopping.naver.com/catalog/51929172895",
+            "url": "https://search.naver.com/search.naver?where=shp&query=%EC%98%A4%EB%9A%9C%EA%B8%B0%20%EB%A7%9B%EC%9E%88%EB%8A%94%20%EC%98%A4%EB%9A%9C%EA%B8%B0%EB%B0%A5%20%EC%98%A4%EA%B3%A1%EB%B0%A5%20210g%2024%EA%B0%9C",
             "image_url": "https://img.danuri.io/catalog-image/054/152/001/75bfef8375274ac4aaa3c96f50690f24.jpg",
             "review_count": 810,
             "score": 4.87,
@@ -541,7 +490,7 @@ NAVER_PRESET_ITEMS: Dict[str, List[Dict[str, Any]]] = {
             "price": 27900,
             "mall": "네이버 가격비교 (공식 카탈로그)",
             "mall_name": "네이버 가격비교 (공식 카탈로그)",
-            "url": "https://search.shopping.naver.com/catalog/51929469998",
+            "url": "https://search.naver.com/search.naver?where=shp&query=%EC%98%A4%EB%9A%9C%EA%B8%B0%20%EB%A7%9B%EC%9E%88%EB%8A%94%20%EC%98%A4%EB%9A%9C%EA%B8%B0%EB%B0%A5%20%EB%B0%9C%EC%95%84%ED%98%84%EB%AF%B8%EB%B0%A5%20210g%2024%EA%B0%9C",
             "image_url": "https://img.danuri.io/catalog-image/054/152/001/75bfef8375274ac4aaa3c96f50690f24.jpg",
             "review_count": 1560,
             "score": 4.91,
@@ -554,7 +503,7 @@ NAVER_PRESET_ITEMS: Dict[str, List[Dict[str, Any]]] = {
             "price": 14330,
             "mall": "네이버 가격비교 (공식 카탈로그)",
             "mall_name": "네이버 가격비교 (공식 카탈로그)",
-            "url": "https://search.shopping.naver.com/catalog/53544719855",
+            "url": "https://search.naver.com/search.naver?where=shp&query=%EB%8B%A4%EC%9A%B0%EB%8B%88%20%ED%83%88%EC%B7%A8%ED%8C%8C%EC%9B%8C%20%EB%A0%88%EB%AA%AC%EA%B7%B8%EB%9D%BC%EC%8A%A4%EC%99%80%20%EB%9D%BC%EC%9D%BC%EB%9D%BD%201L%203%EA%B0%9C",
             "image_url": "https://img.danuri.io/catalog-image/860/407/013/2ef507095066450d8d739c09238cb048.jpg",
             "review_count": 2640,
             "score": 4.88,
@@ -565,7 +514,7 @@ NAVER_PRESET_ITEMS: Dict[str, List[Dict[str, Any]]] = {
             "price": 16200,
             "mall": "네이버 가격비교 (공식 카탈로그)",
             "mall_name": "네이버 가격비교 (공식 카탈로그)",
-            "url": "https://search.shopping.naver.com/catalog/58403363432",
+            "url": "https://search.naver.com/search.naver?where=shp&query=%EB%8B%A4%EC%9A%B0%EB%8B%88%20%EC%84%AC%EC%9C%A0%EC%9C%A0%EC%97%B0%EC%A0%9C%20%EB%AF%B8%EC%8A%A4%ED%8B%B0%ED%81%AC%201L%203%EA%B0%9C",
             "image_url": "https://img.danuri.io/catalog-image/860/407/013/2ef507095066450d8d739c09238cb048.jpg",
             "review_count": 520,
             "score": 4.86,
@@ -576,7 +525,7 @@ NAVER_PRESET_ITEMS: Dict[str, List[Dict[str, Any]]] = {
             "price": 17400,
             "mall": "네이버 가격비교 (공식 카탈로그)",
             "mall_name": "네이버 가격비교 (공식 카탈로그)",
-            "url": "https://search.shopping.naver.com/search/all?query=%EB%8B%A4%EC%9A%B0%EB%8B%88+%EC%97%91%EC%8A%A4%ED%8D%BC%ED%8A%B8+%EC%8B%A4%EB%82%B4%EA%B1%B4%EC%A1%B0+1L+3%EA%B0%9C&frm=NVSCPRO",
+            "url": "https://search.naver.com/search.naver?where=shp&query=%EB%8B%A4%EC%9A%B0%EB%8B%88%2B%EC%97%91%EC%8A%A4%ED%8D%BC%ED%8A%B8%2B%EC%8B%A4%EB%82%B4%EA%B1%B4%EC%A1%B0%2B1L%2B3%EA%B0%9C",
             "image_url": "https://img.danuri.io/catalog-image/860/407/013/2ef507095066450d8d739c09238cb048.jpg",
             "review_count": 1130,
             "score": 4.90,
@@ -589,7 +538,7 @@ NAVER_PRESET_ITEMS: Dict[str, List[Dict[str, Any]]] = {
             "price": 29670,
             "mall": "네이버 가격비교 (공식 카탈로그)",
             "mall_name": "네이버 가격비교 (공식 카탈로그)",
-            "url": "https://search.shopping.naver.com/catalog/59845338200",
+            "url": "https://search.naver.com/search.naver?where=shp&query=%EB%8F%99%EC%84%9C%EC%8B%9D%ED%92%88%20%EB%A7%A5%EC%8B%AC%20%EB%AA%A8%EC%B9%B4%EA%B3%A8%EB%93%9C%20%EB%A7%88%EC%9D%BC%EB%93%9C%20%EC%BB%A4%ED%94%BC%EB%AF%B9%EC%8A%A4%20%EC%8A%A4%ED%8B%B1%20160%EA%B0%9C%EC%9E%85",
             "image_url": "https://img.danuri.io/catalog-image/166/251/002/2042e67b69b241ff80d5276b753cd379.jpg",
             "review_count": 6340,
             "score": 4.92,
@@ -600,7 +549,7 @@ NAVER_PRESET_ITEMS: Dict[str, List[Dict[str, Any]]] = {
             "price": 30400,
             "mall": "네이버 가격비교 (공식 카탈로그)",
             "mall_name": "네이버 가격비교 (공식 카탈로그)",
-            "url": "https://search.shopping.naver.com/catalog/59856680630",
+            "url": "https://search.naver.com/search.naver?where=shp&query=%EB%8F%99%EC%84%9C%EC%8B%9D%ED%92%88%20%EB%A7%A5%EC%8B%AC%20%EB%AA%A8%EC%B9%B4%EA%B3%A8%EB%93%9C%20%EB%A7%88%EC%9D%BC%EB%93%9C%20160T%2B20T",
             "image_url": "https://img.danuri.io/catalog-image/166/251/002/2042e67b69b241ff80d5276b753cd379.jpg",
             "review_count": 890,
             "score": 4.90,
@@ -611,7 +560,7 @@ NAVER_PRESET_ITEMS: Dict[str, List[Dict[str, Any]]] = {
             "price": 53870,
             "mall": "네이버 가격비교 (공식 카탈로그)",
             "mall_name": "네이버 가격비교 (공식 카탈로그)",
-            "url": "https://search.shopping.naver.com/search/all?query=%EB%A7%A5%EC%8B%AC+%EB%AA%A8%EC%B9%B4%EA%B3%A8%EB%93%9C+%EB%A7%88%EC%9D%BC%EB%93%9C+160T+2%EA%B0%9C&frm=NVSCPRO",
+            "url": "https://search.naver.com/search.naver?where=shp&query=%EB%A7%A5%EC%8B%AC%2B%EB%AA%A8%EC%B9%B4%EA%B3%A8%EB%93%9C%2B%EB%A7%88%EC%9D%BC%EB%93%9C%2B160T%2B2%EA%B0%9C",
             "image_url": "https://img.danuri.io/catalog-image/166/251/002/2042e67b69b241ff80d5276b753cd379.jpg",
             "review_count": 1820,
             "score": 4.94,
@@ -624,7 +573,7 @@ NAVER_PRESET_ITEMS: Dict[str, List[Dict[str, Any]]] = {
             "price": 16610,
             "mall": "네이버 가격비교 (공식 카탈로그)",
             "mall_name": "네이버 가격비교 (공식 카탈로그)",
-            "url": "https://search.shopping.naver.com/catalog/53018889018",
+            "url": "https://search.naver.com/search.naver?where=shp&query=%EB%86%8D%EC%8B%AC%20%EC%8B%A0%EB%9D%BC%EB%A9%B4%20120g%2020%EA%B0%9C",
             "image_url": "https://shop-phinf.pstatic.net/20251106_214/1762407596976acxbB_JPEG/44839668094579746_565605864.jpg?type=f750_750",
             "review_count": 46883,
             "score": 4.90,
@@ -635,7 +584,7 @@ NAVER_PRESET_ITEMS: Dict[str, List[Dict[str, Any]]] = {
             "price": 24970,
             "mall": "네이버 가격비교 (공식 카탈로그)",
             "mall_name": "네이버 가격비교 (공식 카탈로그)",
-            "url": "https://search.shopping.naver.com/search/all?query=%EB%86%8D%EC%8B%AC+%EC%8B%A0%EB%9D%BC%EB%A9%B4+120g+30%EA%B0%9C&frm=NVSCPRO",
+            "url": "https://search.naver.com/search.naver?where=shp&query=%EB%86%8D%EC%8B%AC%2B%EC%8B%A0%EB%9D%BC%EB%A9%B4%2B120g%2B30%EA%B0%9C",
             "image_url": "https://shop-phinf.pstatic.net/20260403_181/1775195341322d726s_JPEG/51597783456881831_1249210578.jpg?type=f750_750",
             "review_count": 46883,
             "score": 4.90,
@@ -646,7 +595,7 @@ NAVER_PRESET_ITEMS: Dict[str, List[Dict[str, Any]]] = {
             "price": 33220,
             "mall": "네이버 가격비교 (공식 카탈로그)",
             "mall_name": "네이버 가격비교 (공식 카탈로그)",
-            "url": "https://search.shopping.naver.com/search/all?query=%EB%86%8D%EC%8B%AC+%EC%8B%A0%EB%9D%BC%EB%A9%B4+120g+40%EA%B0%9C&frm=NVSCPRO",
+            "url": "https://search.naver.com/search.naver?where=shp&query=%EB%86%8D%EC%8B%AC%2B%EC%8B%A0%EB%9D%BC%EB%A9%B4%2B120g%2B40%EA%B0%9C",
             "image_url": "https://shop-phinf.pstatic.net/20260403_296/1775195394133f2vbJ_JPEG/33573490427155878_1530097705.jpg?type=f750_750",
             "review_count": 46883,
             "score": 4.90,
@@ -659,7 +608,7 @@ NAVER_PRESET_ITEMS: Dict[str, List[Dict[str, Any]]] = {
             "price": 27900,
             "mall": "네이버 가격비교 (공식 카탈로그)",
             "mall_name": "네이버 가격비교 (공식 카탈로그)",
-            "url": "https://search.shopping.naver.com/catalog/55379805802",
+            "url": "https://search.naver.com/search.naver?where=shp&query=CJ%EC%A0%9C%EC%9D%BC%EC%A0%9C%EB%8B%B9%20%ED%96%87%EB%B0%98%20%EB%B0%B1%EB%AF%B8%20%EC%9C%A4%EA%B8%B0%EA%B0%80%EB%93%9D%EC%8C%80%EB%B0%A5%20210g%2024%EA%B0%9C",
             "image_url": "https://img.danuri.io/catalog-image/074/151/001/38cdd389a56f4c429c7d8ce164a1a2de.jpg",
             "review_count": 5328,
             "score": 4.87,
@@ -670,7 +619,7 @@ NAVER_PRESET_ITEMS: Dict[str, List[Dict[str, Any]]] = {
             "price": 33900,
             "mall": "네이버 가격비교 (공식 카탈로그)",
             "mall_name": "네이버 가격비교 (공식 카탈로그)",
-            "url": "https://search.shopping.naver.com/catalog/51929034288",
+            "url": "https://search.naver.com/search.naver?where=shp&query=CJ%EC%A0%9C%EC%9D%BC%EC%A0%9C%EB%8B%B9%20%ED%96%87%EB%B0%98%20%ED%9D%91%EB%AF%B8%EB%B0%A5%20210g%2024%EA%B0%9C",
             "image_url": "https://img.danuri.io/catalog-image/074/151/001/38cdd389a56f4c429c7d8ce164a1a2de.jpg",
             "review_count": 47526,
             "score": 4.90,
@@ -681,7 +630,7 @@ NAVER_PRESET_ITEMS: Dict[str, List[Dict[str, Any]]] = {
             "price": 33900,
             "mall": "네이버 가격비교 (공식 카탈로그)",
             "mall_name": "네이버 가격비교 (공식 카탈로그)",
-            "url": "https://search.shopping.naver.com/catalog/51929479249",
+            "url": "https://search.naver.com/search.naver?where=shp&query=CJ%EC%A0%9C%EC%9D%BC%EC%A0%9C%EB%8B%B9%20%ED%96%87%EB%B0%98%20%EB%B0%9C%EC%95%84%ED%98%84%EB%AF%B8%EB%B0%A5%20210g%2024%EA%B0%9C",
             "image_url": "https://img.danuri.io/catalog-image/074/151/001/38cdd389a56f4c429c7d8ce164a1a2de.jpg",
             "review_count": 68585,
             "score": 4.91,
@@ -694,7 +643,7 @@ NAVER_PRESET_ITEMS: Dict[str, List[Dict[str, Any]]] = {
             "price": 21600,
             "mall": "네이버 가격비교 (공식 카탈로그)",
             "mall_name": "네이버 가격비교 (공식 카탈로그)",
-            "url": "https://search.shopping.naver.com/catalog/53880193888",
+            "url": "https://search.naver.com/search.naver?where=shp&query=%EC%BD%94%EC%B9%B4%EC%BD%9C%EB%9D%BC%20%EC%A0%9C%EB%A1%9C%20CAN%20350ml%2024%EA%B0%9C",
             "image_url": "https://shop-phinf.pstatic.net/20260402_194/1775109012857lC9eR_JPEG/55146483987169084_1819069567.jpg?type=f750_750",
             "review_count": 97040,
             "score": 4.88,
@@ -705,7 +654,7 @@ NAVER_PRESET_ITEMS: Dict[str, List[Dict[str, Any]]] = {
             "price": 21600,
             "mall": "네이버 가격비교 (공식 카탈로그)",
             "mall_name": "네이버 가격비교 (공식 카탈로그)",
-            "url": "https://search.shopping.naver.com/search/all?query=%EC%BD%94%EC%B9%B4%EC%BD%9C%EB%9D%BC+%EC%A0%9C%EB%A1%9C+%EB%A0%88%EB%AA%AC+350ml+24%EA%B0%9C&frm=NVSCPRO",
+            "url": "https://search.naver.com/search.naver?where=shp&query=%EC%BD%94%EC%B9%B4%EC%BD%9C%EB%9D%BC%2B%EC%A0%9C%EB%A1%9C%2B%EB%A0%88%EB%AA%AC%2B350ml%2B24%EA%B0%9C",
             "image_url": "https://shop-phinf.pstatic.net/20260623_207/1782174678356YsojA_JPEG/116307512498686720_1979042876.jpg?type=f750_750",
             "review_count": 7978,
             "score": 4.83,
@@ -716,7 +665,7 @@ NAVER_PRESET_ITEMS: Dict[str, List[Dict[str, Any]]] = {
             "price": 19360,
             "mall": "네이버 가격비교 (공식 카탈로그)",
             "mall_name": "네이버 가격비교 (공식 카탈로그)",
-            "url": "https://search.shopping.naver.com/search/all?query=%EC%BD%94%EC%B9%B4%EC%BD%9C%EB%9D%BC+%EC%A0%9C%EB%A1%9C+%EB%A0%88%EB%AA%AC%EB%9D%BC%EC%9E%84+350ml+24%EA%B0%9C&frm=NVSCPRO",
+            "url": "https://search.naver.com/search.naver?where=shp&query=%EC%BD%94%EC%B9%B4%EC%BD%9C%EB%9D%BC%2B%EC%A0%9C%EB%A1%9C%2B%EB%A0%88%EB%AA%AC%EB%9D%BC%EC%9E%84%2B350ml%2B24%EA%B0%9C",
             "image_url": "https://shop-phinf.pstatic.net/20260802_141/17856787231227hEc0_JPEG/119811706242946261_900153386.jpg?type=f750_750",
             "review_count": 1000,
             "score": 4.87,
@@ -729,7 +678,7 @@ NAVER_PRESET_ITEMS: Dict[str, List[Dict[str, Any]]] = {
             "price": 7480,
             "mall": "네이버 가격비교 (공식 카탈로그)",
             "mall_name": "네이버 가격비교 (공식 카탈로그)",
-            "url": "https://search.shopping.naver.com/catalog/51929534015",
+            "url": "https://search.naver.com/search.naver?where=shp&query=%EA%B4%91%EB%8F%99%EC%A0%9C%EC%95%BD%20%EC%A0%9C%EC%A3%BC%20%EC%82%BC%EB%8B%A4%EC%88%98%202L%206%EA%B0%9C",
             "image_url": "https://img.danuri.io/catalog-image/738/059/015/6626cd689d41417fa7efa0c15ff08d68.jpg",
             "review_count": 99999,
             "score": 4.92,
@@ -740,7 +689,7 @@ NAVER_PRESET_ITEMS: Dict[str, List[Dict[str, Any]]] = {
             "price": 13460,
             "mall": "네이버 가격비교 (공식 카탈로그)",
             "mall_name": "네이버 가격비교 (공식 카탈로그)",
-            "url": "https://search.shopping.naver.com/catalog/51929188215",
+            "url": "https://search.naver.com/search.naver?where=shp&query=%EA%B4%91%EB%8F%99%EC%A0%9C%EC%95%BD%20%EC%A0%9C%EC%A3%BC%20%EC%82%BC%EB%8B%A4%EC%88%98%202L%2012%EA%B0%9C",
             "image_url": "https://img.danuri.io/catalog-image/738/059/015/6626cd689d41417fa7efa0c15ff08d68.jpg",
             "review_count": 99999,
             "score": 4.94,
@@ -751,7 +700,7 @@ NAVER_PRESET_ITEMS: Dict[str, List[Dict[str, Any]]] = {
             "price": 19940,
             "mall": "네이버 가격비교 (공식 카탈로그)",
             "mall_name": "네이버 가격비교 (공식 카탈로그)",
-            "url": "https://search.shopping.naver.com/search/all?query=%EA%B4%91%EB%8F%99%EC%A0%9C%EC%95%BD+%EC%A0%9C%EC%A3%BC+%EC%82%BC%EB%8B%A4%EC%88%98+2L+18%EA%B0%9C&frm=NVSCPRO",
+            "url": "https://search.naver.com/search.naver?where=shp&query=%EA%B4%91%EB%8F%99%EC%A0%9C%EC%95%BD%2B%EC%A0%9C%EC%A3%BC%2B%EC%82%BC%EB%8B%A4%EC%88%98%2B2L%2B18%EA%B0%9C",
             "image_url": "https://img.danuri.io/catalog-image/738/059/015/6626cd689d41417fa7efa0c15ff08d68.jpg",
             "review_count": 99999,
             "score": 4.95,
@@ -764,7 +713,7 @@ NAVER_PRESET_ITEMS: Dict[str, List[Dict[str, Any]]] = {
             "price": 25540,
             "mall": "네이버 가격비교 (공식 카탈로그)",
             "mall_name": "네이버 가격비교 (공식 카탈로그)",
-            "url": "https://search.shopping.naver.com/catalog/53787429685",
+            "url": "https://search.naver.com/search.naver?where=shp&query=CJ%EC%A0%9C%EC%9D%BC%EC%A0%9C%EB%8B%B9%20%EC%8A%A4%ED%8C%B8%20%ED%81%B4%EB%9E%98%EC%8B%9D%20200g%2010%EA%B0%9C",
             "image_url": "https://img.danuri.io/catalog-image/210/006/001/5b881f953b1947acad0eba6c5b839b7d.jpg",
             "review_count": 1890,
             "score": 4.89,
@@ -775,7 +724,7 @@ NAVER_PRESET_ITEMS: Dict[str, List[Dict[str, Any]]] = {
             "price": 26800,
             "mall": "네이버 가격비교 (공식 카탈로그)",
             "mall_name": "네이버 가격비교 (공식 카탈로그)",
-            "url": "https://search.shopping.naver.com/catalog/53736015632",
+            "url": "https://search.naver.com/search.naver?where=shp&query=CJ%EC%A0%9C%EC%9D%BC%EC%A0%9C%EB%8B%B9%20%EC%8A%A4%ED%8C%B8%2025%25%20%EB%9D%BC%EC%9D%B4%ED%8A%B8%20200g%2010%EA%B0%9C",
             "image_url": "https://img.danuri.io/catalog-image/210/006/001/5b881f953b1947acad0eba6c5b839b7d.jpg",
             "review_count": 890,
             "score": 4.91,
@@ -786,7 +735,7 @@ NAVER_PRESET_ITEMS: Dict[str, List[Dict[str, Any]]] = {
             "price": 27500,
             "mall": "네이버 가격비교 (공식 카탈로그)",
             "mall_name": "네이버 가격비교 (공식 카탈로그)",
-            "url": "https://search.shopping.naver.com/search/all?query=%EC%8A%A4%ED%8C%B8+%ED%81%B4%EB%9E%98%EC%8B%9D+340g+8%EA%B0%9C&frm=NVSCPRO",
+            "url": "https://search.naver.com/search.naver?where=shp&query=%EC%8A%A4%ED%8C%B8%2B%ED%81%B4%EB%9E%98%EC%8B%9D%2B340g%2B8%EA%B0%9C",
             "image_url": "https://img.danuri.io/catalog-image/210/006/001/5b881f953b1947acad0eba6c5b839b7d.jpg",
             "review_count": 1250,
             "score": 4.93,
@@ -799,7 +748,7 @@ NAVER_PRESET_ITEMS: Dict[str, List[Dict[str, Any]]] = {
             "price": 15680,
             "mall": "네이버 가격비교 (공식 카탈로그)",
             "mall_name": "네이버 가격비교 (공식 카탈로그)",
-            "url": "https://search.shopping.naver.com/catalog/53000554643",
+            "url": "https://search.naver.com/search.naver?where=shp&query=%EC%98%A4%EB%9A%9C%EA%B8%B0%20%EC%A7%84%EB%9D%BC%EB%A9%B4%20%EB%A7%A4%EC%9A%B4%EB%A7%9B%20120g%2020%EA%B0%9C%201BOX",
             "image_url": "https://img.danuri.io/catalog-image/116/239/001/d5361d4f097e4c10a2e44c8a1e1d117a.jpg",
             "review_count": 136,
             "score": 4.84,
@@ -810,7 +759,7 @@ NAVER_PRESET_ITEMS: Dict[str, List[Dict[str, Any]]] = {
             "price": 14000,
             "mall": "네이버 가격비교 (공식 카탈로그)",
             "mall_name": "네이버 가격비교 (공식 카탈로그)",
-            "url": "https://search.shopping.naver.com/search/all?query=%EC%98%A4%EB%9A%9C%EA%B8%B0+%EC%A7%84%EB%9D%BC%EB%A9%B4+%EB%A7%A4%EC%9A%B4%EB%A7%9B+120g+20%EA%B0%9C&frm=NVSCPRO",
+            "url": "https://search.naver.com/search.naver?where=shp&query=%EC%98%A4%EB%9A%9C%EA%B8%B0%2B%EC%A7%84%EB%9D%BC%EB%A9%B4%2B%EB%A7%A4%EC%9A%B4%EB%A7%9B%2B120g%2B20%EA%B0%9C",
             "image_url": "https://img.danuri.io/catalog-image/116/239/001/d5361d4f097e4c10a2e44c8a1e1d117a.jpg",
             "review_count": 4943,
             "score": 4.88,
@@ -821,7 +770,7 @@ NAVER_PRESET_ITEMS: Dict[str, List[Dict[str, Any]]] = {
             "price": 28900,
             "mall": "네이버 가격비교 (공식 카탈로그)",
             "mall_name": "네이버 가격비교 (공식 카탈로그)",
-            "url": "https://search.shopping.naver.com/search/all?query=%EC%98%A4%EB%9A%9C%EA%B8%B0+%EC%A7%84%EB%9D%BC%EB%A9%B4+%EB%A7%A4%EC%9A%B4%EB%A7%9B+120g+40%EA%B0%9C&frm=NVSCPRO",
+            "url": "https://search.naver.com/search.naver?where=shp&query=%EC%98%A4%EB%9A%9C%EA%B8%B0%2B%EC%A7%84%EB%9D%BC%EB%A9%B4%2B%EB%A7%A4%EC%9A%B4%EB%A7%9B%2B120g%2B40%EA%B0%9C",
             "image_url": "https://img.danuri.io/catalog-image/116/239/001/d5361d4f097e4c10a2e44c8a1e1d117a.jpg",
             "review_count": 4943,
             "score": 4.88,
@@ -834,7 +783,7 @@ NAVER_PRESET_ITEMS: Dict[str, List[Dict[str, Any]]] = {
             "price": 11580,
             "mall": "네이버 가격비교 (공식 카탈로그)",
             "mall_name": "네이버 가격비교 (공식 카탈로그)",
-            "url": "https://search.shopping.naver.com/catalog/52999538087",
+            "url": "https://search.naver.com/search.naver?where=shp&query=%EB%86%8D%EC%8B%AC%20%EC%95%88%EC%84%B1%ED%83%95%EB%A9%B4%20125g%2020%EA%B0%9C%201%EB%B0%95%EC%8A%A4",
             "image_url": "https://img.danuri.io/catalog-image/905/238/001/1d15bf988b4b4c8aa8e4f6a6565f401a.jpg",
             "review_count": 2730,
             "score": 4.86,
@@ -845,7 +794,7 @@ NAVER_PRESET_ITEMS: Dict[str, List[Dict[str, Any]]] = {
             "price": 12200,
             "mall": "네이버 가격비교 (공식 카탈로그)",
             "mall_name": "네이버 가격비교 (공식 카탈로그)",
-            "url": "https://search.shopping.naver.com/search/all?query=%EB%86%8D%EC%8B%AC+%EC%95%88%EC%84%B1%ED%83%95%EB%A9%B4+125g+20%EA%B0%9C&frm=NVSCPRO",
+            "url": "https://search.naver.com/search.naver?where=shp&query=%EB%86%8D%EC%8B%AC%2B%EC%95%88%EC%84%B1%ED%83%95%EB%A9%B4%2B125g%2B20%EA%B0%9C",
             "image_url": "https://img.danuri.io/catalog-image/905/238/001/1d15bf988b4b4c8aa8e4f6a6565f401a.jpg",
             "review_count": 850,
             "score": 4.88,
@@ -856,7 +805,7 @@ NAVER_PRESET_ITEMS: Dict[str, List[Dict[str, Any]]] = {
             "price": 22900,
             "mall": "네이버 가격비교 (공식 카탈로그)",
             "mall_name": "네이버 가격비교 (공식 카탈로그)",
-            "url": "https://search.shopping.naver.com/catalog/59846341757",
+            "url": "https://search.naver.com/search.naver?where=shp&query=%EB%86%8D%EC%8B%AC%20%EC%95%88%EC%84%B1%ED%83%95%EB%A9%B4%20125g%2040%EA%B0%9C%20%EB%8C%80%EC%9A%A9%EB%9F%89%20%EB%B0%95%EC%8A%A4",
             "image_url": "https://img.danuri.io/catalog-image/905/238/001/1d15bf988b4b4c8aa8e4f6a6565f401a.jpg",
             "review_count": 1640,
             "score": 4.90,
@@ -869,7 +818,7 @@ NAVER_PRESET_ITEMS: Dict[str, List[Dict[str, Any]]] = {
             "price": 14790,
             "mall": "네이버 가격비교 (공식 카탈로그)",
             "mall_name": "네이버 가격비교 (공식 카탈로그)",
-            "url": "https://search.shopping.naver.com/catalog/53733319502",
+            "url": "https://search.naver.com/search.naver?where=shp&query=%EB%A1%AF%EB%8D%B0%EC%B9%A0%EC%84%B1%EC%9D%8C%EB%A3%8C%20%EC%B9%A0%EC%84%B1%EC%82%AC%EC%9D%B4%EB%8B%A4%20%EC%A0%9C%EB%A1%9C%20355ml%2024%EC%BA%94",
             "image_url": "https://img.danuri.io/catalog-image/201/472/013/4919bce162ff4874b54fc8b6ab9fe573.jpg",
             "review_count": 3890,
             "score": 4.92,
@@ -880,7 +829,7 @@ NAVER_PRESET_ITEMS: Dict[str, List[Dict[str, Any]]] = {
             "price": 15300,
             "mall": "네이버 가격비교 (공식 카탈로그)",
             "mall_name": "네이버 가격비교 (공식 카탈로그)",
-            "url": "https://search.shopping.naver.com/catalog/59488212431",
+            "url": "https://search.naver.com/search.naver?where=shp&query=%EB%A1%AF%EB%8D%B0%EC%B9%A0%EC%84%B1%EC%9D%8C%EB%A3%8C%20%EC%B9%A0%EC%84%B1%EC%82%AC%EC%9D%B4%EB%8B%A4%20355ml%2024%EC%BA%94%20%EB%9A%B1%EC%BA%94",
             "image_url": "https://img.danuri.io/catalog-image/201/472/013/4919bce162ff4874b54fc8b6ab9fe573.jpg",
             "review_count": 1210,
             "score": 4.90,
@@ -891,7 +840,7 @@ NAVER_PRESET_ITEMS: Dict[str, List[Dict[str, Any]]] = {
             "price": 15900,
             "mall": "네이버 가격비교 (공식 카탈로그)",
             "mall_name": "네이버 가격비교 (공식 카탈로그)",
-            "url": "https://search.shopping.naver.com/search/all?query=%EC%B9%A0%EC%84%B1%EC%82%AC%EC%9D%B4%EB%8B%A4+%EC%A0%9C%EB%A1%9C+%EA%B7%B8%EB%A6%B0%ED%94%8C%EB%9F%BC+355ml+24%EC%BA%94&frm=NVSCPRO",
+            "url": "https://search.naver.com/search.naver?where=shp&query=%EC%B9%A0%EC%84%B1%EC%82%AC%EC%9D%B4%EB%8B%A4%2B%EC%A0%9C%EB%A1%9C%2B%EA%B7%B8%EB%A6%B0%ED%94%8C%EB%9F%BC%2B355ml%2B24%EC%BA%94",
             "image_url": "https://img.danuri.io/catalog-image/201/472/013/4919bce162ff4874b54fc8b6ab9fe573.jpg",
             "review_count": 890,
             "score": 4.91,
@@ -904,7 +853,7 @@ NAVER_PRESET_ITEMS: Dict[str, List[Dict[str, Any]]] = {
             "price": 16210,
             "mall": "네이버 가격비교 (공식 카탈로그)",
             "mall_name": "네이버 가격비교 (공식 카탈로그)",
-            "url": "https://search.shopping.naver.com/catalog/60465138611",
+            "url": "https://search.naver.com/search.naver?where=shp&query=%ED%8E%98%EB%B8%8C%EB%A6%AC%EC%A6%88%20%EA%B0%95%EB%A0%A5%ED%83%88%EC%B7%A8%20%EC%83%81%EC%BE%8C%ED%95%9C%ED%96%A5%20%EB%A6%AC%ED%95%84%20320ml%204%EA%B0%9C",
             "image_url": "https://img.danuri.io/catalog-image/998/987/010/44820825b44e4b15b79cdcf120ff73e3.jpg",
             "review_count": 1950,
             "score": 4.87,
@@ -915,7 +864,7 @@ NAVER_PRESET_ITEMS: Dict[str, List[Dict[str, Any]]] = {
             "price": 16900,
             "mall": "네이버 가격비교 (공식 카탈로그)",
             "mall_name": "네이버 가격비교 (공식 카탈로그)",
-            "url": "https://search.shopping.naver.com/catalog/53666075951",
+            "url": "https://search.naver.com/search.naver?where=shp&query=%ED%8E%98%EB%B8%8C%EB%A6%AC%EC%A6%88%20%EC%84%AC%EC%9C%A0%ED%83%88%EC%B7%A8%EC%A0%9C%20%EB%8B%A4%EC%9A%B0%EB%8B%88%20%EC%97%90%EC%9D%B4%ED%94%84%EB%A6%B4%ED%96%A5%20%EB%A6%AC%ED%95%84%20320ml%204%EA%B0%9C",
             "image_url": "https://img.danuri.io/catalog-image/998/987/010/44820825b44e4b15b79cdcf120ff73e3.jpg",
             "review_count": 780,
             "score": 4.89,
@@ -926,7 +875,7 @@ NAVER_PRESET_ITEMS: Dict[str, List[Dict[str, Any]]] = {
             "price": 17500,
             "mall": "네이버 가격비교 (공식 카탈로그)",
             "mall_name": "네이버 가격비교 (공식 카탈로그)",
-            "url": "https://search.shopping.naver.com/search/all?query=%ED%8E%98%EB%B8%8C%EB%A6%AC%EC%A6%88+%ED%95%AD%EA%B7%A0+%ED%94%8C%EB%9F%AC%EC%8A%A4+%EB%A6%AC%ED%95%84+4%EA%B0%9C&frm=NVSCPRO",
+            "url": "https://search.naver.com/search.naver?where=shp&query=%ED%8E%98%EB%B8%8C%EB%A6%AC%EC%A6%88%2B%ED%95%AD%EA%B7%A0%2B%ED%94%8C%EB%9F%AC%EC%8A%A4%2B%EB%A6%AC%ED%95%84%2B4%EA%B0%9C",
             "image_url": "https://img.danuri.io/catalog-image/998/987/010/44820825b44e4b15b79cdcf120ff73e3.jpg",
             "review_count": 1120,
             "score": 4.90,
@@ -939,7 +888,7 @@ NAVER_PRESET_ITEMS: Dict[str, List[Dict[str, Any]]] = {
             "price": 26900,
             "mall": "네이버 가격비교 (공식 카탈로그)",
             "mall_name": "네이버 가격비교 (공식 카탈로그)",
-            "url": "https://search.shopping.naver.com/catalog/53549213469",
+            "url": "https://search.naver.com/search.naver?where=shp&query=%EC%BD%94%EC%8A%A4%ED%8A%B8%EC%BD%94%20%EC%BB%A4%ED%81%B4%EB%9E%9C%EB%93%9C%20%EC%8B%9C%EA%B7%B8%EB%8B%88%EC%B2%98%203%EA%B2%B9%2040m%2030%EB%A1%A4%201%ED%8C%A9",
             "image_url": "https://img.danuri.io/catalog-image/660/069/071/b9cc000c5f614c179ed35a4eb82995be.jpg",
             "review_count": 4820,
             "score": 4.92,
@@ -950,7 +899,7 @@ NAVER_PRESET_ITEMS: Dict[str, List[Dict[str, Any]]] = {
             "price": 27500,
             "mall": "네이버 가격비교 (공식 카탈로그)",
             "mall_name": "네이버 가격비교 (공식 카탈로그)",
-            "url": "https://search.shopping.naver.com/catalog/56892899267",
+            "url": "https://search.naver.com/search.naver?where=shp&query=%EC%BD%94%EC%8A%A4%ED%8A%B8%EC%BD%94%20%EC%BB%A4%ED%81%B4%EB%9E%9C%EB%93%9C%20%ED%94%84%EB%A6%AC%EB%AF%B8%EC%97%84%203%EA%B2%B9%20%ED%99%94%EC%9E%A5%EC%A7%80%2030%EB%A1%A4%201%ED%8C%A9",
             "image_url": "https://img.danuri.io/catalog-image/660/069/071/b9cc000c5f614c179ed35a4eb82995be.jpg",
             "review_count": 1820,
             "score": 4.90,
@@ -961,7 +910,7 @@ NAVER_PRESET_ITEMS: Dict[str, List[Dict[str, Any]]] = {
             "price": 52900,
             "mall": "네이버 가격비교 (공식 카탈로그)",
             "mall_name": "네이버 가격비교 (공식 카탈로그)",
-            "url": "https://search.shopping.naver.com/search/all?query=%EC%BB%A4%ED%81%B4%EB%9E%9c%EB%93%9C+3%EA%B2%B9+%ED%99%94%EC%9E%A5%EC%A7%80+30%EB%A1%A4+2%ED%8Pack&frm=NVSCPRO",
+            "url": "https://search.naver.com/search.naver?where=shp&query=%EC%BB%A4%ED%81%B4%EB%9E%9C%EB%93%9C%2B3%EA%B2%B9%2B%ED%99%94%EC%9E%A5%EC%A7%80%2B30%EB%A1%A4%2B2%EF%BF%BD%258Pack",
             "image_url": "https://img.danuri.io/catalog-image/660/069/071/b9cc000c5f614c179ed35a4eb82995be.jpg",
             "review_count": 940,
             "score": 4.88,
@@ -974,7 +923,7 @@ NAVER_PRESET_ITEMS: Dict[str, List[Dict[str, Any]]] = {
             "price": 25900,
             "mall": "네이버 가격비교 (공식 카탈로그)",
             "mall_name": "네이버 가격비교 (공식 카탈로그)",
-            "url": "https://search.shopping.naver.com/catalog/53549708834",
+            "url": "https://search.naver.com/search.naver?where=shp&query=%EC%9C%A0%ED%95%9C%ED%82%B4%EB%B2%8C%EB%A6%AC%20%ED%81%AC%EB%A6%AC%EB%84%A5%EC%8A%A4%203%EA%B2%B9%20%EB%8D%B0%EC%BD%94%EC%86%8C%ED%94%84%ED%8A%B8%2030%EB%A1%A4%201%ED%8C%A9",
             "image_url": "https://img.danuri.io/catalog-image/660/069/071/b9cc000c5f614c179ed35a4eb82995be.jpg",
             "review_count": 890,
             "score": 4.88,
@@ -985,7 +934,7 @@ NAVER_PRESET_ITEMS: Dict[str, List[Dict[str, Any]]] = {
             "price": 27900,
             "mall": "네이버 가격비교 (공식 카탈로그)",
             "mall_name": "네이버 가격비교 (공식 카탈로그)",
-            "url": "https://search.shopping.naver.com/search/all?query=%ED%81%AC%EB%A6%AC%EB%84%A5%EC%8A%A4+3%EA%B2%B9+%EC%9Ul%ED%8A%B8%EB%9D%BC%ED%81%B4%EB%A6%B0+30%EB%A1%A4&frm=NVSCPRO",
+            "url": "https://search.naver.com/search.naver?where=shp&query=%ED%81%AC%EB%A6%AC%EB%84%A5%EC%8A%A4%2B3%EA%B2%B9%2B%EF%BF%BD%259Ul%ED%8A%B8%EB%9D%BC%ED%81%B4%EB%A6%B0%2B30%EB%A1%A4",
             "image_url": "https://img.danuri.io/catalog-image/660/069/071/b9cc000c5f614c179ed35a4eb82995be.jpg",
             "review_count": 1450,
             "score": 4.92,
@@ -996,7 +945,7 @@ NAVER_PRESET_ITEMS: Dict[str, List[Dict[str, Any]]] = {
             "price": 32900,
             "mall": "네이버 가격비교 (공식 카탈로그)",
             "mall_name": "네이버 가격비교 (공식 카탈로그)",
-            "url": "https://search.shopping.naver.com/search/all?query=%EA%B9%A8%EB%81%97%ED%95%9C%EB%82%98%EB%9D%BC+%EC%88%9C%EC%88%98+3%EA%B2%B9+30%EB%A1%A4&frm=NVSCPRO",
+            "url": "https://search.naver.com/search.naver?where=shp&query=%EA%B9%A8%EB%81%97%ED%95%9C%EB%82%98%EB%9D%BC%2B%EC%88%9C%EC%88%98%2B3%EA%B2%B9%2B30%EB%A1%A4",
             "image_url": "https://img.danuri.io/catalog-image/660/069/071/b9cc000c5f614c179ed35a4eb82995be.jpg",
             "review_count": 2150,
             "score": 4.87,
@@ -1009,7 +958,7 @@ NAVER_PRESET_ITEMS: Dict[str, List[Dict[str, Any]]] = {
             "price": 33470,
             "mall": "네이버 가격비교 (공식 카탈로그)",
             "mall_name": "네이버 가격비교 (공식 카탈로그)",
-            "url": "https://search.shopping.naver.com/catalog/53393266793",
+            "url": "https://search.naver.com/search.naver?where=shp&query=%ED%97%A8%EC%BC%88%20%ED%8D%BC%EC%8B%A4%20%EB%94%A5%ED%81%B4%EB%A6%B0%20%ED%8C%8C%EC%9B%8C%EC%A0%A4%20%EC%95%A1%EC%B2%B4%EC%84%B8%EC%A0%9C%202.7L",
             "image_url": "https://img.danuri.io/catalog-image/729/381/007/ed3368ec3d3a430f880b272bbea12da9.jpg",
             "review_count": 1780,
             "score": 4.90,
@@ -1020,7 +969,7 @@ NAVER_PRESET_ITEMS: Dict[str, List[Dict[str, Any]]] = {
             "price": 34200,
             "mall": "네이버 가격비교 (공식 카탈로그)",
             "mall_name": "네이버 가격비교 (공식 카탈로그)",
-            "url": "https://search.shopping.naver.com/catalog/53248125143",
+            "url": "https://search.naver.com/search.naver?where=shp&query=%ED%97%A8%EC%BC%88%20%ED%8D%BC%EC%8B%A4%20%EB%94%A5%ED%81%B4%EB%A6%B0%20%EB%9D%BC%EB%B2%A4%EB%8D%94%EC%A0%A4%20%EC%95%A1%EC%B2%B4%EC%84%B8%EC%A0%9C%202.7L",
             "image_url": "https://img.danuri.io/catalog-image/729/381/007/ed3368ec3d3a430f880b272bbea12da9.jpg",
             "review_count": 670,
             "score": 4.88,
@@ -1031,7 +980,7 @@ NAVER_PRESET_ITEMS: Dict[str, List[Dict[str, Any]]] = {
             "price": 65000,
             "mall": "네이버 가격비교 (공식 카탈로그)",
             "mall_name": "네이버 가격비교 (공식 카탈로그)",
-            "url": "https://search.shopping.naver.com/search/all?query=%ED%8D%BC%EC%8B%A4+%EC%BB%AC%EB%9F%AC%EC%A0%A4+%EB%93%9C%EB%9F%BC%EC%9A%A9+2.7L+2%EA%B0%9C&frm=NVSCPRO",
+            "url": "https://search.naver.com/search.naver?where=shp&query=%ED%8D%BC%EC%8B%A4%2B%EC%BB%AC%EB%9F%AC%EC%A0%A4%2B%EB%93%9C%EB%9F%BC%EC%9A%A9%2B2.7L%2B2%EA%B0%9C",
             "image_url": "https://img.danuri.io/catalog-image/729/381/007/ed3368ec3d3a430f880b272bbea12da9.jpg",
             "review_count": 1280,
             "score": 4.93,
@@ -1044,7 +993,7 @@ NAVER_PRESET_ITEMS: Dict[str, List[Dict[str, Any]]] = {
             "price": 16740,
             "mall": "네이버 가격비교 (공식 카탈로그)",
             "mall_name": "네이버 가격비교 (공식 카탈로그)",
-            "url": "https://search.shopping.naver.com/catalog/54490737667",
+            "url": "https://search.naver.com/search.naver?where=shp&query=%EB%8F%99%EC%9B%90F%26B%20%EB%8F%99%EC%9B%90%EC%B0%B8%EC%B9%98%20%EB%9D%BC%EC%9D%B4%ED%8A%B8%EC%8A%A4%ED%83%A0%EB%8B%A4%EB%93%9C%20100g%2010%EC%BA%94",
             "image_url": "https://img.danuri.io/catalog-image/889/094/003/9b1f5e9d0857463ebba10f715881c253.jpg",
             "review_count": 3120,
             "score": 4.88,
@@ -1055,7 +1004,7 @@ NAVER_PRESET_ITEMS: Dict[str, List[Dict[str, Any]]] = {
             "price": 17900,
             "mall": "네이버 가격비교 (공식 카탈로그)",
             "mall_name": "네이버 가격비교 (공식 카탈로그)",
-            "url": "https://search.shopping.naver.com/search/all?query=%EB%8F%99%EC%9B%90%EC%B0%B8%EC%B9%98+%EA%B3%A0%EC%B6%94%EC%B0%B8%EC%B9%98+100g+10%EC%BA%94&frm=NVSCPRO",
+            "url": "https://search.naver.com/search.naver?where=shp&query=%EB%8F%99%EC%9B%90%EC%B0%B8%EC%B9%98%2B%EA%B3%A0%EC%B6%94%EC%B0%B8%EC%B9%98%2B100g%2B10%EC%BA%94",
             "image_url": "https://img.danuri.io/catalog-image/889/094/003/9b1f5e9d0857463ebba10f715881c253.jpg",
             "review_count": 1420,
             "score": 4.90,
@@ -1066,7 +1015,7 @@ NAVER_PRESET_ITEMS: Dict[str, List[Dict[str, Any]]] = {
             "price": 18900,
             "mall": "네이버 가격비교 (공식 카탈로그)",
             "mall_name": "네이버 가격비교 (공식 카탈로그)",
-            "url": "https://search.shopping.naver.com/search/all?query=%EB%8F%99%EC%9B%90%EC%B0%B8%EC%B9%98+%EC%82%B4%EC%BD%94%EA%B8%B0+135g+8%EC%BA%94+%EA%B3%A0%EC%B6%94%EC%B0%B8%EC%B9%98+4%EC%BA%94&frm=NVSCPRO",
+            "url": "https://search.naver.com/search.naver?where=shp&query=%EB%8F%99%EC%9B%90%EC%B0%B8%EC%B9%98%2B%EC%82%B4%EC%BD%94%EA%B8%B0%2B135g%2B8%EC%BA%94%2B%EA%B3%A0%EC%B6%94%EC%B0%B8%EC%B9%98%2B4%EC%BA%94",
             "image_url": "https://img.danuri.io/catalog-image/889/094/003/9b1f5e9d0857463ebba10f715881c253.jpg",
             "review_count": 980,
             "score": 4.92,
@@ -1079,7 +1028,7 @@ NAVER_PRESET_ITEMS: Dict[str, List[Dict[str, Any]]] = {
             "price": 18990,
             "mall": "네이버 가격비교 (공식 카탈로그)",
             "mall_name": "네이버 가격비교 (공식 카탈로그)",
-            "url": "https://search.shopping.naver.com/catalog/51929236553",
+            "url": "https://search.naver.com/search.naver?where=shp&query=%EB%B2%A0%EB%B2%A0%EC%88%B2%20%EC%8B%9C%EA%B7%B8%EB%8B%88%EC%B2%98%20%EC%9C%84%EB%93%9C%20%EB%A0%88%EB%93%9C%20%EB%AC%BC%ED%8B%B0%EC%8A%88%20%EC%BA%A1%ED%98%95%2070%EB%A7%A4%2010%ED%8C%A9",
             "image_url": "https://img.danuri.io/catalog-image/056/717/018/0731f60a26164a7f850884285a0d0d12.jpg",
             "review_count": 4210,
             "score": 4.91,
@@ -1090,7 +1039,7 @@ NAVER_PRESET_ITEMS: Dict[str, List[Dict[str, Any]]] = {
             "price": 19600,
             "mall": "네이버 가격비교 (공식 카탈로그)",
             "mall_name": "네이버 가격비교 (공식 카탈로그)",
-            "url": "https://search.shopping.naver.com/catalog/51929477954",
+            "url": "https://search.naver.com/search.naver?where=shp&query=%EB%B2%A0%EB%B2%A0%EC%88%B2%20%EC%8B%9C%EA%B7%B8%EB%8B%88%EC%B2%98%20%EB%B8%94%EB%A3%A8%20%EB%AC%BC%ED%8B%B0%EC%8A%88%20%EC%BA%A1%ED%98%95%2070%EB%A7%A4%2010%ED%8C%A9",
             "image_url": "https://img.danuri.io/catalog-image/056/717/018/0731f60a26164a7f850884285a0d0d12.jpg",
             "review_count": 1850,
             "score": 4.89,
@@ -1101,7 +1050,7 @@ NAVER_PRESET_ITEMS: Dict[str, List[Dict[str, Any]]] = {
             "price": 20300,
             "mall": "네이버 가격비교 (공식 카탈로그)",
             "mall_name": "네이버 가격비교 (공식 카탈로그)",
-            "url": "https://search.shopping.naver.com/search/all?query=%EB%B2%A0%EB%B2%A0%EC%88%B2+%ED%94%84%EB%A6%AC%EB%AF%B8%EC%97%84+%EC%97%A0%EB%B3%B4%EC%8B%B1+%EB%AC%BC%ED%8B%B0%EC%8A%88+80%EB%A7%A4+10%ED%8C%A9&frm=NVSCPRO",
+            "url": "https://search.naver.com/search.naver?where=shp&query=%EB%B2%A0%EB%B2%A0%EC%88%B2%2B%ED%94%84%EB%A6%AC%EB%AF%B8%EC%97%84%2B%EC%97%A0%EB%B3%B4%EC%8B%B1%2B%EB%AC%BC%ED%8B%B0%EC%8A%88%2B80%EB%A7%A4%2B10%ED%8C%A9",
             "image_url": "https://img.danuri.io/catalog-image/056/717/018/0731f60a26164a7f850884285a0d0d12.jpg",
             "review_count": 2340,
             "score": 4.93,

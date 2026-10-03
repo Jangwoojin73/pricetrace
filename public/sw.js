@@ -1,5 +1,5 @@
 // PriceTrace PWA Service Worker
-const CACHE_VERSION = 'v1.2.0';
+const CACHE_VERSION = 'v1.3.0';
 const STATIC_CACHE = `pricetrace-static-${CACHE_VERSION}`;
 const DYNAMIC_CACHE = `pricetrace-dynamic-${CACHE_VERSION}`;
 
@@ -24,7 +24,7 @@ self.addEventListener('install', (event) => {
   self.skipWaiting();
   event.waitUntil(
     caches.open(STATIC_CACHE).then((cache) => {
-      console.log('[SW] Pre-caching static assets');
+      console.log('[SW] Pre-caching static assets for', STATIC_CACHE);
       return cache.addAll(STATIC_ASSETS);
     }).catch((err) => {
       console.warn('[SW] Pre-caching warning:', err);
@@ -32,14 +32,14 @@ self.addEventListener('install', (event) => {
   );
 });
 
-// Activate Event: Clean up outdated caches and claim clients
+// Activate Event: Clean up outdated caches and claim clients immediately
 self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys().then((keys) => {
       return Promise.all(
         keys.map((key) => {
           if (key !== STATIC_CACHE && key !== DYNAMIC_CACHE) {
-            console.log('[SW] Removing old cache:', key);
+            console.log('[SW] Purging old cache version:', key);
             return caches.delete(key);
           }
         })
@@ -63,7 +63,6 @@ self.addEventListener('fetch', (event) => {
     event.respondWith(
       fetch(request)
         .then((networkResponse) => {
-          // Update cache with fresh version
           if (networkResponse && networkResponse.status === 200) {
             const responseClone = networkResponse.clone();
             caches.open(STATIC_CACHE).then((cache) => {
@@ -73,11 +72,29 @@ self.addEventListener('fetch', (event) => {
           return networkResponse;
         })
         .catch(() => {
-          // Offline fallback
           return caches.match(request).then((cachedResponse) => {
             return cachedResponse || caches.match('/offline.html');
           });
         })
+    );
+    return;
+  }
+
+  // 1.5. Core Application Code (/app.js, /style.css): Network-First
+  // Guarantees bug fixes, anti-WAF URL logic, and security patches propagate immediately
+  if (url.pathname === '/app.js' || url.pathname === '/style.css') {
+    event.respondWith(
+      fetch(request)
+        .then((networkResponse) => {
+          if (networkResponse && networkResponse.status === 200) {
+            const responseClone = networkResponse.clone();
+            caches.open(STATIC_CACHE).then((cache) => {
+              cache.put(request, responseClone);
+            });
+          }
+          return networkResponse;
+        })
+        .catch(() => caches.match(request))
     );
     return;
   }
@@ -100,7 +117,6 @@ self.addEventListener('fetch', (event) => {
             if (cachedResponse) {
               return cachedResponse;
             }
-            // Return structured offline JSON response
             return new Response(
               JSON.stringify({
                 success: false,
@@ -123,7 +139,6 @@ self.addEventListener('fetch', (event) => {
   event.respondWith(
     caches.match(request).then((cachedResponse) => {
       if (cachedResponse) {
-        // Return cached and optionally update in background
         return cachedResponse;
       }
 
