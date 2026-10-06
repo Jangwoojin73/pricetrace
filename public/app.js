@@ -424,7 +424,15 @@ const elements = {
   // 플로팅 토스트 알림 컴포넌트
   toastNotification: document.getElementById("toastNotification"),
   toastMessage: document.getElementById("toastMessage"),
-  toastIconBox: document.getElementById("toastIconBox")
+  toastIconBox: document.getElementById("toastIconBox"),
+
+  // 모바일 전용 플로팅 하단 네비게이션 바
+  mobileBottomNav: document.getElementById("mobileBottomNav"),
+  mobileNavHomeBtn: document.getElementById("mobileNavHomeBtn"),
+  mobileNavHotdealBtn: document.getElementById("mobileNavHotdealBtn"),
+  mobileNavSearchFabBtn: document.getElementById("mobileNavSearchFabBtn"),
+  mobileNavSteadyBtn: document.getElementById("mobileNavSteadyBtn"),
+  mobileNavConfigBtn: document.getElementById("mobileNavConfigBtn")
 };
 
 // 현재 시각 문자열 포맷팅 (HH:MM:SS)
@@ -484,6 +492,39 @@ function formatCurrency(num) {
   return Number(num || 0).toLocaleString("ko-KR");
 }
 
+// 모바일 하단 네비게이션 바 활성 탭 동기화 함수
+function updateMobileNavActiveTab(activeTabKey) {
+  const buttons = document.querySelectorAll(".mobile-nav-btn");
+  if (!buttons || buttons.length === 0) return;
+
+  buttons.forEach(btn => {
+    const iconBox = btn.querySelector(".mobile-nav-icon-box");
+    const label = btn.querySelector("span");
+    const tabKey = btn.getAttribute("data-mobile-tab");
+    const isTarget = (tabKey === activeTabKey);
+
+    if (isTarget) {
+      btn.classList.add("active", "text-blue-600", "font-extrabold");
+      btn.classList.remove("text-slate-500", "font-medium");
+      if (iconBox) {
+        iconBox.className = "mobile-nav-icon-box p-1.5 rounded-xl transition-all bg-blue-50 text-blue-600";
+      }
+      if (label) {
+        label.className = "text-[10px] tracking-tight mt-0.5 leading-none font-bold";
+      }
+    } else {
+      btn.classList.remove("active", "text-blue-600", "font-extrabold");
+      btn.classList.add("text-slate-500", "font-medium");
+      if (iconBox) {
+        iconBox.className = "mobile-nav-icon-box p-1.5 rounded-xl transition-all text-slate-500 group-hover:text-slate-900";
+      }
+      if (label) {
+        label.className = "text-[10px] tracking-tight mt-0.5 leading-none font-semibold";
+      }
+    }
+  });
+}
+
 // 뷰 전환: 초기 웰컴 화면
 function switchToWelcomeView(skipHistory = false) {
   state.view = "welcome";
@@ -500,6 +541,7 @@ function switchToWelcomeView(skipHistory = false) {
   if (!skipHistory && window.history.pushState && window.location.search) {
     window.history.pushState({}, "", window.location.pathname);
   }
+  updateMobileNavActiveTab("home");
   if (window.lucide) {
     window.lucide.createIcons();
   }
@@ -1109,6 +1151,7 @@ function switchRecommendationTab(tab) {
 
   // 부드러운 전환 애니메이션과 함께 활성 풀에서 즉시 렌더링
   shuffleAndRenderRecommendations(true);
+  updateMobileNavActiveTab(tab === "steady" ? "steady" : "trending");
 }
 
 function shuffleAndRenderRecommendations(animate = false) {
@@ -1389,6 +1432,57 @@ function initEventListeners() {
       elements.refreshBtn.click();
     });
   }
+
+  // 모바일 하단 플로팅 네비게이션 바 (산도장형 5대 탭) 이벤트 등록
+  if (elements.mobileNavHomeBtn) {
+    elements.mobileNavHomeBtn.addEventListener("click", () => {
+      switchToWelcomeView();
+      shuffleAndRenderRecommendations(false);
+      updateMobileNavActiveTab("home");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+  }
+
+  if (elements.mobileNavHotdealBtn) {
+    elements.mobileNavHotdealBtn.addEventListener("click", () => {
+      switchToWelcomeView(true);
+      switchRecommendationTab("trending");
+      updateMobileNavActiveTab("trending");
+      const targetSec = document.getElementById("tabSectionTitle");
+      if (targetSec) {
+        targetSec.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    });
+  }
+
+  if (elements.mobileNavSearchFabBtn) {
+    elements.mobileNavSearchFabBtn.addEventListener("click", () => {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      if (elements.searchInput) {
+        setTimeout(() => {
+          elements.searchInput.focus();
+          elements.searchInput.select();
+        }, 150);
+      }
+    });
+  }
+
+  if (elements.mobileNavSteadyBtn) {
+    elements.mobileNavSteadyBtn.addEventListener("click", () => {
+      switchToWelcomeView(true);
+      switchRecommendationTab("steady");
+      updateMobileNavActiveTab("steady");
+      const targetSec = document.getElementById("tabSectionTitle");
+      if (targetSec) {
+        targetSec.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    });
+  }
+
+  if (elements.mobileNavConfigBtn) {
+    elements.mobileNavConfigBtn.addEventListener("click", openModal);
+  }
+
   if (elements.quickTargetEditBtn) {
     elements.quickTargetEditBtn.addEventListener("click", openModal);
   }
