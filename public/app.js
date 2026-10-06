@@ -1724,8 +1724,210 @@ function setupNetworkStatusMonitor() {
   });
 }
 
+/* ========================================================
+   [모바일/태블릿 동적 인터랙티브 인트로 스플래시 화면 모듈]
+   ======================================================== */
+let splashAnimationId = null;
+let splashProgressInterval = null;
+
+function setupSplashScreen() {
+  const splash = document.getElementById("appSplashScreen");
+  if (!splash) return;
+  if (window.lucide) window.lucide.createIcons();
+
+  const canvas = document.getElementById("splashCanvas");
+  const skipBtn = document.getElementById("splashSkipBtn");
+  const progressBar = document.getElementById("splashProgressBar");
+  const progressText = document.getElementById("splashProgressText");
+  const progressPercent = document.getElementById("splashProgressPercent");
+
+  // 1. 노출 여부 판별:
+  // - 세션당 1회 노출 (sessionStorage 체크)
+  // - 모바일/태블릿(화면 너비 < 1024px) 또는 PWA standalone 모드에서 구동
+  // - 단, URL에 ?splash=true 파라미터가 있으면 강제 노출
+  const urlParams = new URLSearchParams(window.location.search);
+  const forceSplash = urlParams.get("splash") === "true" || urlParams.get("splash") === "1";
+  const splashSeen = sessionStorage.getItem("pricetrace_splash_seen") === "true";
+  const isMobileOrTablet = window.innerWidth < 1024 || window.matchMedia("(display-mode: standalone)").matches;
+
+  if (!forceSplash && (splashSeen || !isMobileOrTablet)) {
+    splash.classList.add("splash-hidden");
+    return;
+  }
+
+  // 2. 캔버스 파티클 애니메이션 엔진 구동 (스마트 최저가 레이더 테마)
+  let particles = [];
+  let ctx = null;
+  if (canvas) {
+    ctx = canvas.getContext("2d");
+    const resizeCanvas = () => {
+      const dpr = window.devicePixelRatio || 1;
+      canvas.width = window.innerWidth * dpr;
+      canvas.height = window.innerHeight * dpr;
+      if (ctx) ctx.scale(dpr, dpr);
+    };
+    resizeCanvas();
+    window.addEventListener("resize", resizeCanvas);
+
+    // 파티클 생성 (골드 스파클 ✨ + 네온 블루 사이버 빛 입자 + 펄스)
+    const particleCount = 45;
+    const colors = ["#60A5FA", "#38BDF8", "#FBBF24", "#F59E0B", "#818CF8", "#34D399"];
+    for (let i = 0; i < particleCount; i++) {
+      particles.push({
+        x: Math.random() * window.innerWidth,
+        y: Math.random() * window.innerHeight,
+        size: Math.random() * 3 + 1,
+        speedY: -(Math.random() * 0.8 + 0.3),
+        speedX: (Math.random() - 0.5) * 0.4,
+        color: colors[Math.floor(Math.random() * colors.length)],
+        opacity: Math.random() * 0.7 + 0.3,
+        pulseSpeed: Math.random() * 0.05 + 0.02,
+        pulse: Math.random() * Math.PI,
+        isSparkle: Math.random() > 0.4
+      });
+    }
+
+    const renderParticles = () => {
+      if (!ctx || splash.classList.contains("splash-hidden")) return;
+      ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+
+      for (let p of particles) {
+        p.y += p.speedY;
+        p.x += p.speedX;
+        p.pulse += p.pulseSpeed;
+        const currentOpacity = Math.max(0.1, Math.min(1, p.opacity + Math.sin(p.pulse) * 0.3));
+
+        if (p.y < -10) {
+          p.y = window.innerHeight + 10;
+          p.x = Math.random() * window.innerWidth;
+        }
+
+        ctx.save();
+        ctx.globalAlpha = currentOpacity;
+        ctx.fillStyle = p.color;
+
+        if (p.isSparkle) {
+          // 4각 스파클 별(✨) 그리기
+          ctx.translate(p.x, p.y);
+          ctx.beginPath();
+          const r = p.size * 2;
+          ctx.moveTo(0, -r);
+          ctx.quadraticCurveTo(0, 0, r, 0);
+          ctx.quadraticCurveTo(0, 0, 0, r);
+          ctx.quadraticCurveTo(0, 0, -r, 0);
+          ctx.quadraticCurveTo(0, 0, 0, -r);
+          ctx.closePath();
+          ctx.fill();
+        } else {
+          // 원형 빛 입자
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+          ctx.shadowBlur = 8;
+          ctx.shadowColor = p.color;
+          ctx.fill();
+        }
+        ctx.restore();
+      }
+
+      splashAnimationId = requestAnimationFrame(renderParticles);
+    };
+
+    renderParticles();
+  }
+
+  // 3. 스플래시 종료 헬퍼 (Fade Out)
+  let isDismissed = false;
+  const dismissSplash = () => {
+    if (isDismissed) return;
+    isDismissed = true;
+    sessionStorage.setItem("pricetrace_splash_seen", "true");
+
+    if (splashProgressInterval) {
+      clearInterval(splashProgressInterval);
+      splashProgressInterval = null;
+    }
+
+    splash.classList.add("splash-fade-out");
+
+    setTimeout(() => {
+      splash.classList.add("splash-hidden");
+      if (splashAnimationId) {
+        cancelAnimationFrame(splashAnimationId);
+        splashAnimationId = null;
+      }
+    }, 550);
+  };
+
+  // 건너뛰기 버튼 이벤트 바인딩
+  if (skipBtn) {
+    skipBtn.addEventListener("click", () => {
+      dismissSplash();
+    });
+  }
+
+  // 인트로 다시 보기 버튼 바인딩
+  const replayBtn = document.getElementById("replaySplashBtn");
+  if (replayBtn) {
+    replayBtn.addEventListener("click", () => {
+      const modal = document.getElementById("configModal");
+      if (modal) modal.classList.add("hidden");
+      window.showSplashDemo();
+    });
+  }
+
+  // 4. 프로그레스 바 진행 (0% → 100%, 약 1.8초 소요)
+  let currentProgress = 0;
+  const stages = [
+    { target: 25, text: "네이버 쇼핑 공식 카탈로그 연결 중..." },
+    { target: 60, text: "16대 국민 생필품 최저가 분석 중..." },
+    { target: 88, text: "스폰서 광고 0% 클린 필터링 가동..." },
+    { target: 100, text: "최저가 레이더 가동 완료!" }
+  ];
+
+  const startTime = Date.now();
+  const totalDuration = 1800; // 1.8초
+
+  splashProgressInterval = setInterval(() => {
+    const elapsed = Date.now() - startTime;
+    const ratio = Math.min(1, elapsed / totalDuration);
+
+    currentProgress = Math.min(100, Math.floor(ratio * 100));
+
+    if (progressBar) {
+      progressBar.style.width = `${currentProgress}%`;
+    }
+    if (progressPercent) {
+      progressPercent.textContent = `${currentProgress}%`;
+    }
+
+    const stage = stages.find(s => currentProgress <= s.target) || stages[stages.length - 1];
+    if (progressText && stage) {
+      progressText.textContent = stage.text;
+    }
+
+    if (ratio >= 1) {
+      clearInterval(splashProgressInterval);
+      splashProgressInterval = null;
+      setTimeout(dismissSplash, 250);
+    }
+  }, 30);
+}
+
+// 외부 디버깅/테스트용 글로벌 노출
+window.showSplashDemo = function() {
+  sessionStorage.removeItem("pricetrace_splash_seen");
+  const splash = document.getElementById("appSplashScreen");
+  if (splash) {
+    splash.classList.remove("splash-hidden", "splash-fade-out");
+  }
+  setupSplashScreen();
+};
+
 // 초기 실행
 function initApp() {
+  // 모바일/태블릿 동적 인트로 스플래시 화면 초기화
+  setupSplashScreen();
+
   initEventListeners();
 
   // PWA 서비스 워커 및 설치 경험 모듈 구동

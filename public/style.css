@@ -148,3 +148,26 @@ html {
   transform: scale(1.05);
 }
 
+/* 모바일/태블릿 동적 인터랙티브 인트로 스플래시 화면 */
+#appSplashScreen {
+  transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1), transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+}
+
+#appSplashScreen.splash-fade-out {
+  opacity: 0 !important;
+  pointer-events: none !important;
+  transform: scale(1.03) !important;
+}
+
+#appSplashScreen.splash-hidden {
+  display: none !important;
+}
+
+/* PC 데스크톱 화면(1024px 이상)에서는 스플래시 화면 및 프로그레스 바 원천 차단 */
+@media (min-width: 1024px) {
+  #appSplashScreen {
+    display: none !important;
+  }
+}
+
