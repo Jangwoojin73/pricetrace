@@ -171,3 +171,9 @@ html {
   }
 }
 
+/* 듀얼 탭(핫딜/생필품) 스크롤 앵커 여백 보장 (고정 헤더 아래에 완벽 위치) */
+#dualTabSwitcherSection,
+#dualTabButtonsTray {
+  scroll-margin-top: 130px;
+}
+

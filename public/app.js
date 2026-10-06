@@ -526,7 +526,7 @@ function updateMobileNavActiveTab(activeTabKey) {
 }
 
 // 뷰 전환: 초기 웰컴 화면
-function switchToWelcomeView(skipHistory = false) {
+function switchToWelcomeView(skipHistory = false, skipScroll = false) {
   state.view = "welcome";
   state.keyword = "";
   if (elements.welcomeView) elements.welcomeView.classList.remove("hidden");
@@ -545,7 +545,9 @@ function switchToWelcomeView(skipHistory = false) {
   if (window.lucide) {
     window.lucide.createIcons();
   }
-  window.scrollTo({ top: 0, behavior: "smooth" });
+  if (!skipScroll) {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
 }
 
 // 뷰 전환: 검색 결과 대시보드 화면
@@ -1443,15 +1445,36 @@ function initEventListeners() {
     });
   }
 
+  // 듀얼 탭(핫딜/생필품) 2개 버튼 위치로 정확하고 일관되게 고정 스크롤
+  function scrollToDualTabs() {
+    requestAnimationFrame(() => {
+      const targetElement = document.getElementById("dualTabSwitcherSection") || document.getElementById("dualTabButtonsTray");
+      const header = document.querySelector("header");
+      if (!targetElement) return;
+
+      const headerHeight = header ? header.offsetHeight : 0;
+      const elementRect = targetElement.getBoundingClientRect();
+      const currentScrollY = window.pageYOffset || window.scrollY || document.documentElement.scrollTop || 0;
+      const absoluteElementTop = elementRect.top + currentScrollY;
+      
+      // 고정 헤더 바로 아래 8px 여백을 두고 2개 탭 버튼이 화면 상단에 선명하게 노출되도록 계산
+      const targetScrollY = Math.max(0, Math.round(absoluteElementTop - headerHeight - 8));
+
+      window.scrollTo({
+        top: targetScrollY,
+        behavior: "smooth"
+      });
+    });
+  }
+
   if (elements.mobileNavHotdealBtn) {
     elements.mobileNavHotdealBtn.addEventListener("click", () => {
-      switchToWelcomeView(true);
-      switchRecommendationTab("trending");
-      updateMobileNavActiveTab("trending");
-      const targetSec = document.getElementById("tabSectionTitle");
-      if (targetSec) {
-        targetSec.scrollIntoView({ behavior: "smooth", block: "start" });
+      switchToWelcomeView(true, true);
+      if (state.activeTab !== "trending") {
+        switchRecommendationTab("trending");
       }
+      updateMobileNavActiveTab("trending");
+      scrollToDualTabs();
     });
   }
 
@@ -1469,13 +1492,12 @@ function initEventListeners() {
 
   if (elements.mobileNavSteadyBtn) {
     elements.mobileNavSteadyBtn.addEventListener("click", () => {
-      switchToWelcomeView(true);
-      switchRecommendationTab("steady");
-      updateMobileNavActiveTab("steady");
-      const targetSec = document.getElementById("tabSectionTitle");
-      if (targetSec) {
-        targetSec.scrollIntoView({ behavior: "smooth", block: "start" });
+      switchToWelcomeView(true, true);
+      if (state.activeTab !== "steady") {
+        switchRecommendationTab("steady");
       }
+      updateMobileNavActiveTab("steady");
+      scrollToDualTabs();
     });
   }
 

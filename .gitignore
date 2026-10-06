@@ -21,3 +21,4 @@ credentials.json
 .daily_trending_cache.json
 *.cache.json
 public/qa_artifacts/
+scratch/
