@@ -37,7 +37,7 @@
   <script src="https://unpkg.com/lucide@latest"></script>
   
   <!-- Custom CSS -->
-  <link rel="stylesheet" href="style.css?v=20261006_bottomnav">
+  <link rel="stylesheet" href="style.css?v=20261006_align">
   
   <script>
     tailwind.config = {
@@ -918,9 +918,9 @@
     </div>
   </div>
 
-  <!-- 모바일 전용 프리미엄 플로팅 하단 네비게이션 바 (Floating Bottom Tab Bar - 산도장형 5대 탭) -->
-  <nav id="mobileBottomNav" class="md:hidden fixed bottom-3 left-3 right-3 max-w-lg mx-auto z-40 bg-white/95 backdrop-blur-xl border border-slate-200/90 rounded-3xl shadow-2xl px-2 py-1.5 transition-all duration-300">
-    <div class="flex items-center justify-around relative">
+  <!-- 모바일 전용 프리미엄 플로팅 하단 네비게이션 바 (Floating Bottom Tab Bar - 수직 중앙 정렬 & 동일 레벨 일치) -->
+  <nav id="mobileBottomNav" class="md:hidden fixed left-3 right-3 max-w-lg mx-auto z-40 bg-white/95 backdrop-blur-xl border border-slate-200/90 rounded-3xl shadow-2xl px-2 py-2 transition-all duration-300">
+    <div class="flex items-center justify-around">
       
       <!-- 1. [홈] 탭 -->
       <button 
@@ -928,12 +928,12 @@
         id="mobileNavHomeBtn" 
         data-mobile-tab="home" 
         title="홈 화면으로 이동" 
-        class="mobile-nav-btn group flex flex-col items-center justify-center flex-1 py-1 px-1 rounded-2xl transition-all cursor-pointer text-blue-600 font-extrabold"
+        class="mobile-nav-btn group flex flex-col items-center justify-center flex-1 py-1 rounded-2xl transition-all cursor-pointer text-blue-600 font-extrabold"
       >
-        <div class="mobile-nav-icon-box p-1.5 rounded-xl transition-all bg-blue-50 text-blue-600">
+        <div class="mobile-nav-icon-box w-9 h-9 flex items-center justify-center rounded-xl transition-all bg-blue-50 text-blue-600">
           <i data-lucide="home" class="w-5 h-5"></i>
         </div>
-        <span class="text-[10px] tracking-tight mt-0.5 leading-none font-bold">홈</span>
+        <span class="text-[10px] tracking-tight mt-1 leading-none font-bold">홈</span>
       </button>
 
       <!-- 2. [실시간 핫딜] 탭 -->
@@ -942,26 +942,27 @@
         id="mobileNavHotdealBtn" 
         data-mobile-tab="trending" 
         title="오늘 실시간 핫딜 TOP 16" 
-        class="mobile-nav-btn group flex flex-col items-center justify-center flex-1 py-1 px-1 rounded-2xl transition-all cursor-pointer text-slate-500 font-medium hover:text-slate-900"
+        class="mobile-nav-btn group flex flex-col items-center justify-center flex-1 py-1 rounded-2xl transition-all cursor-pointer text-slate-500 font-medium hover:text-slate-900"
       >
-        <div class="mobile-nav-icon-box p-1.5 rounded-xl transition-all text-slate-500 group-hover:text-slate-900">
+        <div class="mobile-nav-icon-box w-9 h-9 flex items-center justify-center rounded-xl transition-all text-slate-500 group-hover:text-slate-900">
           <i data-lucide="flame" class="w-5 h-5"></i>
         </div>
-        <span class="text-[10px] tracking-tight mt-0.5 leading-none font-semibold">핫딜</span>
+        <span class="text-[10px] tracking-tight mt-1 leading-none font-semibold">핫딜</span>
       </button>
 
-      <!-- 3. [중앙 돌출 FAB] 최저가 레이더 (검색 포커스) -->
-      <div class="flex-1 flex flex-col items-center justify-center relative -mt-6">
-        <button 
-          type="button" 
-          id="mobileNavSearchFabBtn" 
-          title="실시간 최저가 탐색 (검색)" 
-          class="w-13 h-13 rounded-full bg-gradient-to-tr from-blue-600 via-indigo-600 to-blue-500 text-white shadow-xl shadow-blue-500/40 flex items-center justify-center border-[3.5px] border-white active:scale-95 transition-all cursor-pointer group"
-        >
-          <i data-lucide="search" class="w-6 h-6 group-hover:scale-110 transition-transform text-white stroke-[2.5]"></i>
-        </button>
-        <span class="text-[10px] font-black text-blue-600 tracking-tight mt-0.5 leading-none">레이더</span>
-      </div>
+      <!-- 3. [최저가 레이더] 탭 (동일 레벨 일치 & 프리미엄 센터 칩 강조) -->
+      <button 
+        type="button" 
+        id="mobileNavSearchFabBtn" 
+        data-mobile-tab="search" 
+        title="실시간 최저가 탐색 (검색)" 
+        class="mobile-nav-btn group flex flex-col items-center justify-center flex-1 py-1 rounded-2xl transition-all cursor-pointer text-blue-600 font-bold"
+      >
+        <div class="w-10 h-10 -my-0.5 flex items-center justify-center rounded-2xl bg-gradient-to-tr from-blue-600 via-indigo-600 to-blue-500 text-white shadow-md shadow-blue-500/35 active:scale-95 transition-all">
+          <i data-lucide="search" class="w-5 h-5 text-white stroke-[2.5]"></i>
+        </div>
+        <span class="text-[10px] tracking-tight mt-1 leading-none font-extrabold text-blue-600">레이더</span>
+      </button>
 
       <!-- 4. [국민 생필품] 탭 -->
       <button 
@@ -969,12 +970,12 @@
         id="mobileNavSteadyBtn" 
         data-mobile-tab="steady" 
         title="국민 필수 생필품 TOP 16" 
-        class="mobile-nav-btn group flex flex-col items-center justify-center flex-1 py-1 px-1 rounded-2xl transition-all cursor-pointer text-slate-500 font-medium hover:text-slate-900"
+        class="mobile-nav-btn group flex flex-col items-center justify-center flex-1 py-1 rounded-2xl transition-all cursor-pointer text-slate-500 font-medium hover:text-slate-900"
       >
-        <div class="mobile-nav-icon-box p-1.5 rounded-xl transition-all text-slate-500 group-hover:text-slate-900">
+        <div class="mobile-nav-icon-box w-9 h-9 flex items-center justify-center rounded-xl transition-all text-slate-500 group-hover:text-slate-900">
           <i data-lucide="trophy" class="w-5 h-5"></i>
         </div>
-        <span class="text-[10px] tracking-tight mt-0.5 leading-none font-semibold">생필품</span>
+        <span class="text-[10px] tracking-tight mt-1 leading-none font-semibold">생필품</span>
       </button>
 
       <!-- 5. [목표가/설정] 탭 -->
@@ -983,12 +984,12 @@
         id="mobileNavConfigBtn" 
         data-mobile-tab="config" 
         title="목표가 알림 설정" 
-        class="mobile-nav-btn group flex flex-col items-center justify-center flex-1 py-1 px-1 rounded-2xl transition-all cursor-pointer text-slate-500 font-medium hover:text-slate-900"
+        class="mobile-nav-btn group flex flex-col items-center justify-center flex-1 py-1 rounded-2xl transition-all cursor-pointer text-slate-500 font-medium hover:text-slate-900"
       >
-        <div class="mobile-nav-icon-box p-1.5 rounded-xl transition-all text-slate-500 group-hover:text-slate-900">
+        <div class="mobile-nav-icon-box w-9 h-9 flex items-center justify-center rounded-xl transition-all text-slate-500 group-hover:text-slate-900">
           <i data-lucide="sliders-horizontal" class="w-5 h-5"></i>
         </div>
-        <span class="text-[10px] tracking-tight mt-0.5 leading-none font-semibold">설정</span>
+        <span class="text-[10px] tracking-tight mt-1 leading-none font-semibold">설정</span>
       </button>
 
     </div>
@@ -1035,7 +1036,7 @@
   </div>
 
   <!-- 메인 스크립트 (모바일 하단 네비게이션 바 반영) -->
-  <script src="app.js?v=20261006_bottomnav"></script>
+  <script src="app.js?v=20261006_align"></script>
   <script>
     // Lucide 아이콘 초기화
     lucide.createIcons();
