@@ -140,8 +140,14 @@ function cleanProductTitle(title) {
 function normalizeProductUrl(url, title = "", price = 0, rank = 1, mallName = "") {
   let trimmed = String(url || "").trim();
 
-  // 0. 이미 완성된 네이버 공식 포털 쇼핑 탭(where=shp) 링크인 경우 즉시 보존
+  // 0. 이미 완성된 네이버 공식 포털 쇼핑 탭(where=shp) 링크인 경우 앵커 보장 후 반환
   if (trimmed.includes("search.naver.com/search.naver") && trimmed.includes("where=shp")) {
+    if (!trimmed.includes("#shp_dui_root") && !trimmed.includes("#shp_gui_root")) {
+      const cleanLower = cleanProductTitle(title).toLowerCase();
+      const isProduce = ["사과", "새우", "과일", "수산", "생선", "배추", "감자", "양파", "토마토", "삼겹살", "한우", "소고기"].some(w => cleanLower.includes(w));
+      const anchor = isProduce ? "#shp_gui_root" : "#shp_dui_root";
+      return `${trimmed}${anchor}`;
+    }
     return trimmed;
   }
 
@@ -167,11 +173,11 @@ function normalizeProductUrl(url, title = "", price = 0, rank = 1, mallName = ""
     targetQuery = `${targetQuery} 무료배송`;
   }
 
-  // 3. [WAF 차단 0% 영구 보장]
-  // search.shopping.naver.com 서브도메인의 외부 유입 WAF(접속 제한) 차단을 원천 배제하고
-  // 로그인/캡차/차단 제약이 전혀 없는 네이버 공식 포털 쇼핑 탭(search.naver.com?where=shp)으로 100% 일원화
+  // 3. [WAF 차단 0% & 파워링크 광고/AI 브리핑 0% 우회 직결]
   const encTarget = encodeURIComponent(targetQuery.trim());
-  return `https://search.naver.com/search.naver?where=shp&query=${encTarget}`;
+  const isProduce = ["사과", "새우", "과일", "수산", "생선", "배추", "감자", "양파", "토마토", "삼겹살", "한우", "소고기"].some(w => targetQuery.toLowerCase().includes(w));
+  const anchor = isProduce ? "#shp_gui_root" : "#shp_dui_root";
+  return `https://search.naver.com/search.naver?where=shp&query=${encTarget}${anchor}`;
 }
 
 
@@ -894,7 +900,7 @@ function renderComparisonGrid(items, unit_count = 1) {
     }
 
     return `
-      <div class="relative bg-white rounded-3xl p-5 ${borderClass} flex flex-col justify-between space-y-4 card-hover">
+      <div class="rank-card relative bg-white rounded-3xl p-5 ${borderClass} flex flex-col justify-between space-y-4 card-hover">
         <div class="flex items-center justify-between">
           <span class="inline-flex items-center space-x-1 text-xs font-black ${medalClass} px-3 py-1 rounded-full">
             <span>${medal}</span>
