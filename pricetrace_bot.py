@@ -202,7 +202,8 @@ def clean_search_keyword(title: str) -> str:
         "무료배송", "당일발송", "당일출고", "산지직송", "유명한곳", "초특가", "특가", 
         "선물세트", "국내산", "국산", "원산지", "빅세일", "할인", "한정수량", "고당도",
         "못난이", "가정용", "실속형", "프리미엄", "정품", "공식", "인증", "직송", "유명",
-        "인기", "추천", "대용량", "1+1팩", "1+1", "1팩", "2팩", "1박스", "2박스", "세트", "한박스", "멀티팩"
+        "인기", "추천", "대용량", "1+1팩", "1+1", "1팩", "2팩", "1박스", "2박스", "세트", "한박스", "멀티팩",
+        "카제로템", "ncfb", "패밀리", "국내제조", "반려견", "수제간식", "무염", "제조"
     ]
     for w in remove_words:
         t = t.replace(w, " ")
@@ -232,8 +233,8 @@ def clean_search_keyword(title: str) -> str:
         fb = " ".join(clean_fallback.split()[:4]) or "신라면 20개"
         return f"{fb} {unit_spec}".strip() if unit_spec else fb
         
-    # 핵심 상품명 및 특성(제로, 다우니, 항균 플러스 등)을 최대 4~5단어까지 온전히 보존
-    base = " ".join(tokens[:5])
+    # 핵심 상품명 및 특성(제로, 다우니, 항균 플러스 등)을 최대 3~4단어까지 온전히 보존
+    base = " ".join(tokens[:4])
     if unit_spec and unit_spec.lower() not in base.lower():
         return f"{base} {unit_spec}".strip()
     return base
@@ -320,41 +321,40 @@ def normalize_shopping_url(url: str, nv_mid: Optional[Any] = None, card_type: st
 
     # 0. 이미 완성된 네이버 공식 포털 쇼핑 탭(where=shp) 링크인 경우 앵커 보장 후 반환
     if "search.naver.com/search.naver" in u_str and "where=shp" in u_str:
-        if "#shp_dui_root" not in u_str and "#shp_gui_root" not in u_str:
-            clean_t = clean_product_title(title).lower()
-            is_produce = any(w in clean_t for w in ["사과", "새우", "과일", "수산", "생선", "배추", "감자", "양파", "토마토", "삼겹살", "한우", "소고기"])
-            anchor = "#shp_gui_root" if is_produce else "#shp_dui_root"
-            return f"{u_str}{anchor}"
+        if "#shp_dui_root" not in u_str:
+            clean_base = u_str.replace("#shp_gui_root", "")
+            return f"{clean_base}#shp_dui_root"
         return u_str
 
-    # 1. 기존 URL이나 제목에서 순수 검색어 추출
-    clean_t = clean_product_title(title)
+    # 1. 기존 URL이나 제목에서 순수 검색어 추출 (광고성 수식어/수량단위 정제)
+    clean_t = clean_search_keyword(title) if title else ""
+    if not clean_t:
+        clean_t = clean_product_title(title)
     extracted_query = ""
     if "?" in u_str:
         try:
             parsed = urllib.parse.urlparse(u_str)
             qs = urllib.parse.parse_qs(parsed.query)
             if "query" in qs and qs["query"]:
-                extracted_query = clean_product_title(qs["query"][0].strip())
+                extracted_query = clean_search_keyword(qs["query"][0].strip()) or clean_product_title(qs["query"][0].strip())
         except Exception:
             pass
 
     target_q = clean_t or extracted_query or "신라면 20개"
     clean_mall = extract_clean_mall_name(mall_name)
-    if clean_mall and len(clean_mall) >= 2 and clean_mall not in target_q:
+    # 검색어가 이미 3단어 이상이거나 쇼핑몰 이름이 포함되어 있으면 추가로 붙이지 않음 (검색어 비대화 방지)
+    if clean_mall and len(clean_mall) >= 2 and clean_mall not in target_q and len(target_q.split()) <= 2:
         target_q = f"{clean_mall} {target_q}"
-    elif rank == 2:
+    elif rank == 2 and len(target_q.split()) <= 3:
         target_q = f"{target_q} 최저가"
-    elif rank == 3:
+    elif rank == 3 and len(target_q.split()) <= 3:
         target_q = f"{target_q} 무료배송"
 
     # 2. [WAF 차단 0% & 파워링크 광고/AI 브리핑 0% 우회 직결]
     # search.shopping.naver.com 서브도메인의 외부 유입 WAF/로그인 제약을 원천 배제하고
     # 상단 파워링크 광고 및 AI 브리핑을 건너뛰고 '네이버 가격비교' 섹션으로 즉시 직결되는 앵커 적용
     enc_target = urllib.parse.quote(target_q.strip())
-    is_produce = any(w in target_q.lower() for w in ["사과", "새우", "과일", "수산", "생선", "배추", "감자", "양파", "토마토", "삼겹살", "한우", "소고기"])
-    anchor = "#shp_gui_root" if is_produce else "#shp_dui_root"
-    return f"https://search.naver.com/search.naver?where=shp&query={enc_target}{anchor}"
+    return f"https://search.naver.com/search.naver?where=shp&query={enc_target}#shp_dui_root"
 
 
 

@@ -137,16 +137,31 @@ function cleanProductTitle(title) {
   return s.replace(/\s+/g, " ").trim();
 }
 
+function cleanSearchKeyword(title) {
+  if (!title) return "";
+  let t = cleanProductTitle(title);
+  const removeWords = [
+    "무료배송", "당일발송", "당일출고", "산지직송", "유명한곳", "초특가", "특가", 
+    "선물세트", "국내산", "국산", "원산지", "빅세일", "할인", "한정수량", "고당도",
+    "못난이", "가정용", "실속형", "프리미엄", "정품", "공식", "인증", "직송", "유명",
+    "인기", "추천", "대용량", "1+1팩", "1+1", "1팩", "2팩", "1박스", "2박스", "세트", "한박스", "멀티팩",
+    "카제로템", "ncfb", "패밀리", "국내제조", "반려견", "수제간식", "무염", "제조"
+  ];
+  for (const w of removeWords) {
+    t = t.replace(new RegExp(w, "gi"), " ");
+  }
+  const tokens = t.split(/\s+/).filter(tok => tok.length > 0);
+  return tokens.slice(0, 4).join(" ").trim() || cleanProductTitle(title);
+}
+
 function normalizeProductUrl(url, title = "", price = 0, rank = 1, mallName = "") {
   let trimmed = String(url || "").trim();
 
   // 0. 이미 완성된 네이버 공식 포털 쇼핑 탭(where=shp) 링크인 경우 앵커 보장 후 반환
   if (trimmed.includes("search.naver.com/search.naver") && trimmed.includes("where=shp")) {
-    if (!trimmed.includes("#shp_dui_root") && !trimmed.includes("#shp_gui_root")) {
-      const cleanLower = cleanProductTitle(title).toLowerCase();
-      const isProduce = ["사과", "새우", "과일", "수산", "생선", "배추", "감자", "양파", "토마토", "삼겹살", "한우", "소고기"].some(w => cleanLower.includes(w));
-      const anchor = isProduce ? "#shp_gui_root" : "#shp_dui_root";
-      return `${trimmed}${anchor}`;
+    if (!trimmed.includes("#shp_dui_root")) {
+      const cleanBase = trimmed.replace(/#shp_gui_root/g, "");
+      return `${cleanBase}#shp_dui_root`;
     }
     return trimmed;
   }
@@ -156,28 +171,26 @@ function normalizeProductUrl(url, title = "", price = 0, rank = 1, mallName = ""
   if (trimmed.includes("?")) {
     try {
       const u = new URL(trimmed);
-      extractedQuery = cleanProductTitle(u.searchParams.get("query") || "");
+      extractedQuery = cleanSearchKeyword(u.searchParams.get("query") || "");
     } catch (e) {}
   }
 
-  const cleanTitle = cleanProductTitle(title || extractedQuery || "인기상품");
+  const cleanTitle = cleanSearchKeyword(title || extractedQuery || "인기상품");
 
   // 2. 순위별 고유 차별화 키워드 조합 (1위: 기본/공식, 2위: 최저가, 3위: 무료배송)
   let targetQuery = cleanTitle;
   const cleanMall = extractCleanMallName(mallName);
-  if (cleanMall && cleanMall.length >= 2 && !targetQuery.includes(cleanMall)) {
+  if (cleanMall && cleanMall.length >= 2 && !targetQuery.includes(cleanMall) && targetQuery.split(/\s+/).length <= 2) {
     targetQuery = `${cleanMall} ${targetQuery}`.trim();
-  } else if (rank === 2) {
+  } else if (rank === 2 && targetQuery.split(/\s+/).length <= 3) {
     targetQuery = `${targetQuery} 최저가`;
-  } else if (rank === 3) {
+  } else if (rank === 3 && targetQuery.split(/\s+/).length <= 3) {
     targetQuery = `${targetQuery} 무료배송`;
   }
 
   // 3. [WAF 차단 0% & 파워링크 광고/AI 브리핑 0% 우회 직결]
   const encTarget = encodeURIComponent(targetQuery.trim());
-  const isProduce = ["사과", "새우", "과일", "수산", "생선", "배추", "감자", "양파", "토마토", "삼겹살", "한우", "소고기"].some(w => targetQuery.toLowerCase().includes(w));
-  const anchor = isProduce ? "#shp_gui_root" : "#shp_dui_root";
-  return `https://search.naver.com/search.naver?where=shp&query=${encTarget}${anchor}`;
+  return `https://search.naver.com/search.naver?where=shp&query=${encTarget}#shp_dui_root`;
 }
 
 
