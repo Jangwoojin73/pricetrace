@@ -198,21 +198,23 @@ def clean_search_keyword(title: str) -> str:
     t = re.sub(r"\[.*?\]|\(.*?\)|<.*?>", " ", title)
     
     # 2. 흔한 광고성 수식어 및 포장 단위 사전 제거
+    t = re.sub(r'\d+\s*(?:개월|달|주|일)(?:\s*분)?', ' ', t)
     remove_words = [
         "무료배송", "당일발송", "당일출고", "산지직송", "유명한곳", "초특가", "특가", 
         "선물세트", "국내산", "국산", "원산지", "빅세일", "할인", "한정수량", "고당도",
         "못난이", "가정용", "실속형", "프리미엄", "정품", "공식", "인증", "직송", "유명",
         "인기", "추천", "대용량", "1+1팩", "1+1", "1팩", "2팩", "1박스", "2박스", "세트", "한박스", "멀티팩",
-        "카제로템", "ncfb", "패밀리", "국내제조", "반려견", "수제간식", "무염", "제조"
+        "카제로템", "ncfb", "패밀리", "국내제조", "반려견", "수제간식", "무염", "제조",
+        "과학", "치약", "케이스", "제공", "치아", "형성", "좋은", "칼슘", "잇몸"
     ]
     for w in remove_words:
         t = t.replace(w, " ")
     
-    # 3. 핵심 단위 우선순위 추출 (롤 > 캔/T/병 > 개/봉 > kg/L) - 가장 마지막 총수량 단위 매칭
+    # 3. 핵심 단위 우선순위 추출 (롤 > 캔/T/병 > 개/봉 > kg/L) - 가장 마지막 총수량 단위 매칭 (개월 등 기간 단위 제외)
     unit_spec = ""
     roll_m = re.findall(r'(\d+\s*롤)', title, re.IGNORECASE)
     can_m = re.findall(r'(\d+\s*(?:캔|T|병))', title, re.IGNORECASE)
-    count_m = re.findall(r'(\d+\s*(?:개|봉|입))', title, re.IGNORECASE)
+    count_m = re.findall(r'(\d+\s*(?:개|봉|입))(?!월)', title, re.IGNORECASE)
     weight_m = re.findall(r'(\d+(?:\.\d+)?\s*(?:kg|L))', title, re.IGNORECASE)
     
     if roll_m:
@@ -224,9 +226,10 @@ def clean_search_keyword(title: str) -> str:
     elif weight_m:
         unit_spec = weight_m[-1].replace(" ", "")
 
-    # 4. 특수문자 제거
+    # 4. 특수문자 및 불필요한 단일 조사/수식어 제거
     t = re.sub(r"[^\w\s가-힣0-9a-zA-Z]", " ", t)
-    tokens = [tok for tok in t.split() if tok and len(tok) >= 1 and tok.lower() != (unit_spec.lower() if unit_spec else "")]
+    particles = {"에", "의", "와", "과", "로", "를", "은", "는", "이", "가", "약"}
+    tokens = [tok for tok in t.split() if tok and tok.lower() not in particles and (len(tok) >= 2 or tok.isdigit()) and tok.lower() != (unit_spec.lower() if unit_spec else "")]
     
     if not tokens:
         clean_fallback = re.sub(r"[^\w\s가-힣0-9]", " ", title).strip()

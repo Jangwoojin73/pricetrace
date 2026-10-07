@@ -140,17 +140,20 @@ function cleanProductTitle(title) {
 function cleanSearchKeyword(title) {
   if (!title) return "";
   let t = cleanProductTitle(title);
+  t = t.replace(/\d+\s*(?:개월|달|주|일)(?:\s*분)?/g, " ");
   const removeWords = [
     "무료배송", "당일발송", "당일출고", "산지직송", "유명한곳", "초특가", "특가", 
     "선물세트", "국내산", "국산", "원산지", "빅세일", "할인", "한정수량", "고당도",
     "못난이", "가정용", "실속형", "프리미엄", "정품", "공식", "인증", "직송", "유명",
     "인기", "추천", "대용량", "1+1팩", "1+1", "1팩", "2팩", "1박스", "2박스", "세트", "한박스", "멀티팩",
-    "카제로템", "ncfb", "패밀리", "국내제조", "반려견", "수제간식", "무염", "제조"
+    "카제로템", "ncfb", "패밀리", "국내제조", "반려견", "수제간식", "무염", "제조",
+    "과학", "치약", "케이스", "제공", "치아", "형성", "좋은", "칼슘", "잇몸"
   ];
   for (const w of removeWords) {
     t = t.replace(new RegExp(w, "gi"), " ");
   }
-  const tokens = t.split(/\s+/).filter(tok => tok.length > 0);
+  const particles = new Set(["에", "의", "와", "과", "로", "를", "은", "는", "이", "가", "약"]);
+  const tokens = t.split(/\s+/).filter(tok => tok.length >= 2 && !particles.has(tok.toLowerCase()));
   return tokens.slice(0, 4).join(" ").trim() || cleanProductTitle(title);
 }
 
