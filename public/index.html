@@ -1002,9 +1002,9 @@
     </div>
   </div>
 
-  <!-- 모바일/태블릿 프리미엄 바닥 밀착형 하단 네비게이션 바 (Docked Bottom Tab Bar - 화면 최하단 바닥에 안정적 착지) -->
-  <nav id="mobileBottomNav" class="lg:hidden fixed bottom-0 inset-x-0 w-full z-40 bg-white/95 backdrop-blur-xl border-t border-slate-200/90 shadow-[0_-4px_25px_-4px_rgba(15,23,42,0.08)] px-2 pt-2 transition-all duration-300">
-    <div class="max-w-lg mx-auto flex items-center justify-around">
+  <!-- 모바일/태블릿 프리미엄 바닥 밀착형 하단 네비게이션 바 (Docked Bottom Tab Bar) -->
+  <nav id="mobileBottomNav" class="lg:hidden fixed bottom-0 inset-x-0 w-full z-40 bg-white/95 backdrop-blur-xl border-t border-slate-200/90 shadow-[0_-4px_25px_-4px_rgba(15,23,42,0.08)] px-2 pt-1 transition-all duration-300">
+    <div class="max-w-lg mx-auto flex items-end justify-around">
       
       <!-- 1. [홈] 탭 -->
       <button 
@@ -1012,7 +1012,7 @@
         id="mobileNavHomeBtn" 
         data-mobile-tab="home" 
         title="홈 화면으로 이동" 
-        class="mobile-nav-btn group flex flex-col items-center justify-center flex-1 py-1 rounded-2xl transition-all cursor-pointer text-blue-600 font-extrabold"
+        class="mobile-nav-btn group flex flex-col items-center justify-end flex-1 pb-1 pt-1.5 rounded-2xl transition-all cursor-pointer text-blue-600 font-extrabold"
       >
         <div class="mobile-nav-icon-box w-9 h-9 flex items-center justify-center rounded-xl transition-all bg-blue-50 text-blue-600">
           <i data-lucide="home" class="w-5 h-5"></i>
@@ -1020,46 +1020,46 @@
         <span class="text-[10px] tracking-tight mt-1 leading-none font-bold">홈</span>
       </button>
 
-      <!-- 2. [실시간 핫딜] 탭 -->
-      <button 
-        type="button" 
-        id="mobileNavHotdealBtn" 
-        data-mobile-tab="trending" 
-        title="오늘 실시간 핫딜 TOP 16" 
-        class="mobile-nav-btn group flex flex-col items-center justify-center flex-1 py-1 rounded-2xl transition-all cursor-pointer text-slate-500 font-medium hover:text-slate-900"
-      >
-        <div class="mobile-nav-icon-box w-9 h-9 flex items-center justify-center rounded-xl transition-all text-slate-500 group-hover:text-slate-900">
-          <i data-lucide="flame" class="w-5 h-5"></i>
-        </div>
-        <span class="text-[10px] tracking-tight mt-1 leading-none font-semibold">핫딜</span>
-      </button>
-
-      <!-- 3. [최저가 레이더] 탭 (동일 레벨 일치 & 프리미엄 센터 칩 강조) -->
+      <!-- 2. [최저가 레이더 (검색)] 탭 (사이드 표준 유틸리티 탭으로 정렬) -->
       <button 
         type="button" 
         id="mobileNavSearchFabBtn" 
         data-mobile-tab="search" 
-        title="실시간 최저가 탐색 (검색)" 
-        class="mobile-nav-btn group flex flex-col items-center justify-center flex-1 py-1 rounded-2xl transition-all cursor-pointer text-blue-600 font-bold"
+        title="실시간 최저가 탐색 (검색창 이동)" 
+        class="mobile-nav-btn group flex flex-col items-center justify-end flex-1 pb-1 pt-1.5 rounded-2xl transition-all cursor-pointer text-slate-500 font-medium hover:text-slate-900"
       >
-        <div class="w-10 h-10 -my-0.5 flex items-center justify-center rounded-2xl bg-gradient-to-tr from-blue-600 via-indigo-600 to-blue-500 text-white shadow-md shadow-blue-500/35 active:scale-95 transition-all">
-          <i data-lucide="search" class="w-5 h-5 text-white stroke-[2.5]"></i>
+        <div class="mobile-nav-icon-box w-9 h-9 flex items-center justify-center rounded-xl transition-all text-slate-500 group-hover:text-slate-900">
+          <i data-lucide="search" class="w-5 h-5"></i>
         </div>
-        <span class="text-[10px] tracking-tight mt-1 leading-none font-extrabold text-blue-600">레이더</span>
+        <span class="text-[10px] tracking-tight mt-1 leading-none font-semibold">레이더</span>
       </button>
 
-      <!-- 4. [국민 생필품] 탭 -->
+      <!-- 3. [🏆 국민 필수 생필품] 탭 (중앙 히어로 1: 대형 트로피 볼륨 뱃지) -->
       <button 
         type="button" 
         id="mobileNavSteadyBtn" 
         data-mobile-tab="steady" 
         title="국민 필수 생필품 TOP 16" 
-        class="mobile-nav-btn group flex flex-col items-center justify-center flex-1 py-1 rounded-2xl transition-all cursor-pointer text-slate-500 font-medium hover:text-slate-900"
+        class="mobile-nav-btn hero-tab flex flex-col items-center justify-end flex-1 pb-1 pt-0 transition-all cursor-pointer text-emerald-700 font-bold relative"
       >
-        <div class="mobile-nav-icon-box w-9 h-9 flex items-center justify-center rounded-xl transition-all text-slate-500 group-hover:text-slate-900">
-          <i data-lucide="trophy" class="w-5 h-5"></i>
+        <div class="hero-nav-badge steady-badge active:scale-95">
+          <i data-lucide="trophy" class="text-white"></i>
         </div>
-        <span class="text-[10px] tracking-tight mt-1 leading-none font-semibold">생필품</span>
+        <span class="text-[10px] tracking-tight mt-1 leading-none font-black text-emerald-700">생필품</span>
+      </button>
+
+      <!-- 4. [🔥 오늘 실시간 핫딜] 탭 (중앙 히어로 2: 대형 불꽃 볼륨 뱃지) -->
+      <button 
+        type="button" 
+        id="mobileNavHotdealBtn" 
+        data-mobile-tab="trending" 
+        title="오늘 실시간 핫딜 TOP 16" 
+        class="mobile-nav-btn hero-tab flex flex-col items-center justify-end flex-1 pb-1 pt-0 transition-all cursor-pointer text-rose-600 font-bold relative"
+      >
+        <div class="hero-nav-badge hotdeal-badge active:scale-95">
+          <i data-lucide="flame" class="text-white"></i>
+        </div>
+        <span class="text-[10px] tracking-tight mt-1 leading-none font-black text-rose-600">핫딜</span>
       </button>
 
       <!-- 5. [목표가/설정] 탭 -->
@@ -1068,7 +1068,7 @@
         id="mobileNavConfigBtn" 
         data-mobile-tab="config" 
         title="목표가 알림 설정" 
-        class="mobile-nav-btn group flex flex-col items-center justify-center flex-1 py-1 rounded-2xl transition-all cursor-pointer text-slate-500 font-medium hover:text-slate-900"
+        class="mobile-nav-btn group flex flex-col items-center justify-end flex-1 pb-1 pt-1.5 rounded-2xl transition-all cursor-pointer text-slate-500 font-medium hover:text-slate-900"
       >
         <div class="mobile-nav-icon-box w-9 h-9 flex items-center justify-center rounded-xl transition-all text-slate-500 group-hover:text-slate-900">
           <i data-lucide="sliders-horizontal" class="w-5 h-5"></i>

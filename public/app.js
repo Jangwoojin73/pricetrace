@@ -548,27 +548,53 @@ function updateMobileNavActiveTab(activeTabKey) {
 
   buttons.forEach(btn => {
     const iconBox = btn.querySelector(".mobile-nav-icon-box");
+    const heroBadge = btn.querySelector(".hero-nav-badge");
     const label = btn.querySelector("span");
     const tabKey = btn.getAttribute("data-mobile-tab");
     const isTarget = (tabKey === activeTabKey);
 
     if (isTarget) {
-      btn.classList.add("active", "text-blue-600", "font-extrabold");
-      btn.classList.remove("text-slate-500", "font-medium");
-      if (iconBox) {
-        iconBox.className = "mobile-nav-icon-box p-1.5 rounded-xl transition-all bg-blue-50 text-blue-600";
-      }
-      if (label) {
-        label.className = "text-[10px] tracking-tight mt-0.5 leading-none font-bold";
+      btn.classList.add("active");
+      if (tabKey === "trending") {
+        btn.classList.add("text-rose-600");
+        btn.classList.remove("text-slate-500", "text-blue-600");
+        if (heroBadge) heroBadge.classList.add("active-hero");
+        if (label) label.className = "text-[10px] tracking-tight mt-1 leading-none font-black text-rose-600";
+      } else if (tabKey === "steady") {
+        btn.classList.add("text-emerald-700");
+        btn.classList.remove("text-slate-500", "text-blue-600");
+        if (heroBadge) heroBadge.classList.add("active-hero");
+        if (label) label.className = "text-[10px] tracking-tight mt-1 leading-none font-black text-emerald-700";
+      } else {
+        btn.classList.add("text-blue-600", "font-extrabold");
+        btn.classList.remove("text-slate-500");
+        if (iconBox) {
+          iconBox.className = "mobile-nav-icon-box w-9 h-9 flex items-center justify-center rounded-xl transition-all bg-blue-50 text-blue-600";
+        }
+        if (label) {
+          label.className = "text-[10px] tracking-tight mt-1 leading-none font-bold text-blue-600";
+        }
       }
     } else {
       btn.classList.remove("active", "text-blue-600", "font-extrabold");
-      btn.classList.add("text-slate-500", "font-medium");
-      if (iconBox) {
-        iconBox.className = "mobile-nav-icon-box p-1.5 rounded-xl transition-all text-slate-500 group-hover:text-slate-900";
-      }
-      if (label) {
-        label.className = "text-[10px] tracking-tight mt-0.5 leading-none font-semibold";
+      if (heroBadge) heroBadge.classList.remove("active-hero");
+
+      if (tabKey === "trending") {
+        btn.classList.remove("text-blue-600");
+        btn.classList.add("text-rose-600/80");
+        if (label) label.className = "text-[10px] tracking-tight mt-1 leading-none font-bold text-rose-600/80";
+      } else if (tabKey === "steady") {
+        btn.classList.remove("text-blue-600");
+        btn.classList.add("text-emerald-700/80");
+        if (label) label.className = "text-[10px] tracking-tight mt-1 leading-none font-bold text-emerald-700/80";
+      } else {
+        btn.classList.add("text-slate-500", "font-medium");
+        if (iconBox) {
+          iconBox.className = "mobile-nav-icon-box w-9 h-9 flex items-center justify-center rounded-xl transition-all text-slate-500 group-hover:text-slate-900";
+        }
+        if (label) {
+          label.className = "text-[10px] tracking-tight mt-1 leading-none font-semibold text-slate-500";
+        }
       }
     }
   });
