@@ -157,16 +157,39 @@ function cleanSearchKeyword(title) {
   return tokens.slice(0, 4).join(" ").trim() || cleanProductTitle(title);
 }
 
+function isMobileClient() {
+  if (typeof window === "undefined") return false;
+  return (
+    window.innerWidth <= 768 ||
+    /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
+  );
+}
+
 function normalizeProductUrl(url, title = "", price = 0, rank = 1, mallName = "") {
   let trimmed = String(url || "").trim();
+  const isMobile = isMobileClient();
 
-  // 0. 이미 완성된 네이버 공식 포털 쇼핑 탭(where=shp) 링크인 경우 앵커 보장 후 반환
-  if (trimmed.includes("search.naver.com/search.naver") && trimmed.includes("where=shp")) {
-    if (!trimmed.includes("#shp_dui_root")) {
-      const cleanBase = trimmed.replace(/#shp_gui_root/g, "");
-      return `${cleanBase}#shp_dui_root`;
+  // 0. 이미 완성된 네이버 공식 포털 쇼핑 링크인 경우 기기 환경에 맞춰 앵커 및 도메인 상호 변환
+  if (trimmed.includes("search.naver.com/search.naver") || trimmed.includes("m.search.naver.com/search.naver")) {
+    if (isMobile) {
+      // 모바일 환경: m.search.naver.com 및 #shp_lis_root로 변환하여 모바일 파워링크 광고 100% 자동 우회
+      let mobileUrl = trimmed.replace("search.naver.com", "m.search.naver.com");
+      mobileUrl = mobileUrl.replace("where=shp", "where=m");
+      mobileUrl = mobileUrl.replace("#shp_dui_root", "").replace("#shp_gui_root", "");
+      if (!mobileUrl.includes("#shp_lis_root")) {
+        mobileUrl += "#shp_lis_root";
+      }
+      return mobileUrl;
+    } else {
+      // PC 환경: search.naver.com?where=shp 및 #shp_dui_root 보장
+      let desktopUrl = trimmed.replace("m.search.naver.com", "search.naver.com");
+      desktopUrl = desktopUrl.replace("where=m", "where=shp");
+      desktopUrl = desktopUrl.replace("#shp_lis_root", "").replace("#shp_gui_root", "");
+      if (!desktopUrl.includes("#shp_dui_root")) {
+        desktopUrl += "#shp_dui_root";
+      }
+      return desktopUrl;
     }
-    return trimmed;
   }
 
   // 1. 기존 URL이나 제목에서 순수 검색어 추출
@@ -191,9 +214,13 @@ function normalizeProductUrl(url, title = "", price = 0, rank = 1, mallName = ""
     targetQuery = `${targetQuery} 무료배송`;
   }
 
-  // 3. [WAF 차단 0% & 파워링크 광고/AI 브리핑 0% 우회 직결]
+  // 3. 기기별 최적화 URL 반환 [WAF 차단 0% & 파워링크 광고/AI 브리핑 0% 우회 직결]
   const encTarget = encodeURIComponent(targetQuery.trim());
-  return `https://search.naver.com/search.naver?where=shp&query=${encTarget}#shp_dui_root`;
+  if (isMobile) {
+    return `https://m.search.naver.com/search.naver?where=m&query=${encTarget}#shp_lis_root`;
+  } else {
+    return `https://search.naver.com/search.naver?where=shp&query=${encTarget}#shp_dui_root`;
+  }
 }
 
 
@@ -1599,6 +1626,27 @@ function initEventListeners() {
     } else {
       switchToWelcomeView(true);
       shuffleAndRenderRecommendations(false);
+    }
+  });
+
+  // 6. 모바일/데스크톱 쇼핑 링크 클릭 시 기기 맞춤형 앵커 자동 변환 인터셉터
+  document.addEventListener("click", (e) => {
+    const link = e.target.closest("a");
+    if (!link || !link.href) return;
+    if (link.href.includes("naver.com/search.naver")) {
+      const isMobile = isMobileClient();
+      if (isMobile && (link.href.includes("#shp_dui_root") || link.href.includes("where=shp"))) {
+        link.href = link.href.replace("search.naver.com", "m.search.naver.com")
+                             .replace("where=shp", "where=m")
+                             .replace("#shp_dui_root", "#shp_lis_root")
+                             .replace("#shp_gui_root", "#shp_lis_root");
+        if (!link.href.includes("#shp_lis_root")) link.href += "#shp_lis_root";
+      } else if (!isMobile && (link.href.includes("#shp_lis_root") || link.href.includes("where=m"))) {
+        link.href = link.href.replace("m.search.naver.com", "search.naver.com")
+                             .replace("where=m", "where=shp")
+                             .replace("#shp_lis_root", "#shp_dui_root");
+        if (!link.href.includes("#shp_dui_root")) link.href += "#shp_dui_root";
+      }
     }
   });
 }
