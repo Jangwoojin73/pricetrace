@@ -557,17 +557,26 @@ function updateMobileNavActiveTab(activeTabKey) {
       btn.classList.add("active");
       if (tabKey === "trending") {
         btn.classList.add("text-rose-600");
-        btn.classList.remove("text-slate-500", "text-blue-600");
+        btn.classList.remove("text-slate-500", "text-blue-600", "text-indigo-600");
         if (heroBadge) heroBadge.classList.add("active-hero");
         if (label) label.className = "text-[10px] tracking-tight mt-1 leading-none font-black text-rose-600";
       } else if (tabKey === "steady") {
         btn.classList.add("text-emerald-700");
-        btn.classList.remove("text-slate-500", "text-blue-600");
+        btn.classList.remove("text-slate-500", "text-blue-600", "text-indigo-600");
         if (heroBadge) heroBadge.classList.add("active-hero");
         if (label) label.className = "text-[10px] tracking-tight mt-1 leading-none font-black text-emerald-700";
+      } else if (tabKey === "search") {
+        btn.classList.add("text-indigo-600", "font-black");
+        btn.classList.remove("text-slate-500", "text-blue-600");
+        if (iconBox) {
+          iconBox.className = "mobile-nav-icon-box w-9 h-9 flex items-center justify-center rounded-xl transition-all duration-300";
+        }
+        if (label) {
+          label.className = "text-[10px] tracking-tight mt-1 leading-none font-black text-indigo-600";
+        }
       } else {
         btn.classList.add("text-blue-600", "font-extrabold");
-        btn.classList.remove("text-slate-500");
+        btn.classList.remove("text-slate-500", "text-indigo-600");
         if (iconBox) {
           iconBox.className = "mobile-nav-icon-box w-9 h-9 flex items-center justify-center rounded-xl transition-all bg-blue-50 text-blue-600";
         }
@@ -576,17 +585,26 @@ function updateMobileNavActiveTab(activeTabKey) {
         }
       }
     } else {
-      btn.classList.remove("active", "text-blue-600", "font-extrabold");
+      btn.classList.remove("active", "text-blue-600", "text-indigo-600", "font-extrabold", "font-black");
       if (heroBadge) heroBadge.classList.remove("active-hero");
 
       if (tabKey === "trending") {
-        btn.classList.remove("text-blue-600");
+        btn.classList.remove("text-blue-600", "text-indigo-600");
         btn.classList.add("text-rose-600/80");
         if (label) label.className = "text-[10px] tracking-tight mt-1 leading-none font-bold text-rose-600/80";
       } else if (tabKey === "steady") {
-        btn.classList.remove("text-blue-600");
+        btn.classList.remove("text-blue-600", "text-indigo-600");
         btn.classList.add("text-emerald-700/80");
         if (label) label.className = "text-[10px] tracking-tight mt-1 leading-none font-bold text-emerald-700/80";
+      } else if (tabKey === "search") {
+        btn.classList.remove("text-indigo-600");
+        btn.classList.add("text-slate-500", "font-medium");
+        if (iconBox) {
+          iconBox.className = "mobile-nav-icon-box w-9 h-9 flex items-center justify-center rounded-xl transition-all duration-300 text-slate-500 group-hover:text-slate-900";
+        }
+        if (label) {
+          label.className = "text-[10px] tracking-tight mt-1 leading-none font-semibold text-slate-500";
+        }
       } else {
         btn.classList.add("text-slate-500", "font-medium");
         if (iconBox) {
@@ -643,6 +661,7 @@ function switchToResultView(keyword) {
   if (elements.topBannerText) {
     elements.topBannerText.textContent = `'${keyword}' 네이버 쇼핑 실시간 최저가 분석`;
   }
+  updateMobileNavActiveTab("search");
 
   // 🛡️ 빈 페이지 방지: 결과 뷰 전환 즉시 정적 템플릿을 스켈레톤 로딩 UI로 교체
   // (API 응답 도착 전 사용자가 href="#" 클릭 시 빈 페이지로 이동하는 것을 원천 차단)
@@ -1555,6 +1574,7 @@ function initEventListeners() {
 
   if (elements.mobileNavSearchFabBtn) {
     elements.mobileNavSearchFabBtn.addEventListener("click", () => {
+      updateMobileNavActiveTab("search");
       window.scrollTo({ top: 0, behavior: "smooth" });
       if (elements.searchInput) {
         setTimeout(() => {

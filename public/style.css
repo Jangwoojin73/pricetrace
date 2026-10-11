@@ -201,6 +201,69 @@ html {
   stroke-width: 2.3px;
 }
 
+/* 레이더 탭 호버 및 활성(탭) 인터랙티브 스타일 */
+.mobile-nav-btn.radar-tab {
+  position: relative;
+}
+
+.mobile-nav-btn.radar-tab .mobile-nav-icon-box {
+  transition: all 0.28s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* 호버 효과: 부드러운 스케일 업 및 은은한 인디고 틴트 & 글로우 */
+.mobile-nav-btn.radar-tab:hover .mobile-nav-icon-box {
+  background-color: #e0e7ff;
+  color: #4338ca;
+  transform: translateY(-2px) scale(1.08);
+  box-shadow: 0 4px 14px -2px rgba(67, 56, 202, 0.28);
+}
+
+.mobile-nav-btn.radar-tab:hover .mobile-nav-icon-box svg,
+.mobile-nav-btn.radar-tab:hover .mobile-nav-icon-box i {
+  color: #4338ca !important;
+  stroke: #4338ca !important;
+}
+
+.mobile-nav-btn.radar-tab:hover span {
+  color: #4338ca !important;
+  font-weight: 800 !important;
+}
+
+/* 터치 / 클릭 순간 (Active feedback) */
+.mobile-nav-btn.radar-tab:active .mobile-nav-icon-box {
+  transform: translateY(0) scale(0.95);
+}
+
+/* 탭하여 활성화(Active)되었을 때: 선명하고 강렬한 인디고-로열블루 그라데이션 및 발광 펄스 효과 */
+.mobile-nav-btn.radar-tab.active .mobile-nav-icon-box {
+  background: linear-gradient(135deg, #2563eb 0%, #4f46e5 50%, #7c3aed 100%) !important;
+  color: #ffffff !important;
+  transform: translateY(-2px) scale(1.08);
+  box-shadow: 0 6px 18px -2px rgba(79, 70, 229, 0.55), 0 0 0 2px rgba(99, 102, 241, 0.35);
+  animation: radarIconPulse 2.2s infinite ease-in-out;
+}
+
+.mobile-nav-btn.radar-tab.active .mobile-nav-icon-box svg,
+.mobile-nav-btn.radar-tab.active .mobile-nav-icon-box i {
+  color: #ffffff !important;
+  stroke: #ffffff !important;
+  stroke-width: 2.4px;
+}
+
+.mobile-nav-btn.radar-tab.active span {
+  color: #4338ca !important;
+  font-weight: 900 !important;
+}
+
+@keyframes radarIconPulse {
+  0%, 100% {
+    box-shadow: 0 6px 18px -2px rgba(79, 70, 229, 0.55), 0 0 0 2px rgba(99, 102, 241, 0.35);
+  }
+  50% {
+    box-shadow: 0 8px 24px -1px rgba(79, 70, 229, 0.75), 0 0 0 4px rgba(99, 102, 241, 0.55);
+  }
+}
+
 /* 모바일/태블릿 동적 인터랙티브 인트로 스플래시 화면 */
 #appSplashScreen {
   transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1), transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);

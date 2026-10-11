@@ -37,7 +37,7 @@
   <script src="https://unpkg.com/lucide@latest"></script>
   
   <!-- Custom CSS -->
-  <link rel="stylesheet" href="style.css?v=20261006_tablet">
+  <link rel="stylesheet" href="style.css?v=20261011_radar_active">
   
   <script>
     tailwind.config = {
@@ -1026,10 +1026,10 @@
         id="mobileNavSearchFabBtn" 
         data-mobile-tab="search" 
         title="실시간 최저가 탐색 (검색창 이동)" 
-        class="mobile-nav-btn group flex flex-col items-center justify-end flex-1 pb-1 pt-1.5 rounded-2xl transition-all cursor-pointer text-slate-500 font-medium hover:text-slate-900"
+        class="mobile-nav-btn radar-tab group flex flex-col items-center justify-end flex-1 pb-1 pt-1.5 rounded-2xl transition-all cursor-pointer text-slate-500 font-medium hover:text-slate-900"
       >
-        <div class="mobile-nav-icon-box w-9 h-9 flex items-center justify-center rounded-xl transition-all text-slate-500 group-hover:text-slate-900">
-          <i data-lucide="search" class="w-5 h-5"></i>
+        <div class="mobile-nav-icon-box w-9 h-9 flex items-center justify-center rounded-xl transition-all duration-300 text-slate-500 group-hover:text-slate-900">
+          <i data-lucide="radar" class="w-5 h-5"></i>
         </div>
         <span class="text-[10px] tracking-tight mt-1 leading-none font-semibold">레이더</span>
       </button>
@@ -1120,7 +1120,7 @@
   </div>
 
   <!-- 메인 스크립트 (모바일/태블릿 동적 인트로 스플래시 & 프로그레스 바 반영) -->
-  <script src="app.js?v=20261006_splash"></script>
+  <script src="app.js?v=20261011_radar_active"></script>
   <script>
     // Lucide 아이콘 초기화
     lucide.createIcons();
