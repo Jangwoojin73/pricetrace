@@ -46,8 +46,8 @@ with sync_playwright() as p:
     m_page.screenshot(path=os.path.join(ARTIFACT_DIR, "audit_01_mobile_splash_progress.png"))
     print(f"  [Mobile Splash] 표시여부: {splash_visible}, 프로그레스: {progress_val}, 건너뛰기버튼: {skip_btn_exists}")
 
-    # 스플래시 종료 대기 (1.8초)
-    m_page.wait_for_timeout(2500)
+    # 스플래시 종료 대기 (3.5초 + 페이드아웃)
+    m_page.wait_for_timeout(4500)
     splash_dismissed = m_page.evaluate('() => { const el = document.getElementById("appSplashScreen"); return el && (el.classList.contains("splash-hidden") || getComputedStyle(el).display === "none"); }')
     print(f"  [Mobile Splash] 자동종료 및 메인 전환 여부: {splash_dismissed}")
     m_ctx.close()
@@ -409,7 +409,7 @@ def fmt_p(s2, item_idx, price_idx):
 # Markdown 통합 감사 보고서 생성
 report_md = f"""# PriceTrace 서비스 전 기능 전수검사 및 실측 증거 기반 무인 감사 보고서 (모바일·PC 크로스 디바이스 완결판)
 
-> **감사 일시**: 2026-10-08 (KST 최신 전수검사)  
+> **감사 일시**: {time.strftime("%Y-%m-%d %H:%M:%S")} (KST 최신 전수검사)  
 > **검증 대상**: PriceTrace 웹 애플리케이션 (`{BASE_URL}`) 및 네이버 쇼핑 포털  
 > **검증 도구**: Playwright 자동화 브라우저 엔진 (Chromium Headless)  
 > **감사 판정**: **전 항목 무결성 100% 통과 (PASS: 5/5, 통과율: 100.0%)**

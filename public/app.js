@@ -2013,7 +2013,7 @@ function setupSplashScreen() {
     });
   }
 
-  // 4. 프로그레스 바 진행 (0% → 100%, 약 1.8초 소요)
+  // 4. 프로그레스 바 진행 (0% → 100%, 약 3.5초 소요)
   let currentProgress = 0;
   const stages = [
     { target: 25, text: "네이버 쇼핑 공식 카탈로그 연결 중..." },
@@ -2023,7 +2023,7 @@ function setupSplashScreen() {
   ];
 
   const startTime = Date.now();
-  const totalDuration = 1800; // 1.8초
+  const totalDuration = 3500; // 3.5초
 
   splashProgressInterval = setInterval(() => {
     const elapsed = Date.now() - startTime;
