@@ -571,8 +571,83 @@ function updateMobileNavActiveTab(activeTabKey) {
   });
 }
 
+// 실시간 최저가 레이더 검색 & 자판 바텀시트 모달 컨트롤러 (Search Mode Modal)
+function updateModalClearBtn() {
+  const input = elements.modalSearchInput || document.getElementById("modalSearchInput");
+  const clearBtn = elements.modalClearSearchBtn || document.getElementById("modalClearSearchBtn");
+  if (!clearBtn || !input) return;
+  if (input.value.trim().length > 0) {
+    clearBtn.classList.remove("hidden");
+  } else {
+    clearBtn.classList.add("hidden");
+  }
+}
+
+function openRadarSearchModal() {
+  const modal = elements.radarSearchModal || document.getElementById("radarSearchModal");
+  if (!modal) return;
+  updateMobileNavActiveTab("search");
+
+  // 모달 표시 및 바텀시트 슬라이드 업 활성화
+  modal.classList.remove("modal-hidden");
+  void modal.offsetWidth; // 강제 리플로우
+  modal.classList.add("modal-open");
+
+  // 기존 검색어 동기화
+  const searchInput = elements.searchInput || document.getElementById("searchInput");
+  const modalInput = elements.modalSearchInput || document.getElementById("modalSearchInput");
+  if (modalInput) {
+    modalInput.value = searchInput ? searchInput.value : "";
+    updateModalClearBtn();
+
+    // 모달 검색창에 즉각 동기 포커스 및 커서 깜빡임 설정
+    try {
+      modalInput.focus({ preventScroll: true });
+      const valLen = modalInput.value.length;
+      modalInput.setSelectionRange(valLen, valLen);
+    } catch (e) {}
+
+    setTimeout(() => {
+      try {
+        modalInput.focus({ preventScroll: true });
+      } catch (e) {}
+    }, 50);
+  }
+
+  if (window.lucide) {
+    window.lucide.createIcons();
+  }
+}
+
+function closeRadarSearchModal(immediate = false) {
+  const modal = elements.radarSearchModal || document.getElementById("radarSearchModal");
+  if (!modal) return;
+
+  modal.classList.remove("modal-open");
+  if (immediate) {
+    modal.classList.add("modal-hidden");
+  } else {
+    setTimeout(() => {
+      if (!modal.classList.contains("modal-open")) {
+        modal.classList.add("modal-hidden");
+      }
+    }, 280);
+  }
+
+  // 모바일 가상 자판 및 커서 강제 해제 (키보드 및 잔류 포커스 즉시 닫힘)
+  const modalInput = elements.modalSearchInput || document.getElementById("modalSearchInput");
+  const searchInput = elements.searchInput || document.getElementById("searchInput");
+  if (modalInput && document.activeElement === modalInput) {
+    try { modalInput.blur(); } catch (e) {}
+  }
+  if (searchInput && document.activeElement === searchInput) {
+    try { searchInput.blur(); } catch (e) {}
+  }
+}
+
 // 뷰 전환: 초기 웰컴 화면
 function switchToWelcomeView(skipHistory = false, skipScroll = false) {
+  closeRadarSearchModal(true);
   state.view = "welcome";
   state.keyword = "";
   if (elements.welcomeView) elements.welcomeView.classList.remove("hidden");
@@ -598,6 +673,7 @@ function switchToWelcomeView(skipHistory = false, skipScroll = false) {
 
 // 뷰 전환: 검색 결과 대시보드 화면
 function switchToResultView(keyword) {
+  closeRadarSearchModal(true);
   state.view = "result";
   if (elements.welcomeView) elements.welcomeView.classList.add("hidden");
   if (elements.resultView) elements.resultView.classList.remove("hidden");
@@ -662,6 +738,7 @@ function updateClearBtn() {
 
 // 1. API 데이터 로드
 async function loadPriceData(keyword, targetPrice = 0, forceRefresh = false) {
+  closeRadarSearchModal(true);
   if (!keyword || !keyword.trim()) {
     switchToWelcomeView();
     return;
@@ -1404,6 +1481,8 @@ function initEventListeners() {
   // 검색 폼
   elements.searchForm.addEventListener("submit", (e) => {
     e.preventDefault();
+    closeRadarSearchModal(true);
+    if (elements.searchInput) elements.searchInput.blur();
     const query = elements.searchInput.value.trim();
     if (query) {
       // 새로운 상품 검색 시 이전 상품의 목표가를 리셋하여 해당 상품 시세에 맞춤
@@ -1526,58 +1605,8 @@ function initEventListeners() {
   }
 
   // ==========================================================================
-  // 실시간 최저가 레이더 검색 & 자판 바텀시트 모달 컨트롤러 (Search Mode Modal)
+  // 실시간 최저가 레이더 검색 & 자판 바텀시트 모달 리스너
   // ==========================================================================
-  const updateModalClearBtn = () => {
-    if (!elements.modalClearSearchBtn || !elements.modalSearchInput) return;
-    if (elements.modalSearchInput.value.trim().length > 0) {
-      elements.modalClearSearchBtn.classList.remove("hidden");
-    } else {
-      elements.modalClearSearchBtn.classList.add("hidden");
-    }
-  };
-
-  const openRadarSearchModal = () => {
-    updateMobileNavActiveTab("search");
-    if (!elements.radarSearchModal) return;
-
-    // 모달 표시 및 바텀시트 슬라이드 업 활성화
-    elements.radarSearchModal.classList.remove("modal-hidden");
-    void elements.radarSearchModal.offsetWidth; // 강제 리플로우
-    elements.radarSearchModal.classList.add("modal-open");
-
-    // 기존 검색어 동기화
-    if (elements.modalSearchInput) {
-      elements.modalSearchInput.value = elements.searchInput ? elements.searchInput.value : "";
-      updateModalClearBtn();
-
-      // 모달 검색창에 즉각 동기 포커스 및 커서 깜빡임 설정
-      try {
-        elements.modalSearchInput.focus({ preventScroll: true });
-        const valLen = elements.modalSearchInput.value.length;
-        elements.modalSearchInput.setSelectionRange(valLen, valLen);
-      } catch (e) {}
-
-      setTimeout(() => {
-        try {
-          elements.modalSearchInput.focus({ preventScroll: true });
-        } catch (e) {}
-      }, 50);
-    }
-
-    if (window.lucide) {
-      window.lucide.createIcons();
-    }
-  };
-
-  const closeRadarSearchModal = () => {
-    if (!elements.radarSearchModal) return;
-    elements.radarSearchModal.classList.remove("modal-open");
-    setTimeout(() => {
-      elements.radarSearchModal.classList.add("modal-hidden");
-    }, 280);
-  };
-
   // [레이더] 메뉴 탭 시: 하단부에서 자판 모달창(Search Mode Bottom Sheet) 위로 슬라이드 업 & 커서 깜빡임
   if (elements.mobileNavSearchFabBtn) {
     let lastRadarTapTime = 0;
@@ -1592,25 +1621,16 @@ function initEventListeners() {
     elements.mobileNavSearchFabBtn.addEventListener("touchend", handleRadarTabTap, { passive: false });
   }
 
-  // 모바일 상단 검색창 탭 시에도 검색 모달창으로 자연스럽게 전환
-  if (elements.searchInput && window.innerWidth <= 768) {
-    elements.searchInput.addEventListener("focus", () => {
-      if (elements.radarSearchModal && elements.radarSearchModal.classList.contains("modal-hidden")) {
-        openRadarSearchModal();
-      }
-    });
-  }
-
   // 모달 닫기 버튼
   if (elements.closeRadarSearchModalBtn) {
-    elements.closeRadarSearchModalBtn.addEventListener("click", closeRadarSearchModal);
+    elements.closeRadarSearchModalBtn.addEventListener("click", () => closeRadarSearchModal(false));
   }
 
   // 모달 바깥 배경 클릭 시 닫기
   if (elements.radarSearchModal) {
     elements.radarSearchModal.addEventListener("click", (e) => {
       if (e.target === elements.radarSearchModal) {
-        closeRadarSearchModal();
+        closeRadarSearchModal(false);
       }
     });
   }
@@ -1625,10 +1645,14 @@ function initEventListeners() {
         if (elements.modalSearchInput) elements.modalSearchInput.focus();
         return;
       }
-      closeRadarSearchModal();
+      closeRadarSearchModal(true);
       if (elements.searchInput) {
         elements.searchInput.value = query;
         updateClearBtn();
+        elements.searchInput.blur();
+      }
+      if (elements.modalSearchInput) {
+        elements.modalSearchInput.blur();
       }
       loadPriceData(query, 0, false);
     });
@@ -1674,10 +1698,14 @@ function initEventListeners() {
       if (!btn) return;
       const query = btn.getAttribute("data-query") || "";
       if (!query) return;
-      closeRadarSearchModal();
+      closeRadarSearchModal(true);
       if (elements.searchInput) {
         elements.searchInput.value = query;
         updateClearBtn();
+        elements.searchInput.blur();
+      }
+      if (elements.modalSearchInput) {
+        elements.modalSearchInput.blur();
       }
       loadPriceData(query, 0, false);
     });
@@ -1715,8 +1743,13 @@ function initEventListeners() {
 
   // ESC 키로 모달 닫기
   window.addEventListener("keydown", (e) => {
-    if (e.key === "Escape" && elements.configModal && !elements.configModal.classList.contains("hidden")) {
-      closeModal();
+    if (e.key === "Escape") {
+      if (elements.radarSearchModal && elements.radarSearchModal.classList.contains("modal-open")) {
+        closeRadarSearchModal(false);
+      }
+      if (elements.configModal && !elements.configModal.classList.contains("hidden")) {
+        closeModal();
+      }
     }
   });
 
