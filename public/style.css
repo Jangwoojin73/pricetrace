@@ -413,4 +413,56 @@ html {
   }
 }
 
+/* ==========================================================================
+   실시간 최저가 레이더 검색 & 자판 바텀시트 모달 스타일
+   ========================================================================== */
+#radarSearchModal {
+  transition: opacity 0.28s ease, visibility 0.28s ease;
+}
+
+#radarSearchModal.modal-hidden {
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+
+#radarSearchModal.modal-open {
+  opacity: 1 !important;
+  visibility: visible !important;
+  pointer-events: auto !important;
+}
+
+#radarSearchDrawer {
+  transform: translateY(100%);
+  transition: transform 0.32s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform;
+}
+
+#radarSearchModal.modal-open #radarSearchDrawer {
+  transform: translateY(0) !important;
+}
+
+#modalSearchInput {
+  caret-color: #2563eb; /* 선명한 코발트 블루 깜빡임 커서 */
+}
+
+#modalSearchInput:focus {
+  background-color: #ffffff !important;
+  border-color: #2563eb !important;
+  box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.18), 0 4px 14px -2px rgba(37, 99, 235, 0.12) !important;
+}
+
+/* 빠른 보조 자판 칩 호버 및 터치 인터랙션 */
+.modal-pad-chip:hover {
+  border-color: #93c5fd;
+  color: #2563eb;
+  background-color: #eff6ff;
+}
+
+.modal-quick-chip:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px -1px rgba(37, 99, 235, 0.15);
+}
+
+
 
