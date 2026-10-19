@@ -142,13 +142,108 @@ html {
   font-weight: 800 !important;
 }
 
-.mobile-nav-btn.active .mobile-nav-icon-box {
-  background-color: #eff6ff !important;
-  color: #2563eb !important;
-  transform: scale(1.05);
+/* ==========================================================================
+   하단 네비게이션 탭 메뉴 활성화 필(Pill) 스타일 (아이콘 + 메뉴명 일체형 백그라운드)
+   - 탭 선택 시 아이콘과 메뉴명 전체를 감싸는 둥근 캡슐형 백그라운드 표시 (참조 앱 스타일)
+   ========================================================================== */
+.mobile-nav-btn {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  background: transparent;
+  border: none;
+  outline: none;
+  padding: 0;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
 }
 
-/* 산도장 앱 스타일 하단 중앙 듀얼 히어로 뱃지 (핫딜 & 생필품 상한선 돌출 & 수평 텍스트 베이스라인 완전 일치) */
+.mobile-nav-pill {
+  width: 100%;
+  max-width: 62px;
+  padding: 6px 4px 5px 4px;
+  border-radius: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: transparent;
+  border: 1px solid transparent;
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+  color: #64748b;
+}
+
+.mobile-nav-pill .mobile-nav-icon-box {
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent !important;
+  color: inherit;
+  transition: transform 0.22s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.mobile-nav-pill .mobile-nav-icon-box svg,
+.mobile-nav-pill .mobile-nav-icon-box i {
+  width: 20px !important;
+  height: 20px !important;
+  color: inherit !important;
+  stroke: currentColor !important;
+  stroke-width: 2.2px;
+}
+
+.mobile-nav-pill span {
+  font-size: 10px;
+  letter-spacing: -0.02em;
+  margin-top: 3px;
+  line-height: 1;
+  font-weight: 600;
+  color: inherit;
+  white-space: nowrap;
+  transition: font-weight 0.2s ease, color 0.2s ease;
+}
+
+/* 터치 / 클릭 누르고 있을 때 살짝 반응 */
+.mobile-nav-btn:active .mobile-nav-pill {
+  transform: scale(0.93);
+}
+
+/* 1. [홈] 활성화 캡슐: 산뜻한 스카이블루 톤 (아이콘 + '홈' 텍스트 일체형 배경) */
+.mobile-nav-btn[data-mobile-tab="home"].active .mobile-nav-pill {
+  background-color: #eff6ff;
+  border-color: rgba(191, 219, 254, 0.9);
+  color: #2563eb;
+  box-shadow: 0 2px 8px -1px rgba(37, 99, 235, 0.14);
+}
+.mobile-nav-btn[data-mobile-tab="home"].active .mobile-nav-pill span {
+  font-weight: 800;
+  color: #2563eb;
+}
+.mobile-nav-btn[data-mobile-tab="home"].active .mobile-nav-pill .mobile-nav-icon-box {
+  transform: translateY(-1px);
+}
+
+/* 2. [레이더] 활성화 캡슐: 세련된 인디고/바이올렛 톤 (아이콘 + '레이더' 텍스트 일체형 배경) */
+.mobile-nav-btn[data-mobile-tab="search"].active .mobile-nav-pill {
+  background-color: #eef2ff;
+  border-color: rgba(199, 210, 254, 0.9);
+  color: #4f46e5;
+  box-shadow: 0 2px 8px -1px rgba(79, 70, 229, 0.16);
+}
+.mobile-nav-btn[data-mobile-tab="search"].active .mobile-nav-pill span {
+  font-weight: 800;
+  color: #4f46e5;
+}
+.mobile-nav-btn[data-mobile-tab="search"].active .mobile-nav-pill .mobile-nav-icon-box {
+  transform: translateY(-1px);
+}
+
+/* ==========================================================================
+   하단 중앙 듀얼 히어로 아일랜드 뱃지 (생필품 & 핫딜 상단 돌출 & 초강력 볼륨 엠블럼)
+   ========================================================================== */
 .hero-nav-badge {
   width: 48px;
   height: 48px;
@@ -161,12 +256,7 @@ html {
   border: 3.5px solid #ffffff;
   position: relative;
   z-index: 20;
-  transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.25s ease;
-}
-
-.hero-nav-badge.hotdeal-badge {
-  background: linear-gradient(135deg, #f43f5e 0%, #e11d48 50%, #ea580c 100%);
-  box-shadow: 0 6px 16px -2px rgba(225, 29, 72, 0.42), 0 2px 6px -1px rgba(15, 23, 42, 0.08);
+  transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.25s ease, opacity 0.2s ease;
 }
 
 .hero-nav-badge.steady-badge {
@@ -174,23 +264,13 @@ html {
   box-shadow: 0 6px 16px -2px rgba(5, 150, 105, 0.42), 0 2px 6px -1px rgba(15, 23, 42, 0.08);
 }
 
+.hero-nav-badge.hotdeal-badge {
+  background: linear-gradient(135deg, #f43f5e 0%, #e11d48 50%, #ea580c 100%);
+  box-shadow: 0 6px 16px -2px rgba(225, 29, 72, 0.42), 0 2px 6px -1px rgba(15, 23, 42, 0.08);
+}
+
 .hero-nav-badge:active {
   transform: scale(0.92);
-}
-
-.hero-nav-badge.active-hero,
-.mobile-nav-btn.active .hero-nav-badge {
-  transform: scale(1.08);
-}
-
-.hero-nav-badge.hotdeal-badge.active-hero,
-.mobile-nav-btn.active .hero-nav-badge.hotdeal-badge {
-  box-shadow: 0 8px 22px -2px rgba(225, 29, 72, 0.58), 0 0 0 2px rgba(244, 63, 94, 0.35);
-}
-
-.hero-nav-badge.steady-badge.active-hero,
-.mobile-nav-btn.active .hero-nav-badge.steady-badge {
-  box-shadow: 0 8px 22px -2px rgba(5, 150, 105, 0.58), 0 0 0 2px rgba(16, 185, 129, 0.35);
 }
 
 .hero-nav-badge i,
@@ -198,70 +278,74 @@ html {
   width: 22px !important;
   height: 22px !important;
   color: #ffffff !important;
+  stroke: #ffffff !important;
   stroke-width: 2.3px;
 }
 
-/* 레이더 탭 호버 및 활성(탭) 인터랙티브 스타일 */
-.mobile-nav-btn.radar-tab {
-  position: relative;
+.hero-tab span {
+  margin-bottom: 7px;
+  line-height: 1;
+  font-size: 10px;
+  transition: transform 0.2s ease, color 0.2s ease;
 }
 
-.mobile-nav-btn.radar-tab .mobile-nav-icon-box {
-  transition: all 0.28s cubic-bezier(0.34, 1.56, 0.64, 1);
+/* 3. [생필품] 탭 활성화 시 극대화된 히어로 강조 효과 (확대 + 네온 펄스 아우라) */
+.mobile-nav-btn.hero-tab[data-mobile-tab="steady"].active .hero-nav-badge,
+.hero-nav-badge.steady-badge.active-hero {
+  transform: scale(1.15) translateY(-3px);
+  box-shadow: 0 10px 25px -2px rgba(5, 150, 105, 0.7), 0 0 0 3.5px rgba(16, 185, 129, 0.45);
+  animation: steadyPulseAura 2s infinite ease-in-out;
 }
 
-/* 호버 효과: 부드러운 스케일 업 및 은은한 인디고 틴트 & 글로우 */
-.mobile-nav-btn.radar-tab:hover .mobile-nav-icon-box {
-  background-color: #e0e7ff;
-  color: #4338ca;
-  transform: translateY(-2px) scale(1.08);
-  box-shadow: 0 4px 14px -2px rgba(67, 56, 202, 0.28);
-}
-
-.mobile-nav-btn.radar-tab:hover .mobile-nav-icon-box svg,
-.mobile-nav-btn.radar-tab:hover .mobile-nav-icon-box i {
-  color: #4338ca !important;
-  stroke: #4338ca !important;
-}
-
-.mobile-nav-btn.radar-tab:hover span {
-  color: #4338ca !important;
-  font-weight: 800 !important;
-}
-
-/* 터치 / 클릭 순간 (Active feedback) */
-.mobile-nav-btn.radar-tab:active .mobile-nav-icon-box {
-  transform: translateY(0) scale(0.95);
-}
-
-/* 탭하여 활성화(Active)되었을 때: 선명하고 강렬한 인디고-로열블루 그라데이션 및 발광 펄스 효과 */
-.mobile-nav-btn.radar-tab.active .mobile-nav-icon-box {
-  background: linear-gradient(135deg, #2563eb 0%, #4f46e5 50%, #7c3aed 100%) !important;
-  color: #ffffff !important;
-  transform: translateY(-2px) scale(1.08);
-  box-shadow: 0 6px 18px -2px rgba(79, 70, 229, 0.55), 0 0 0 2px rgba(99, 102, 241, 0.35);
-  animation: radarIconPulse 2.2s infinite ease-in-out;
-}
-
-.mobile-nav-btn.radar-tab.active .mobile-nav-icon-box svg,
-.mobile-nav-btn.radar-tab.active .mobile-nav-icon-box i {
-  color: #ffffff !important;
-  stroke: #ffffff !important;
-  stroke-width: 2.4px;
-}
-
-.mobile-nav-btn.radar-tab.active span {
-  color: #4338ca !important;
+.mobile-nav-btn.hero-tab[data-mobile-tab="steady"].active span {
   font-weight: 900 !important;
+  color: #047857 !important;
 }
 
-@keyframes radarIconPulse {
+@keyframes steadyPulseAura {
   0%, 100% {
-    box-shadow: 0 6px 18px -2px rgba(79, 70, 229, 0.55), 0 0 0 2px rgba(99, 102, 241, 0.35);
+    box-shadow: 0 10px 25px -2px rgba(5, 150, 105, 0.7), 0 0 0 3.5px rgba(16, 185, 129, 0.45);
   }
   50% {
-    box-shadow: 0 8px 24px -1px rgba(79, 70, 229, 0.75), 0 0 0 4px rgba(99, 102, 241, 0.55);
+    box-shadow: 0 12px 30px 0px rgba(5, 150, 105, 0.9), 0 0 0 5px rgba(16, 185, 129, 0.65);
   }
+}
+
+/* 4. [핫딜] 탭 활성화 시 극대화된 히어로 강조 효과 (확대 + 네온 펄스 아우라) */
+.mobile-nav-btn.hero-tab[data-mobile-tab="trending"].active .hero-nav-badge,
+.hero-nav-badge.hotdeal-badge.active-hero {
+  transform: scale(1.15) translateY(-3px);
+  box-shadow: 0 10px 25px -2px rgba(225, 29, 72, 0.7), 0 0 0 3.5px rgba(244, 63, 94, 0.45);
+  animation: hotdealPulseAura 2s infinite ease-in-out;
+}
+
+.mobile-nav-btn.hero-tab[data-mobile-tab="trending"].active span {
+  font-weight: 900 !important;
+  color: #be123c !important;
+}
+
+@keyframes hotdealPulseAura {
+  0%, 100% {
+    box-shadow: 0 10px 25px -2px rgba(225, 29, 72, 0.7), 0 0 0 3.5px rgba(244, 63, 94, 0.45);
+  }
+  50% {
+    box-shadow: 0 12px 30px 0px rgba(225, 29, 72, 0.9), 0 0 0 5px rgba(244, 63, 94, 0.65);
+  }
+}
+
+/* 5. [설정] 활성화 캡슐: 깔끔한 블루/슬레이트 톤 (아이콘 + '설정' 텍스트 일체형 배경) */
+.mobile-nav-btn[data-mobile-tab="config"].active .mobile-nav-pill {
+  background-color: #eff6ff;
+  border-color: rgba(191, 219, 254, 0.9);
+  color: #2563eb;
+  box-shadow: 0 2px 8px -1px rgba(37, 99, 235, 0.14);
+}
+.mobile-nav-btn[data-mobile-tab="config"].active .mobile-nav-pill span {
+  font-weight: 800;
+  color: #2563eb;
+}
+.mobile-nav-btn[data-mobile-tab="config"].active .mobile-nav-pill .mobile-nav-icon-box {
+  transform: translateY(-1px);
 }
 
 /* 모바일/태블릿 동적 인터랙티브 인트로 스플래시 화면 */
