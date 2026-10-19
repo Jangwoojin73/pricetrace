@@ -377,3 +377,40 @@ html {
   scroll-margin-top: 130px;
 }
 
+/* ==========================================================================
+   검색 입력창 커서 및 레이더 탭 터치 시 시각적 조준 펄스 효과
+   ========================================================================== */
+#searchInput {
+  caret-color: #2563eb; /* 선명한 코발트 블루 입력 커서 */
+}
+
+#searchInput:focus {
+  background-color: #ffffff !important;
+  border-color: #03c75a !important;
+  box-shadow: 0 0 0 4px rgba(3, 199, 90, 0.15), 0 4px 12px -2px rgba(15, 23, 42, 0.08) !important;
+}
+
+/* 레이더 탭을 탭했을 때 검색창 시각적 조준 펄스 효과 */
+#searchInput.radar-search-focus {
+  animation: radarSearchPulse 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes radarSearchPulse {
+  0% {
+    transform: scale(0.98);
+    box-shadow: 0 0 0 0 rgba(37, 99, 235, 0.6), 0 0 20px rgba(37, 99, 235, 0.35);
+    border-color: #2563eb;
+  }
+  30% {
+    transform: scale(1.015);
+    box-shadow: 0 0 0 6px rgba(37, 99, 235, 0.3), 0 0 24px rgba(37, 99, 235, 0.45);
+    border-color: #2563eb;
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 4px rgba(3, 199, 90, 0.15), 0 4px 12px -2px rgba(15, 23, 42, 0.08);
+    border-color: #03c75a;
+  }
+}
+
+

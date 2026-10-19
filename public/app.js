@@ -1516,16 +1516,40 @@ function initEventListeners() {
   }
 
   if (elements.mobileNavSearchFabBtn) {
-    elements.mobileNavSearchFabBtn.addEventListener("click", () => {
+    let lastRadarTapTime = 0;
+    const handleRadarTabClick = (e) => {
+      // 터치와 클릭 이벤트 중복 방지 (300ms 디바운스)
+      const now = Date.now();
+      if (now - lastRadarTapTime < 300) return;
+      lastRadarTapTime = now;
+
       updateMobileNavActiveTab("search");
-      window.scrollTo({ top: 0, behavior: "smooth" });
+
       if (elements.searchInput) {
-        setTimeout(() => {
-          elements.searchInput.focus();
-          elements.searchInput.select();
-        }, 150);
+        // [중요: 모바일 브라우저 가상 키보드 팝업 필수 규격]
+        // iOS Safari 및 Android Chrome은 비동기(setTimeout 등) focus() 호출 시
+        // 가상 키보드(소프트웨어 자판) 전개를 보안상 차단합니다.
+        // 반드시 사용자 터치/클릭 이벤트의 동기(Synchronous) 실행 컨텍스트 내에서 직접 focus()를 호출해야 자판이 하단에서 위로 올라옵니다.
+        elements.searchInput.focus({ preventScroll: false });
+
+        // 입력 커서를 맨 뒤에 위치시켜 커서가 즉시 깜빡이며 입력받을 준비가 되도록 설정
+        const valLen = elements.searchInput.value ? elements.searchInput.value.length : 0;
+        try {
+          elements.searchInput.setSelectionRange(valLen, valLen);
+        } catch (err) {}
+
+        // 검색창 시각적 조준 펄스 애니메이션 추가 (사용자 경험 극대화)
+        elements.searchInput.classList.remove("radar-search-focus");
+        void elements.searchInput.offsetWidth; // DOM 리플로우 강제 트리거
+        elements.searchInput.classList.add("radar-search-focus");
       }
-    });
+
+      // 화면을 최상단으로 부드럽게 스크롤하여 검색창이 모바일 자판 상단에 완벽하게 안착하도록 유도
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    };
+
+    elements.mobileNavSearchFabBtn.addEventListener("click", handleRadarTabClick);
+    elements.mobileNavSearchFabBtn.addEventListener("touchend", handleRadarTabClick, { passive: false });
   }
 
   if (elements.mobileNavSteadyBtn) {
