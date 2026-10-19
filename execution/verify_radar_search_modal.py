@@ -61,6 +61,9 @@ def run_modal_verification():
                 isActiveElementModalInput: activeElem === input,
                 activeElementId: activeElem ? activeElem.id : null,
                 caretColor: inputStyle ? inputStyle.caretColor : null,
+                fontSize: inputStyle ? inputStyle.fontSize : null,
+                touchAction: inputStyle ? inputStyle.touchAction : null,
+                viewportMeta: document.querySelector('meta[name="viewport"]') ? document.querySelector('meta[name="viewport"]').getAttribute('content') : null,
                 inputMode: input ? input.getAttribute('inputmode') : null,
                 enterKeyHint: input ? input.getAttribute('enterkeyhint') : null,
                 drawerTop: drawerRect ? drawerRect.top : null,
@@ -73,6 +76,9 @@ def run_modal_verification():
         print(f"  - 모달 활성화 여부 (.modal-open): {eval_modal['isModalOpen']}")
         print(f"  - 모달 바텀시트 드로어 높이: {eval_modal['drawerHeight']}px (화면 Y: {eval_modal['drawerTop']}px ~ {eval_modal['windowHeight']}px)")
         print(f"  - 모달 검색창 포커스 여부 (document.activeElement === #modalSearchInput): {eval_modal['isActiveElementModalInput']}")
+        print(f"  - 모달 검색창 font-size (iOS 자동확대 방지 16px 보장): {eval_modal['fontSize']}")
+        print(f"  - touch-action (더블탭 줌 방지): {eval_modal['touchAction']}")
+        print(f"  - 뷰포트 메타태그 (줌 락): {eval_modal['viewportMeta']}")
         print(f"  - caret-color (선명한 코발트 블루): {eval_modal['caretColor']}")
         print(f"  - inputmode: {eval_modal['inputMode']} / enterkeyhint: {eval_modal['enterKeyHint']}")
 
@@ -83,7 +89,7 @@ def run_modal_verification():
 
         # 4. 빠른 수량·단위 보조자판 및 텍스트 입력 테스트
         print("\n[Step 3] 모달 검색창에 '신라면' 입력 및 보조자판 '20개' 칩 클릭...")
-        page.keyboard.type("신라면", delay=80)
+        page.locator("#modalSearchInput").type("신라면", delay=80)
         time.sleep(0.3)
 
         # 보조자판 '20개' 칩 클릭

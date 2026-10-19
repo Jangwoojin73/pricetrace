@@ -464,5 +464,27 @@ html {
   box-shadow: 0 2px 8px -1px rgba(37, 99, 235, 0.15);
 }
 
+/* ==========================================================================
+   모바일 기기 화면 자동 확대(Auto-Zoom) 및 더블탭 줌 원천 차단
+   ========================================================================== */
+html, body, button, a, input, select, textarea, .modal-pad-chip, .modal-quick-chip, .mobile-nav-btn {
+  touch-action: manipulation; /* 더블 탭에 의한 의도치 않은 화면 확대 제스처 원천 차단 */
+}
+
+/* iOS 사파리는 font-size가 16px 미만(12px~14px)인 input에 포커스가 갈 때 화면을 강제로 확대합니다.
+   모바일 화면(768px 이하)에서 16px를 강제 보장하여 iOS 및 모바일 브라우저의 화면 자동 확대(Auto-Zoom)를 100% 원천 차단합니다. */
+@media screen and (max-width: 768px) {
+  input,
+  input[type="text"],
+  input[type="search"],
+  input[type="number"],
+  #searchInput,
+  #modalSearchInput,
+  #modalTargetPriceInput {
+    font-size: 16px !important;
+  }
+}
+
+
 
 

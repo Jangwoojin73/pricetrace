@@ -1551,12 +1551,16 @@ function initEventListeners() {
       elements.modalSearchInput.value = elements.searchInput ? elements.searchInput.value : "";
       updateModalClearBtn();
 
-      // 모달 검색창에 즉각 포커스 및 커서 깜빡임 설정
-      setTimeout(() => {
-        elements.modalSearchInput.focus();
+      // 모달 검색창에 즉각 동기 포커스 및 커서 깜빡임 설정
+      try {
+        elements.modalSearchInput.focus({ preventScroll: true });
         const valLen = elements.modalSearchInput.value.length;
+        elements.modalSearchInput.setSelectionRange(valLen, valLen);
+      } catch (e) {}
+
+      setTimeout(() => {
         try {
-          elements.modalSearchInput.setSelectionRange(valLen, valLen);
+          elements.modalSearchInput.focus({ preventScroll: true });
         } catch (e) {}
       }, 50);
     }
