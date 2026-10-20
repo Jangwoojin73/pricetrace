@@ -1852,7 +1852,8 @@ function registerPwaServiceWorker() {
       navigator.serviceWorker.addEventListener("controllerchange", () => {
         if (!refreshing) {
           refreshing = true;
-          console.log("[PWA] 새로운 Service Worker가 활성화되었습니다.");
+          console.log("[PWA] 새로운 Service Worker가 활성화되었습니다. 최신 버전으로 자동 갱신합니다.");
+          window.location.reload();
         }
       });
     });

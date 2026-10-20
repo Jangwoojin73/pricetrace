@@ -495,7 +495,14 @@ html, body, button, a, input, select, textarea, .modal-pad-chip, .modal-quick-ch
    - 화면 상단 흐림 효과(blur) 배제 및 시간표시 아래부터 깨끗하게 시작되도록 위치 조정
    ========================================================================== */
 #topLiveBanner {
-  padding-top: max(0.375rem, env(safe-area-inset-top, 0.375rem));
+  padding-top: max(0.5rem, calc(env(safe-area-inset-top, 0px) + 0.375rem)) !important;
+}
+
+/* iOS PWA 및 스탠드얼론(홈 화면 추가) 모드: 상태표시줄(44px~54px) 아래로 강제 안전 여백 보장 */
+@media all and (display-mode: standalone) {
+  #topLiveBanner {
+    padding-top: max(3rem, calc(env(safe-area-inset-top, 2.75rem) + 0.375rem)) !important;
+  }
 }
 
 /* GNB 헤더 상단 텍스트 및 로고 선명도 100% 보장 (흐림 효과 원천 배제) */
