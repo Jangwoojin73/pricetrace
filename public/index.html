@@ -6,23 +6,23 @@
   <title>PriceTrace | 네이버 쇼핑 실시간 최저가 레이더</title>
   
   <!-- PWA Web App Manifest & Mobile Meta -->
-  <link rel="manifest" href="/manifest.json?v=20261020_v133">
+  <link rel="manifest" href="/manifest.json?v=20261020_v134">
   <meta name="theme-color" content="#0f172a">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="apple-mobile-web-app-title" content="PriceTrace">
   <meta name="application-name" content="PriceTrace">
-  <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png?v=20261003_v130">
-  <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png?v=20261003_v130">
-  <link rel="apple-touch-icon" sizes="192x192" href="/icons/icon-192x192.png?v=20261003_v130">
-  <link rel="apple-touch-icon" sizes="512x512" href="/icons/icon-512x512.png?v=20261003_v130">
+  <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png?v=20261020_v134">
+  <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png?v=20261020_v134">
+  <link rel="apple-touch-icon" sizes="192x192" href="/icons/icon-192x192.png?v=20261020_v134">
+  <link rel="apple-touch-icon" sizes="512x512" href="/icons/icon-512x512.png?v=20261020_v134">
 
   <!-- Favicon & Shortcut Icons -->
-  <link rel="icon" type="image/svg+xml" href="/logo_jwj.svg?v=20261003_v130">
-  <link rel="icon" type="image/png" sizes="32x32" href="/icons/icon-192x192.png?v=20261003_v130">
-  <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192x192.png?v=20261003_v130">
-  <link rel="shortcut icon" href="/favicon.ico?v=20261003_v130">
+  <link rel="icon" type="image/svg+xml" href="/logo_jwj.svg?v=20261020_v134">
+  <link rel="icon" type="image/png" sizes="32x32" href="/icons/icon-192x192.png?v=20261020_v134">
+  <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192x192.png?v=20261020_v134">
+  <link rel="shortcut icon" href="/favicon.ico?v=20261020_v134">
 
   <!-- Pretendard 폰트 (한국어 표준 고품질 웹폰트) -->
   <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" />
@@ -37,7 +37,7 @@
   <script src="https://unpkg.com/lucide@latest"></script>
   
   <!-- Custom CSS -->
-  <link rel="stylesheet" href="style.css?v=20261020_v133">
+  <link rel="stylesheet" href="style.css?v=20261020_v134">
   
   <script>
     tailwind.config = {
@@ -148,17 +148,17 @@
     </div>
   </div>
 
-  <!-- 최상단 고정 헤더 통합 컨테이너 (LIVE 특가 배너 + GNB 네비게이션 PC/모바일 동시 상단 영구 고정) -->
-  <header class="sticky top-0 z-40 w-full shadow-xs" style="backdrop-filter: none !important; -webkit-backdrop-filter: none !important;">
-    <!-- 1. 최상단 실시간 특가 알림 바 (PC 및 모바일 스크롤 시 화면 상단 영구 고정) -->
-    <div id="topLiveBanner" class="bg-slate-900 text-white text-[11px] sm:text-xs py-1.5 sm:py-2 px-3 sm:px-4 shadow-sm border-b border-slate-800" style="padding-top: max(0.5rem, calc(env(safe-area-inset-top, 0px) + 0.375rem));">
+  <!-- 최상단 고정 헤더 통합 컨테이너 (LIVE 특가 배너 + GNB 네비게이션 PC/모바일 동시 상단 영구 고정, 흐릿한 효과 100% 완전 제거) -->
+  <header class="sticky top-0 z-40 w-full" style="backdrop-filter: none !important; -webkit-backdrop-filter: none !important; filter: none !important; box-shadow: none !important;">
+    <!-- 1. 최상단 실시간 특가 알림 바 (PC 및 모바일 스크롤 시 화면 상단 영구 고정, 흐릿한 효과 100% 원천 배제) -->
+    <div id="topLiveBanner" class="bg-slate-900 text-white text-xs sm:text-xs py-2 px-3 sm:px-4 border-b border-slate-800" style="filter: none !important; -webkit-filter: none !important; backdrop-filter: none !important; -webkit-backdrop-filter: none !important; text-shadow: none !important; box-shadow: none !important; -webkit-font-smoothing: antialiased !important; -moz-osx-font-smoothing: grayscale !important; text-rendering: optimizeLegibility !important;">
       <div class="max-w-7xl mx-auto flex items-center justify-between">
         <div class="flex items-center space-x-2 truncate">
-          <span class="inline-flex items-center justify-center px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-coupang text-white animate-pulse shrink-0">
+          <span class="inline-flex items-center justify-center px-2 py-0.5 rounded-full text-[11px] font-black bg-red-600 text-white shrink-0 tracking-wide" style="filter: none !important; opacity: 1 !important; transform: none !important;">
             LIVE
           </span>
-          <span class="font-medium text-slate-100 truncate">
-            실시간 최저가 추적: <strong class="text-yellow-300 font-bold ml-1" id="topBannerText">네이버 쇼핑 공식 카탈로그 실시간 최저가 레이더</strong>
+          <span class="font-bold text-white truncate" style="filter: none !important; -webkit-font-smoothing: antialiased !important;">
+            실시간 최저가 추적: <strong class="text-amber-300 font-black ml-1 tracking-tight" id="topBannerText">네이버 쇼핑 공식 카탈로그 실시간 최저가 레이더</strong>
           </span>
         </div>
         <div class="hidden lg:flex items-center space-x-5 text-xs text-white shrink-0 font-medium">
@@ -1274,7 +1274,7 @@
   </div>
 
   <!-- 메인 스크립트 (모바일/태블릿 동적 인트로 스플래시 & 프로그레스 바 반영) -->
-  <script src="app.js?v=20261020_v133"></script>
+  <script src="app.js?v=20261020_v134"></script>
   <script>
     // Lucide 아이콘 초기화
     lucide.createIcons();

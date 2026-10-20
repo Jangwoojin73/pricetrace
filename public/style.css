@@ -490,12 +490,43 @@ html, body, button, a, input, select, textarea, .modal-pad-chip, .modal-quick-ch
 
 
 /* ==========================================================================
-   모바일 기기 상단 상태표시줄(시간/배터리) 안전영역(Safe Area) 및 선명도 최적화
+   모바일 기기 상단 상태표시줄(시간/배터리) 안전영역(Safe Area) 및 100% 선명도 최적화
    - iOS PWA 및 노치/다이내믹 아일랜드 기기에서 상단 시간/배터리 표시에 가려지지 않도록 패딩 보장
-   - 화면 상단 흐림 효과(blur) 배제 및 시간표시 아래부터 깨끗하게 시작되도록 위치 조정
+   - 화면 상단 흐림 효과(blur, opacity pulse, subpixel aliasing) 완전 배제
    ========================================================================== */
 #topLiveBanner {
-  padding-top: max(0.5rem, calc(env(safe-area-inset-top, 0px) + 0.375rem)) !important;
+  background-color: #0f172a !important;
+  color: #ffffff !important;
+  filter: none !important;
+  -webkit-filter: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  box-shadow: none !important;
+  text-shadow: none !important;
+  -webkit-font-smoothing: antialiased !important;
+  -moz-osx-font-smoothing: grayscale !important;
+  text-rendering: optimizeLegibility !important;
+  transform: none !important;
+  padding-top: max(0.625rem, calc(env(safe-area-inset-top, 0px) + 0.375rem)) !important;
+}
+
+#topLiveBanner * {
+  filter: none !important;
+  -webkit-filter: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  box-shadow: none !important;
+  text-shadow: none !important;
+  -webkit-font-smoothing: antialiased !important;
+  -moz-osx-font-smoothing: grayscale !important;
+  text-rendering: optimizeLegibility !important;
+}
+
+/* LIVE 뱃지 펄스 애니메이션(흐릿함 유발 원인) 완전 무효화 및 100% 불투명 선명도 고정 */
+#topLiveBanner .animate-pulse,
+#topLiveBanner span {
+  animation: none !important;
+  opacity: 1 !important;
 }
 
 /* iOS PWA 및 스탠드얼론(홈 화면 추가) 모드: 상태표시줄(44px~54px) 아래로 강제 안전 여백 보장 */
@@ -509,6 +540,9 @@ html, body, button, a, input, select, textarea, .modal-pad-chip, .modal-quick-ch
 header {
   -webkit-backdrop-filter: none !important;
   backdrop-filter: none !important;
+  filter: none !important;
+  -webkit-filter: none !important;
+  box-shadow: none !important;
   background-color: #ffffff !important;
 }
 
