@@ -41,3 +41,10 @@ try:
 
 except Exception as e:
     print('Error fetching Vercel:', e)
+
+# Check sw.js CACHE_VERSION
+with urllib.request.urlopen('https://pricetrace-nu.vercel.app/sw.js') as resp:
+    sw = resp.read().decode('utf-8')
+for line in sw.splitlines():
+    if 'CACHE_VERSION' in line:
+        print('Live Vercel line:', line)

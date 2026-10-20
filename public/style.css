@@ -374,7 +374,7 @@ html {
 /* 듀얼 탭(핫딜/생필품) 스크롤 앵커 여백 보장 (고정 헤더 아래에 완벽 위치) */
 #dualTabSwitcherSection,
 #dualTabButtonsTray {
-  scroll-margin-top: 130px;
+  scroll-margin-top: 140px;
 }
 
 /* ==========================================================================
@@ -509,5 +509,17 @@ html, body, button, a, input, select, textarea, .modal-pad-chip, .modal-quick-ch
 header {
   -webkit-backdrop-filter: none !important;
   backdrop-filter: none !important;
+  background-color: #ffffff !important;
+}
+
+/* 최상단 LIVE 특가 배너 + GNB 네비게이션 일체형 상단 고정 */
+header.sticky {
+  position: sticky !important;
+  top: 0 !important;
+  z-index: 40 !important;
+  width: 100% !important;
+}
+
+header #gnbNavBar {
   background-color: #ffffff !important;
 }

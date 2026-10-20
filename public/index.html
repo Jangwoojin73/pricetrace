@@ -6,7 +6,7 @@
   <title>PriceTrace | 네이버 쇼핑 실시간 최저가 레이더</title>
   
   <!-- PWA Web App Manifest & Mobile Meta -->
-  <link rel="manifest" href="/manifest.json?v=20261020_v131">
+  <link rel="manifest" href="/manifest.json?v=20261020_v133">
   <meta name="theme-color" content="#0f172a">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -37,7 +37,7 @@
   <script src="https://unpkg.com/lucide@latest"></script>
   
   <!-- Custom CSS -->
-  <link rel="stylesheet" href="style.css?v=20261020_v131">
+  <link rel="stylesheet" href="style.css?v=20261020_v133">
   
   <script>
     tailwind.config = {
@@ -148,27 +148,29 @@
     </div>
   </div>
 
-  <!-- 1. 최상단 실시간 특가 알림 바 (어두운 배경 대비 가독성 최적화: 환한 흰색 & 노랑) -->
-  <div id="topLiveBanner" class="bg-slate-900 text-white text-[11px] sm:text-xs py-1.5 sm:py-2 px-3 sm:px-4 shadow-sm border-b border-slate-800" style="padding-top: max(0.5rem, calc(env(safe-area-inset-top, 0px) + 0.375rem));">
-    <div class="max-w-7xl mx-auto flex items-center justify-between">
-      <div class="flex items-center space-x-2 truncate">
-        <span class="inline-flex items-center justify-center px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-coupang text-white animate-pulse shrink-0">
-          LIVE
-        </span>
-        <span class="font-medium text-slate-100 truncate">
-          실시간 최저가 추적: <strong class="text-yellow-300 font-bold ml-1" id="topBannerText">네이버 쇼핑 공식 카탈로그 실시간 최저가 레이더</strong>
-        </span>
-      </div>
-      <div class="hidden lg:flex items-center space-x-5 text-xs text-white shrink-0 font-medium">
-        <span class="flex items-center text-slate-100"><i data-lucide="shield-check" class="w-3.5 h-3.5 mr-1.5 text-yellow-300"></i> 광고 상품 100% 자동 필터링</span>
-        <span class="flex items-center text-slate-100"><i data-lucide="clock" class="w-3.5 h-3.5 mr-1.5 text-sky-300"></i> <span id="lastUpdatedTime" class="text-yellow-300 font-bold ml-0.5">방금 갱신됨</span></span>
+  <!-- 최상단 고정 헤더 통합 컨테이너 (LIVE 특가 배너 + GNB 네비게이션 PC/모바일 동시 상단 영구 고정) -->
+  <header class="sticky top-0 z-40 w-full shadow-xs" style="backdrop-filter: none !important; -webkit-backdrop-filter: none !important;">
+    <!-- 1. 최상단 실시간 특가 알림 바 (PC 및 모바일 스크롤 시 화면 상단 영구 고정) -->
+    <div id="topLiveBanner" class="bg-slate-900 text-white text-[11px] sm:text-xs py-1.5 sm:py-2 px-3 sm:px-4 shadow-sm border-b border-slate-800" style="padding-top: max(0.5rem, calc(env(safe-area-inset-top, 0px) + 0.375rem));">
+      <div class="max-w-7xl mx-auto flex items-center justify-between">
+        <div class="flex items-center space-x-2 truncate">
+          <span class="inline-flex items-center justify-center px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-coupang text-white animate-pulse shrink-0">
+            LIVE
+          </span>
+          <span class="font-medium text-slate-100 truncate">
+            실시간 최저가 추적: <strong class="text-yellow-300 font-bold ml-1" id="topBannerText">네이버 쇼핑 공식 카탈로그 실시간 최저가 레이더</strong>
+          </span>
+        </div>
+        <div class="hidden lg:flex items-center space-x-5 text-xs text-white shrink-0 font-medium">
+          <span class="flex items-center text-slate-100"><i data-lucide="shield-check" class="w-3.5 h-3.5 mr-1.5 text-yellow-300"></i> 광고 상품 100% 자동 필터링</span>
+          <span class="flex items-center text-slate-100"><i data-lucide="clock" class="w-3.5 h-3.5 mr-1.5 text-sky-300"></i> <span id="lastUpdatedTime" class="text-yellow-300 font-bold ml-0.5">방금 갱신됨</span></span>
+        </div>
       </div>
     </div>
-  </div>
 
-  <!-- 2. GNB 헤더 (모바일/태블릿 반응형 2단 / 데스크톱 1단 완벽 최적화) -->
-  <header class="sticky top-0 z-40 bg-white border-b border-slate-200/80 shadow-xs" style="background-color: #ffffff !important; backdrop-filter: none !important; -webkit-backdrop-filter: none !important;">
-    <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-2 lg:py-0 lg:h-20 flex flex-col lg:flex-row lg:items-center justify-between gap-2 lg:gap-4">
+    <!-- 2. GNB 네비게이션 바 (모바일/태블릿 반응형 2단 / 데스크톱 1단 완벽 최적화) -->
+    <div id="gnbNavBar" class="bg-white border-b border-slate-200/80">
+      <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-2 lg:py-0 lg:h-20 flex flex-col lg:flex-row lg:items-center justify-between gap-2 lg:gap-4">
       
       <!-- 상단 줄: [브랜드 로고] + [모바일/태블릿 전용 우측 컨트롤 버튼들] -->
       <div class="flex items-center justify-between w-full lg:w-auto shrink-0">
@@ -312,6 +314,7 @@
       </div>
 
     </div>
+    </div><!-- /#gnbNavBar -->
   </header>
 
   <!-- 메인 본문 컨테이너 (모바일/태블릿 하단 네비게이션 바 여백 pb-28 확보) -->
@@ -860,42 +863,61 @@
 
   </main>
 
-  <!-- 7. 푸터 (기술 스택 및 출처) -->
-  <footer class="mt-12 mb-16 lg:mb-0 bg-white border-t border-slate-200/80 py-8 text-xs text-slate-500">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col lg:flex-row items-center justify-between gap-6 text-center lg:text-left">
-      <div class="flex items-center space-x-3 justify-center md:justify-start">
-        <!-- 헤더와 통일된 최저가 레이더 로고 심볼 -->
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" class="w-10 h-10 sm:w-12 sm:h-12 object-contain shrink-0" fill="none">
-          <!-- 1. 미니멀 볼드 레이더 원형 림 -->
-          <circle cx="24" cy="24" r="20" stroke="#0F172A" stroke-width="3" />
-          <!-- 2. 레이더 외곽 정밀 조준 틱 (절제된 4방위 틱) -->
-          <line x1="24" y1="4" x2="24" y2="8" stroke="#0F172A" stroke-width="2.5" stroke-linecap="round" />
-          <line x1="24" y1="40" x2="24" y2="44" stroke="#0F172A" stroke-width="2.5" stroke-linecap="round" />
-          <line x1="4" y1="24" x2="8" y2="24" stroke="#0F172A" stroke-width="2.5" stroke-linecap="round" />
-          <line x1="40" y1="24" x2="44" y2="24" stroke="#0F172A" stroke-width="2.5" stroke-linecap="round" />
-          <!-- 3. 시원하고 직관적인 가격 급락 트렌드 화살표 (볼드 블랙) -->
-          <path d="M14 18L22 26L27 21L34 32" stroke="#0F172A" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" />
-          <polyline points="26 32 34 32 34 24" stroke="#0F172A" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" />
-          <!-- 4. 실시간 최저가 록온 포인트 (선명한 코발트 블루) -->
-          <circle cx="34" cy="32" r="3.5" fill="#2563EB" />
-        </svg>
-        <div>
-          <div class="flex items-center space-x-2 justify-center md:justify-start">
-            <span class="text-base sm:text-lg font-black tracking-tight text-slate-900 flex items-center gap-0.5">
-              Price<span class="text-blue-600">Trace</span>
-            </span>
-            <span class="text-[10px] font-bold text-blue-700 bg-blue-50 px-2 py-0.5 rounded-full border border-blue-200/60">v1.0.0</span>
+  <!-- 7. 푸터 (기술 스택 및 출처) - 모바일 좌측 정렬 & 뱃지 랩 & 하단 네비 겹침 0% 최적화 -->
+  <footer class="mt-12 bg-white border-t border-slate-200/80 pt-8 pb-32 lg:pb-10 text-xs text-slate-500">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-6 text-left">
+        
+        <!-- 좌측: 브랜드 로고 + 타이틀 + 데이터 출처 및 저작권 안내 (모바일 완벽 좌측 정렬) -->
+        <div class="space-y-2">
+          <div class="flex items-center space-x-2.5">
+            <!-- 헤더와 통일된 최저가 레이더 로고 심볼 -->
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" class="w-8 h-8 sm:w-10 sm:h-10 object-contain shrink-0" fill="none">
+              <!-- 1. 미니멀 볼드 레이더 원형 림 -->
+              <circle cx="24" cy="24" r="20" stroke="#0F172A" stroke-width="3" />
+              <!-- 2. 레이더 외곽 정밀 조준 틱 (절제된 4방위 틱) -->
+              <line x1="24" y1="4" x2="24" y2="8" stroke="#0F172A" stroke-width="2.5" stroke-linecap="round" />
+              <line x1="24" y1="40" x2="24" y2="44" stroke="#0F172A" stroke-width="2.5" stroke-linecap="round" />
+              <line x1="4" y1="24" x2="8" y2="24" stroke="#0F172A" stroke-width="2.5" stroke-linecap="round" />
+              <line x1="40" y1="24" x2="44" y2="24" stroke="#0F172A" stroke-width="2.5" stroke-linecap="round" />
+              <!-- 3. 시원하고 직관적인 가격 급락 트렌드 화살표 (볼드 블랙) -->
+              <path d="M14 18L22 26L27 21L34 32" stroke="#0F172A" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" />
+              <polyline points="26 32 34 32 34 24" stroke="#0F172A" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" />
+              <!-- 4. 실시간 최저가 록온 포인트 (선명한 코발트 블루) -->
+              <circle cx="34" cy="32" r="3.5" fill="#2563EB" />
+            </svg>
+            <div class="flex items-center space-x-2">
+              <span class="text-base sm:text-lg font-black tracking-tight text-slate-900 flex items-center gap-0.5">
+                Price<span class="text-blue-600">Trace</span>
+              </span>
+              <span class="text-[10px] font-bold text-blue-700 bg-blue-50 px-2 py-0.5 rounded-full border border-blue-200/60">v1.3.3</span>
+            </div>
           </div>
-          <p class="text-slate-800 font-semibold text-xs mt-0.5">데이터 출처: 네이버 쇼핑 공개 BFF API 및 k-skill proxy 엔드포인트 실시간 연동</p>
-          <p class="text-slate-900 font-medium text-xs mt-1">© 2026 JANG WOO JIN. All rights reserved.</p>
+          
+          <p class="text-slate-600 font-medium text-xs leading-relaxed break-keep">
+            데이터 출처: 네이버 쇼핑 공개 BFF API 및 k-skill proxy 엔드포인트 실시간 연동
+          </p>
+          <p class="text-slate-400 font-normal text-[11px] sm:text-xs">
+            © 2026 JANG WOO JIN. All rights reserved.
+          </p>
         </div>
-      </div>
-      <div class="flex items-center space-x-4 text-slate-900 font-bold text-xs justify-center md:justify-end">
-        <span>3-Layer 아키텍처</span>
-        <span class="text-slate-400">·</span>
-        <span>결정론적 클린 필터링</span>
-        <span class="text-slate-400">·</span>
-        <span>경량 Python 서버</span>
+
+        <!-- 우측: 3대 핵심 기술 아키텍처 뱃지 (단어 중간 줄바꿈 방지 & 유연한 가로 랩) -->
+        <div class="flex flex-wrap items-center gap-2 pt-1 lg:pt-0 lg:justify-end text-slate-700 font-semibold text-[11px] sm:text-xs">
+          <span class="inline-flex items-center px-2.5 py-1 rounded-lg bg-slate-100 border border-slate-200/60 whitespace-nowrap">
+            <span class="w-1.5 h-1.5 rounded-full bg-blue-500 mr-1.5 shrink-0"></span>
+            3-Layer 아키텍처
+          </span>
+          <span class="inline-flex items-center px-2.5 py-1 rounded-lg bg-slate-100 border border-slate-200/60 whitespace-nowrap">
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 mr-1.5 shrink-0"></span>
+            결정론적 클린 필터
+          </span>
+          <span class="inline-flex items-center px-2.5 py-1 rounded-lg bg-slate-100 border border-slate-200/60 whitespace-nowrap">
+            <span class="w-1.5 h-1.5 rounded-full bg-indigo-500 mr-1.5 shrink-0"></span>
+            경량 Python 서버
+          </span>
+        </div>
+
       </div>
     </div>
   </footer>
@@ -1252,7 +1274,7 @@
   </div>
 
   <!-- 메인 스크립트 (모바일/태블릿 동적 인트로 스플래시 & 프로그레스 바 반영) -->
-  <script src="app.js?v=20261020_v131"></script>
+  <script src="app.js?v=20261020_v133"></script>
   <script>
     // Lucide 아이콘 초기화
     lucide.createIcons();
