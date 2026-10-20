@@ -6,23 +6,23 @@
   <title>PriceTrace | 네이버 쇼핑 실시간 최저가 레이더</title>
   
   <!-- PWA Web App Manifest & Mobile Meta -->
-  <link rel="manifest" href="/manifest.json?v=20261020_v134">
+  <link rel="manifest" href="/manifest.json?v=20261020_v135">
   <meta name="theme-color" content="#0f172a">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
   <meta name="apple-mobile-web-app-title" content="PriceTrace">
   <meta name="application-name" content="PriceTrace">
-  <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png?v=20261020_v134">
-  <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png?v=20261020_v134">
-  <link rel="apple-touch-icon" sizes="192x192" href="/icons/icon-192x192.png?v=20261020_v134">
-  <link rel="apple-touch-icon" sizes="512x512" href="/icons/icon-512x512.png?v=20261020_v134">
+  <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png?v=20261020_v135">
+  <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png?v=20261020_v135">
+  <link rel="apple-touch-icon" sizes="192x192" href="/icons/icon-192x192.png?v=20261020_v135">
+  <link rel="apple-touch-icon" sizes="512x512" href="/icons/icon-512x512.png?v=20261020_v135">
 
   <!-- Favicon & Shortcut Icons -->
-  <link rel="icon" type="image/svg+xml" href="/logo_jwj.svg?v=20261020_v134">
-  <link rel="icon" type="image/png" sizes="32x32" href="/icons/icon-192x192.png?v=20261020_v134">
-  <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192x192.png?v=20261020_v134">
-  <link rel="shortcut icon" href="/favicon.ico?v=20261020_v134">
+  <link rel="icon" type="image/svg+xml" href="/logo_jwj.svg?v=20261020_v135">
+  <link rel="icon" type="image/png" sizes="32x32" href="/icons/icon-192x192.png?v=20261020_v135">
+  <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192x192.png?v=20261020_v135">
+  <link rel="shortcut icon" href="/favicon.ico?v=20261020_v135">
 
   <!-- Pretendard 폰트 (한국어 표준 고품질 웹폰트) -->
   <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" />
@@ -37,7 +37,7 @@
   <script src="https://unpkg.com/lucide@latest"></script>
   
   <!-- Custom CSS -->
-  <link rel="stylesheet" href="style.css?v=20261020_v134">
+  <link rel="stylesheet" href="style.css?v=20261020_v135">
   
   <script>
     tailwind.config = {
@@ -81,16 +81,17 @@
     <!-- 1) 배경 동적 파티클 캔버스 (60fps 경량 캔버스) -->
     <canvas id="splashCanvas" class="absolute inset-0 pointer-events-none w-full h-full z-0"></canvas>
 
-    <!-- 2) 상단 헤더: LIVE 뱃지 & 우측 상단 건너뛰기 버튼 -->
-    <div class="relative z-10 flex items-center justify-between px-5 pt-[max(1.2rem,env(safe-area-inset-top))]">
-      <div class="flex items-center space-x-1.5 px-2.5 py-1 rounded-full bg-slate-800/80 border border-slate-700/80 backdrop-blur-md">
-        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
-        <span class="text-[11px] font-extrabold text-emerald-300 tracking-wide">RADAR LIVE</span>
+    <!-- 2) 상단 헤더: LIVE 뱃지 & 우측 상단 건너뛰기 버튼 (시간표시 54px 아래로 안전 안착, 블러 필터 완전 배제) -->
+    <div class="relative z-10 flex items-center justify-between px-5 pt-[max(3.75rem,calc(env(safe-area-inset-top,3.25rem)+0.5rem))]">
+      <div class="flex items-center space-x-1.5 px-2.5 py-1 rounded-full bg-slate-800 border border-slate-700 shadow-sm" style="filter: none !important; -webkit-filter: none !important; backdrop-filter: none !important; -webkit-backdrop-filter: none !important;">
+        <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+        <span class="text-[11px] font-black text-emerald-300 tracking-wide">RADAR LIVE</span>
       </div>
       <button 
         type="button" 
         id="splashSkipBtn" 
-        class="px-3.5 py-1.5 rounded-full bg-white/15 hover:bg-white/25 active:scale-95 backdrop-blur-md border border-white/25 text-white text-xs font-bold shadow-sm transition-all flex items-center space-x-1 cursor-pointer"
+        class="px-3.5 py-1.5 rounded-full bg-white/20 hover:bg-white/30 active:scale-95 border border-white/30 text-white text-xs font-bold shadow-sm transition-all flex items-center space-x-1 cursor-pointer"
+        style="filter: none !important; -webkit-filter: none !important; backdrop-filter: none !important; -webkit-backdrop-filter: none !important;"
         title="스플래시 화면 건너뛰기"
       >
         <span>건너뛰기</span>
@@ -1274,7 +1275,7 @@
   </div>
 
   <!-- 메인 스크립트 (모바일/태블릿 동적 인트로 스플래시 & 프로그레스 바 반영) -->
-  <script src="app.js?v=20261020_v134"></script>
+  <script src="app.js?v=20261020_v135"></script>
   <script>
     // Lucide 아이콘 초기화
     lucide.createIcons();

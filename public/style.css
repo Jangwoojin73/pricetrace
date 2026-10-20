@@ -491,8 +491,8 @@ html, body, button, a, input, select, textarea, .modal-pad-chip, .modal-quick-ch
 
 /* ==========================================================================
    모바일 기기 상단 상태표시줄(시간/배터리) 안전영역(Safe Area) 및 100% 선명도 최적화
-   - iOS PWA 및 노치/다이내믹 아일랜드 기기에서 상단 시간/배터리 표시에 가려지지 않도록 패딩 보장
-   - 화면 상단 흐림 효과(blur, opacity pulse, subpixel aliasing) 완전 배제
+   - iOS PWA, Safari, 크롬 등 모든 모바일 기기에서 상단 시간/배터리(54px) 아래로 56px 강제 여백 보장
+   - 상단 회색 블러 그라데이션 및 잔상 0% 원천 배제
    ========================================================================== */
 #topLiveBanner {
   background-color: #0f172a !important;
@@ -507,7 +507,22 @@ html, body, button, a, input, select, textarea, .modal-pad-chip, .modal-quick-ch
   -moz-osx-font-smoothing: grayscale !important;
   text-rendering: optimizeLegibility !important;
   transform: none !important;
-  padding-top: max(0.625rem, calc(env(safe-area-inset-top, 0px) + 0.375rem)) !important;
+}
+
+/* 모바일 전용 (iOS Safari, PWA, 웹뷰 등 전 환경): 상태표시줄(54px) 아래로 깨끗하게 내려서 배치 */
+@media (max-width: 1023px) {
+  #topLiveBanner {
+    padding-top: max(3.5rem, calc(env(safe-area-inset-top, 3.25rem) + 0.375rem)) !important;
+    padding-bottom: 0.625rem !important;
+  }
+}
+
+/* PC 데스크톱 전용: 상태표시줄이 없으므로 컴팩트한 상하 8px 패딩 유지 */
+@media (min-width: 1024px) {
+  #topLiveBanner {
+    padding-top: 0.5rem !important;
+    padding-bottom: 0.5rem !important;
+  }
 }
 
 #topLiveBanner * {
@@ -527,13 +542,6 @@ html, body, button, a, input, select, textarea, .modal-pad-chip, .modal-quick-ch
 #topLiveBanner span {
   animation: none !important;
   opacity: 1 !important;
-}
-
-/* iOS PWA 및 스탠드얼론(홈 화면 추가) 모드: 상태표시줄(44px~54px) 아래로 강제 안전 여백 보장 */
-@media all and (display-mode: standalone) {
-  #topLiveBanner {
-    padding-top: max(3rem, calc(env(safe-area-inset-top, 2.75rem) + 0.375rem)) !important;
-  }
 }
 
 /* GNB 헤더 상단 텍스트 및 로고 선명도 100% 보장 (흐림 효과 원천 배제) */
