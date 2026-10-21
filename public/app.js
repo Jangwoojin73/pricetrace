@@ -1505,9 +1505,16 @@ function initEventListeners() {
       showToast(`[${timeStr} 갱신 중] 네이버 실시간 최신 시세를 조회하고 있습니다...`, "loading", 2000);
       loadPriceData(state.keyword, state.targetPrice, true);
     } else {
+      setLoadingUI(true);
       switchToWelcomeView();
       shuffleAndRenderRecommendations(true);
-      loadDailyTrendingProducts();
+      if (typeof loadDailyTrendingProducts === "function") {
+        Promise.resolve(loadDailyTrendingProducts()).finally(() => {
+          setTimeout(() => setLoadingUI(false), 500);
+        });
+      } else {
+        setTimeout(() => setLoadingUI(false), 500);
+      }
       const tabName = state.activeTab === "trending" ? "오늘 실시간 핫딜" : "국민 필수 생필품";
       showToast(`[${timeStr} 갱신] ${tabName} 추천 목록이 새로고침되었습니다.`, "success");
     }
