@@ -544,24 +544,114 @@ html, body, button, a, input, select, textarea, .modal-pad-chip, .modal-quick-ch
   opacity: 1 !important;
 }
 
-/* GNB 헤더 상단 텍스트 및 로고 선명도 100% 보장 (흐림 효과 원천 배제) */
-header {
-  -webkit-backdrop-filter: none !important;
-  backdrop-filter: none !important;
-  filter: none !important;
-  -webkit-filter: none !important;
-  box-shadow: none !important;
-  background-color: #ffffff !important;
-}
-
-/* 최상단 LIVE 특가 배너 + GNB 네비게이션 일체형 상단 고정 */
+/* ==========================================================================
+   상단 고정 헤더 전체 3D 최저가 트래커 배경 이미지 & 8px 블러 효과
+   - 사용자 지정 헤더 전체(LIVE 배너 + 로고 + 검색창 + 인기 검색어) 일체형 투시 블러
+   - 적절한 블러 강도(8px)로 배경의 3D 스마트폰/돋보기/골드 화살표의 형태를 보존하면서
+   - 텍스트/로고/검색창 100% 선명도 및 가독성(WCAG AAA) 보장
+   ========================================================================== */
 header.sticky {
   position: sticky !important;
   top: 0 !important;
   z-index: 40 !important;
   width: 100% !important;
+  background-image: url('assets/images/header_bg_pricetracker_blur.jpg?v=20261021_v4') !important;
+  background-size: cover !important;
+  background-position: center 25% !important;
+  box-shadow: 0 4px 20px rgba(15, 23, 42, 0.25) !important;
+  border-bottom: 1px solid rgba(59, 130, 246, 0.35) !important;
 }
 
-header #gnbNavBar {
-  background-color: #ffffff !important;
+#topLiveBanner {
+  position: relative !important;
+  z-index: 10 !important;
+  background-color: rgba(10, 18, 42, 0.45) !important;
+  backdrop-filter: blur(10px) !important;
+  -webkit-backdrop-filter: blur(10px) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15) !important;
+}
+
+#gnbNavBar {
+  position: relative !important;
+  z-index: 10 !important;
+  background-color: rgba(10, 18, 42, 0.42) !important;
+  backdrop-filter: blur(10px) !important;
+  -webkit-backdrop-filter: blur(10px) !important;
+  border-bottom: none !important;
+}
+
+/* 로고 텍스트 및 SVG 선명도 강화 */
+#gnbNavBar a span.text-slate-900 {
+  color: #ffffff !important;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.7) !important;
+}
+#gnbNavBar a span.text-blue-600 {
+  color: #38bdf8 !important;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6) !important;
+}
+#gnbNavBar a p.text-slate-500 {
+  color: #cbd5e1 !important;
+}
+#gnbNavBar a svg circle[stroke='#0F172A'], 
+#gnbNavBar a svg line[stroke='#0F172A'],
+#gnbNavBar a svg path[stroke='#0F172A'],
+#gnbNavBar a svg polyline[stroke='#0F172A'] {
+  stroke: #ffffff !important;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.6)) !important;
+}
+#gnbNavBar a svg circle[fill='#2563EB'] {
+  fill: #38bdf8 !important;
+}
+
+/* 모바일 상단 컨트롤 버튼 */
+#mobileRefreshBtn {
+  background-color: rgba(255, 255, 255, 0.22) !important;
+  border: 1px solid rgba(255, 255, 255, 0.3) !important;
+}
+#mobileRefreshBtn i {
+  color: #ffffff !important;
+}
+#mobileOpenConfigModalBtn {
+  background-color: rgba(15, 23, 42, 0.8) !important;
+  border: 1px solid rgba(255, 255, 255, 0.3) !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4) !important;
+  color: #ffffff !important;
+}
+#mobileBtnTargetPriceDisplay {
+  color: #facc15 !important;
+}
+
+/* 검색 입력창 (클린 화이트 글래스 캡슐로 100% 편안한 가독성) */
+#searchInput {
+  background-color: rgba(255, 255, 255, 0.96) !important;
+  border: 2px solid rgba(255, 255, 255, 0.9) !important;
+  color: #0f172a !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25) !important;
+}
+#searchInput::placeholder {
+  color: #64748b !important;
+}
+
+/* 인기 검색어 라벨 및 칩 태그 */
+#gnbNavBar .text-slate-800, 
+#gnbNavBar .text-slate-700 {
+  color: #ffffff !important;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.8) !important;
+}
+#quickChipsContainer .quick-chip {
+  background-color: rgba(15, 23, 42, 0.65) !important;
+  color: #f8fafc !important;
+  border: 1px solid rgba(255, 255, 255, 0.25) !important;
+  backdrop-filter: blur(10px) !important;
+  -webkit-backdrop-filter: blur(10px) !important;
+  font-weight: 600 !important;
+}
+#quickChipsContainer .quick-chip:hover {
+  background-color: rgba(37, 99, 235, 0.8) !important;
+  color: #ffffff !important;
+  border-color: rgba(147, 197, 253, 0.5) !important;
+}
+#shuffleChipsBtn {
+  color: #ffffff !important;
+  background-color: rgba(255, 255, 255, 0.22) !important;
 }

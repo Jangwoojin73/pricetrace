@@ -1,5 +1,5 @@
 // PriceTrace PWA Service Worker
-const CACHE_VERSION = 'v1.3.6';
+const CACHE_VERSION = 'v1.4.0';
 const STATIC_CACHE = `pricetrace-static-${CACHE_VERSION}`;
 const DYNAMIC_CACHE = `pricetrace-dynamic-${CACHE_VERSION}`;
 
@@ -16,7 +16,8 @@ const STATIC_ASSETS = [
   '/icons/icon-192x192-maskable.png',
   '/icons/icon-512x512.png',
   '/icons/icon-512x512-maskable.png',
-  '/icons/apple-touch-icon.png'
+  '/icons/apple-touch-icon.png',
+  '/assets/images/header_bg_pricetracker_blur.jpg'
 ];
 
 // Install Event: Precache static core assets
