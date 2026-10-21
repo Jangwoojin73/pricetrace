@@ -1193,12 +1193,15 @@ function renderChart(history, targetPrice) {
 
 // 5. 로딩 UI 토글
 function setLoadingUI(isLoading) {
+  const mobileRefreshIcon = elements.mobileRefreshBtn ? elements.mobileRefreshBtn.querySelector("svg, i") : null;
   if (isLoading) {
-    elements.refreshIcon.classList.add("animate-spin");
+    if (elements.refreshIcon) elements.refreshIcon.classList.add("animate-spin");
+    if (mobileRefreshIcon) mobileRefreshIcon.classList.add("animate-spin");
     elements.lowestPriceDisplay.classList.add("skeleton");
     elements.unitPriceDisplay.classList.add("skeleton");
   } else {
-    elements.refreshIcon.classList.remove("animate-spin");
+    if (elements.refreshIcon) elements.refreshIcon.classList.remove("animate-spin");
+    if (mobileRefreshIcon) mobileRefreshIcon.classList.remove("animate-spin");
     elements.lowestPriceDisplay.classList.remove("skeleton");
     elements.unitPriceDisplay.classList.remove("skeleton");
   }
