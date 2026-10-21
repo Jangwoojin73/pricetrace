@@ -657,7 +657,7 @@ function switchToWelcomeView(skipHistory = false, skipScroll = false) {
     updateClearBtn();
   }
   if (elements.topBannerText) {
-    elements.topBannerText.textContent = "네이버 쇼핑 공식 카탈로그 실시간 최저가 레이더";
+    elements.topBannerText.textContent = "네이버 쇼핑 공식 카탈로그 실시간 레이더";
   }
   if (!skipHistory && window.history.pushState && window.location.search) {
     window.history.pushState({}, "", window.location.pathname);
