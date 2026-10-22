@@ -38,103 +38,164 @@ function getAudioContext() {
   return audioCtx;
 }
 
-// 브라우저 Autoplay 정책 대응: 사용자 상호작용 발생 시 AudioContext 언락
-window.addEventListener("click", () => {
-  if (audioCtx && audioCtx.state === "suspended") {
-    audioCtx.resume().catch(() => {});
+// 브라우저 Autoplay 정책 대응: 사용자 상호작용(터치/클릭/입력) 발생 시 AudioContext 언락 및 하드웨어 워밍업
+const unlockAudioOnMobile = () => {
+  const ctx = getAudioContext();
+  if (ctx && ctx.state === "suspended") {
+    ctx.resume().catch(() => {});
   }
-}, { once: false, passive: true });
-window.addEventListener("touchstart", () => {
-  if (audioCtx && audioCtx.state === "suspended") {
-    audioCtx.resume().catch(() => {});
+  // 모바일 iOS Safari / Android 하드웨어 오디오 출력단 워밍업 (1-샘플 무음 버퍼)
+  if (ctx && typeof ctx.createBuffer === "function") {
+    try {
+      const buffer = ctx.createBuffer(1, 1, 22050);
+      const source = ctx.createBufferSource();
+      source.buffer = buffer;
+      source.connect(ctx.destination);
+      source.start(0);
+    } catch (_) {}
   }
-}, { once: false, passive: true });
+};
+window.addEventListener("click", unlockAudioOnMobile, { passive: true });
+window.addEventListener("touchstart", unlockAudioOnMobile, { passive: true });
+window.addEventListener("touchend", unlockAudioOnMobile, { passive: true });
+window.addEventListener("keydown", unlockAudioOnMobile, { passive: true });
 
 function playChimeSound() {
   try {
     const ctx = getAudioContext();
     if (!ctx) return;
 
-    const now = ctx.currentTime;
+    const executeChime = () => {
+      const now = ctx.currentTime;
 
-    // 1차 톤 (띵 - Ding): A5 880Hz + 배음 (Harmonic, 1760Hz)
-    const osc1 = ctx.createOscillator();
-    const gain1 = ctx.createGain();
-    osc1.type = "sine";
-    osc1.frequency.setValueAtTime(880, now);
+      // 1차 톤 (띵 - Ding): A5 880Hz + 배음 (Harmonic, 1760Hz)
+      const osc1 = ctx.createOscillator();
+      const gain1 = ctx.createGain();
+      osc1.type = "sine";
+      osc1.frequency.setValueAtTime(880, now);
 
-    const osc1Harmonic = ctx.createOscillator();
-    const gain1Harmonic = ctx.createGain();
-    osc1Harmonic.type = "sine";
-    osc1Harmonic.frequency.setValueAtTime(1760, now);
+      const osc1Harmonic = ctx.createOscillator();
+      const gain1Harmonic = ctx.createGain();
+      osc1Harmonic.type = "sine";
+      osc1Harmonic.frequency.setValueAtTime(1760, now);
 
-    gain1.gain.setValueAtTime(0, now);
-    gain1.gain.linearRampToValueAtTime(0.28, now + 0.02);
-    gain1.gain.exponentialRampToValueAtTime(0.0001, now + 0.35);
+      gain1.gain.setValueAtTime(0, now);
+      gain1.gain.linearRampToValueAtTime(0.35, now + 0.02);
+      gain1.gain.exponentialRampToValueAtTime(0.0001, now + 0.38);
 
-    gain1Harmonic.gain.setValueAtTime(0, now);
-    gain1Harmonic.gain.linearRampToValueAtTime(0.07, now + 0.02);
-    gain1Harmonic.gain.exponentialRampToValueAtTime(0.0001, now + 0.30);
+      gain1Harmonic.gain.setValueAtTime(0, now);
+      gain1Harmonic.gain.linearRampToValueAtTime(0.09, now + 0.02);
+      gain1Harmonic.gain.exponentialRampToValueAtTime(0.0001, now + 0.32);
 
-    osc1.connect(gain1);
-    gain1.connect(ctx.destination);
-    osc1Harmonic.connect(gain1Harmonic);
-    gain1Harmonic.connect(ctx.destination);
+      osc1.connect(gain1);
+      gain1.connect(ctx.destination);
+      osc1Harmonic.connect(gain1Harmonic);
+      gain1Harmonic.connect(ctx.destination);
 
-    osc1.start(now);
-    osc1Harmonic.start(now);
-    osc1.stop(now + 0.36);
-    osc1Harmonic.stop(now + 0.36);
+      osc1.start(now);
+      osc1Harmonic.start(now);
+      osc1.stop(now + 0.40);
+      osc1Harmonic.stop(now + 0.40);
 
-    // 2차 톤 (동 - Dong): E5 659.25Hz (0.22초 후 시작, 풍부한 0.65초 잔향)
-    const t2 = now + 0.22;
-    const osc2 = ctx.createOscillator();
-    const gain2 = ctx.createGain();
-    osc2.type = "sine";
-    osc2.frequency.setValueAtTime(659.25, t2);
+      // 2차 톤 (동 - Dong): E5 659.25Hz (0.22초 후 시작, 풍부한 0.70초 잔향)
+      const t2 = now + 0.22;
+      const osc2 = ctx.createOscillator();
+      const gain2 = ctx.createGain();
+      osc2.type = "sine";
+      osc2.frequency.setValueAtTime(659.25, t2);
 
-    const osc2Harmonic = ctx.createOscillator();
-    const gain2Harmonic = ctx.createGain();
-    osc2Harmonic.type = "sine";
-    osc2Harmonic.frequency.setValueAtTime(1318.5, t2);
+      const osc2Harmonic = ctx.createOscillator();
+      const gain2Harmonic = ctx.createGain();
+      osc2Harmonic.type = "sine";
+      osc2Harmonic.frequency.setValueAtTime(1318.5, t2);
 
-    gain2.gain.setValueAtTime(0, t2);
-    gain2.gain.linearRampToValueAtTime(0.32, t2 + 0.025);
-    gain2.gain.exponentialRampToValueAtTime(0.0001, t2 + 0.65);
+      gain2.gain.setValueAtTime(0, t2);
+      gain2.gain.linearRampToValueAtTime(0.38, t2 + 0.025);
+      gain2.gain.exponentialRampToValueAtTime(0.0001, t2 + 0.70);
 
-    gain2Harmonic.gain.setValueAtTime(0, t2);
-    gain2Harmonic.gain.linearRampToValueAtTime(0.08, t2 + 0.025);
-    gain2Harmonic.gain.exponentialRampToValueAtTime(0.0001, t2 + 0.55);
+      gain2Harmonic.gain.setValueAtTime(0, t2);
+      gain2Harmonic.gain.linearRampToValueAtTime(0.10, t2 + 0.025);
+      gain2Harmonic.gain.exponentialRampToValueAtTime(0.0001, t2 + 0.60);
 
-    osc2.connect(gain2);
-    gain2.connect(ctx.destination);
-    osc2Harmonic.connect(gain2Harmonic);
-    gain2Harmonic.connect(ctx.destination);
+      osc2.connect(gain2);
+      gain2.connect(ctx.destination);
+      osc2Harmonic.connect(gain2Harmonic);
+      gain2Harmonic.connect(ctx.destination);
 
-    osc2.start(t2);
-    osc2Harmonic.start(t2);
-    osc2.stop(t2 + 0.68);
-    osc2Harmonic.stop(t2 + 0.68);
+      osc2.start(t2);
+      osc2Harmonic.start(t2);
+      osc2.stop(t2 + 0.72);
+      osc2Harmonic.stop(t2 + 0.72);
+    };
+
+    if (ctx.state === "suspended") {
+      ctx.resume().then(() => {
+        executeChime();
+      }).catch(() => {
+        executeChime();
+      });
+    } else {
+      executeChime();
+    }
   } catch (err) {
     console.warn("차임벨 사운드 재생 중 오류(무음 유지):", err);
   }
 }
 
-function triggerHapticVibration() {
-  try {
-    if (typeof navigator !== "undefined" && "vibrate" in navigator) {
-      // 띵 (100ms) -> 대기 (60ms) -> 동 (160ms)
-      navigator.vibrate([100, 60, 160]);
-    }
-  } catch (err) {
-    console.warn("햅틱 진동 호출 불가:", err);
-  }
+// 햅틱 진동 시각적 촉각 효과 (Visual Tactile Shake & Glow - iOS Safari 및 전 기기 공통)
+function triggerVisualHapticEffect() {
+  const targets = [
+    elements.alertBanner,
+    elements.testNotificationBtn,
+    elements.saveConfigModalBtn
+  ].filter(Boolean);
+
+  targets.forEach(el => {
+    el.classList.remove("haptic-pulse-active");
+    void el.offsetWidth; // force reflow
+    el.classList.add("haptic-pulse-active");
+    setTimeout(() => {
+      el.classList.remove("haptic-pulse-active");
+    }, 450);
+  });
 }
 
-function notifySpecialPrice(keyword, lowestPrice, force = false) {
-  const alertKey = `${keyword}_${lowestPrice}`;
+function triggerHapticVibration() {
+  // 1. Android 및 표준 Vibration API 지원 브라우저 (Chrome, Samsung Internet 등)
+  try {
+    if (typeof navigator !== "undefined" && typeof navigator.vibrate === "function") {
+      // 2단 햅틱 패턴: 띵 (120ms) -> 대기 (60ms) -> 동 (180ms)
+      const didVibrate = navigator.vibrate([120, 60, 180]);
+      if (!didVibrate) {
+        navigator.vibrate(200);
+      }
+    }
+  } catch (err) {
+    try {
+      if (typeof navigator !== "undefined" && typeof navigator.vibrate === "function") {
+        navigator.vibrate(200);
+      }
+    } catch (_) {}
+  }
+
+  // 2. iOS 18+ WebKit Switch Haptic Trigger
+  try {
+    const iosSwitch = document.getElementById("iosHapticTrigger");
+    if (iosSwitch) {
+      iosSwitch.checked = !iosSwitch.checked;
+      iosSwitch.dispatchEvent(new Event("change", { bubbles: true }));
+    }
+  } catch (_) {}
+
+  // 3. 전 디바이스 공통 촉각 시각 펄스 (iOS Safari 및 무음 모드 지원)
+  triggerVisualHapticEffect();
+}
+
+function notifySpecialPrice(keyword, lowestPrice, force = false, targetPrice = 0) {
+  const currentTarget = targetPrice || state.targetPrice || 0;
+  const alertKey = `${keyword}_${lowestPrice}_${currentTarget}`;
   if (!force && state.lastAlertPlayedKey === alertKey) {
-    return; // 동일 상품 연속 재생 방지
+    return; // 동일 조건 연속 재생 방지
   }
   state.lastAlertPlayedKey = alertKey;
 
@@ -988,7 +1049,7 @@ function renderAll(data) {
     elements.alertDescription.innerHTML = `현재 1위 최저가가 설정하신 목표가 <strong>${formatCurrency(target_price)}원</strong>보다 <strong>${formatCurrency(discount_amount)}원(${discountRate}%)</strong> 저렴합니다.`;
 
     // 🔔 목표가 이하 특가 달성 시 차임벨 소리 및 햅틱 진동 피드백 발동
-    notifySpecialPrice(keyword, lowest_price);
+    notifySpecialPrice(keyword, lowest_price, false, target_price);
   } else {
     elements.alertBanner.className = "relative overflow-hidden rounded-3xl p-5 sm:p-6 transition-all duration-300 shadow-md banner-normal";
     elements.alertIconBox.textContent = "ℹ️";
@@ -1621,6 +1682,7 @@ function initEventListeners() {
   // 검색 폼
   elements.searchForm.addEventListener("submit", (e) => {
     e.preventDefault();
+    unlockAudioOnMobile();
     closeRadarSearchModal(true);
     if (elements.searchInput) elements.searchInput.blur();
     const query = elements.searchInput.value.trim();
@@ -1795,6 +1857,7 @@ function initEventListeners() {
         return;
       }
       closeRadarSearchModal(true);
+      unlockAudioOnMobile();
       if (elements.searchInput) {
         elements.searchInput.value = query;
         updateClearBtn();
@@ -1848,6 +1911,7 @@ function initEventListeners() {
       const query = btn.getAttribute("data-query") || "";
       if (!query) return;
       closeRadarSearchModal(true);
+      unlockAudioOnMobile();
       if (elements.searchInput) {
         elements.searchInput.value = query;
         updateClearBtn();
@@ -1923,10 +1987,15 @@ function initEventListeners() {
   // 소리/진동 즉시 테스트 버튼
   if (elements.testNotificationBtn) {
     elements.testNotificationBtn.addEventListener("click", () => {
+      unlockAudioOnMobile();
       playChimeSound();
       triggerHapticVibration();
+      const isIos = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+      const msg = isIos 
+        ? "🔔 '띵동~' 차임벨 소리와 시각 햅틱 진동을 테스트했습니다." 
+        : "🔔 '띵동~' 차임벨 소리와 햅틱 진동을 테스트했습니다.";
       if (typeof showToast === "function") {
-        showToast("🔔 '띵동~' 차임벨 소리와 햅틱 진동을 테스트했습니다.", "success", 2000);
+        showToast(msg, "success", 2200);
       }
     });
   }
@@ -1954,6 +2023,13 @@ function initEventListeners() {
   }
 
   elements.saveConfigModalBtn.addEventListener("click", () => {
+    // 1. 유저 직접 제스처 즉시 AudioContext 언락/재개 (비동기 fetch 전 동기 실행 필수!)
+    unlockAudioOnMobile();
+    const ctx = getAudioContext();
+    if (ctx && ctx.state === "suspended") {
+      ctx.resume().catch(() => {});
+    }
+
     const newTarget = parseInt(elements.modalTargetPriceInput.value, 10);
     if (!isNaN(newTarget) && newTarget > 0) {
       closeModal();
@@ -1969,14 +2045,39 @@ function initEventListeners() {
         localStorage.setItem("pricetrace_vibrate_enabled", state.vibrateEnabled ? "true" : "false");
       }
       state.targetPrice = newTarget;
+      localStorage.setItem("pricetrace_user_target_price", String(newTarget));
+
       if (elements.btnTargetPriceDisplay) {
         elements.btnTargetPriceDisplay.textContent = formatCurrency(newTarget) + "원";
       }
       if (elements.mobileBtnTargetPriceDisplay) {
         elements.mobileBtnTargetPriceDisplay.textContent = formatCurrency(newTarget) + "원";
       }
+
+      // 현재 화면에 이미 조회된 상품이 있다면 즉시 새 목표가와 비교하여 UI 갱신 및 띵동 벨소리/진동 발동!
+      if (state.data && state.data.lowest_price > 0) {
+        const lowest = state.data.lowest_price;
+        const isSpecial = lowest <= newTarget;
+        state.data.target_price = newTarget;
+        state.data.is_special_price = isSpecial;
+        state.data.discount_amount = isSpecial ? (newTarget - lowest) : 0;
+        
+        // UI 즉시 재렌더링
+        renderAll(state.data);
+
+        // 목표가 달성(특가)인 경우 벨소리 및 진동 즉시 강제 발동!
+        if (isSpecial && state.alertEnabled) {
+          notifySpecialPrice(state.keyword, lowest, true, newTarget);
+        }
+
+        showToast(`목표가가 ${formatCurrency(newTarget)}원으로 저장되었습니다.${isSpecial ? " 🔔 특가가 감지되었습니다!" : ""}`, "success", 2500);
+      } else {
+        showToast(`목표가가 ${formatCurrency(newTarget)}원으로 저장되었습니다.`, "success", 2000);
+      }
+
+      // 백엔드에도 동기화 호출
       if (state.keyword && state.keyword.trim()) {
-        loadPriceData(state.keyword, newTarget);
+        loadPriceData(state.keyword, newTarget, false);
       }
     } else {
       alert("올바른 금액을 입력해 주세요 (1원 이상의 숫자).");
