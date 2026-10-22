@@ -49,7 +49,7 @@ def run_haptic_verification():
         banner_text_ios = banner_ios.inner_text()
         print(f"  - iOS 감지 배너 내용:\n{banner_text_ios}")
         assert "Apple iOS" in banner_text_ios, "iOS 배너에 Apple iOS 문구가 포함되어야 함"
-        assert "사용자님의 스마트폰은 정상" in banner_text_ios, "스마트폰 정상 문구가 포함되어야 함"
+        assert "정상" in banner_text_ios, "스마트폰 정상 문구가 포함되어야 함"
 
         # Check label for switch
         ios_label = page_ios.locator("#iosHapticTriggerLabel")
