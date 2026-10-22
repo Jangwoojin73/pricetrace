@@ -44,6 +44,12 @@ const unlockAudioOnMobile = () => {
   if (ctx && ctx.state === "suspended") {
     ctx.resume().catch(() => {});
   }
+  // iOS 17+ 물리 무음 스위치 상태에서도 차임벨 사운드 출력 보장 (AudioSession playback 카테고리)
+  try {
+    if (typeof navigator !== "undefined" && "audioSession" in navigator) {
+      navigator.audioSession.type = "playback";
+    }
+  } catch (_) {}
   // 모바일 iOS Safari / Android 하드웨어 오디오 출력단 워밍업 (1-샘플 무음 버퍼)
   if (ctx && typeof ctx.createBuffer === "function") {
     try {
@@ -190,17 +196,19 @@ function updateDeviceHapticBanner() {
     banner.className = "mt-2.5 p-3 rounded-xl bg-amber-50/90 border border-amber-200/90 text-amber-900 text-[11px] leading-relaxed";
     banner.innerHTML = `
       <div class="flex items-center space-x-1.5 font-bold text-amber-950 mb-1">
-        <span class="text-xs">🍎 Apple iOS (iPhone/iPad) 환경 감지</span>
+        <span class="text-xs">🍎 Apple iOS (iPhone) 환경 안내</span>
       </div>
       <div class="text-amber-900/90 space-y-1.5">
-        <div>• <strong>아이폰 하드웨어는 100% 정상입니다.</strong></div>
-        <div>• <strong>웹 진동 모터 차단</strong>: Apple은 보안 및 배터리 정책상 Safari 등 모든 iOS 브라우저에서 웹페이지의 Taptic 진동 모터 접근(<code>navigator.vibrate</code>)을 전면 차단하고 있습니다. (전 세계 모든 웹사이트 동일)</div>
-        <div>• <strong>적용된 보완 솔루션</strong>:
+        <div>• <strong>아이폰 기기 자체는 100% 정상입니다.</strong></div>
+        <div>• <strong>인앱 물리 진동 미지원 이유</strong>: Apple WebKit 보안 정책상 모든 웹 브라우저(Safari, Chrome 등)에서 웹페이지 터치 시 기기 내부의 물리 진동 모터(Taptic Engine, <code>navigator.vibrate</code>)를 직접 울리는 것은 전면 차단되어 있습니다. (전 세계 모든 웹사이트 동일)</div>
+        <div>• <strong>현재 제공되는 알림 피드백</strong>:
           <div class="pl-2 mt-0.5 space-y-0.5 text-amber-950">
-            <div>① <strong>스피커 물리 코일 공진 진동</strong>: 하부 스피커 코일 변위(54Hz 저음 펄스)로 폰 바디 떨림 전달</div>
-            <div>② <strong>2단계 시각 촉각 펄스</strong>: 차임벨(띵-동) 리듬에 맞춘 화면 바운스 진동 동기화</div>
-            <div>③ <strong>홈 화면 앱 추가(PWA)</strong>: 사파리 하단 [공유] ➔ [홈 화면에 추가] 시 시스템 알림 진동 연동 가능</div>
+            <div>🔔 <strong>고음질 특가 차임벨</strong>: 경쾌한 띵-동 사운드 (iOS 무음 모드 재생 지원)</div>
+            <div>📳 <strong>2단 시각 촉각 펄스</strong>: 차임벨 리듬에 맞춘 화면 4px 햅틱 바운스 진동</div>
           </div>
+        </div>
+        <div class="pt-1 text-[10.5px] text-amber-800/90 border-t border-amber-200/60">
+          ※ 실제 모터 물리 진동은 iOS 정책상 웹 브라우저 터치가 아닌, <strong>App Store 네이티브 앱</strong> 또는 <strong>VAPID 서버 푸시 알림 수신 시</strong>에만 iOS 시스템에 의해 제한적으로 동작합니다.
         </div>
       </div>
     `;
@@ -290,13 +298,7 @@ function triggerHapticVibration() {
     }
   } catch (_) {}
 
-  // 3. iOS 18+ WebKit Switch Haptic Trigger (Label Click Delegation)
-  try {
-    const iosLabel = document.getElementById("iosHapticTriggerLabel");
-    if (iosLabel) {
-      iosLabel.click();
-    }
-  } catch (_) {}
+
 
   // 3. 전 디바이스 공통 2단 동기화 시각 촉각 펄스 (iOS Safari 및 무음 모드 지원)
   triggerVisualHapticEffect();
