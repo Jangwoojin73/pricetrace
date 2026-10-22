@@ -1,1329 +1,1339 @@
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>PriceTrace | 네이버 쇼핑 실시간 최저가 레이더</title>
-  
-  <!-- PWA Web App Manifest & Mobile Meta -->
-  <link rel="manifest" href="/manifest.json?v=20261022_v147">
-  <meta name="theme-color" content="#0f172a">
-  <meta name="mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black">
-  <meta name="apple-mobile-web-app-title" content="PriceTrace">
-  <meta name="application-name" content="PriceTrace">
-  <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png?v=20261022_v147">
-  <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png?v=20261022_v147">
-  <link rel="apple-touch-icon" sizes="192x192" href="/icons/icon-192x192.png?v=20261022_v147">
-  <link rel="apple-touch-icon" sizes="512x512" href="/icons/icon-512x512.png?v=20261022_v147">
-
-  <!-- Favicon & Shortcut Icons -->
-  <link rel="icon" type="image/svg+xml" href="/logo_jwj.svg?v=20261022_v147">
-  <link rel="icon" type="image/png" sizes="32x32" href="/icons/icon-192x192.png?v=20261022_v147">
-  <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192x192.png?v=20261022_v147">
-  <link rel="shortcut icon" href="/favicon.ico?v=20261022_v147">
-
-  <!-- Pretendard 폰트 (한국어 표준 고품질 웹폰트) -->
-  <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" />
-  
-  <!-- Tailwind CSS CDN -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  
-  <!-- Chart.js CDN -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  
-  <!-- Lucide Icons CDN -->
-  <script src="https://unpkg.com/lucide@latest"></script>
-  
-  <!-- Custom CSS -->
-  <link rel="stylesheet" href="style.css?v=20261022_v147">
-  
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          fontFamily: {
-            sans: ['Pretendard', '-apple-system', 'BlinkMacSystemFont', 'system-ui', 'Roboto', 'sans-serif'],
-          },
-          colors: {
-            lapis: {
-              DEFAULT: '#1D4ED8', // 고귀하고 선명한 청금석 로열 블루
-              dark: '#1E3A8A',    // 깊은 청남색
-              light: '#EFF6FF',   // 부드러운 스카이 틴트
-              vivid: '#2563EB'    // 비비드 코발트
-            },
-            naver: {
-              DEFAULT: '#1D4ED8', // 기존 호환성을 위해 청금석 블루로 매핑
-              dark: '#1E3A8A',
-              light: '#EFF6FF'
-            },
-            coupang: {
-              DEFAULT: '#E52528',
-              blue: '#0073E9'
-            },
-            surface: {
-              50: '#F8FAFC',
-              100: '#F1F5F9',
-              800: '#1E293B',
-              900: '#0F172A'
-            }
-          }
-        }
-      }
-    }
-  </script>
-</head>
-<body class="bg-surface-50 text-slate-800 font-sans antialiased selection:bg-lapis selection:text-white min-h-screen flex flex-col">
-
-  <!-- 0. 모바일/태블릿 동적 인터랙티브 인트로 스플래시 화면 (PC 화면에서는 lg:hidden으로 원천 비활성화) -->
-  <div id="appSplashScreen" class="lg:hidden fixed inset-0 z-50 flex flex-col justify-between overflow-hidden bg-gradient-to-b from-slate-950 via-slate-900 to-blue-950 text-white select-none transition-all duration-500">
-    <!-- 1) 배경 동적 파티클 캔버스 (60fps 경량 캔버스) -->
-    <canvas id="splashCanvas" class="absolute inset-0 pointer-events-none w-full h-full z-0"></canvas>
-
-    <!-- 2) 상단 헤더: LIVE 뱃지 & 우측 상단 건너뛰기 버튼 (시간표시 54px 아래로 안전 안착, 블러 필터 완전 배제) -->
-    <div class="relative z-10 flex items-center justify-between px-5 pt-[max(3.125rem,calc(env(safe-area-inset-top,2.75rem)+0.125rem))]">
-      <div class="flex items-center space-x-1.5 px-2.5 py-1 rounded-full bg-slate-800 border border-slate-700 shadow-sm" style="filter: none !important; -webkit-filter: none !important; backdrop-filter: none !important; -webkit-backdrop-filter: none !important;">
-        <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
-        <span class="text-[11px] font-black text-emerald-300 tracking-wide">RADAR LIVE</span>
-      </div>
-      <button 
-        type="button" 
-        id="splashSkipBtn" 
-        class="px-3.5 py-1.5 rounded-full bg-white/20 hover:bg-white/30 active:scale-95 border border-white/30 text-white text-xs font-bold shadow-sm transition-all flex items-center space-x-1 cursor-pointer"
-        style="filter: none !important; -webkit-filter: none !important; backdrop-filter: none !important; -webkit-backdrop-filter: none !important;"
-        title="스플래시 화면 건너뛰기"
-      >
-        <span>건너뛰기</span>
-        <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
-      </button>
-    </div>
-
-    <!-- 3) 중앙 브랜드 비주얼: 펄스 발광 레이더 엠블럼 + 타이틀 -->
-    <div class="relative z-10 flex flex-col items-center justify-center text-center px-6 -mt-4 space-y-4">
-      <!-- 펄스 레이더 엠블럼 -->
-      <div class="relative w-28 h-28 sm:w-32 sm:h-32 flex items-center justify-center">
-        <!-- 펄스 링 -->
-        <div class="absolute inset-0 rounded-full bg-blue-500/20 animate-ping"></div>
-        <div class="absolute inset-2 rounded-full bg-indigo-500/30 animate-pulse"></div>
-        <!-- 엠블럼 원형 박스 -->
-        <div class="relative w-24 h-24 sm:w-28 sm:h-28 rounded-full bg-gradient-to-tr from-blue-600 via-indigo-600 to-sky-500 p-1 shadow-2xl shadow-blue-500/50 flex items-center justify-center border-2 border-white/40">
-          <img src="/logo_jwj.svg?v=20261002" alt="PriceTrace" class="w-16 h-16 sm:w-18 sm:h-18 object-contain drop-shadow-md">
-        </div>
-      </div>
-
-      <!-- 브랜드 타이틀 및 캐치프레이즈 -->
-      <div class="space-y-1.5">
-        <h1 class="text-3xl sm:text-4xl font-black tracking-tight text-white drop-shadow-sm">
-          Price<span class="text-sky-400">Trace</span>
-        </h1>
-        <p class="text-xs sm:text-sm font-bold text-sky-200 tracking-wide">
-          스마트 이커머스 최저가 추적 레이더
-        </p>
-        <p class="text-[12px] sm:text-xs text-slate-300 font-normal pt-1 max-w-xs mx-auto leading-relaxed">
-          광고는 거르고, 1개당 진짜 최저가를 찾아드립니다
-        </p>
-      </div>
-    </div>
-
-    <!-- 4) 하단 프로그레스 바 및 안내 문구 -->
-    <div class="relative z-10 flex flex-col items-center text-center px-6 pb-[max(2.5rem,env(safe-area-inset-bottom))] space-y-3.5 w-full max-w-sm mx-auto">
-      <!-- 상태 라벨 및 퍼센티지 -->
-      <div class="flex items-center justify-between w-full text-xs font-medium text-slate-300 px-1">
-        <span id="splashProgressText" class="truncate text-slate-200">네이버 쇼핑 공식 카탈로그 연결 중...</span>
-        <span id="splashProgressPercent" class="font-extrabold text-yellow-300 ml-2 shrink-0">0%</span>
-      </div>
-
-      <!-- 프로그레스 트랙 & 게이지 바 -->
-      <div class="w-full h-2.5 bg-white/15 backdrop-blur-md rounded-full overflow-hidden p-0.5 border border-white/20 shadow-inner">
-        <div 
-          id="splashProgressBar" 
-          class="h-full bg-gradient-to-r from-blue-400 via-indigo-400 to-emerald-400 rounded-full transition-all duration-150 ease-out w-0 shadow-lg shadow-blue-500/50"
-        ></div>
-      </div>
-
-      <!-- 하단 브랜드 슬로건 -->
-      <p class="text-[11px] text-slate-400 font-normal pt-1">
-        수많은 미끼 상품 속, 진짜 최저가를 분석합니다
-      </p>
-    </div>
-  </div>
-
-  <!-- 최상단 고정 헤더 통합 컨테이너 (LIVE 특가 배너 + GNB 네비게이션 PC/모바일 동시 상단 영구 고정, 흐릿한 효과 100% 완전 제거) -->
-  <header class="sticky top-0 z-40 w-full" style="backdrop-filter: none !important; -webkit-backdrop-filter: none !important; filter: none !important; box-shadow: none !important;">
-    <!-- 1. 최상단 실시간 특가 알림 바 (PC 및 모바일 스크롤 시 화면 상단 영구 고정, 흐릿한 효과 100% 원천 배제) -->
-    <div id="topLiveBanner" class="bg-slate-900 text-white text-xs sm:text-xs py-2 px-3 sm:px-4 border-b border-slate-800" style="filter: none !important; -webkit-filter: none !important; backdrop-filter: none !important; -webkit-backdrop-filter: none !important; text-shadow: none !important; box-shadow: none !important; -webkit-font-smoothing: antialiased !important; -moz-osx-font-smoothing: grayscale !important; text-rendering: optimizeLegibility !important;">
-      <div class="max-w-7xl mx-auto flex items-center justify-between">
-        <div class="flex items-center space-x-2 truncate">
-          <span class="inline-flex items-center justify-center px-2 py-0.5 rounded-full text-[11px] font-black bg-red-600 text-white shrink-0 tracking-wide" style="filter: none !important; opacity: 1 !important; transform: none !important;">
-            LIVE
-          </span>
-          <span class="font-bold text-white truncate" style="filter: none !important; -webkit-font-smoothing: antialiased !important;">
-            실시간 최저가 추적: <strong class="text-amber-300 font-black ml-1 tracking-tight" id="topBannerText">네이버 쇼핑 공식 카탈로그 실시간 레이더</strong>
-          </span>
-        </div>
-        <div class="hidden lg:flex items-center space-x-5 text-xs text-white shrink-0 font-medium">
-          <span class="flex items-center text-slate-100"><i data-lucide="shield-check" class="w-3.5 h-3.5 mr-1.5 text-yellow-300"></i> 광고 상품 100% 자동 필터링</span>
-          <span class="flex items-center text-slate-100"><i data-lucide="clock" class="w-3.5 h-3.5 mr-1.5 text-sky-300"></i> <span id="lastUpdatedTime" class="text-yellow-300 font-bold ml-0.5">방금 갱신됨</span></span>
-        </div>
-      </div>
-    </div>
-
-    <!-- 2. GNB 네비게이션 바 (모바일/태블릿 반응형 2단 / 데스크톱 1단 완벽 최적화) -->
-    <div id="gnbNavBar" class="bg-white border-b border-slate-200/80">
-      <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-2 lg:py-0 lg:h-20 flex flex-col lg:flex-row lg:items-center justify-between gap-2 lg:gap-4">
-      
-      <!-- 상단 줄: [브랜드 로고] + [모바일/태블릿 전용 우측 컨트롤 버튼들] -->
-      <div class="flex items-center justify-between w-full lg:w-auto shrink-0">
-        <a href="/" class="flex items-center space-x-2 sm:space-x-3 group shrink-0">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" class="w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 object-contain group-hover:scale-105 transition-transform shrink-0" fill="none">
-            <!-- 1. 미니멀 볼드 레이더 원형 림 -->
-            <circle cx="24" cy="24" r="20" stroke="#0F172A" stroke-width="3" />
-            <!-- 2. 레이더 외곽 정밀 조준 틱 (절제된 4방위 틱) -->
-            <line x1="24" y1="4" x2="24" y2="8" stroke="#0F172A" stroke-width="2.5" stroke-linecap="round" />
-            <line x1="24" y1="40" x2="24" y2="44" stroke="#0F172A" stroke-width="2.5" stroke-linecap="round" />
-            <line x1="4" y1="24" x2="8" y2="24" stroke="#0F172A" stroke-width="2.5" stroke-linecap="round" />
-            <line x1="40" y1="24" x2="44" y2="24" stroke="#0F172A" stroke-width="2.5" stroke-linecap="round" />
-            <!-- 3. 시원하고 직관적인 가격 급락 트렌드 화살표 (볼드 블랙) -->
-            <path d="M14 18L22 26L27 21L34 32" stroke="#0F172A" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" />
-            <polyline points="26 32 34 32 34 24" stroke="#0F172A" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" />
-            <!-- 4. 실시간 최저가 록온 포인트 (선명한 코발트 블루) -->
-            <circle cx="34" cy="32" r="3.5" fill="#2563EB" />
-          </svg>
-          <div>
-            <span class="text-xl sm:text-2xl font-black tracking-tight text-slate-900 flex items-center gap-1 leading-none">
-              Price<span class="text-blue-600">Trace</span>
-            </span>
-            <p class="text-[10px] sm:text-[11px] text-slate-500 font-semibold mt-0.5 hidden sm:block">스마트 이커머스 최저가 레이더</p>
-          </div>
-        </a>
-
-        <!-- 모바일/태블릿 전용 상단 우측 컨트롤 버튼 (lg:hidden) -->
-        <div class="flex lg:hidden items-center space-x-1.5 shrink-0">
-          <button 
-            type="button" 
-            id="mobileInstallAppBtn" 
-            title="앱으로 설치하기"
-            class="hidden items-center space-x-1 px-2.5 py-1.5 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 text-white text-xs font-bold active:scale-95 transition-all shadow-sm shadow-blue-500/30 cursor-pointer"
-          >
-            <i data-lucide="download" class="w-3.5 h-3.5 text-white"></i>
-            <span>설치</span>
-          </button>
-          <button 
-            type="button" 
-            id="mobileRefreshBtn" 
-            title="실시간 갱신"
-            class="p-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 active:scale-95 transition-all cursor-pointer"
-          >
-            <i data-lucide="refresh-cw" class="w-4 h-4 text-slate-600"></i>
-          </button>
-          <button 
-            type="button" 
-            id="mobileOpenConfigModalBtn" 
-            title="목표가 설정"
-            class="flex items-center space-x-1 px-2.5 py-1.5 rounded-xl bg-slate-900 text-white text-xs font-bold active:scale-95 transition-all cursor-pointer"
-          >
-            <i data-lucide="sliders" class="w-3.5 h-3.5 text-blue-400"></i>
-            <span id="mobileBtnTargetPriceDisplay">15,000원</span>
-          </button>
-        </div>
-      </div>
-
-      <!-- 중앙 검색창 (모바일/태블릿에서는 꽉 찬 너비, 데스크톱에서는 max-w-2xl) -->
-      <div class="w-full lg:flex-1 lg:max-w-2xl relative">
-        <form id="searchForm" class="relative flex items-center">
-          <div class="absolute left-3 text-slate-400 pointer-events-none">
-            <i data-lucide="search" class="w-4 h-4 sm:w-5 sm:h-5"></i>
-          </div>
-          <input 
-            type="text" 
-            id="searchInput" 
-            value="" 
-            placeholder="원하시는 상품과 수량 검색 (예: 신라면 20개, 햇반 24개)" 
-            autocomplete="off"
-            autocapitalize="none"
-            autocorrect="off"
-            spellcheck="false"
-            inputmode="search"
-            enterkeyhint="search"
-            class="w-full pl-9 pr-20 sm:pl-11 sm:pr-28 py-2.5 sm:py-3 bg-slate-100/90 hover:bg-slate-100 focus:bg-white text-base sm:text-sm font-semibold rounded-2xl border-2 border-transparent focus:border-naver focus:ring-4 focus:ring-naver/10 transition-all outline-none"
-          >
-          <!-- 텍스트 지우기 버튼 -->
-          <button 
-            type="button" 
-            id="clearSearchBtn" 
-            class="hidden absolute right-14 sm:right-24 p-1 text-slate-400 hover:text-slate-600 transition-colors"
-            title="검색어 지우기"
-          >
-            <i data-lucide="x" class="w-3.5 h-3.5 sm:w-4 sm:h-4"></i>
-          </button>
-          <button 
-            type="submit" 
-            class="absolute right-1 px-3 sm:px-4 py-1.5 sm:py-2 bg-naver hover:bg-naver-dark text-white text-xs font-bold rounded-xl transition-all shadow-sm shadow-naver/30 flex items-center space-x-1"
-          >
-            <span>조회</span>
-            <i data-lucide="arrow-right" class="w-3 h-3 sm:w-3.5 sm:h-3.5"></i>
-          </button>
-        </form>
-
-        <!-- 인기 검색어 / 빠른 태그 칩 (모바일 가로 스크롤 & 데스크톱 랩) -->
-        <div class="flex items-center gap-1.5 mt-1 sm:mt-1.5 text-xs text-slate-700 overflow-x-auto no-scrollbar py-0.5 px-0.5">
-          <span class="font-black text-slate-800 flex items-center gap-1 shrink-0 text-[11px] sm:text-xs">
-            <i data-lucide="flame" class="w-3.5 h-3.5 text-coupang"></i> 인기:
-          </span>
-          <div id="quickChipsContainer" class="flex items-center gap-1.5 shrink-0">
-            <!-- JS 동적 렌더링 -->
-          </div>
-        </div>
-      </div>
-
-      <!-- 데스크톱 전용 우측 컨트롤 버튼 (hidden lg:flex) -->
-      <div class="hidden lg:flex items-center space-x-2 shrink-0">
-        <button 
-          id="installAppBtn" 
-          title="PriceTrace 앱으로 설치"
-          class="hidden items-center space-x-1.5 px-3.5 py-2.5 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white text-xs font-bold shadow-md shadow-blue-600/25 transition-all active:scale-95 cursor-pointer"
-        >
-          <i data-lucide="download" class="w-4 h-4 text-white"></i>
-          <span>앱 설치</span>
-        </button>
-
-        <button 
-          id="refreshBtn" 
-          title="네이버 쇼핑 실시간 최신화"
-          class="flex items-center space-x-1.5 px-3.5 py-2.5 rounded-xl bg-white border border-slate-200 hover:border-slate-300 hover:bg-slate-50 text-slate-900 text-xs font-bold shadow-xs transition-all active:scale-95 cursor-pointer"
-        >
-          <i data-lucide="refresh-cw" id="refreshIcon" class="w-4 h-4 text-blue-700"></i>
-          <span class="hidden sm:inline text-slate-900 font-bold">실시간 갱신</span>
-        </button>
-
-        <button 
-          id="openConfigModalBtn" 
-          class="flex items-center space-x-1.5 px-3.5 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold shadow-xs transition-all active:scale-95 cursor-pointer"
-        >
-          <i data-lucide="sliders" class="w-4 h-4 text-blue-400"></i>
-          <span class="hidden sm:inline">목표가</span> <span id="btnTargetPriceDisplay">15,000원</span>
-        </button>
-      </div>
-
-    </div>
-    </div><!-- /#gnbNavBar -->
-  </header>
-
-  <!-- 메인 본문 컨테이너 (모바일/태블릿 하단 네비게이션 바 여백 pb-28 확보) -->
-  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 pb-28 lg:pb-8 space-y-8">
-
-    <!-- ============================================== -->
-    <!-- [VIEW 1] 초기 웰컴 & 서비스 탐색 화면 (Welcome View) -->
-    <!-- ============================================== -->
-    <div id="welcomeView" class="space-y-10">
-
-      <!-- 1. 웰컴 히어로 헤더 (청금석 라피스 라줄리 프리미엄 테마) -->
-      <div class="relative overflow-hidden rounded-3xl bg-gradient-to-br from-slate-950 via-slate-900 to-blue-950 text-white p-7 sm:p-10 shadow-2xl border border-blue-900/50">
-        <!-- 배경 장식 글로우 -->
-        <div class="absolute -right-20 -top-20 w-80 h-80 bg-blue-600/20 rounded-full blur-3xl pointer-events-none"></div>
-        <div class="absolute -left-20 -bottom-20 w-80 h-80 bg-indigo-600/25 rounded-full blur-3xl pointer-events-none"></div>
-
-        <div class="relative z-10 max-w-3xl space-y-4">
-          <div class="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-blue-500/15 border border-blue-400/30 text-sky-300 text-xs font-bold tracking-wide uppercase">
-            <i data-lucide="sparkles" class="w-3.5 h-3.5 text-sky-400"></i>
-            <span>실시간 이커머스 최저가 추적 레이더</span>
-          </div>
-
-          <h1 class="text-2xl sm:text-4xl font-black tracking-tight text-white leading-tight">
-            광고는 거르고,<br class="hidden sm:block">
-            <span class="text-transparent bg-clip-text bg-gradient-to-r from-sky-300 via-blue-400 to-indigo-300">1개당 진짜 최저가</span>를 찾아드립니다
-          </h1>
-
-          <p class="text-slate-100 text-xs sm:text-sm font-normal leading-relaxed pt-1">
-            수많은 미끼 상품과 스폰서 광고 속에서, <strong class="text-white font-bold">네이버 쇼핑 공식 카탈로그</strong>와 <strong class="text-white font-bold">스마트스토어</strong>의 
-            <strong class="text-yellow-300 font-extrabold">배송비 포함 실구매가</strong> 및 <strong class="text-yellow-300 font-extrabold">묶음당 개당 환산단가</strong>를 실시간으로 비교 분석합니다.
-          </p>
-
-          <div class="pt-2 flex flex-wrap items-center gap-3 text-xs text-slate-200 font-medium">
-            <span class="flex items-center gap-1.5 text-yellow-300 font-bold">
-              <i data-lucide="check-circle-2" class="w-4 h-4 text-yellow-300"></i> 광고(AD) 자동 필터링
-            </span>
-            <span class="text-slate-400">•</span>
-            <span class="flex items-center gap-1.5 text-yellow-300 font-bold">
-              <i data-lucide="check-circle-2" class="w-4 h-4 text-yellow-300"></i> 1개당 단가 자동 환산
-            </span>
-            <span class="text-slate-400">•</span>
-            <span class="flex items-center gap-1.5 text-yellow-300 font-bold">
-              <i data-lucide="check-circle-2" class="w-4 h-4 text-yellow-300"></i> 30일 시세 변동 추이
-            </span>
-          </div>
-        </div>
-      </div>
-
-      <!-- 2. 하이브리드 듀얼 탭 추천 섹션 (국민 생필품 TOP 16 vs 오늘 실시간 핫딜 TOP 16) -->
-      <div>
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4 px-1">
-          <div>
-            <h2 class="text-lg sm:text-xl font-black text-slate-900 flex items-center flex-wrap gap-2">
-              <span class="flex items-center gap-1.5">
-                <i data-lucide="sparkles" class="w-5 h-5 text-emerald-600"></i>
-                <span id="tabSectionTitle">국민 필수 생필품 원클릭 최저가</span>
-              </span>
-              <span id="dailyTrendingBadge" class="text-[11px] font-bold text-emerald-700 bg-emerald-50 border border-emerald-200/80 px-2.5 py-0.5 rounded-full inline-flex items-center gap-1.5 shadow-2xs">
-                <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                <span id="dailyTrendingDateText">실시간 최저가 검증</span>
-              </span>
-            </h2>
-            <p id="tabSectionSubtitle" class="text-xs text-slate-500 mt-0.5">한국인이 가장 많이 재구매하는 16대 필수품의 오늘 실시간 최저가입니다.</p>
-          </div>
-          <div class="flex items-center gap-2 self-start sm:self-auto">
-            <button 
-              type="button" 
-              id="refreshRecommendCardsBtn" 
-              class="inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-xl bg-white border border-slate-200 hover:border-emerald-600/40 hover:bg-emerald-50 text-slate-700 hover:text-emerald-700 text-xs font-semibold shadow-2xs transition-all active:scale-95 cursor-pointer"
-              title="다른 인기 생필품 추천 보기"
-            >
-              <i data-lucide="rotate-cw" class="w-3.5 h-3.5 text-emerald-600"></i>
-              <span class="hidden sm:inline">다른 추천 보기</span>
-            </button>
-          </div>
-        </div>
-
-        <!-- 선명한 2분할 듀얼 탭 스위처 -->
-        <div class="mb-5" id="dualTabSwitcherSection">
-          <!-- 상단 탭 선택 가이드 바 -->
-          <div class="flex items-center justify-between px-1 mb-2">
-            <span class="text-xs font-bold text-slate-600 flex items-center gap-1.5">
-              <i data-lucide="sliders-horizontal" class="w-3.5 h-3.5 text-blue-600"></i>
-              <span>추천 모드 선택 (원하시는 탭을 클릭하여 전환)</span>
-            </span>
-            <span class="text-[11px] text-slate-400 font-medium hidden sm:inline">2가지 실시간 추천 모드 지원</span>
-          </div>
-
-          <!-- 2분할 탭 카드 트레이 -->
-          <div id="dualTabButtonsTray" class="p-1.5 sm:p-2 bg-slate-200/80 rounded-2xl border-2 border-slate-300/80 shadow-inner grid grid-cols-2 gap-2 sm:gap-3">
-            <!-- 탭 1: 국민 필수 생필품 -->
-            <button 
-              type="button" 
-              id="tabSteadyBtn" 
-              class="relative flex items-center justify-center py-3 px-2 sm:px-4 rounded-xl text-xs sm:text-sm font-black cursor-pointer transition-all duration-200 bg-white text-emerald-900 shadow-md border-2 border-emerald-500 ring-2 ring-emerald-500/20 active:scale-[0.98]"
-            >
-              <div class="flex flex-col sm:flex-row items-center justify-center sm:space-x-2 text-center">
-                <div class="flex items-center space-x-1">
-                  <span class="text-sm sm:text-base">🏆</span>
-                  <span class="font-extrabold text-[12px] sm:text-sm tracking-tight">국민 필수 생필품</span>
-                </div>
-                <span id="tabSteadyBadge" class="mt-0.5 sm:mt-0 text-[10px] sm:text-[11px] bg-emerald-600 text-white font-bold px-2 py-0.5 rounded-full shadow-2xs">선택됨 ✓</span>
-              </div>
-            </button>
-
-            <!-- 탭 2: 오늘 실시간 핫딜 -->
-            <button 
-              type="button" 
-              id="tabTrendingBtn" 
-              class="relative flex items-center justify-center py-3 px-2 sm:px-4 rounded-xl text-xs sm:text-sm font-bold cursor-pointer transition-all duration-200 bg-slate-100 hover:bg-white text-slate-600 hover:text-slate-900 border-2 border-slate-300 hover:border-slate-400 shadow-xs active:scale-[0.98]"
-            >
-              <div class="flex flex-col sm:flex-row items-center justify-center sm:space-x-2 text-center">
-                <div class="flex items-center space-x-1">
-                  <span class="text-sm sm:text-base">🔥</span>
-                  <span class="font-bold text-[12px] sm:text-sm tracking-tight">오늘 실시간 핫딜</span>
-                </div>
-                <span id="tabTrendingBadge" class="mt-0.5 sm:mt-0 text-[10px] sm:text-[11px] bg-white text-slate-600 border border-slate-300 font-semibold px-2 py-0.5 rounded-full">선택하기 👆</span>
-              </div>
-            </button>
-          </div>
-        </div>
-
-        <div id="welcomeCardsContainer" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5 transition-opacity duration-200">
-          <!-- JS에서 활성 탭 풀에서 4개를 동적으로 렌더링 -->
-        </div>
-      </div>
-
-      <!-- 3. PriceTrace 핵심 가치 (Why PriceTrace?) -->
-      <div class="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/80 shadow-xs">
-        <h3 class="text-base sm:text-lg font-black text-slate-900 mb-6 flex items-center space-x-2">
-          <i data-lucide="shield-check" class="w-5 h-5 text-blue-600"></i>
-          <span>PriceTrace가 다른 검색과 다른 3가지 이유</span>
-        </h3>
-
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div class="space-y-2.5 p-4 rounded-2xl bg-slate-50/80 border border-slate-100">
-            <div class="w-10 h-10 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center font-bold">
-              <i data-lucide="filter" class="w-5 h-5"></i>
-            </div>
-            <h4 class="font-bold text-sm text-slate-900">클린 필터링 (광고 제외)</h4>
-            <p class="text-xs text-slate-700 font-medium leading-relaxed">
-              돈 내고 올리는 스폰서 광고 상품과 엉뚱한 낱개 미끼 상품을 시스템이 자동으로 배제하여 순수 실시간 최저가만 수집합니다.
-            </p>
-          </div>
-
-          <div class="space-y-2.5 p-4 rounded-2xl bg-blue-100/50 border border-blue-100">
-            <div class="w-10 h-10 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center font-bold">
-              <i data-lucide="calculator" class="w-5 h-5"></i>
-            </div>
-            <h4 class="font-bold text-sm text-slate-900">개당 환산 단가 계산</h4>
-            <p class="text-xs text-slate-700 font-medium leading-relaxed">
-              상품명 속 수량(20개, 24캔 등)을 자동 인식하여 1개당 실제 얼마인지 환산해 드려 진짜 가성비 제품을 즉시 판별합니다.
-            </p>
-          </div>
-
-          <div class="space-y-2.5 p-4 rounded-2xl bg-amber-50/80 border border-amber-100">
-            <div class="w-10 h-10 rounded-xl bg-amber-100 text-amber-600 flex items-center justify-center font-bold">
-              <i data-lucide="trending-up" class="w-5 h-5"></i>
-            </div>
-            <h4 class="font-bold text-sm text-slate-900">30일 가격 추이 및 알림</h4>
-            <p class="text-xs text-slate-700 font-medium leading-relaxed">
-              최근 한 달간의 시세 변동 흐름과 목표가를 비교 분석하여 지금 바로 사야 할 타이밍인지 직관적으로 진단해 드립니다.
-            </p>
-          </div>
-        </div>
-      </div>
-
-    </div>
-
-    <!-- ============================================== -->
-    <!-- [VIEW 2] 검색 결과 대시보드 화면 (Result View) -->
-    <!-- ============================================== -->
-    <div id="resultView" class="space-y-8 hidden">
-
-      <!-- 상단 네비게이션 (홈으로 돌아가기 & 현재 검색어 정보) -->
-      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5 pb-2.5 border-b border-slate-200/80">
-        <button 
-          id="backToHomeBtn" 
-          type="button" 
-          class="inline-flex items-center space-x-1.5 text-xs sm:text-sm font-bold text-slate-600 hover:text-blue-600 transition-colors group px-2 sm:px-3 py-1.5 rounded-xl hover:bg-slate-100 self-start"
-        >
-          <i data-lucide="arrow-left" class="w-4 h-4 group-hover:-translate-x-1 transition-transform"></i>
-          <span>초기 화면으로 돌아가기</span>
-        </button>
-
-        <div class="text-xs text-slate-500 font-medium pl-1 sm:pl-0">
-          현재 검색어: <strong id="currentSearchKeywordText" class="text-slate-900 font-bold"></strong>
-        </div>
-      </div>
-
-      <!-- 3. 실시간 특가 상태 배너 (Alert Box) -->
-      <div id="alertBanner" class="relative overflow-hidden rounded-3xl p-5 sm:p-6 transition-all duration-300 shadow-md">
-      <!-- 배경 애니메이션 그라데이션이 JS로 동적 토글됨 -->
-      <div class="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div class="flex items-start sm:items-center space-x-4">
-          <div id="alertIconBox" class="w-14 h-14 rounded-2xl flex items-center justify-center text-2xl shrink-0 shadow-sm">
-            🚨
-          </div>
-          <div>
-            <div class="flex items-center space-x-2">
-              <span id="alertStatusBadge" class="px-2.5 py-0.5 rounded-full text-xs font-extrabold uppercase tracking-wide">
-                특가 감지
-              </span>
-              <span class="text-xs text-slate-500 font-medium" id="alertSubTime">실시간 기준</span>
-            </div>
-            <h2 id="alertMainMessage" class="text-xl sm:text-2xl font-black text-slate-900 mt-1">
-              목표 가격 이하입니다! 지금이 구매 적기입니다.
-            </h2>
-            <p id="alertDescription" class="text-xs sm:text-sm text-slate-600 mt-0.5">
-              현재 1위 최저가가 설정하신 목표가 <strong>15,000원</strong>보다 <strong>1,800원(12%)</strong> 저렴합니다.
-            </p>
-          </div>
-        </div>
-        
-        <!-- 간편 알림 수신 상태 토글 및 목표가 설정 -->
-        <div class="flex flex-wrap items-center gap-2.5 shrink-0 self-end md:self-center">
-          <!-- 알림 ON/OFF 토글 스위치 -->
-          <div class="bg-white/80 backdrop-blur border border-slate-200/80 px-3.5 py-2 rounded-2xl flex items-center space-x-2">
-            <span id="alertToggleLabel" class="text-xs font-bold text-slate-700">알림 ON</span>
-            <label class="relative inline-flex items-center cursor-pointer" title="목표가 알림 켜기/끄기">
-              <input type="checkbox" id="alertToggleSwitch" class="sr-only peer" checked>
-              <div class="w-9 h-5 bg-slate-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-naver"></div>
-            </label>
-          </div>
-          <div class="bg-white/80 backdrop-blur border border-slate-200/80 px-4 py-2.5 rounded-2xl text-right">
-            <span class="block text-[11px] text-slate-500 font-medium">목표 알림 기준</span>
-            <span class="text-base font-black text-slate-900" id="currentSetTargetPrice">15,000원</span>
-          </div>
-          <button id="quickTargetEditBtn" class="px-3 py-2 bg-white hover:bg-slate-100 border border-slate-200 text-slate-700 text-xs font-bold rounded-xl shadow-xs transition-all">
-            변경
-          </button>
-        </div>
-      </div>
-    </div>
-
-    <!-- 4. 네이버 쇼핑 / 쿠팡 스타일 대표 상품 최저가 카탈로그 요약 (Hero Card) -->
-    <section class="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/80 shadow-xs relative overflow-hidden">
-      <!-- 우측 상단 네이버 쇼핑 인증 태그 -->
-      <div class="flex flex-wrap items-center justify-between gap-2 pb-6 border-b border-slate-100">
-        <div class="flex items-center space-x-2">
-          <span class="inline-flex items-center space-x-1 px-3 py-1 rounded-full text-xs font-bold bg-naver text-white shadow-xs">
-            <i data-lucide="check" class="w-3.5 h-3.5"></i>
-            <span>네이버 쇼핑 공식 카탈로그 연동</span>
-          </span>
-          <span class="inline-flex items-center space-x-1 px-3 py-1 rounded-full text-xs font-semibold bg-blue-50 text-blue-800 border border-blue-200">
-            <i data-lucide="sparkles" class="w-3 h-3 text-blue-600"></i>
-            <span>광고(AD) 제외 완료</span>
-          </span>
-        </div>
-        <div class="text-xs text-slate-400 font-medium flex items-center">
-          <i data-lucide="info" class="w-3.5 h-3.5 mr-1"></i>
-          배송비 포함 실구매가 자동 계산
-        </div>
-      </div>
-
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 pt-6 items-center">
-        
-        <!-- 상품 대표 썸네일 (이커머스 비주얼) -->
-        <div class="lg:col-span-4 flex flex-col items-center justify-center">
-          <div class="relative w-full max-w-sm aspect-square bg-slate-50 rounded-3xl overflow-hidden border border-slate-200 flex items-center justify-center group p-6">
-            <img 
-              id="productMainImage" 
-              src="https://shopping-phinf.pstatic.net/main_5301888/53018889018.20250214174431.jpg" 
-              alt="상품 대표 이미지" 
-              class="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300"
-              onerror="this.src='https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80'"
-            >
-            <!-- 1위 최저가 뱃지 -->
-            <div class="absolute top-4 left-4 bg-slate-900/90 backdrop-blur text-white text-xs font-black px-3 py-1 rounded-full shadow-md flex items-center space-x-1">
-              <span class="text-amber-400">🥇</span>
-              <span>실시간 1위</span>
-            </div>
-            <!-- 수량 검증 뱃지 -->
-            <div class="absolute bottom-4 right-4 bg-white/95 text-slate-800 text-[11px] font-bold px-2.5 py-1 rounded-lg border border-slate-200 shadow-sm flex items-center space-x-1">
-              <i data-lucide="package" class="w-3.5 h-3.5 text-naver"></i>
-              <span id="productBadgeText">실시간 정품 검증</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- 상품 정보 및 실시간 가격 정보 -->
-        <div class="lg:col-span-8 flex flex-col justify-between space-y-6">
-          <div>
-            <!-- 브랜드 및 카테고리 -->
-            <div class="flex items-center space-x-2 text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">
-              <span id="productCategoryTag" class="text-naver">실시간 최저가</span>
-              <span>•</span>
-              <span id="productMallTag">네이버 쇼핑</span>
-              <span>•</span>
-              <span id="productUnitTag">온라인 공식 판매처</span>
-            </div>
-
-            <!-- 메인 상품명 -->
-            <h1 id="productTitle" class="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight leading-snug">
-              검색된 상품명
-            </h1>
-
-            <!-- 리뷰 및 평점 (쿠팡/네이버 스타일) -->
-            <div class="flex items-center space-x-3 mt-3">
-              <div class="flex items-center text-amber-400 text-sm font-bold">
-                <i data-lucide="star" class="w-4 h-4 fill-current"></i>
-                <span class="ml-1 text-slate-900 font-extrabold" id="productScore">4.88</span>
-                <span class="text-slate-400 text-xs font-normal ml-0.5">/5.0</span>
-              </div>
-              <span class="text-slate-300">|</span>
-              <div class="text-xs text-slate-600 font-medium">
-                누적 리뷰 <strong class="text-slate-900 font-bold" id="productReviewCount">104,064건</strong>
-              </div>
-              <span class="text-slate-300">|</span>
-              <div class="text-xs text-blue-600 font-semibold flex items-center">
-                <i data-lucide="truck" class="w-3.5 h-3.5 mr-1"></i> 무료배송 혜택 포함
-              </div>
-            </div>
-          </div>
-
-          <!-- 실시간 최저가 가격 박스 (핵심 강조) -->
-          <div class="bg-gradient-to-br from-slate-50 to-blue-50/40 rounded-3xl p-6 border border-slate-200/90">
-            <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
-              <div>
-                <span class="text-xs font-bold text-slate-500 uppercase tracking-wide block mb-1">
-                  실시간 최저 판매가 (1위)
-                </span>
-                <div class="flex items-baseline space-x-2">
-                  <span class="text-3xl sm:text-5xl font-black text-slate-900 tracking-tight" id="lowestPriceDisplay">
-                    13,200
-                  </span>
-                  <span class="text-2xl font-bold text-slate-900">원</span>
-                  <span class="text-xs sm:text-sm font-bold text-coupang bg-coupang/10 px-2.5 py-0.5 rounded-lg ml-2" id="discountBadge">
-                    목표가 대비 -1,800원 (-12%)
-                  </span>
-                </div>
-              </div>
-
-              <!-- 1봉당 환산 단가 카드 -->
-              <div class="bg-white px-4 py-2.5 rounded-2xl border border-slate-200 shadow-xs text-left sm:text-right">
-                <span class="block text-[11px] text-slate-400 font-semibold" id="unitPriceLabel">1개/봉당 환산가</span>
-                <span class="text-lg font-extrabold text-naver" id="unitPriceDisplay">약 660원</span>
-              </div>
-            </div>
-
-            <!-- 판매처 및 링크 버튼 -->
-            <div class="mt-6 pt-5 border-t border-slate-200/60 flex flex-col sm:flex-row items-center justify-between gap-4">
-              <div class="flex items-center space-x-2 text-xs text-slate-600 w-full sm:w-auto">
-                <span class="w-2 h-2 rounded-full bg-naver"></span>
-                <span>현재 최저가 판매처:</span>
-                <strong class="text-slate-900 font-bold" id="lowestMallName">네이버 가격비교 (카탈로그)</strong>
-              </div>
-
-              <div class="flex items-center space-x-3 w-full sm:w-auto">
-                <a 
-                  id="buyButton" 
-                  href="https://search.naver.com/search.naver?where=nexearch&query=%EB%86%8D%EC%8B%AC%20%EC%8B%A0%EB%9D%BC%EB%A9%B4%20120g%2020%EA%B0%9C%20%EC%B5%9C%EC%A0%80%EA%B0%80" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  referrerpolicy="no-referrer"
-                  class="w-full sm:w-auto inline-flex items-center justify-center space-x-2 px-6 py-3.5 bg-naver hover:bg-naver-dark text-white text-sm font-extrabold rounded-2xl shadow-md shadow-naver/25 hover:shadow-lg hover:shadow-naver/35 transition-all group"
-                >
-                  <span>최저가 구매하러 가기</span>
-                  <i data-lucide="external-link" class="w-4 h-4 group-hover:translate-x-0.5 transition-transform"></i>
-                </a>
-              </div>
-            </div>
-          </div>
-
-        </div>
-
-      </div>
-    </section>
-
-    <!-- 5. 판매처별 가격 비교 매트릭스 (Price Comparison Table) -->
-    <section class="space-y-4">
-      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-        <div>
-          <h3 class="text-xl font-black text-slate-900 flex items-center space-x-2">
-            <span>판매처별 실시간 가격 비교</span>
-            <span class="text-xs font-bold px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 border border-slate-200">
-              TOP 3 순위
-            </span>
-          </h3>
-          <p class="text-xs text-slate-500 mt-0.5">광고 상품 및 낱개/혼합 상품을 걸러낸 정품 20개입 순위입니다.</p>
-        </div>
-
-        <div class="flex items-center space-x-2 text-xs font-semibold text-slate-500">
-          <span class="flex items-center text-emerald-600"><i data-lucide="shield-check" class="w-4 h-4 mr-1"></i> 클린 필터링 검증됨</span>
-        </div>
-      </div>
-
-      <!-- 비교 카드 리스트 -->
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-4" id="priceComparisonGrid">
-        <!-- 템플릿 카드 1 (1위) -->
-        <div class="relative bg-white rounded-3xl p-5 border-2 border-naver shadow-sm flex flex-col justify-between space-y-4">
-          <div class="flex items-center justify-between">
-            <span class="inline-flex items-center space-x-1 text-xs font-black text-amber-700 bg-amber-100 px-3 py-1 rounded-full">
-              <span>🥇 1위 최저가</span>
-            </span>
-            <span class="text-xs text-naver font-bold">강력 추천</span>
-          </div>
-          <div>
-            <span class="text-xs text-slate-400 font-medium block">네이버 가격비교 (카탈로그)</span>
-            <h4 class="text-sm font-bold text-slate-900 mt-1 line-clamp-2">농심 신라면, 120g, 20개</h4>
-            <div class="mt-3 flex items-baseline space-x-1">
-              <span class="text-2xl font-black text-slate-900">13,200</span>
-              <span class="text-sm font-bold text-slate-700">원</span>
-              <span class="text-xs text-slate-400 ml-1">(봉당 약 660원)</span>
-            </div>
-            <div class="mt-2 text-xs text-slate-500 flex items-center space-x-2">
-              <span>리뷰 104,064개</span>
-              <span>·</span>
-              <span>평점 ★ 4.88</span>
-            </div>
-          </div>
-          <a href="javascript:void(0)" onclick="return false;" class="w-full py-2.5 text-center bg-naver/50 text-white text-xs font-extrabold rounded-xl cursor-wait">
-            로딩 중...
-          </a>
-        </div>
-
-        <!-- 템플릿 카드 2 (2위) -->
-        <div class="relative bg-white rounded-3xl p-5 border border-slate-200 shadow-xs flex flex-col justify-between space-y-4">
-          <div class="flex items-center justify-between">
-            <span class="inline-flex items-center space-x-1 text-xs font-black text-slate-700 bg-slate-100 px-3 py-1 rounded-full">
-              <span>🥈 2위</span>
-            </span>
-          </div>
-          <div>
-            <span class="text-xs text-slate-400 font-medium block">신성마켓몰</span>
-            <h4 class="text-sm font-bold text-slate-900 mt-1 line-clamp-2">농심 신라면120g 20개 1박스</h4>
-            <div class="mt-3 flex items-baseline space-x-1">
-              <span class="text-2xl font-black text-slate-900">13,200</span>
-              <span class="text-sm font-bold text-slate-700">원</span>
-              <span class="text-xs text-slate-400 ml-1">(봉당 약 660원)</span>
-            </div>
-            <div class="mt-2 text-xs text-slate-500 flex items-center space-x-2">
-              <span>리뷰 715개</span>
-              <span>·</span>
-              <span>평점 ★ 4.88</span>
-            </div>
-          </div>
-          <a href="javascript:void(0)" onclick="return false;" class="w-full py-2.5 text-center bg-slate-100 text-slate-400 text-xs font-bold rounded-xl cursor-wait">
-            로딩 중...
-          </a>
-        </div>
-
-        <!-- 템플릿 카드 3 (3위) -->
-        <div class="relative bg-white rounded-3xl p-5 border border-slate-200 shadow-xs flex flex-col justify-between space-y-4">
-          <div class="flex items-center justify-between">
-            <span class="inline-flex items-center space-x-1 text-xs font-black text-amber-900 bg-amber-50 px-3 py-1 rounded-full">
-              <span>🥉 3위</span>
-            </span>
-          </div>
-          <div>
-            <span class="text-xs text-slate-400 font-medium block">더싼 마트</span>
-            <h4 class="text-sm font-bold text-slate-900 mt-1 line-clamp-2">농심 신라면 120g 20개 한박스</h4>
-            <div class="mt-3 flex items-baseline space-x-1">
-              <span class="text-2xl font-black text-slate-900">14,500</span>
-              <span class="text-sm font-bold text-slate-700">원</span>
-              <span class="text-xs text-slate-400 ml-1">(봉당 약 725원)</span>
-            </div>
-            <div class="mt-2 text-xs text-slate-500 flex items-center space-x-2">
-              <span>리뷰 36개</span>
-              <span>·</span>
-              <span>평점 ★ 4.89</span>
-            </div>
-          </div>
-          <a href="javascript:void(0)" onclick="return false;" class="w-full py-2.5 text-center bg-slate-100 text-slate-400 text-xs font-bold rounded-xl cursor-wait">
-            로딩 중...
-          </a>
-        </div>
-      </div>
-    </section>
-
-    <!-- 6. 최근 30일 가격 변동 추이 차트 & 구매 적기 진단 (네이버 쇼핑 분석 스타일) -->
-    <section class="grid grid-cols-1 lg:grid-cols-12 gap-8">
-      
-      <!-- 인터랙티브 차트 (8 cols) -->
-      <div class="lg:col-span-8 bg-white rounded-3xl p-6 sm:p-7 border border-slate-200/80 shadow-xs flex flex-col justify-between">
-        <div class="flex flex-wrap items-center justify-between gap-2 mb-4">
-          <div>
-            <h3 class="text-lg font-black text-slate-900 flex items-center space-x-2">
-              <i data-lucide="trending-down" class="w-5 h-5 text-blue-600"></i>
-              <span>최근 30일 가격 변동 트렌드</span>
-            </h3>
-            <p class="text-xs text-slate-500 mt-0.5">실시간 수집된 일자별 최저가 추이 그래프</p>
-          </div>
-          <div class="flex items-center space-x-3 text-xs font-semibold">
-            <span class="flex items-center text-blue-600">
-              <span class="w-3 h-1 bg-blue-600 rounded-full mr-1.5"></span> 실시간 최저가
-            </span>
-            <span class="flex items-center text-slate-400">
-              <span class="w-3 h-1 bg-slate-300 rounded-full mr-1.5 border border-dashed border-slate-400"></span> 목표 알림선 (15,000원)
-            </span>
-          </div>
-        </div>
-
-        <div class="relative w-full h-64 sm:h-72">
-          <canvas id="priceHistoryChart"></canvas>
-        </div>
-      </div>
-
-      <!-- 구매 타이밍 진단기 & 가이드 (4 cols, 청금석 Lapis Lazuli 테마) -->
-      <div class="lg:col-span-4 bg-gradient-to-br from-slate-950 via-slate-900 to-blue-950 text-white rounded-3xl p-6 sm:p-7 shadow-md flex flex-col justify-between space-y-6 border border-blue-900/40">
-        <div>
-          <div class="flex items-center justify-between">
-            <span class="text-[11px] font-extrabold uppercase tracking-widest text-yellow-300 bg-blue-950 px-2.5 py-1 rounded-full border border-blue-700">
-              AI 구매 타이밍 진단
-            </span>
-            <i data-lucide="zap" class="w-5 h-5 text-yellow-400"></i>
-          </div>
-
-          <h4 class="text-xl font-black mt-4 text-white">지금 사야 할까요?</h4>
-          
-          <div class="mt-4 p-4 rounded-2xl bg-white/10 backdrop-blur border border-white/15">
-            <div class="text-xs text-slate-200 font-bold">현재 상태 판단</div>
-            <div class="text-lg font-black text-yellow-300 mt-1 flex items-center">
-              <i data-lucide="check-circle" class="w-5 h-5 mr-1.5 text-yellow-300"></i>
-              <span id="stat30DayDiagnosisBadge">강력 구매 추천</span>
-            </div>
-            <p id="stat30DayDiagnosisDesc" class="text-xs text-slate-100 mt-2 leading-relaxed">
-              현재 가격(<strong id="stat30DayCurrentPrice" class="text-yellow-300 font-extrabold">13,200원</strong>)은 최근 30일 중 <strong class="text-yellow-300 font-extrabold">역대 최저가 구간</strong>에 해당하며, 목표가 대비 12% 저렴합니다.
-            </p>
-          </div>
-        </div>
-
-        <div class="space-y-3">
-          <div class="flex items-center justify-between text-xs text-slate-200 font-semibold border-b border-slate-700/60 pb-2">
-            <span>30일 최고가</span>
-            <span id="stat30DayMax" class="font-extrabold text-white">16,200원</span>
-          </div>
-          <div class="flex items-center justify-between text-xs text-slate-200 font-semibold border-b border-slate-700/60 pb-2">
-            <span>30일 평균가</span>
-            <span id="stat30DayAvg" class="font-extrabold text-white">14,920원</span>
-          </div>
-          <div class="flex items-center justify-between text-xs text-slate-200 font-semibold pb-1">
-            <span>30일 최저가 (현재)</span>
-            <span id="stat30DayMin" class="font-black text-yellow-300 text-sm">13,200원</span>
-          </div>
-
-          <button id="directBuySubBtn" class="w-full mt-3 py-3 bg-naver hover:bg-naver-dark text-white text-xs font-black rounded-xl shadow-lg shadow-naver/30 transition-all flex items-center justify-center space-x-1.5">
-            <span>최저가로 바로 주문</span>
-            <i data-lucide="chevron-right" class="w-4 h-4"></i>
-          </button>
-        </div>
-      </div>
-
-    </section>
-    </div> <!-- #resultView 끝 -->
-
-  </main>
-
-  <!-- 7. 푸터 (기술 스택 및 출처) - 모바일 좌측 정렬 & 뱃지 랩 & 하단 네비 겹침 0% 최적화 -->
-  <footer class="mt-12 bg-white border-t border-slate-200/80 pt-8 pb-32 lg:pb-10 text-xs text-slate-500">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-6 text-left">
-        
-        <!-- 좌측: 브랜드 로고 + 타이틀 + 데이터 출처 및 저작권 안내 (모바일 완벽 좌측 정렬) -->
-        <div class="space-y-2">
-          <div class="flex items-center space-x-2.5">
-            <!-- 헤더와 통일된 최저가 레이더 로고 심볼 -->
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" class="w-8 h-8 sm:w-10 sm:h-10 object-contain shrink-0" fill="none">
-              <!-- 1. 미니멀 볼드 레이더 원형 림 -->
-              <circle cx="24" cy="24" r="20" stroke="#0F172A" stroke-width="3" />
-              <!-- 2. 레이더 외곽 정밀 조준 틱 (절제된 4방위 틱) -->
-              <line x1="24" y1="4" x2="24" y2="8" stroke="#0F172A" stroke-width="2.5" stroke-linecap="round" />
-              <line x1="24" y1="40" x2="24" y2="44" stroke="#0F172A" stroke-width="2.5" stroke-linecap="round" />
-              <line x1="4" y1="24" x2="8" y2="24" stroke="#0F172A" stroke-width="2.5" stroke-linecap="round" />
-              <line x1="40" y1="24" x2="44" y2="24" stroke="#0F172A" stroke-width="2.5" stroke-linecap="round" />
-              <!-- 3. 시원하고 직관적인 가격 급락 트렌드 화살표 (볼드 블랙) -->
-              <path d="M14 18L22 26L27 21L34 32" stroke="#0F172A" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" />
-              <polyline points="26 32 34 32 34 24" stroke="#0F172A" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" />
-              <!-- 4. 실시간 최저가 록온 포인트 (선명한 코발트 블루) -->
-              <circle cx="34" cy="32" r="3.5" fill="#2563EB" />
-            </svg>
-            <div class="flex items-center space-x-2">
-              <span class="text-base sm:text-lg font-black tracking-tight text-slate-900 flex items-center gap-0.5">
-                Price<span class="text-blue-600">Trace</span>
-              </span>
-              <span class="text-[10px] font-bold text-blue-700 bg-blue-50 px-2 py-0.5 rounded-full border border-blue-200/60">v1.3.3</span>
-            </div>
-          </div>
-          
-          <p class="text-slate-600 font-medium text-xs leading-relaxed break-keep">
-            데이터 출처: 네이버 쇼핑 공개 BFF API 및 k-skill proxy 엔드포인트 실시간 연동
-          </p>
-          <p class="text-slate-400 font-normal text-[11px] sm:text-xs">
-            © 2026 JANG WOO JIN. All rights reserved.
-          </p>
-        </div>
-
-        <!-- 우측: 3대 핵심 기술 아키텍처 뱃지 (단어 중간 줄바꿈 방지 & 유연한 가로 랩) -->
-        <div class="flex flex-wrap items-center gap-2 pt-1 lg:pt-0 lg:justify-end text-slate-700 font-semibold text-[11px] sm:text-xs">
-          <span class="inline-flex items-center px-2.5 py-1 rounded-lg bg-slate-100 border border-slate-200/60 whitespace-nowrap">
-            <span class="w-1.5 h-1.5 rounded-full bg-blue-500 mr-1.5 shrink-0"></span>
-            3-Layer 아키텍처
-          </span>
-          <span class="inline-flex items-center px-2.5 py-1 rounded-lg bg-slate-100 border border-slate-200/60 whitespace-nowrap">
-            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 mr-1.5 shrink-0"></span>
-            결정론적 클린 필터
-          </span>
-          <span class="inline-flex items-center px-2.5 py-1 rounded-lg bg-slate-100 border border-slate-200/60 whitespace-nowrap">
-            <span class="w-1.5 h-1.5 rounded-full bg-indigo-500 mr-1.5 shrink-0"></span>
-            경량 Python 서버
-          </span>
-        </div>
-
-      </div>
-    </div>
-  </footer>
-
-  <!-- 목표가 변경 모달 -->
-  <div id="configModal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs hidden flex items-center justify-center p-3 sm:p-4 overflow-y-auto overscroll-contain">
-    <div class="bg-white rounded-3xl max-w-md w-full max-h-[90vh] flex flex-col shadow-2xl border border-slate-200 transform transition-all animate-in fade-in zoom-in-95 my-auto">
-      <div class="flex items-center justify-between p-5 sm:p-6 pb-3 sm:pb-4 border-b border-slate-100 shrink-0">
-        <h3 class="text-lg font-black text-slate-900 flex items-center space-x-2">
-          <i data-lucide="bell" class="w-5 h-5 text-naver"></i>
-          <span>목표 알림 가격 설정</span>
-        </h3>
-        <button id="closeConfigModalBtn" class="p-1 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 cursor-pointer">
-          <i data-lucide="x" class="w-5 h-5"></i>
-        </button>
-      </div>
-
-      <div class="p-5 sm:p-6 py-4 space-y-4 overflow-y-auto overscroll-contain flex-1">
-        <div>
-          <label class="block text-xs font-bold text-slate-600 mb-1.5">희망 알림 목표가 (원)</label>
-          <div class="relative">
-            <input 
-              type="number" 
-              id="modalTargetPriceInput" 
-              step="500" 
-              value="15000" 
-              class="w-full px-4 py-3 bg-slate-100 rounded-2xl text-slate-900 font-extrabold text-lg focus:bg-white focus:ring-4 focus:ring-naver/20 focus:border-naver border-2 border-transparent outline-none transition-all"
-            >
-            <span class="absolute right-4 top-3.5 text-slate-400 font-bold">원</span>
-          </div>
-          <p class="text-xs text-slate-400 mt-1.5">이 가격 이하로 최저가가 떨어지면 '특가 발생' 알림이 발동됩니다.</p>
-        </div>
-
-        <!-- 빠른 선택 버튼 -->
-        <div class="flex items-center space-x-2 pt-1">
-          <button type="button" class="preset-price-btn px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-lg" data-price="14000">14,000원</button>
-          <button type="button" class="preset-price-btn px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-lg" data-price="14500">14,500원</button>
-          <button type="button" class="preset-price-btn px-3 py-1.5 bg-naver/10 text-naver text-xs font-bold rounded-lg border border-naver/30" data-price="15000">15,000원 (기본)</button>
-          <button type="button" class="preset-price-btn px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-lg" data-price="15500">15,500원</button>
-        </div>
-
-        <!-- 목표가 도달 알림 활성화 토글 -->
-        <div class="flex items-center justify-between p-3.5 bg-slate-50 border border-slate-200/80 rounded-2xl mt-2">
-          <div>
-            <div class="text-xs font-bold text-slate-800 flex items-center space-x-1.5">
-              <i data-lucide="bell" class="w-3.5 h-3.5 text-blue-600"></i>
-              <span>목표가 도달 알림 활성화</span>
-            </div>
-            <div class="text-[11px] text-slate-500">목표가 이하로 떨어졌을 때 알림 배너 및 상태를 표시합니다.</div>
-          </div>
-          <label class="relative inline-flex items-center cursor-pointer shrink-0 ml-3" title="알림 활성화 토글">
-            <input type="checkbox" id="modalAlertToggle" class="sr-only peer" checked>
-            <div class="w-10 h-6 bg-slate-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-naver"></div>
-          </label>
-        </div>
-
-        <!-- 특가 알림 소리(차임벨) 토글 -->
-        <div class="flex items-center justify-between p-3.5 bg-slate-50 border border-slate-200/80 rounded-2xl mt-2">
-          <div>
-            <div class="text-xs font-bold text-slate-800 flex items-center space-x-1.5">
-              <i data-lucide="volume-2" class="w-3.5 h-3.5 text-blue-600"></i>
-              <span>특가 감지 차임벨 소리</span>
-            </div>
-            <div class="text-[11px] text-slate-500">목표가 이하 달성 시 경쾌한 띵동~ 🔔 벨소리를 재생합니다.</div>
-          </div>
-          <label class="relative inline-flex items-center cursor-pointer shrink-0 ml-3" title="차임벨 소리 토글">
-            <input type="checkbox" id="modalSoundToggle" class="sr-only peer" checked>
-            <div class="w-10 h-6 bg-slate-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-naver"></div>
-          </label>
-        </div>
-
-        <!-- 특가 알림 모바일 햅틱 진동 토글 -->
-        <div class="flex items-center justify-between p-3.5 bg-slate-50 border border-slate-200/80 rounded-2xl mt-2">
-          <div class="pr-2">
-            <div class="text-xs font-bold text-slate-800 flex items-center space-x-1.5">
-              <i data-lucide="vibrate" class="w-3.5 h-3.5 text-indigo-600"></i>
-              <span>모바일 햅틱 진동</span>
-            </div>
-            <div class="text-[11px] text-slate-500 leading-snug mt-0.5">
-              기기 진동/소리 모드에서 2단 햅틱 진동 피드백을 전달합니다.<br>
-              <span class="text-[10px] text-slate-400">※ 안드로이드는 기기 모터 진동, iOS Safari는 브라우저 정책상 차임벨 소리 및 시각 햅틱 진동으로 동작합니다.</span>
-            </div>
-          </div>
-          <label class="relative inline-flex items-center cursor-pointer shrink-0 ml-3" title="햅틱 진동 토글">
-            <input type="checkbox" id="modalVibrateToggle" class="sr-only peer" checked>
-            <div class="w-10 h-6 bg-slate-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-naver"></div>
-          </label>
-        </div>
-
-        <!-- 소리 / 진동 즉시 테스트 버튼 -->
-        <div class="flex items-center justify-between p-3.5 bg-gradient-to-r from-emerald-50 to-teal-50 border border-emerald-200/80 rounded-2xl mt-2">
-          <div>
-            <div class="text-xs font-bold text-emerald-900 flex items-center space-x-1.5">
-              <i data-lucide="sparkles" class="w-3.5 h-3.5 text-emerald-600"></i>
-              <span>소리 및 진동 동작 테스트</span>
-            </div>
-            <div class="text-[11px] text-emerald-700/80">현재 설정된 차임벨 소리와 햅틱 진동을 즉시 체험해 봅니다.</div>
-          </div>
-          <button type="button" id="testNotificationBtn" class="px-3.5 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold shrink-0 ml-3 shadow-xs active:scale-95 transition-all flex items-center space-x-1 cursor-pointer">
-            <i data-lucide="bell-ring" class="w-3.5 h-3.5"></i>
-            <span>미리 테스트</span>
-          </button>
-        </div>
-
-        <!-- 오프닝 스플래시 인트로 다시 보기 (PC에서는 lg:hidden으로 숨김) -->
-        <div class="lg:hidden flex items-center justify-between p-3.5 bg-blue-50/70 border border-blue-200/80 rounded-2xl mt-2">
-          <div>
-            <div class="text-xs font-bold text-blue-900">시작 인트로 애니메이션 다시 보기</div>
-            <div class="text-[11px] text-blue-700/80">동적 파티클과 프로그레스 바가 포함된 오프닝 화면을 재생합니다.</div>
-          </div>
-          <button type="button" id="replaySplashBtn" class="px-3 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold shrink-0 ml-3 shadow-xs active:scale-95 transition-all flex items-center space-x-1 cursor-pointer">
-            <i data-lucide="play" class="w-3.5 h-3.5"></i>
-            <span>재생</span>
-          </button>
-        </div>
-      </div>
-
-      <div class="p-5 sm:p-6 pt-3 sm:pt-4 border-t border-slate-100 flex items-center justify-end space-x-2 shrink-0 bg-slate-50/70 rounded-b-3xl">
-        <button id="cancelConfigModalBtn" class="px-4 py-2.5 rounded-xl text-slate-600 hover:bg-slate-100 text-xs font-bold cursor-pointer">
-          취소
-        </button>
-        <button id="saveConfigModalBtn" class="px-5 py-2.5 bg-naver hover:bg-naver-dark text-white rounded-xl text-xs font-black shadow-md shadow-naver/25 cursor-pointer">
-          설정 저장 및 다시 계산
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <!-- ==========================================================================
-       실시간 최저가 레이더 검색 & 자판 바텀시트 모달 (Search Mode Bottom Sheet)
-       ========================================================================== -->
-  <div id="radarSearchModal" class="modal-hidden fixed inset-0 z-50 flex items-end justify-center bg-slate-950/60 backdrop-blur-xs p-0 sm:p-4">
-    <div id="radarSearchDrawer" class="w-full max-w-lg bg-white rounded-t-3xl sm:rounded-3xl p-5 sm:p-6 shadow-2xl border border-slate-200/90 max-h-[90vh] overflow-y-auto flex flex-col">
-      
-      <!-- 상단 드래그 핸들 (모바일 네이티브 바텀시트 느낌 연출) -->
-      <div class="w-12 h-1.5 bg-slate-200 rounded-full mx-auto mb-3.5 shrink-0"></div>
-
-      <!-- 모달 헤더: 레이더 검색모드 타이틀 & 닫기 버튼 -->
-      <div class="flex items-center justify-between mb-3.5 shrink-0">
-        <div class="flex items-center space-x-2">
-          <div class="w-8 h-8 rounded-xl bg-blue-50 flex items-center justify-center text-blue-600 shadow-xs">
-            <i data-lucide="radar" class="w-4 h-4"></i>
-          </div>
-          <div>
-            <h3 class="text-sm sm:text-base font-extrabold text-slate-900 flex items-center gap-1.5 leading-none">
-              레이더 검색 모드
-              <span class="text-[10px] font-black px-1.5 py-0.5 rounded-full bg-blue-600 text-white tracking-wide">LIVE</span>
-            </h3>
-            <p class="text-[11px] text-slate-500 font-semibold mt-0.5">네이버 쇼핑 공식 카탈로그 실시간 최저가 추적</p>
-          </div>
-        </div>
-        <button 
-          id="closeRadarSearchModalBtn" 
-          type="button" 
-          class="p-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-500 hover:text-slate-700 active:scale-95 transition-all cursor-pointer"
-          title="검색창 닫기"
-        >
-          <i data-lucide="x" class="w-4 h-4"></i>
-        </button>
-      </div>
-
-      <!-- 초대형 검색 입력창 (입력 커서 깜빡임 & 가상 자판 입력 준비) -->
-      <form id="modalSearchForm" class="relative flex items-center mb-3.5 shrink-0">
-        <div class="absolute left-3.5 text-blue-600 pointer-events-none">
-          <i data-lucide="search" class="w-4 h-4 sm:w-5 sm:h-5"></i>
-        </div>
-        <input 
-          type="text" 
-          id="modalSearchInput" 
-          placeholder="원하시는 상품과 수량 검색 (예: 신라면 20개, 햇반 24개)" 
-          autocomplete="off"
-          autocapitalize="none"
-          autocorrect="off"
-          spellcheck="false"
-          inputmode="search"
-          enterkeyhint="search"
-          class="w-full pl-10 pr-24 py-3.5 bg-slate-100/90 hover:bg-slate-100 focus:bg-white text-base sm:text-sm font-bold rounded-2xl border-2 border-slate-200 focus:border-blue-600 focus:ring-4 focus:ring-blue-500/10 transition-all outline-none text-slate-900"
-        >
-        <!-- 텍스트 지우기 버튼 -->
-        <button 
-          type="button" 
-          id="modalClearSearchBtn" 
-          class="hidden absolute right-16 p-1 text-slate-400 hover:text-slate-600 transition-colors"
-          title="검색어 지우기"
-        >
-          <i data-lucide="x" class="w-3.5 h-3.5"></i>
-        </button>
-        <button 
-          type="submit" 
-          class="absolute right-1.5 px-3.5 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white text-xs font-bold rounded-xl transition-all shadow-md shadow-blue-500/25 flex items-center space-x-1 active:scale-95 cursor-pointer"
-        >
-          <span>조회</span>
-          <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
-        </button>
-      </form>
-
-      <!-- 1. 원클릭 수량 및 단위 보조 자판 (자판 입력 편의 기능) -->
-      <div class="mb-3.5">
-        <div class="flex items-center justify-between mb-1.5">
-          <span class="text-[11px] font-bold text-slate-600 flex items-center gap-1">
-            <i data-lucide="hash" class="w-3 h-3 text-blue-500"></i> 빠른 수량·단위 보조자판
-          </span>
-          <span class="text-[10px] text-slate-400">클릭 시 자동 추가</span>
-        </div>
-        <div class="flex flex-wrap gap-1.5" id="modalQuantityPad">
-          <button type="button" class="modal-pad-chip px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-blue-50 hover:text-blue-600 border border-slate-200/60 text-slate-700 text-xs font-semibold active:scale-95 transition-all cursor-pointer" data-append=" 20개">20개</button>
-          <button type="button" class="modal-pad-chip px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-blue-50 hover:text-blue-600 border border-slate-200/60 text-slate-700 text-xs font-semibold active:scale-95 transition-all cursor-pointer" data-append=" 24개">24개</button>
-          <button type="button" class="modal-pad-chip px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-blue-50 hover:text-blue-600 border border-slate-200/60 text-slate-700 text-xs font-semibold active:scale-95 transition-all cursor-pointer" data-append=" 30롤">30롤</button>
-          <button type="button" class="modal-pad-chip px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-blue-50 hover:text-blue-600 border border-slate-200/60 text-slate-700 text-xs font-semibold active:scale-95 transition-all cursor-pointer" data-append=" 24캔">24캔</button>
-          <button type="button" class="modal-pad-chip px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-blue-50 hover:text-blue-600 border border-slate-200/60 text-slate-700 text-xs font-semibold active:scale-95 transition-all cursor-pointer" data-append=" 6개">6개</button>
-          <button type="button" class="modal-pad-chip px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-blue-50 hover:text-blue-600 border border-slate-200/60 text-slate-700 text-xs font-semibold active:scale-95 transition-all cursor-pointer" data-append=" 10팩">10팩</button>
-          <button type="button" class="modal-pad-chip px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-blue-50 hover:text-blue-600 border border-slate-200/60 text-slate-700 text-xs font-semibold active:scale-95 transition-all cursor-pointer" data-append=" 40개">40개</button>
-          <button type="button" class="modal-pad-chip px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-blue-50 hover:text-blue-600 border border-slate-200/60 text-slate-700 text-xs font-semibold active:scale-95 transition-all cursor-pointer" data-append=" 1박스">1박스</button>
-        </div>
-      </div>
-
-      <!-- 2. 실시간 추천 검색어 (원터치 검색) -->
-      <div>
-        <div class="flex items-center justify-between mb-1.5">
-          <span class="text-[11px] font-bold text-slate-600 flex items-center gap-1">
-            <i data-lucide="flame" class="w-3 h-3 text-rose-500"></i> 실시간 추천 검색어
-          </span>
-          <span class="text-[10px] text-slate-400">즉시 조회</span>
-        </div>
-        <div class="flex flex-wrap gap-1.5" id="modalQuickSearchChips">
-          <button type="button" class="modal-quick-chip px-2.5 py-1.5 rounded-xl bg-slate-50 border border-slate-200/80 hover:bg-blue-50 hover:border-blue-300 text-slate-700 text-xs font-semibold active:scale-95 transition-all flex items-center gap-1 cursor-pointer" data-query="농심 신라면 봉지 20개입">
-            <span>🍜 신라면 20개</span>
-          </button>
-          <button type="button" class="modal-quick-chip px-2.5 py-1.5 rounded-xl bg-slate-50 border border-slate-200/80 hover:bg-blue-50 hover:border-blue-300 text-slate-700 text-xs font-semibold active:scale-95 transition-all flex items-center gap-1 cursor-pointer" data-query="CJ제일제당 햇반 210g 24개">
-            <span>🍚 햇반 24개</span>
-          </button>
-          <button type="button" class="modal-quick-chip px-2.5 py-1.5 rounded-xl bg-slate-50 border border-slate-200/80 hover:bg-blue-50 hover:border-blue-300 text-slate-700 text-xs font-semibold active:scale-95 transition-all flex items-center gap-1 cursor-pointer" data-query="코스트코 커클랜드 휴지 3겹 30롤">
-            <span>🧻 커클랜드 30롤</span>
-          </button>
-          <button type="button" class="modal-quick-chip px-2.5 py-1.5 rounded-xl bg-slate-50 border border-slate-200/80 hover:bg-blue-50 hover:border-blue-300 text-slate-700 text-xs font-semibold active:scale-95 transition-all flex items-center gap-1 cursor-pointer" data-query="코카콜라 제로 355ml 24캔">
-            <span>🥤 코카콜라 제로</span>
-          </button>
-          <button type="button" class="modal-quick-chip px-2.5 py-1.5 rounded-xl bg-slate-50 border border-slate-200/80 hover:bg-blue-50 hover:border-blue-300 text-slate-700 text-xs font-semibold active:scale-95 transition-all flex items-center gap-1 cursor-pointer" data-query="제주 삼다수 2L 6개">
-            <span>💧 삼다수 2L 6개</span>
-          </button>
-          <button type="button" class="modal-quick-chip px-2.5 py-1.5 rounded-xl bg-slate-50 border border-slate-200/80 hover:bg-blue-50 hover:border-blue-300 text-slate-700 text-xs font-semibold active:scale-95 transition-all flex items-center gap-1 cursor-pointer" data-query="사과">
-            <span>🍎 신선 사과</span>
-          </button>
-        </div>
-      </div>
-
-    </div>
-  </div>
-
-  <!-- 플로팅 토스트 알림 컴포넌트 (모바일/태블릿에서는 하단 탭 바 위 bottom-24에 위치) -->
-  <div id="toastNotification" class="fixed bottom-24 lg:bottom-6 left-1/2 -translate-x-1/2 z-50 transition-all duration-300 transform translate-y-16 opacity-0 pointer-events-none">
-    <div class="flex items-center space-x-2.5 px-4 sm:px-5 py-3 bg-slate-900/95 backdrop-blur-md text-white text-xs sm:text-sm font-semibold rounded-2xl shadow-2xl border border-slate-700/80">
-      <span id="toastIconBox" class="flex items-center justify-center w-6 h-6 rounded-full bg-blue-500/20 text-blue-400 shrink-0">
-        <i data-lucide="check-circle-2" class="w-4 h-4"></i>
-      </span>
-      <span id="toastMessage" class="text-slate-100 font-medium">최신 정보로 갱신되었습니다.</span>
-    </div>
-  </div>
-
-  <!-- PWA 모바일/태블릿/데스크톱 플로팅 설치 유도 배너 (A2HS - 모바일/태블릿에서는 하단 탭 바 위 bottom-24에 위치) -->
-  <div id="pwaInstallBanner" class="hidden fixed bottom-24 lg:bottom-5 left-4 right-4 sm:left-auto sm:right-6 sm:max-w-md z-40 bg-slate-900/95 backdrop-blur-xl border border-slate-700/80 rounded-2xl p-4 shadow-2xl text-white transition-all duration-300">
-    <div class="flex items-center gap-3">
-      <div class="w-11 h-11 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-600 p-0.5 shrink-0 shadow-md shadow-blue-500/30 flex items-center justify-center">
-        <img src="/icons/icon-192x192.png?v=20261002_logo" alt="PriceTrace" class="w-full h-full object-cover rounded-[10px]">
-      </div>
-      <div class="flex-1 min-w-0">
-        <div class="flex items-center gap-1.5">
-          <span class="font-extrabold text-sm text-white truncate">PriceTrace 앱 설치</span>
-          <span class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-blue-500/20 text-blue-300 border border-blue-500/30 shrink-0">PWA</span>
-        </div>
-        <p class="text-xs text-slate-400 truncate mt-0.5">홈 화면에서 주소창 없이 0.1초 만에 실행</p>
-      </div>
-      <div class="flex items-center gap-1.5 shrink-0">
-        <button id="pwaBannerInstallBtn" class="px-3.5 py-2 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white text-xs font-bold shadow-md shadow-blue-600/30 active:scale-95 transition-all cursor-pointer">
-          설치
-        </button>
-        <button id="pwaBannerDismissBtn" class="p-1.5 text-slate-400 hover:text-white rounded-lg transition-colors cursor-pointer" title="닫기">
-          <i data-lucide="x" class="w-4 h-4"></i>
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <!-- 모바일/태블릿 프리미엄 바닥 밀착형 하단 네비게이션 바 (Docked Bottom Tab Bar) -->
-  <nav id="mobileBottomNav" class="lg:hidden fixed bottom-0 inset-x-0 w-full z-40 bg-white/95 backdrop-blur-xl border-t border-slate-200/90 shadow-[0_-4px_25px_-4px_rgba(15,23,42,0.08)] px-2 pt-1 pb-safe transition-all duration-300">
-    <div class="max-w-lg mx-auto flex items-end justify-around">
-      
-      <!-- 1. [홈] 탭 -->
-      <button 
-        type="button" 
-        id="mobileNavHomeBtn" 
-        data-mobile-tab="home" 
-        title="홈 화면으로 이동" 
-        class="mobile-nav-btn active group flex flex-col items-center justify-end flex-1 pb-1 pt-1 rounded-2xl transition-all cursor-pointer relative"
-      >
-        <div class="mobile-nav-pill flex flex-col items-center justify-center w-full max-w-[62px] py-1.5 px-1 rounded-2xl transition-all">
-          <div class="mobile-nav-icon-box flex items-center justify-center transition-all">
-            <i data-lucide="home" class="w-5 h-5"></i>
-          </div>
-          <span class="text-[10px] tracking-tight mt-1 leading-none font-bold">홈</span>
-        </div>
-      </button>
-
-      <!-- 2. [최저가 레이더 (검색)] 탭 -->
-      <button 
-        type="button" 
-        id="mobileNavSearchFabBtn" 
-        data-mobile-tab="search" 
-        title="실시간 최저가 탐색 (검색창 이동)" 
-        class="mobile-nav-btn radar-tab group flex flex-col items-center justify-end flex-1 pb-1 pt-1 rounded-2xl transition-all cursor-pointer relative"
-      >
-        <div class="mobile-nav-pill flex flex-col items-center justify-center w-full max-w-[62px] py-1.5 px-1 rounded-2xl transition-all">
-          <div class="mobile-nav-icon-box flex items-center justify-center transition-all">
-            <i data-lucide="radar" class="w-5 h-5"></i>
-          </div>
-          <span class="text-[10px] tracking-tight mt-1 leading-none font-semibold">레이더</span>
-        </div>
-      </button>
-
-      <!-- 3. [🏆 국민 필수 생필품] 탭 (상단 돌출 히어로 볼륨 뱃지 & 특화 강조) -->
-      <button 
-        type="button" 
-        id="mobileNavSteadyBtn" 
-        data-mobile-tab="steady" 
-        title="국민 필수 생필품 TOP 16" 
-        class="mobile-nav-btn hero-tab steady-tab flex flex-col items-center justify-end flex-1 pb-1 pt-0 transition-all cursor-pointer text-emerald-700 font-bold relative"
-      >
-        <div class="hero-nav-badge steady-badge active:scale-95">
-          <i data-lucide="trophy" class="text-white"></i>
-        </div>
-        <span class="text-[10px] tracking-tight mt-1 leading-none font-black text-emerald-700">생필품</span>
-      </button>
-
-      <!-- 4. [🔥 오늘 실시간 핫딜] 탭 (상단 돌출 히어로 볼륨 뱃지 & 특화 강조) -->
-      <button 
-        type="button" 
-        id="mobileNavHotdealBtn" 
-        data-mobile-tab="trending" 
-        title="오늘 실시간 핫딜 TOP 16" 
-        class="mobile-nav-btn hero-tab hotdeal-tab flex flex-col items-center justify-end flex-1 pb-1 pt-0 transition-all cursor-pointer text-rose-600 font-bold relative"
-      >
-        <div class="hero-nav-badge hotdeal-badge active:scale-95">
-          <i data-lucide="flame" class="text-white"></i>
-        </div>
-        <span class="text-[10px] tracking-tight mt-1 leading-none font-black text-rose-600">핫딜</span>
-      </button>
-
-      <!-- 5. [목표가/설정] 탭 -->
-      <button 
-        type="button" 
-        id="mobileNavConfigBtn" 
-        data-mobile-tab="config" 
-        title="목표가 알림 설정" 
-        class="mobile-nav-btn config-tab group flex flex-col items-center justify-end flex-1 pb-1 pt-1 rounded-2xl transition-all cursor-pointer relative"
-      >
-        <div class="mobile-nav-pill flex flex-col items-center justify-center w-full max-w-[62px] py-1.5 px-1 rounded-2xl transition-all">
-          <div class="mobile-nav-icon-box flex items-center justify-center transition-all">
-            <i data-lucide="sliders-horizontal" class="w-5 h-5"></i>
-          </div>
-          <span class="text-[10px] tracking-tight mt-1 leading-none font-semibold">설정</span>
-        </div>
-      </button>
-
-    </div>
-  </nav>
-
-  <!-- iOS Safari 전용 홈 화면 추가 안내 모달 -->
-  <div id="iosInstallModal" class="hidden fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-sm flex items-end sm:items-center justify-center p-4">
-    <div class="w-full max-w-sm bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-2xl text-white space-y-4">
-      <div class="flex items-center justify-between">
-        <div class="flex items-center gap-2.5">
-          <div class="w-9 h-9 rounded-xl bg-blue-600/20 border border-blue-500/30 flex items-center justify-center">
-            <i data-lucide="smartphone" class="w-5 h-5 text-blue-400"></i>
-          </div>
-          <h3 class="font-black text-base text-white">홈 화면에 앱 추가하기</h3>
-        </div>
-        <button id="closeIosInstallModalBtn" class="p-1 text-slate-400 hover:text-white rounded-lg">
-          <i data-lucide="x" class="w-5 h-5"></i>
-        </button>
-      </div>
-      
-      <p class="text-xs text-slate-300 leading-relaxed">
-        Safari 브라우저에서 아래 순서대로 진행하시면 홈 화면에서 독립 앱으로 즉시 실행됩니다:
-      </p>
-
-      <div class="space-y-2.5 text-xs text-slate-300">
-        <div class="flex items-center gap-3 p-2.5 rounded-xl bg-slate-800/60 border border-slate-700/50">
-          <span class="w-6 h-6 rounded-full bg-blue-600 text-white font-bold flex items-center justify-center text-xs shrink-0">1</span>
-          <span>Safari 하단 중앙의 <strong class="text-white">공유 버튼</strong>(<i data-lucide="share" class="w-3.5 h-3.5 inline mx-0.5 text-blue-400"></i>)을 탭합니다.</span>
-        </div>
-        <div class="flex items-center gap-3 p-2.5 rounded-xl bg-slate-800/60 border border-slate-700/50">
-          <span class="w-6 h-6 rounded-full bg-blue-600 text-white font-bold flex items-center justify-center text-xs shrink-0">2</span>
-          <span>공유 시트 메뉴에서 <strong class="text-white">'홈 화면에 추가'</strong>를 선택합니다.</span>
-        </div>
-        <div class="flex items-center gap-3 p-2.5 rounded-xl bg-slate-800/60 border border-slate-700/50">
-          <span class="w-6 h-6 rounded-full bg-blue-600 text-white font-bold flex items-center justify-center text-xs shrink-0">3</span>
-          <span>우측 상단의 <strong class="text-white">'추가'</strong>를 누르면 설치가 완료됩니다!</span>
-        </div>
-      </div>
-
-      <button id="confirmIosInstallBtn" class="w-full py-3 rounded-2xl bg-blue-600 hover:bg-blue-500 font-bold text-xs text-white shadow-lg shadow-blue-600/30 transition-all">
-        확인했습니다
-      </button>
-    </div>
-  </div>
-
-  <!-- 메인 스크립트 (모바일/태블릿 동적 인트로 스플래시 & 프로그레스 바 반영) -->
-  <script src="app.js?v=20261022_v147"></script>
-  <script>
-    // Lucide 아이콘 초기화
-    lucide.createIcons();
-  </script>
-  <!-- iOS 18+ WebKit Taptic Haptic Trigger -->
-  <input type="checkbox" switch id="iosHapticTrigger" class="sr-only" aria-hidden="true" tabindex="-1">
-</body>
-</html>
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>PriceTrace | 네이버 쇼핑 실시간 최저가 레이더</title>
+  
+  <!-- PWA Web App Manifest & Mobile Meta -->
+  <link rel="manifest" href="/manifest.json?v=20261022_v148">
+  <meta name="theme-color" content="#0f172a">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="apple-mobile-web-app-title" content="PriceTrace">
+  <meta name="application-name" content="PriceTrace">
+  <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png?v=20261022_v148">
+  <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png?v=20261022_v148">
+  <link rel="apple-touch-icon" sizes="192x192" href="/icons/icon-192x192.png?v=20261022_v148">
+  <link rel="apple-touch-icon" sizes="512x512" href="/icons/icon-512x512.png?v=20261022_v148">
+
+  <!-- Favicon & Shortcut Icons -->
+  <link rel="icon" type="image/svg+xml" href="/logo_jwj.svg?v=20261022_v148">
+  <link rel="icon" type="image/png" sizes="32x32" href="/icons/icon-192x192.png?v=20261022_v148">
+  <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192x192.png?v=20261022_v148">
+  <link rel="shortcut icon" href="/favicon.ico?v=20261022_v148">
+
+  <!-- Pretendard 폰트 (한국어 표준 고품질 웹폰트) -->
+  <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" />
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="style.css?v=20261022_v148">
+  
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Pretendard', '-apple-system', 'BlinkMacSystemFont', 'system-ui', 'Roboto', 'sans-serif'],
+          },
+          colors: {
+            lapis: {
+              DEFAULT: '#1D4ED8', // 고귀하고 선명한 청금석 로열 블루
+              dark: '#1E3A8A',    // 깊은 청남색
+              light: '#EFF6FF',   // 부드러운 스카이 틴트
+              vivid: '#2563EB'    // 비비드 코발트
+            },
+            naver: {
+              DEFAULT: '#1D4ED8', // 기존 호환성을 위해 청금석 블루로 매핑
+              dark: '#1E3A8A',
+              light: '#EFF6FF'
+            },
+            coupang: {
+              DEFAULT: '#E52528',
+              blue: '#0073E9'
+            },
+            surface: {
+              50: '#F8FAFC',
+              100: '#F1F5F9',
+              800: '#1E293B',
+              900: '#0F172A'
+            }
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-surface-50 text-slate-800 font-sans antialiased selection:bg-lapis selection:text-white min-h-screen flex flex-col">
+
+  <!-- 0. 모바일/태블릿 동적 인터랙티브 인트로 스플래시 화면 (PC 화면에서는 lg:hidden으로 원천 비활성화) -->
+  <div id="appSplashScreen" class="lg:hidden fixed inset-0 z-50 flex flex-col justify-between overflow-hidden bg-gradient-to-b from-slate-950 via-slate-900 to-blue-950 text-white select-none transition-all duration-500">
+    <!-- 1) 배경 동적 파티클 캔버스 (60fps 경량 캔버스) -->
+    <canvas id="splashCanvas" class="absolute inset-0 pointer-events-none w-full h-full z-0"></canvas>
+
+    <!-- 2) 상단 헤더: LIVE 뱃지 & 우측 상단 건너뛰기 버튼 (시간표시 54px 아래로 안전 안착, 블러 필터 완전 배제) -->
+    <div class="relative z-10 flex items-center justify-between px-5 pt-[max(3.125rem,calc(env(safe-area-inset-top,2.75rem)+0.125rem))]">
+      <div class="flex items-center space-x-1.5 px-2.5 py-1 rounded-full bg-slate-800 border border-slate-700 shadow-sm" style="filter: none !important; -webkit-filter: none !important; backdrop-filter: none !important; -webkit-backdrop-filter: none !important;">
+        <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+        <span class="text-[11px] font-black text-emerald-300 tracking-wide">RADAR LIVE</span>
+      </div>
+      <button 
+        type="button" 
+        id="splashSkipBtn" 
+        class="px-3.5 py-1.5 rounded-full bg-white/20 hover:bg-white/30 active:scale-95 border border-white/30 text-white text-xs font-bold shadow-sm transition-all flex items-center space-x-1 cursor-pointer"
+        style="filter: none !important; -webkit-filter: none !important; backdrop-filter: none !important; -webkit-backdrop-filter: none !important;"
+        title="스플래시 화면 건너뛰기"
+      >
+        <span>건너뛰기</span>
+        <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+      </button>
+    </div>
+
+    <!-- 3) 중앙 브랜드 비주얼: 펄스 발광 레이더 엠블럼 + 타이틀 -->
+    <div class="relative z-10 flex flex-col items-center justify-center text-center px-6 -mt-4 space-y-4">
+      <!-- 펄스 레이더 엠블럼 -->
+      <div class="relative w-28 h-28 sm:w-32 sm:h-32 flex items-center justify-center">
+        <!-- 펄스 링 -->
+        <div class="absolute inset-0 rounded-full bg-blue-500/20 animate-ping"></div>
+        <div class="absolute inset-2 rounded-full bg-indigo-500/30 animate-pulse"></div>
+        <!-- 엠블럼 원형 박스 -->
+        <div class="relative w-24 h-24 sm:w-28 sm:h-28 rounded-full bg-gradient-to-tr from-blue-600 via-indigo-600 to-sky-500 p-1 shadow-2xl shadow-blue-500/50 flex items-center justify-center border-2 border-white/40">
+          <img src="/logo_jwj.svg?v=20261002" alt="PriceTrace" class="w-16 h-16 sm:w-18 sm:h-18 object-contain drop-shadow-md">
+        </div>
+      </div>
+
+      <!-- 브랜드 타이틀 및 캐치프레이즈 -->
+      <div class="space-y-1.5">
+        <h1 class="text-3xl sm:text-4xl font-black tracking-tight text-white drop-shadow-sm">
+          Price<span class="text-sky-400">Trace</span>
+        </h1>
+        <p class="text-xs sm:text-sm font-bold text-sky-200 tracking-wide">
+          스마트 이커머스 최저가 추적 레이더
+        </p>
+        <p class="text-[12px] sm:text-xs text-slate-300 font-normal pt-1 max-w-xs mx-auto leading-relaxed">
+          광고는 거르고, 1개당 진짜 최저가를 찾아드립니다
+        </p>
+      </div>
+    </div>
+
+    <!-- 4) 하단 프로그레스 바 및 안내 문구 -->
+    <div class="relative z-10 flex flex-col items-center text-center px-6 pb-[max(2.5rem,env(safe-area-inset-bottom))] space-y-3.5 w-full max-w-sm mx-auto">
+      <!-- 상태 라벨 및 퍼센티지 -->
+      <div class="flex items-center justify-between w-full text-xs font-medium text-slate-300 px-1">
+        <span id="splashProgressText" class="truncate text-slate-200">네이버 쇼핑 공식 카탈로그 연결 중...</span>
+        <span id="splashProgressPercent" class="font-extrabold text-yellow-300 ml-2 shrink-0">0%</span>
+      </div>
+
+      <!-- 프로그레스 트랙 & 게이지 바 -->
+      <div class="w-full h-2.5 bg-white/15 backdrop-blur-md rounded-full overflow-hidden p-0.5 border border-white/20 shadow-inner">
+        <div 
+          id="splashProgressBar" 
+          class="h-full bg-gradient-to-r from-blue-400 via-indigo-400 to-emerald-400 rounded-full transition-all duration-150 ease-out w-0 shadow-lg shadow-blue-500/50"
+        ></div>
+      </div>
+
+      <!-- 하단 브랜드 슬로건 -->
+      <p class="text-[11px] text-slate-400 font-normal pt-1">
+        수많은 미끼 상품 속, 진짜 최저가를 분석합니다
+      </p>
+    </div>
+  </div>
+
+  <!-- 최상단 고정 헤더 통합 컨테이너 (LIVE 특가 배너 + GNB 네비게이션 PC/모바일 동시 상단 영구 고정, 흐릿한 효과 100% 완전 제거) -->
+  <header class="sticky top-0 z-40 w-full" style="backdrop-filter: none !important; -webkit-backdrop-filter: none !important; filter: none !important; box-shadow: none !important;">
+    <!-- 1. 최상단 실시간 특가 알림 바 (PC 및 모바일 스크롤 시 화면 상단 영구 고정, 흐릿한 효과 100% 원천 배제) -->
+    <div id="topLiveBanner" class="bg-slate-900 text-white text-xs sm:text-xs py-2 px-3 sm:px-4 border-b border-slate-800" style="filter: none !important; -webkit-filter: none !important; backdrop-filter: none !important; -webkit-backdrop-filter: none !important; text-shadow: none !important; box-shadow: none !important; -webkit-font-smoothing: antialiased !important; -moz-osx-font-smoothing: grayscale !important; text-rendering: optimizeLegibility !important;">
+      <div class="max-w-7xl mx-auto flex items-center justify-between">
+        <div class="flex items-center space-x-2 truncate">
+          <span class="inline-flex items-center justify-center px-2 py-0.5 rounded-full text-[11px] font-black bg-red-600 text-white shrink-0 tracking-wide" style="filter: none !important; opacity: 1 !important; transform: none !important;">
+            LIVE
+          </span>
+          <span class="font-bold text-white truncate" style="filter: none !important; -webkit-font-smoothing: antialiased !important;">
+            실시간 최저가 추적: <strong class="text-amber-300 font-black ml-1 tracking-tight" id="topBannerText">네이버 쇼핑 공식 카탈로그 실시간 레이더</strong>
+          </span>
+        </div>
+        <div class="hidden lg:flex items-center space-x-5 text-xs text-white shrink-0 font-medium">
+          <span class="flex items-center text-slate-100"><i data-lucide="shield-check" class="w-3.5 h-3.5 mr-1.5 text-yellow-300"></i> 광고 상품 100% 자동 필터링</span>
+          <span class="flex items-center text-slate-100"><i data-lucide="clock" class="w-3.5 h-3.5 mr-1.5 text-sky-300"></i> <span id="lastUpdatedTime" class="text-yellow-300 font-bold ml-0.5">방금 갱신됨</span></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. GNB 네비게이션 바 (모바일/태블릿 반응형 2단 / 데스크톱 1단 완벽 최적화) -->
+    <div id="gnbNavBar" class="bg-white border-b border-slate-200/80">
+      <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-2 lg:py-0 lg:h-20 flex flex-col lg:flex-row lg:items-center justify-between gap-2 lg:gap-4">
+      
+      <!-- 상단 줄: [브랜드 로고] + [모바일/태블릿 전용 우측 컨트롤 버튼들] -->
+      <div class="flex items-center justify-between w-full lg:w-auto shrink-0">
+        <a href="/" class="flex items-center space-x-2 sm:space-x-3 group shrink-0">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" class="w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 object-contain group-hover:scale-105 transition-transform shrink-0" fill="none">
+            <!-- 1. 미니멀 볼드 레이더 원형 림 -->
+            <circle cx="24" cy="24" r="20" stroke="#0F172A" stroke-width="3" />
+            <!-- 2. 레이더 외곽 정밀 조준 틱 (절제된 4방위 틱) -->
+            <line x1="24" y1="4" x2="24" y2="8" stroke="#0F172A" stroke-width="2.5" stroke-linecap="round" />
+            <line x1="24" y1="40" x2="24" y2="44" stroke="#0F172A" stroke-width="2.5" stroke-linecap="round" />
+            <line x1="4" y1="24" x2="8" y2="24" stroke="#0F172A" stroke-width="2.5" stroke-linecap="round" />
+            <line x1="40" y1="24" x2="44" y2="24" stroke="#0F172A" stroke-width="2.5" stroke-linecap="round" />
+            <!-- 3. 시원하고 직관적인 가격 급락 트렌드 화살표 (볼드 블랙) -->
+            <path d="M14 18L22 26L27 21L34 32" stroke="#0F172A" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" />
+            <polyline points="26 32 34 32 34 24" stroke="#0F172A" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" />
+            <!-- 4. 실시간 최저가 록온 포인트 (선명한 코발트 블루) -->
+            <circle cx="34" cy="32" r="3.5" fill="#2563EB" />
+          </svg>
+          <div>
+            <span class="text-xl sm:text-2xl font-black tracking-tight text-slate-900 flex items-center gap-1 leading-none">
+              Price<span class="text-blue-600">Trace</span>
+            </span>
+            <p class="text-[10px] sm:text-[11px] text-slate-500 font-semibold mt-0.5 hidden sm:block">스마트 이커머스 최저가 레이더</p>
+          </div>
+        </a>
+
+        <!-- 모바일/태블릿 전용 상단 우측 컨트롤 버튼 (lg:hidden) -->
+        <div class="flex lg:hidden items-center space-x-1.5 shrink-0">
+          <button 
+            type="button" 
+            id="mobileInstallAppBtn" 
+            title="앱으로 설치하기"
+            class="hidden items-center space-x-1 px-2.5 py-1.5 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 text-white text-xs font-bold active:scale-95 transition-all shadow-sm shadow-blue-500/30 cursor-pointer"
+          >
+            <i data-lucide="download" class="w-3.5 h-3.5 text-white"></i>
+            <span>설치</span>
+          </button>
+          <button 
+            type="button" 
+            id="mobileRefreshBtn" 
+            title="실시간 갱신"
+            class="p-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 active:scale-95 transition-all cursor-pointer"
+          >
+            <i data-lucide="refresh-cw" class="w-4 h-4 text-slate-600"></i>
+          </button>
+          <button 
+            type="button" 
+            id="mobileOpenConfigModalBtn" 
+            title="목표가 설정"
+            class="flex items-center space-x-1 px-2.5 py-1.5 rounded-xl bg-slate-900 text-white text-xs font-bold active:scale-95 transition-all cursor-pointer"
+          >
+            <i data-lucide="sliders" class="w-3.5 h-3.5 text-blue-400"></i>
+            <span id="mobileBtnTargetPriceDisplay">15,000원</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- 중앙 검색창 (모바일/태블릿에서는 꽉 찬 너비, 데스크톱에서는 max-w-2xl) -->
+      <div class="w-full lg:flex-1 lg:max-w-2xl relative">
+        <form id="searchForm" class="relative flex items-center">
+          <div class="absolute left-3 text-slate-400 pointer-events-none">
+            <i data-lucide="search" class="w-4 h-4 sm:w-5 sm:h-5"></i>
+          </div>
+          <input 
+            type="text" 
+            id="searchInput" 
+            value="" 
+            placeholder="원하시는 상품과 수량 검색 (예: 신라면 20개, 햇반 24개)" 
+            autocomplete="off"
+            autocapitalize="none"
+            autocorrect="off"
+            spellcheck="false"
+            inputmode="search"
+            enterkeyhint="search"
+            class="w-full pl-9 pr-20 sm:pl-11 sm:pr-28 py-2.5 sm:py-3 bg-slate-100/90 hover:bg-slate-100 focus:bg-white text-base sm:text-sm font-semibold rounded-2xl border-2 border-transparent focus:border-naver focus:ring-4 focus:ring-naver/10 transition-all outline-none"
+          >
+          <!-- 텍스트 지우기 버튼 -->
+          <button 
+            type="button" 
+            id="clearSearchBtn" 
+            class="hidden absolute right-14 sm:right-24 p-1 text-slate-400 hover:text-slate-600 transition-colors"
+            title="검색어 지우기"
+          >
+            <i data-lucide="x" class="w-3.5 h-3.5 sm:w-4 sm:h-4"></i>
+          </button>
+          <button 
+            type="submit" 
+            class="absolute right-1 px-3 sm:px-4 py-1.5 sm:py-2 bg-naver hover:bg-naver-dark text-white text-xs font-bold rounded-xl transition-all shadow-sm shadow-naver/30 flex items-center space-x-1"
+          >
+            <span>조회</span>
+            <i data-lucide="arrow-right" class="w-3 h-3 sm:w-3.5 sm:h-3.5"></i>
+          </button>
+        </form>
+
+        <!-- 인기 검색어 / 빠른 태그 칩 (모바일 가로 스크롤 & 데스크톱 랩) -->
+        <div class="flex items-center gap-1.5 mt-1 sm:mt-1.5 text-xs text-slate-700 overflow-x-auto no-scrollbar py-0.5 px-0.5">
+          <span class="font-black text-slate-800 flex items-center gap-1 shrink-0 text-[11px] sm:text-xs">
+            <i data-lucide="flame" class="w-3.5 h-3.5 text-coupang"></i> 인기:
+          </span>
+          <div id="quickChipsContainer" class="flex items-center gap-1.5 shrink-0">
+            <!-- JS 동적 렌더링 -->
+          </div>
+        </div>
+      </div>
+
+      <!-- 데스크톱 전용 우측 컨트롤 버튼 (hidden lg:flex) -->
+      <div class="hidden lg:flex items-center space-x-2 shrink-0">
+        <button 
+          id="installAppBtn" 
+          title="PriceTrace 앱으로 설치"
+          class="hidden items-center space-x-1.5 px-3.5 py-2.5 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white text-xs font-bold shadow-md shadow-blue-600/25 transition-all active:scale-95 cursor-pointer"
+        >
+          <i data-lucide="download" class="w-4 h-4 text-white"></i>
+          <span>앱 설치</span>
+        </button>
+
+        <button 
+          id="refreshBtn" 
+          title="네이버 쇼핑 실시간 최신화"
+          class="flex items-center space-x-1.5 px-3.5 py-2.5 rounded-xl bg-white border border-slate-200 hover:border-slate-300 hover:bg-slate-50 text-slate-900 text-xs font-bold shadow-xs transition-all active:scale-95 cursor-pointer"
+        >
+          <i data-lucide="refresh-cw" id="refreshIcon" class="w-4 h-4 text-blue-700"></i>
+          <span class="hidden sm:inline text-slate-900 font-bold">실시간 갱신</span>
+        </button>
+
+        <button 
+          id="openConfigModalBtn" 
+          class="flex items-center space-x-1.5 px-3.5 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold shadow-xs transition-all active:scale-95 cursor-pointer"
+        >
+          <i data-lucide="sliders" class="w-4 h-4 text-blue-400"></i>
+          <span class="hidden sm:inline">목표가</span> <span id="btnTargetPriceDisplay">15,000원</span>
+        </button>
+      </div>
+
+    </div>
+    </div><!-- /#gnbNavBar -->
+  </header>
+
+  <!-- 메인 본문 컨테이너 (모바일/태블릿 하단 네비게이션 바 여백 pb-28 확보) -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 pb-28 lg:pb-8 space-y-8">
+
+    <!-- ============================================== -->
+    <!-- [VIEW 1] 초기 웰컴 & 서비스 탐색 화면 (Welcome View) -->
+    <!-- ============================================== -->
+    <div id="welcomeView" class="space-y-10">
+
+      <!-- 1. 웰컴 히어로 헤더 (청금석 라피스 라줄리 프리미엄 테마) -->
+      <div class="relative overflow-hidden rounded-3xl bg-gradient-to-br from-slate-950 via-slate-900 to-blue-950 text-white p-7 sm:p-10 shadow-2xl border border-blue-900/50">
+        <!-- 배경 장식 글로우 -->
+        <div class="absolute -right-20 -top-20 w-80 h-80 bg-blue-600/20 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="absolute -left-20 -bottom-20 w-80 h-80 bg-indigo-600/25 rounded-full blur-3xl pointer-events-none"></div>
+
+        <div class="relative z-10 max-w-3xl space-y-4">
+          <div class="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-blue-500/15 border border-blue-400/30 text-sky-300 text-xs font-bold tracking-wide uppercase">
+            <i data-lucide="sparkles" class="w-3.5 h-3.5 text-sky-400"></i>
+            <span>실시간 이커머스 최저가 추적 레이더</span>
+          </div>
+
+          <h1 class="text-2xl sm:text-4xl font-black tracking-tight text-white leading-tight">
+            광고는 거르고,<br class="hidden sm:block">
+            <span class="text-transparent bg-clip-text bg-gradient-to-r from-sky-300 via-blue-400 to-indigo-300">1개당 진짜 최저가</span>를 찾아드립니다
+          </h1>
+
+          <p class="text-slate-100 text-xs sm:text-sm font-normal leading-relaxed pt-1">
+            수많은 미끼 상품과 스폰서 광고 속에서, <strong class="text-white font-bold">네이버 쇼핑 공식 카탈로그</strong>와 <strong class="text-white font-bold">스마트스토어</strong>의 
+            <strong class="text-yellow-300 font-extrabold">배송비 포함 실구매가</strong> 및 <strong class="text-yellow-300 font-extrabold">묶음당 개당 환산단가</strong>를 실시간으로 비교 분석합니다.
+          </p>
+
+          <div class="pt-2 flex flex-wrap items-center gap-3 text-xs text-slate-200 font-medium">
+            <span class="flex items-center gap-1.5 text-yellow-300 font-bold">
+              <i data-lucide="check-circle-2" class="w-4 h-4 text-yellow-300"></i> 광고(AD) 자동 필터링
+            </span>
+            <span class="text-slate-400">•</span>
+            <span class="flex items-center gap-1.5 text-yellow-300 font-bold">
+              <i data-lucide="check-circle-2" class="w-4 h-4 text-yellow-300"></i> 1개당 단가 자동 환산
+            </span>
+            <span class="text-slate-400">•</span>
+            <span class="flex items-center gap-1.5 text-yellow-300 font-bold">
+              <i data-lucide="check-circle-2" class="w-4 h-4 text-yellow-300"></i> 30일 시세 변동 추이
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2. 하이브리드 듀얼 탭 추천 섹션 (국민 생필품 TOP 16 vs 오늘 실시간 핫딜 TOP 16) -->
+      <div>
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4 px-1">
+          <div>
+            <h2 class="text-lg sm:text-xl font-black text-slate-900 flex items-center flex-wrap gap-2">
+              <span class="flex items-center gap-1.5">
+                <i data-lucide="sparkles" class="w-5 h-5 text-emerald-600"></i>
+                <span id="tabSectionTitle">국민 필수 생필품 원클릭 최저가</span>
+              </span>
+              <span id="dailyTrendingBadge" class="text-[11px] font-bold text-emerald-700 bg-emerald-50 border border-emerald-200/80 px-2.5 py-0.5 rounded-full inline-flex items-center gap-1.5 shadow-2xs">
+                <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                <span id="dailyTrendingDateText">실시간 최저가 검증</span>
+              </span>
+            </h2>
+            <p id="tabSectionSubtitle" class="text-xs text-slate-500 mt-0.5">한국인이 가장 많이 재구매하는 16대 필수품의 오늘 실시간 최저가입니다.</p>
+          </div>
+          <div class="flex items-center gap-2 self-start sm:self-auto">
+            <button 
+              type="button" 
+              id="refreshRecommendCardsBtn" 
+              class="inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-xl bg-white border border-slate-200 hover:border-emerald-600/40 hover:bg-emerald-50 text-slate-700 hover:text-emerald-700 text-xs font-semibold shadow-2xs transition-all active:scale-95 cursor-pointer"
+              title="다른 인기 생필품 추천 보기"
+            >
+              <i data-lucide="rotate-cw" class="w-3.5 h-3.5 text-emerald-600"></i>
+              <span class="hidden sm:inline">다른 추천 보기</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- 선명한 2분할 듀얼 탭 스위처 -->
+        <div class="mb-5" id="dualTabSwitcherSection">
+          <!-- 상단 탭 선택 가이드 바 -->
+          <div class="flex items-center justify-between px-1 mb-2">
+            <span class="text-xs font-bold text-slate-600 flex items-center gap-1.5">
+              <i data-lucide="sliders-horizontal" class="w-3.5 h-3.5 text-blue-600"></i>
+              <span>추천 모드 선택 (원하시는 탭을 클릭하여 전환)</span>
+            </span>
+            <span class="text-[11px] text-slate-400 font-medium hidden sm:inline">2가지 실시간 추천 모드 지원</span>
+          </div>
+
+          <!-- 2분할 탭 카드 트레이 -->
+          <div id="dualTabButtonsTray" class="p-1.5 sm:p-2 bg-slate-200/80 rounded-2xl border-2 border-slate-300/80 shadow-inner grid grid-cols-2 gap-2 sm:gap-3">
+            <!-- 탭 1: 국민 필수 생필품 -->
+            <button 
+              type="button" 
+              id="tabSteadyBtn" 
+              class="relative flex items-center justify-center py-3 px-2 sm:px-4 rounded-xl text-xs sm:text-sm font-black cursor-pointer transition-all duration-200 bg-white text-emerald-900 shadow-md border-2 border-emerald-500 ring-2 ring-emerald-500/20 active:scale-[0.98]"
+            >
+              <div class="flex flex-col sm:flex-row items-center justify-center sm:space-x-2 text-center">
+                <div class="flex items-center space-x-1">
+                  <span class="text-sm sm:text-base">🏆</span>
+                  <span class="font-extrabold text-[12px] sm:text-sm tracking-tight">국민 필수 생필품</span>
+                </div>
+                <span id="tabSteadyBadge" class="mt-0.5 sm:mt-0 text-[10px] sm:text-[11px] bg-emerald-600 text-white font-bold px-2 py-0.5 rounded-full shadow-2xs">선택됨 ✓</span>
+              </div>
+            </button>
+
+            <!-- 탭 2: 오늘 실시간 핫딜 -->
+            <button 
+              type="button" 
+              id="tabTrendingBtn" 
+              class="relative flex items-center justify-center py-3 px-2 sm:px-4 rounded-xl text-xs sm:text-sm font-bold cursor-pointer transition-all duration-200 bg-slate-100 hover:bg-white text-slate-600 hover:text-slate-900 border-2 border-slate-300 hover:border-slate-400 shadow-xs active:scale-[0.98]"
+            >
+              <div class="flex flex-col sm:flex-row items-center justify-center sm:space-x-2 text-center">
+                <div class="flex items-center space-x-1">
+                  <span class="text-sm sm:text-base">🔥</span>
+                  <span class="font-bold text-[12px] sm:text-sm tracking-tight">오늘 실시간 핫딜</span>
+                </div>
+                <span id="tabTrendingBadge" class="mt-0.5 sm:mt-0 text-[10px] sm:text-[11px] bg-white text-slate-600 border border-slate-300 font-semibold px-2 py-0.5 rounded-full">선택하기 👆</span>
+              </div>
+            </button>
+          </div>
+        </div>
+
+        <div id="welcomeCardsContainer" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5 transition-opacity duration-200">
+          <!-- JS에서 활성 탭 풀에서 4개를 동적으로 렌더링 -->
+        </div>
+      </div>
+
+      <!-- 3. PriceTrace 핵심 가치 (Why PriceTrace?) -->
+      <div class="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/80 shadow-xs">
+        <h3 class="text-base sm:text-lg font-black text-slate-900 mb-6 flex items-center space-x-2">
+          <i data-lucide="shield-check" class="w-5 h-5 text-blue-600"></i>
+          <span>PriceTrace가 다른 검색과 다른 3가지 이유</span>
+        </h3>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div class="space-y-2.5 p-4 rounded-2xl bg-slate-50/80 border border-slate-100">
+            <div class="w-10 h-10 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center font-bold">
+              <i data-lucide="filter" class="w-5 h-5"></i>
+            </div>
+            <h4 class="font-bold text-sm text-slate-900">클린 필터링 (광고 제외)</h4>
+            <p class="text-xs text-slate-700 font-medium leading-relaxed">
+              돈 내고 올리는 스폰서 광고 상품과 엉뚱한 낱개 미끼 상품을 시스템이 자동으로 배제하여 순수 실시간 최저가만 수집합니다.
+            </p>
+          </div>
+
+          <div class="space-y-2.5 p-4 rounded-2xl bg-blue-100/50 border border-blue-100">
+            <div class="w-10 h-10 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center font-bold">
+              <i data-lucide="calculator" class="w-5 h-5"></i>
+            </div>
+            <h4 class="font-bold text-sm text-slate-900">개당 환산 단가 계산</h4>
+            <p class="text-xs text-slate-700 font-medium leading-relaxed">
+              상품명 속 수량(20개, 24캔 등)을 자동 인식하여 1개당 실제 얼마인지 환산해 드려 진짜 가성비 제품을 즉시 판별합니다.
+            </p>
+          </div>
+
+          <div class="space-y-2.5 p-4 rounded-2xl bg-amber-50/80 border border-amber-100">
+            <div class="w-10 h-10 rounded-xl bg-amber-100 text-amber-600 flex items-center justify-center font-bold">
+              <i data-lucide="trending-up" class="w-5 h-5"></i>
+            </div>
+            <h4 class="font-bold text-sm text-slate-900">30일 가격 추이 및 알림</h4>
+            <p class="text-xs text-slate-700 font-medium leading-relaxed">
+              최근 한 달간의 시세 변동 흐름과 목표가를 비교 분석하여 지금 바로 사야 할 타이밍인지 직관적으로 진단해 드립니다.
+            </p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ============================================== -->
+    <!-- [VIEW 2] 검색 결과 대시보드 화면 (Result View) -->
+    <!-- ============================================== -->
+    <div id="resultView" class="space-y-8 hidden">
+
+      <!-- 상단 네비게이션 (홈으로 돌아가기 & 현재 검색어 정보) -->
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5 pb-2.5 border-b border-slate-200/80">
+        <button 
+          id="backToHomeBtn" 
+          type="button" 
+          class="inline-flex items-center space-x-1.5 text-xs sm:text-sm font-bold text-slate-600 hover:text-blue-600 transition-colors group px-2 sm:px-3 py-1.5 rounded-xl hover:bg-slate-100 self-start"
+        >
+          <i data-lucide="arrow-left" class="w-4 h-4 group-hover:-translate-x-1 transition-transform"></i>
+          <span>초기 화면으로 돌아가기</span>
+        </button>
+
+        <div class="text-xs text-slate-500 font-medium pl-1 sm:pl-0">
+          현재 검색어: <strong id="currentSearchKeywordText" class="text-slate-900 font-bold"></strong>
+        </div>
+      </div>
+
+      <!-- 3. 실시간 특가 상태 배너 (Alert Box) -->
+      <div id="alertBanner" class="relative overflow-hidden rounded-3xl p-5 sm:p-6 transition-all duration-300 shadow-md">
+      <!-- 배경 애니메이션 그라데이션이 JS로 동적 토글됨 -->
+      <div class="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div class="flex items-start sm:items-center space-x-4">
+          <div id="alertIconBox" class="w-14 h-14 rounded-2xl flex items-center justify-center text-2xl shrink-0 shadow-sm">
+            🚨
+          </div>
+          <div>
+            <div class="flex items-center space-x-2">
+              <span id="alertStatusBadge" class="px-2.5 py-0.5 rounded-full text-xs font-extrabold uppercase tracking-wide">
+                특가 감지
+              </span>
+              <span class="text-xs text-slate-500 font-medium" id="alertSubTime">실시간 기준</span>
+            </div>
+            <h2 id="alertMainMessage" class="text-xl sm:text-2xl font-black text-slate-900 mt-1">
+              목표 가격 이하입니다! 지금이 구매 적기입니다.
+            </h2>
+            <p id="alertDescription" class="text-xs sm:text-sm text-slate-600 mt-0.5">
+              현재 1위 최저가가 설정하신 목표가 <strong>15,000원</strong>보다 <strong>1,800원(12%)</strong> 저렴합니다.
+            </p>
+          </div>
+        </div>
+        
+        <!-- 간편 알림 수신 상태 토글 및 목표가 설정 -->
+        <div class="flex flex-wrap items-center gap-2.5 shrink-0 self-end md:self-center">
+          <!-- 알림 ON/OFF 토글 스위치 -->
+          <div class="bg-white/80 backdrop-blur border border-slate-200/80 px-3.5 py-2 rounded-2xl flex items-center space-x-2">
+            <span id="alertToggleLabel" class="text-xs font-bold text-slate-700">알림 ON</span>
+            <label class="relative inline-flex items-center cursor-pointer" title="목표가 알림 켜기/끄기">
+              <input type="checkbox" id="alertToggleSwitch" class="sr-only peer" checked>
+              <div class="w-9 h-5 bg-slate-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-naver"></div>
+            </label>
+          </div>
+          <div class="bg-white/80 backdrop-blur border border-slate-200/80 px-4 py-2.5 rounded-2xl text-right">
+            <span class="block text-[11px] text-slate-500 font-medium">목표 알림 기준</span>
+            <span class="text-base font-black text-slate-900" id="currentSetTargetPrice">15,000원</span>
+          </div>
+          <button id="quickTargetEditBtn" class="px-3 py-2 bg-white hover:bg-slate-100 border border-slate-200 text-slate-700 text-xs font-bold rounded-xl shadow-xs transition-all">
+            변경
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4. 네이버 쇼핑 / 쿠팡 스타일 대표 상품 최저가 카탈로그 요약 (Hero Card) -->
+    <section class="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/80 shadow-xs relative overflow-hidden">
+      <!-- 우측 상단 네이버 쇼핑 인증 태그 -->
+      <div class="flex flex-wrap items-center justify-between gap-2 pb-6 border-b border-slate-100">
+        <div class="flex items-center space-x-2">
+          <span class="inline-flex items-center space-x-1 px-3 py-1 rounded-full text-xs font-bold bg-naver text-white shadow-xs">
+            <i data-lucide="check" class="w-3.5 h-3.5"></i>
+            <span>네이버 쇼핑 공식 카탈로그 연동</span>
+          </span>
+          <span class="inline-flex items-center space-x-1 px-3 py-1 rounded-full text-xs font-semibold bg-blue-50 text-blue-800 border border-blue-200">
+            <i data-lucide="sparkles" class="w-3 h-3 text-blue-600"></i>
+            <span>광고(AD) 제외 완료</span>
+          </span>
+        </div>
+        <div class="text-xs text-slate-400 font-medium flex items-center">
+          <i data-lucide="info" class="w-3.5 h-3.5 mr-1"></i>
+          배송비 포함 실구매가 자동 계산
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 pt-6 items-center">
+        
+        <!-- 상품 대표 썸네일 (이커머스 비주얼) -->
+        <div class="lg:col-span-4 flex flex-col items-center justify-center">
+          <div class="relative w-full max-w-sm aspect-square bg-slate-50 rounded-3xl overflow-hidden border border-slate-200 flex items-center justify-center group p-6">
+            <img 
+              id="productMainImage" 
+              src="https://shopping-phinf.pstatic.net/main_5301888/53018889018.20250214174431.jpg" 
+              alt="상품 대표 이미지" 
+              class="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300"
+              onerror="this.src='https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80'"
+            >
+            <!-- 1위 최저가 뱃지 -->
+            <div class="absolute top-4 left-4 bg-slate-900/90 backdrop-blur text-white text-xs font-black px-3 py-1 rounded-full shadow-md flex items-center space-x-1">
+              <span class="text-amber-400">🥇</span>
+              <span>실시간 1위</span>
+            </div>
+            <!-- 수량 검증 뱃지 -->
+            <div class="absolute bottom-4 right-4 bg-white/95 text-slate-800 text-[11px] font-bold px-2.5 py-1 rounded-lg border border-slate-200 shadow-sm flex items-center space-x-1">
+              <i data-lucide="package" class="w-3.5 h-3.5 text-naver"></i>
+              <span id="productBadgeText">실시간 정품 검증</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 상품 정보 및 실시간 가격 정보 -->
+        <div class="lg:col-span-8 flex flex-col justify-between space-y-6">
+          <div>
+            <!-- 브랜드 및 카테고리 -->
+            <div class="flex items-center space-x-2 text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">
+              <span id="productCategoryTag" class="text-naver">실시간 최저가</span>
+              <span>•</span>
+              <span id="productMallTag">네이버 쇼핑</span>
+              <span>•</span>
+              <span id="productUnitTag">온라인 공식 판매처</span>
+            </div>
+
+            <!-- 메인 상품명 -->
+            <h1 id="productTitle" class="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight leading-snug">
+              검색된 상품명
+            </h1>
+
+            <!-- 리뷰 및 평점 (쿠팡/네이버 스타일) -->
+            <div class="flex items-center space-x-3 mt-3">
+              <div class="flex items-center text-amber-400 text-sm font-bold">
+                <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+                <span class="ml-1 text-slate-900 font-extrabold" id="productScore">4.88</span>
+                <span class="text-slate-400 text-xs font-normal ml-0.5">/5.0</span>
+              </div>
+              <span class="text-slate-300">|</span>
+              <div class="text-xs text-slate-600 font-medium">
+                누적 리뷰 <strong class="text-slate-900 font-bold" id="productReviewCount">104,064건</strong>
+              </div>
+              <span class="text-slate-300">|</span>
+              <div class="text-xs text-blue-600 font-semibold flex items-center">
+                <i data-lucide="truck" class="w-3.5 h-3.5 mr-1"></i> 무료배송 혜택 포함
+              </div>
+            </div>
+          </div>
+
+          <!-- 실시간 최저가 가격 박스 (핵심 강조) -->
+          <div class="bg-gradient-to-br from-slate-50 to-blue-50/40 rounded-3xl p-6 border border-slate-200/90">
+            <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+              <div>
+                <span class="text-xs font-bold text-slate-500 uppercase tracking-wide block mb-1">
+                  실시간 최저 판매가 (1위)
+                </span>
+                <div class="flex items-baseline space-x-2">
+                  <span class="text-3xl sm:text-5xl font-black text-slate-900 tracking-tight" id="lowestPriceDisplay">
+                    13,200
+                  </span>
+                  <span class="text-2xl font-bold text-slate-900">원</span>
+                  <span class="text-xs sm:text-sm font-bold text-coupang bg-coupang/10 px-2.5 py-0.5 rounded-lg ml-2" id="discountBadge">
+                    목표가 대비 -1,800원 (-12%)
+                  </span>
+                </div>
+              </div>
+
+              <!-- 1봉당 환산 단가 카드 -->
+              <div class="bg-white px-4 py-2.5 rounded-2xl border border-slate-200 shadow-xs text-left sm:text-right">
+                <span class="block text-[11px] text-slate-400 font-semibold" id="unitPriceLabel">1개/봉당 환산가</span>
+                <span class="text-lg font-extrabold text-naver" id="unitPriceDisplay">약 660원</span>
+              </div>
+            </div>
+
+            <!-- 판매처 및 링크 버튼 -->
+            <div class="mt-6 pt-5 border-t border-slate-200/60 flex flex-col sm:flex-row items-center justify-between gap-4">
+              <div class="flex items-center space-x-2 text-xs text-slate-600 w-full sm:w-auto">
+                <span class="w-2 h-2 rounded-full bg-naver"></span>
+                <span>현재 최저가 판매처:</span>
+                <strong class="text-slate-900 font-bold" id="lowestMallName">네이버 가격비교 (카탈로그)</strong>
+              </div>
+
+              <div class="flex items-center space-x-3 w-full sm:w-auto">
+                <a 
+                  id="buyButton" 
+                  href="https://search.naver.com/search.naver?where=nexearch&query=%EB%86%8D%EC%8B%AC%20%EC%8B%A0%EB%9D%BC%EB%A9%B4%20120g%2020%EA%B0%9C%20%EC%B5%9C%EC%A0%80%EA%B0%80" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  referrerpolicy="no-referrer"
+                  class="w-full sm:w-auto inline-flex items-center justify-center space-x-2 px-6 py-3.5 bg-naver hover:bg-naver-dark text-white text-sm font-extrabold rounded-2xl shadow-md shadow-naver/25 hover:shadow-lg hover:shadow-naver/35 transition-all group"
+                >
+                  <span>최저가 구매하러 가기</span>
+                  <i data-lucide="external-link" class="w-4 h-4 group-hover:translate-x-0.5 transition-transform"></i>
+                </a>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- 5. 판매처별 가격 비교 매트릭스 (Price Comparison Table) -->
+    <section class="space-y-4">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+        <div>
+          <h3 class="text-xl font-black text-slate-900 flex items-center space-x-2">
+            <span>판매처별 실시간 가격 비교</span>
+            <span class="text-xs font-bold px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 border border-slate-200">
+              TOP 3 순위
+            </span>
+          </h3>
+          <p class="text-xs text-slate-500 mt-0.5">광고 상품 및 낱개/혼합 상품을 걸러낸 정품 20개입 순위입니다.</p>
+        </div>
+
+        <div class="flex items-center space-x-2 text-xs font-semibold text-slate-500">
+          <span class="flex items-center text-emerald-600"><i data-lucide="shield-check" class="w-4 h-4 mr-1"></i> 클린 필터링 검증됨</span>
+        </div>
+      </div>
+
+      <!-- 비교 카드 리스트 -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4" id="priceComparisonGrid">
+        <!-- 템플릿 카드 1 (1위) -->
+        <div class="relative bg-white rounded-3xl p-5 border-2 border-naver shadow-sm flex flex-col justify-between space-y-4">
+          <div class="flex items-center justify-between">
+            <span class="inline-flex items-center space-x-1 text-xs font-black text-amber-700 bg-amber-100 px-3 py-1 rounded-full">
+              <span>🥇 1위 최저가</span>
+            </span>
+            <span class="text-xs text-naver font-bold">강력 추천</span>
+          </div>
+          <div>
+            <span class="text-xs text-slate-400 font-medium block">네이버 가격비교 (카탈로그)</span>
+            <h4 class="text-sm font-bold text-slate-900 mt-1 line-clamp-2">농심 신라면, 120g, 20개</h4>
+            <div class="mt-3 flex items-baseline space-x-1">
+              <span class="text-2xl font-black text-slate-900">13,200</span>
+              <span class="text-sm font-bold text-slate-700">원</span>
+              <span class="text-xs text-slate-400 ml-1">(봉당 약 660원)</span>
+            </div>
+            <div class="mt-2 text-xs text-slate-500 flex items-center space-x-2">
+              <span>리뷰 104,064개</span>
+              <span>·</span>
+              <span>평점 ★ 4.88</span>
+            </div>
+          </div>
+          <a href="javascript:void(0)" onclick="return false;" class="w-full py-2.5 text-center bg-naver/50 text-white text-xs font-extrabold rounded-xl cursor-wait">
+            로딩 중...
+          </a>
+        </div>
+
+        <!-- 템플릿 카드 2 (2위) -->
+        <div class="relative bg-white rounded-3xl p-5 border border-slate-200 shadow-xs flex flex-col justify-between space-y-4">
+          <div class="flex items-center justify-between">
+            <span class="inline-flex items-center space-x-1 text-xs font-black text-slate-700 bg-slate-100 px-3 py-1 rounded-full">
+              <span>🥈 2위</span>
+            </span>
+          </div>
+          <div>
+            <span class="text-xs text-slate-400 font-medium block">신성마켓몰</span>
+            <h4 class="text-sm font-bold text-slate-900 mt-1 line-clamp-2">농심 신라면120g 20개 1박스</h4>
+            <div class="mt-3 flex items-baseline space-x-1">
+              <span class="text-2xl font-black text-slate-900">13,200</span>
+              <span class="text-sm font-bold text-slate-700">원</span>
+              <span class="text-xs text-slate-400 ml-1">(봉당 약 660원)</span>
+            </div>
+            <div class="mt-2 text-xs text-slate-500 flex items-center space-x-2">
+              <span>리뷰 715개</span>
+              <span>·</span>
+              <span>평점 ★ 4.88</span>
+            </div>
+          </div>
+          <a href="javascript:void(0)" onclick="return false;" class="w-full py-2.5 text-center bg-slate-100 text-slate-400 text-xs font-bold rounded-xl cursor-wait">
+            로딩 중...
+          </a>
+        </div>
+
+        <!-- 템플릿 카드 3 (3위) -->
+        <div class="relative bg-white rounded-3xl p-5 border border-slate-200 shadow-xs flex flex-col justify-between space-y-4">
+          <div class="flex items-center justify-between">
+            <span class="inline-flex items-center space-x-1 text-xs font-black text-amber-900 bg-amber-50 px-3 py-1 rounded-full">
+              <span>🥉 3위</span>
+            </span>
+          </div>
+          <div>
+            <span class="text-xs text-slate-400 font-medium block">더싼 마트</span>
+            <h4 class="text-sm font-bold text-slate-900 mt-1 line-clamp-2">농심 신라면 120g 20개 한박스</h4>
+            <div class="mt-3 flex items-baseline space-x-1">
+              <span class="text-2xl font-black text-slate-900">14,500</span>
+              <span class="text-sm font-bold text-slate-700">원</span>
+              <span class="text-xs text-slate-400 ml-1">(봉당 약 725원)</span>
+            </div>
+            <div class="mt-2 text-xs text-slate-500 flex items-center space-x-2">
+              <span>리뷰 36개</span>
+              <span>·</span>
+              <span>평점 ★ 4.89</span>
+            </div>
+          </div>
+          <a href="javascript:void(0)" onclick="return false;" class="w-full py-2.5 text-center bg-slate-100 text-slate-400 text-xs font-bold rounded-xl cursor-wait">
+            로딩 중...
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- 6. 최근 30일 가격 변동 추이 차트 & 구매 적기 진단 (네이버 쇼핑 분석 스타일) -->
+    <section class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+      
+      <!-- 인터랙티브 차트 (8 cols) -->
+      <div class="lg:col-span-8 bg-white rounded-3xl p-6 sm:p-7 border border-slate-200/80 shadow-xs flex flex-col justify-between">
+        <div class="flex flex-wrap items-center justify-between gap-2 mb-4">
+          <div>
+            <h3 class="text-lg font-black text-slate-900 flex items-center space-x-2">
+              <i data-lucide="trending-down" class="w-5 h-5 text-blue-600"></i>
+              <span>최근 30일 가격 변동 트렌드</span>
+            </h3>
+            <p class="text-xs text-slate-500 mt-0.5">실시간 수집된 일자별 최저가 추이 그래프</p>
+          </div>
+          <div class="flex items-center space-x-3 text-xs font-semibold">
+            <span class="flex items-center text-blue-600">
+              <span class="w-3 h-1 bg-blue-600 rounded-full mr-1.5"></span> 실시간 최저가
+            </span>
+            <span class="flex items-center text-slate-400">
+              <span class="w-3 h-1 bg-slate-300 rounded-full mr-1.5 border border-dashed border-slate-400"></span> 목표 알림선 (15,000원)
+            </span>
+          </div>
+        </div>
+
+        <div class="relative w-full h-64 sm:h-72">
+          <canvas id="priceHistoryChart"></canvas>
+        </div>
+      </div>
+
+      <!-- 구매 타이밍 진단기 & 가이드 (4 cols, 청금석 Lapis Lazuli 테마) -->
+      <div class="lg:col-span-4 bg-gradient-to-br from-slate-950 via-slate-900 to-blue-950 text-white rounded-3xl p-6 sm:p-7 shadow-md flex flex-col justify-between space-y-6 border border-blue-900/40">
+        <div>
+          <div class="flex items-center justify-between">
+            <span class="text-[11px] font-extrabold uppercase tracking-widest text-yellow-300 bg-blue-950 px-2.5 py-1 rounded-full border border-blue-700">
+              AI 구매 타이밍 진단
+            </span>
+            <i data-lucide="zap" class="w-5 h-5 text-yellow-400"></i>
+          </div>
+
+          <h4 class="text-xl font-black mt-4 text-white">지금 사야 할까요?</h4>
+          
+          <div class="mt-4 p-4 rounded-2xl bg-white/10 backdrop-blur border border-white/15">
+            <div class="text-xs text-slate-200 font-bold">현재 상태 판단</div>
+            <div class="text-lg font-black text-yellow-300 mt-1 flex items-center">
+              <i data-lucide="check-circle" class="w-5 h-5 mr-1.5 text-yellow-300"></i>
+              <span id="stat30DayDiagnosisBadge">강력 구매 추천</span>
+            </div>
+            <p id="stat30DayDiagnosisDesc" class="text-xs text-slate-100 mt-2 leading-relaxed">
+              현재 가격(<strong id="stat30DayCurrentPrice" class="text-yellow-300 font-extrabold">13,200원</strong>)은 최근 30일 중 <strong class="text-yellow-300 font-extrabold">역대 최저가 구간</strong>에 해당하며, 목표가 대비 12% 저렴합니다.
+            </p>
+          </div>
+        </div>
+
+        <div class="space-y-3">
+          <div class="flex items-center justify-between text-xs text-slate-200 font-semibold border-b border-slate-700/60 pb-2">
+            <span>30일 최고가</span>
+            <span id="stat30DayMax" class="font-extrabold text-white">16,200원</span>
+          </div>
+          <div class="flex items-center justify-between text-xs text-slate-200 font-semibold border-b border-slate-700/60 pb-2">
+            <span>30일 평균가</span>
+            <span id="stat30DayAvg" class="font-extrabold text-white">14,920원</span>
+          </div>
+          <div class="flex items-center justify-between text-xs text-slate-200 font-semibold pb-1">
+            <span>30일 최저가 (현재)</span>
+            <span id="stat30DayMin" class="font-black text-yellow-300 text-sm">13,200원</span>
+          </div>
+
+          <button id="directBuySubBtn" class="w-full mt-3 py-3 bg-naver hover:bg-naver-dark text-white text-xs font-black rounded-xl shadow-lg shadow-naver/30 transition-all flex items-center justify-center space-x-1.5">
+            <span>최저가로 바로 주문</span>
+            <i data-lucide="chevron-right" class="w-4 h-4"></i>
+          </button>
+        </div>
+      </div>
+
+    </section>
+    </div> <!-- #resultView 끝 -->
+
+  </main>
+
+  <!-- 7. 푸터 (기술 스택 및 출처) - 모바일 좌측 정렬 & 뱃지 랩 & 하단 네비 겹침 0% 최적화 -->
+  <footer class="mt-12 bg-white border-t border-slate-200/80 pt-8 pb-32 lg:pb-10 text-xs text-slate-500">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-6 text-left">
+        
+        <!-- 좌측: 브랜드 로고 + 타이틀 + 데이터 출처 및 저작권 안내 (모바일 완벽 좌측 정렬) -->
+        <div class="space-y-2">
+          <div class="flex items-center space-x-2.5">
+            <!-- 헤더와 통일된 최저가 레이더 로고 심볼 -->
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" class="w-8 h-8 sm:w-10 sm:h-10 object-contain shrink-0" fill="none">
+              <!-- 1. 미니멀 볼드 레이더 원형 림 -->
+              <circle cx="24" cy="24" r="20" stroke="#0F172A" stroke-width="3" />
+              <!-- 2. 레이더 외곽 정밀 조준 틱 (절제된 4방위 틱) -->
+              <line x1="24" y1="4" x2="24" y2="8" stroke="#0F172A" stroke-width="2.5" stroke-linecap="round" />
+              <line x1="24" y1="40" x2="24" y2="44" stroke="#0F172A" stroke-width="2.5" stroke-linecap="round" />
+              <line x1="4" y1="24" x2="8" y2="24" stroke="#0F172A" stroke-width="2.5" stroke-linecap="round" />
+              <line x1="40" y1="24" x2="44" y2="24" stroke="#0F172A" stroke-width="2.5" stroke-linecap="round" />
+              <!-- 3. 시원하고 직관적인 가격 급락 트렌드 화살표 (볼드 블랙) -->
+              <path d="M14 18L22 26L27 21L34 32" stroke="#0F172A" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" />
+              <polyline points="26 32 34 32 34 24" stroke="#0F172A" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" />
+              <!-- 4. 실시간 최저가 록온 포인트 (선명한 코발트 블루) -->
+              <circle cx="34" cy="32" r="3.5" fill="#2563EB" />
+            </svg>
+            <div class="flex items-center space-x-2">
+              <span class="text-base sm:text-lg font-black tracking-tight text-slate-900 flex items-center gap-0.5">
+                Price<span class="text-blue-600">Trace</span>
+              </span>
+              <span class="text-[10px] font-bold text-blue-700 bg-blue-50 px-2 py-0.5 rounded-full border border-blue-200/60">v1.3.3</span>
+            </div>
+          </div>
+          
+          <p class="text-slate-600 font-medium text-xs leading-relaxed break-keep">
+            데이터 출처: 네이버 쇼핑 공개 BFF API 및 k-skill proxy 엔드포인트 실시간 연동
+          </p>
+          <p class="text-slate-400 font-normal text-[11px] sm:text-xs">
+            © 2026 JANG WOO JIN. All rights reserved.
+          </p>
+        </div>
+
+        <!-- 우측: 3대 핵심 기술 아키텍처 뱃지 (단어 중간 줄바꿈 방지 & 유연한 가로 랩) -->
+        <div class="flex flex-wrap items-center gap-2 pt-1 lg:pt-0 lg:justify-end text-slate-700 font-semibold text-[11px] sm:text-xs">
+          <span class="inline-flex items-center px-2.5 py-1 rounded-lg bg-slate-100 border border-slate-200/60 whitespace-nowrap">
+            <span class="w-1.5 h-1.5 rounded-full bg-blue-500 mr-1.5 shrink-0"></span>
+            3-Layer 아키텍처
+          </span>
+          <span class="inline-flex items-center px-2.5 py-1 rounded-lg bg-slate-100 border border-slate-200/60 whitespace-nowrap">
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 mr-1.5 shrink-0"></span>
+            결정론적 클린 필터
+          </span>
+          <span class="inline-flex items-center px-2.5 py-1 rounded-lg bg-slate-100 border border-slate-200/60 whitespace-nowrap">
+            <span class="w-1.5 h-1.5 rounded-full bg-indigo-500 mr-1.5 shrink-0"></span>
+            경량 Python 서버
+          </span>
+        </div>
+
+      </div>
+    </div>
+  </footer>
+
+  <!-- 목표가 변경 모달 -->
+  <div id="configModal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs hidden flex items-center justify-center p-3 sm:p-4 overflow-y-auto overscroll-contain">
+    <div class="bg-white rounded-3xl max-w-md w-full max-h-[90vh] flex flex-col shadow-2xl border border-slate-200 transform transition-all animate-in fade-in zoom-in-95 my-auto">
+      <div class="flex items-center justify-between p-5 sm:p-6 pb-3 sm:pb-4 border-b border-slate-100 shrink-0">
+        <h3 class="text-lg font-black text-slate-900 flex items-center space-x-2">
+          <i data-lucide="bell" class="w-5 h-5 text-naver"></i>
+          <span>목표 알림 가격 설정</span>
+        </h3>
+        <button id="closeConfigModalBtn" class="p-1 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 cursor-pointer">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <div class="p-5 sm:p-6 py-4 space-y-4 overflow-y-auto overscroll-contain flex-1">
+        <div>
+          <label class="block text-xs font-bold text-slate-600 mb-1.5">희망 알림 목표가 (원)</label>
+          <div class="relative">
+            <input 
+              type="number" 
+              id="modalTargetPriceInput" 
+              step="500" 
+              value="15000" 
+              class="w-full px-4 py-3 bg-slate-100 rounded-2xl text-slate-900 font-extrabold text-lg focus:bg-white focus:ring-4 focus:ring-naver/20 focus:border-naver border-2 border-transparent outline-none transition-all"
+            >
+            <span class="absolute right-4 top-3.5 text-slate-400 font-bold">원</span>
+          </div>
+          <p class="text-xs text-slate-400 mt-1.5">이 가격 이하로 최저가가 떨어지면 '특가 발생' 알림이 발동됩니다.</p>
+        </div>
+
+        <!-- 빠른 선택 버튼 -->
+        <div class="flex items-center space-x-2 pt-1">
+          <button type="button" class="preset-price-btn px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-lg" data-price="14000">14,000원</button>
+          <button type="button" class="preset-price-btn px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-lg" data-price="14500">14,500원</button>
+          <button type="button" class="preset-price-btn px-3 py-1.5 bg-naver/10 text-naver text-xs font-bold rounded-lg border border-naver/30" data-price="15000">15,000원 (기본)</button>
+          <button type="button" class="preset-price-btn px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-lg" data-price="15500">15,500원</button>
+        </div>
+
+        <!-- 목표가 도달 알림 활성화 토글 -->
+        <div class="flex items-center justify-between p-3.5 bg-slate-50 border border-slate-200/80 rounded-2xl mt-2">
+          <div>
+            <div class="text-xs font-bold text-slate-800 flex items-center space-x-1.5">
+              <i data-lucide="bell" class="w-3.5 h-3.5 text-blue-600"></i>
+              <span>목표가 도달 알림 활성화</span>
+            </div>
+            <div class="text-[11px] text-slate-500">목표가 이하로 떨어졌을 때 알림 배너 및 상태를 표시합니다.</div>
+          </div>
+          <label class="relative inline-flex items-center cursor-pointer shrink-0 ml-3" title="알림 활성화 토글">
+            <input type="checkbox" id="modalAlertToggle" class="sr-only peer" checked>
+            <div class="w-10 h-6 bg-slate-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-naver"></div>
+          </label>
+        </div>
+
+        <!-- 특가 알림 소리(차임벨) 토글 -->
+        <div class="flex items-center justify-between p-3.5 bg-slate-50 border border-slate-200/80 rounded-2xl mt-2">
+          <div>
+            <div class="text-xs font-bold text-slate-800 flex items-center space-x-1.5">
+              <i data-lucide="volume-2" class="w-3.5 h-3.5 text-blue-600"></i>
+              <span>특가 감지 차임벨 소리</span>
+            </div>
+            <div class="text-[11px] text-slate-500">목표가 이하 달성 시 경쾌한 띵동~ 🔔 벨소리를 재생합니다.</div>
+          </div>
+          <label class="relative inline-flex items-center cursor-pointer shrink-0 ml-3" title="차임벨 소리 토글">
+            <input type="checkbox" id="modalSoundToggle" class="sr-only peer" checked>
+            <div class="w-10 h-6 bg-slate-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-naver"></div>
+          </label>
+        </div>
+
+        <!-- 특가 알림 모바일 햅틱 진동 토글 및 기기별 진단 배너 -->
+        <div class="p-3.5 bg-slate-50 border border-slate-200/80 rounded-2xl mt-2">
+          <div class="flex items-center justify-between">
+            <div class="pr-2">
+              <div class="text-xs font-bold text-slate-800 flex items-center space-x-1.5">
+                <i data-lucide="vibrate" class="w-3.5 h-3.5 text-indigo-600"></i>
+                <span>모바일 햅틱 진동</span>
+              </div>
+              <div class="text-[11px] text-slate-500 leading-snug mt-0.5">
+                목표가 달성 시 2단 햅틱 진동 및 시각 촉각 펄스를 전달합니다.
+              </div>
+            </div>
+            <label class="relative inline-flex items-center cursor-pointer shrink-0 ml-3" title="햅틱 진동 토글">
+              <input type="checkbox" id="modalVibrateToggle" class="sr-only peer" checked>
+              <div class="w-10 h-6 bg-slate-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-naver"></div>
+            </label>
+          </div>
+
+          <!-- 실시간 기기 감지 및 햅틱 진단 안내 배너 -->
+          <div id="deviceHapticInfoBanner" class="mt-2.5 p-2.5 rounded-xl border text-[11px] leading-relaxed transition-all">
+            <!-- JS에서 iOS / Android / Desktop 감지 후 동적 렌더링 -->
+          </div>
+        </div>
+
+        <!-- 소리 / 진동 즉시 테스트 버튼 -->
+        <div class="flex items-center justify-between p-3.5 bg-gradient-to-r from-emerald-50 to-teal-50 border border-emerald-200/80 rounded-2xl mt-2">
+          <div>
+            <div class="text-xs font-bold text-emerald-900 flex items-center space-x-1.5">
+              <i data-lucide="sparkles" class="w-3.5 h-3.5 text-emerald-600"></i>
+              <span>소리 및 진동 동작 테스트</span>
+            </div>
+            <div class="text-[11px] text-emerald-700/80">현재 설정된 차임벨 소리와 햅틱 진동을 즉시 체험해 봅니다.</div>
+          </div>
+          <button type="button" id="testNotificationBtn" class="px-3.5 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold shrink-0 ml-3 shadow-xs active:scale-95 transition-all flex items-center space-x-1 cursor-pointer">
+            <i data-lucide="bell-ring" class="w-3.5 h-3.5"></i>
+            <span>미리 테스트</span>
+          </button>
+        </div>
+
+        <!-- 오프닝 스플래시 인트로 다시 보기 (PC에서는 lg:hidden으로 숨김) -->
+        <div class="lg:hidden flex items-center justify-between p-3.5 bg-blue-50/70 border border-blue-200/80 rounded-2xl mt-2">
+          <div>
+            <div class="text-xs font-bold text-blue-900">시작 인트로 애니메이션 다시 보기</div>
+            <div class="text-[11px] text-blue-700/80">동적 파티클과 프로그레스 바가 포함된 오프닝 화면을 재생합니다.</div>
+          </div>
+          <button type="button" id="replaySplashBtn" class="px-3 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold shrink-0 ml-3 shadow-xs active:scale-95 transition-all flex items-center space-x-1 cursor-pointer">
+            <i data-lucide="play" class="w-3.5 h-3.5"></i>
+            <span>재생</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="p-5 sm:p-6 pt-3 sm:pt-4 border-t border-slate-100 flex items-center justify-end space-x-2 shrink-0 bg-slate-50/70 rounded-b-3xl">
+        <button id="cancelConfigModalBtn" class="px-4 py-2.5 rounded-xl text-slate-600 hover:bg-slate-100 text-xs font-bold cursor-pointer">
+          취소
+        </button>
+        <button id="saveConfigModalBtn" class="px-5 py-2.5 bg-naver hover:bg-naver-dark text-white rounded-xl text-xs font-black shadow-md shadow-naver/25 cursor-pointer">
+          설정 저장 및 다시 계산
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       실시간 최저가 레이더 검색 & 자판 바텀시트 모달 (Search Mode Bottom Sheet)
+       ========================================================================== -->
+  <div id="radarSearchModal" class="modal-hidden fixed inset-0 z-50 flex items-end justify-center bg-slate-950/60 backdrop-blur-xs p-0 sm:p-4">
+    <div id="radarSearchDrawer" class="w-full max-w-lg bg-white rounded-t-3xl sm:rounded-3xl p-5 sm:p-6 shadow-2xl border border-slate-200/90 max-h-[90vh] overflow-y-auto flex flex-col">
+      
+      <!-- 상단 드래그 핸들 (모바일 네이티브 바텀시트 느낌 연출) -->
+      <div class="w-12 h-1.5 bg-slate-200 rounded-full mx-auto mb-3.5 shrink-0"></div>
+
+      <!-- 모달 헤더: 레이더 검색모드 타이틀 & 닫기 버튼 -->
+      <div class="flex items-center justify-between mb-3.5 shrink-0">
+        <div class="flex items-center space-x-2">
+          <div class="w-8 h-8 rounded-xl bg-blue-50 flex items-center justify-center text-blue-600 shadow-xs">
+            <i data-lucide="radar" class="w-4 h-4"></i>
+          </div>
+          <div>
+            <h3 class="text-sm sm:text-base font-extrabold text-slate-900 flex items-center gap-1.5 leading-none">
+              레이더 검색 모드
+              <span class="text-[10px] font-black px-1.5 py-0.5 rounded-full bg-blue-600 text-white tracking-wide">LIVE</span>
+            </h3>
+            <p class="text-[11px] text-slate-500 font-semibold mt-0.5">네이버 쇼핑 공식 카탈로그 실시간 최저가 추적</p>
+          </div>
+        </div>
+        <button 
+          id="closeRadarSearchModalBtn" 
+          type="button" 
+          class="p-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-500 hover:text-slate-700 active:scale-95 transition-all cursor-pointer"
+          title="검색창 닫기"
+        >
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+
+      <!-- 초대형 검색 입력창 (입력 커서 깜빡임 & 가상 자판 입력 준비) -->
+      <form id="modalSearchForm" class="relative flex items-center mb-3.5 shrink-0">
+        <div class="absolute left-3.5 text-blue-600 pointer-events-none">
+          <i data-lucide="search" class="w-4 h-4 sm:w-5 sm:h-5"></i>
+        </div>
+        <input 
+          type="text" 
+          id="modalSearchInput" 
+          placeholder="원하시는 상품과 수량 검색 (예: 신라면 20개, 햇반 24개)" 
+          autocomplete="off"
+          autocapitalize="none"
+          autocorrect="off"
+          spellcheck="false"
+          inputmode="search"
+          enterkeyhint="search"
+          class="w-full pl-10 pr-24 py-3.5 bg-slate-100/90 hover:bg-slate-100 focus:bg-white text-base sm:text-sm font-bold rounded-2xl border-2 border-slate-200 focus:border-blue-600 focus:ring-4 focus:ring-blue-500/10 transition-all outline-none text-slate-900"
+        >
+        <!-- 텍스트 지우기 버튼 -->
+        <button 
+          type="button" 
+          id="modalClearSearchBtn" 
+          class="hidden absolute right-16 p-1 text-slate-400 hover:text-slate-600 transition-colors"
+          title="검색어 지우기"
+        >
+          <i data-lucide="x" class="w-3.5 h-3.5"></i>
+        </button>
+        <button 
+          type="submit" 
+          class="absolute right-1.5 px-3.5 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white text-xs font-bold rounded-xl transition-all shadow-md shadow-blue-500/25 flex items-center space-x-1 active:scale-95 cursor-pointer"
+        >
+          <span>조회</span>
+          <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+        </button>
+      </form>
+
+      <!-- 1. 원클릭 수량 및 단위 보조 자판 (자판 입력 편의 기능) -->
+      <div class="mb-3.5">
+        <div class="flex items-center justify-between mb-1.5">
+          <span class="text-[11px] font-bold text-slate-600 flex items-center gap-1">
+            <i data-lucide="hash" class="w-3 h-3 text-blue-500"></i> 빠른 수량·단위 보조자판
+          </span>
+          <span class="text-[10px] text-slate-400">클릭 시 자동 추가</span>
+        </div>
+        <div class="flex flex-wrap gap-1.5" id="modalQuantityPad">
+          <button type="button" class="modal-pad-chip px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-blue-50 hover:text-blue-600 border border-slate-200/60 text-slate-700 text-xs font-semibold active:scale-95 transition-all cursor-pointer" data-append=" 20개">20개</button>
+          <button type="button" class="modal-pad-chip px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-blue-50 hover:text-blue-600 border border-slate-200/60 text-slate-700 text-xs font-semibold active:scale-95 transition-all cursor-pointer" data-append=" 24개">24개</button>
+          <button type="button" class="modal-pad-chip px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-blue-50 hover:text-blue-600 border border-slate-200/60 text-slate-700 text-xs font-semibold active:scale-95 transition-all cursor-pointer" data-append=" 30롤">30롤</button>
+          <button type="button" class="modal-pad-chip px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-blue-50 hover:text-blue-600 border border-slate-200/60 text-slate-700 text-xs font-semibold active:scale-95 transition-all cursor-pointer" data-append=" 24캔">24캔</button>
+          <button type="button" class="modal-pad-chip px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-blue-50 hover:text-blue-600 border border-slate-200/60 text-slate-700 text-xs font-semibold active:scale-95 transition-all cursor-pointer" data-append=" 6개">6개</button>
+          <button type="button" class="modal-pad-chip px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-blue-50 hover:text-blue-600 border border-slate-200/60 text-slate-700 text-xs font-semibold active:scale-95 transition-all cursor-pointer" data-append=" 10팩">10팩</button>
+          <button type="button" class="modal-pad-chip px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-blue-50 hover:text-blue-600 border border-slate-200/60 text-slate-700 text-xs font-semibold active:scale-95 transition-all cursor-pointer" data-append=" 40개">40개</button>
+          <button type="button" class="modal-pad-chip px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-blue-50 hover:text-blue-600 border border-slate-200/60 text-slate-700 text-xs font-semibold active:scale-95 transition-all cursor-pointer" data-append=" 1박스">1박스</button>
+        </div>
+      </div>
+
+      <!-- 2. 실시간 추천 검색어 (원터치 검색) -->
+      <div>
+        <div class="flex items-center justify-between mb-1.5">
+          <span class="text-[11px] font-bold text-slate-600 flex items-center gap-1">
+            <i data-lucide="flame" class="w-3 h-3 text-rose-500"></i> 실시간 추천 검색어
+          </span>
+          <span class="text-[10px] text-slate-400">즉시 조회</span>
+        </div>
+        <div class="flex flex-wrap gap-1.5" id="modalQuickSearchChips">
+          <button type="button" class="modal-quick-chip px-2.5 py-1.5 rounded-xl bg-slate-50 border border-slate-200/80 hover:bg-blue-50 hover:border-blue-300 text-slate-700 text-xs font-semibold active:scale-95 transition-all flex items-center gap-1 cursor-pointer" data-query="농심 신라면 봉지 20개입">
+            <span>🍜 신라면 20개</span>
+          </button>
+          <button type="button" class="modal-quick-chip px-2.5 py-1.5 rounded-xl bg-slate-50 border border-slate-200/80 hover:bg-blue-50 hover:border-blue-300 text-slate-700 text-xs font-semibold active:scale-95 transition-all flex items-center gap-1 cursor-pointer" data-query="CJ제일제당 햇반 210g 24개">
+            <span>🍚 햇반 24개</span>
+          </button>
+          <button type="button" class="modal-quick-chip px-2.5 py-1.5 rounded-xl bg-slate-50 border border-slate-200/80 hover:bg-blue-50 hover:border-blue-300 text-slate-700 text-xs font-semibold active:scale-95 transition-all flex items-center gap-1 cursor-pointer" data-query="코스트코 커클랜드 휴지 3겹 30롤">
+            <span>🧻 커클랜드 30롤</span>
+          </button>
+          <button type="button" class="modal-quick-chip px-2.5 py-1.5 rounded-xl bg-slate-50 border border-slate-200/80 hover:bg-blue-50 hover:border-blue-300 text-slate-700 text-xs font-semibold active:scale-95 transition-all flex items-center gap-1 cursor-pointer" data-query="코카콜라 제로 355ml 24캔">
+            <span>🥤 코카콜라 제로</span>
+          </button>
+          <button type="button" class="modal-quick-chip px-2.5 py-1.5 rounded-xl bg-slate-50 border border-slate-200/80 hover:bg-blue-50 hover:border-blue-300 text-slate-700 text-xs font-semibold active:scale-95 transition-all flex items-center gap-1 cursor-pointer" data-query="제주 삼다수 2L 6개">
+            <span>💧 삼다수 2L 6개</span>
+          </button>
+          <button type="button" class="modal-quick-chip px-2.5 py-1.5 rounded-xl bg-slate-50 border border-slate-200/80 hover:bg-blue-50 hover:border-blue-300 text-slate-700 text-xs font-semibold active:scale-95 transition-all flex items-center gap-1 cursor-pointer" data-query="사과">
+            <span>🍎 신선 사과</span>
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- 플로팅 토스트 알림 컴포넌트 (모바일/태블릿에서는 하단 탭 바 위 bottom-24에 위치) -->
+  <div id="toastNotification" class="fixed bottom-24 lg:bottom-6 left-1/2 -translate-x-1/2 z-50 transition-all duration-300 transform translate-y-16 opacity-0 pointer-events-none">
+    <div class="flex items-center space-x-2.5 px-4 sm:px-5 py-3 bg-slate-900/95 backdrop-blur-md text-white text-xs sm:text-sm font-semibold rounded-2xl shadow-2xl border border-slate-700/80">
+      <span id="toastIconBox" class="flex items-center justify-center w-6 h-6 rounded-full bg-blue-500/20 text-blue-400 shrink-0">
+        <i data-lucide="check-circle-2" class="w-4 h-4"></i>
+      </span>
+      <span id="toastMessage" class="text-slate-100 font-medium">최신 정보로 갱신되었습니다.</span>
+    </div>
+  </div>
+
+  <!-- PWA 모바일/태블릿/데스크톱 플로팅 설치 유도 배너 (A2HS - 모바일/태블릿에서는 하단 탭 바 위 bottom-24에 위치) -->
+  <div id="pwaInstallBanner" class="hidden fixed bottom-24 lg:bottom-5 left-4 right-4 sm:left-auto sm:right-6 sm:max-w-md z-40 bg-slate-900/95 backdrop-blur-xl border border-slate-700/80 rounded-2xl p-4 shadow-2xl text-white transition-all duration-300">
+    <div class="flex items-center gap-3">
+      <div class="w-11 h-11 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-600 p-0.5 shrink-0 shadow-md shadow-blue-500/30 flex items-center justify-center">
+        <img src="/icons/icon-192x192.png?v=20261002_logo" alt="PriceTrace" class="w-full h-full object-cover rounded-[10px]">
+      </div>
+      <div class="flex-1 min-w-0">
+        <div class="flex items-center gap-1.5">
+          <span class="font-extrabold text-sm text-white truncate">PriceTrace 앱 설치</span>
+          <span class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-blue-500/20 text-blue-300 border border-blue-500/30 shrink-0">PWA</span>
+        </div>
+        <p class="text-xs text-slate-400 truncate mt-0.5">홈 화면에서 주소창 없이 0.1초 만에 실행</p>
+      </div>
+      <div class="flex items-center gap-1.5 shrink-0">
+        <button id="pwaBannerInstallBtn" class="px-3.5 py-2 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white text-xs font-bold shadow-md shadow-blue-600/30 active:scale-95 transition-all cursor-pointer">
+          설치
+        </button>
+        <button id="pwaBannerDismissBtn" class="p-1.5 text-slate-400 hover:text-white rounded-lg transition-colors cursor-pointer" title="닫기">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 모바일/태블릿 프리미엄 바닥 밀착형 하단 네비게이션 바 (Docked Bottom Tab Bar) -->
+  <nav id="mobileBottomNav" class="lg:hidden fixed bottom-0 inset-x-0 w-full z-40 bg-white/95 backdrop-blur-xl border-t border-slate-200/90 shadow-[0_-4px_25px_-4px_rgba(15,23,42,0.08)] px-2 pt-1 pb-safe transition-all duration-300">
+    <div class="max-w-lg mx-auto flex items-end justify-around">
+      
+      <!-- 1. [홈] 탭 -->
+      <button 
+        type="button" 
+        id="mobileNavHomeBtn" 
+        data-mobile-tab="home" 
+        title="홈 화면으로 이동" 
+        class="mobile-nav-btn active group flex flex-col items-center justify-end flex-1 pb-1 pt-1 rounded-2xl transition-all cursor-pointer relative"
+      >
+        <div class="mobile-nav-pill flex flex-col items-center justify-center w-full max-w-[62px] py-1.5 px-1 rounded-2xl transition-all">
+          <div class="mobile-nav-icon-box flex items-center justify-center transition-all">
+            <i data-lucide="home" class="w-5 h-5"></i>
+          </div>
+          <span class="text-[10px] tracking-tight mt-1 leading-none font-bold">홈</span>
+        </div>
+      </button>
+
+      <!-- 2. [최저가 레이더 (검색)] 탭 -->
+      <button 
+        type="button" 
+        id="mobileNavSearchFabBtn" 
+        data-mobile-tab="search" 
+        title="실시간 최저가 탐색 (검색창 이동)" 
+        class="mobile-nav-btn radar-tab group flex flex-col items-center justify-end flex-1 pb-1 pt-1 rounded-2xl transition-all cursor-pointer relative"
+      >
+        <div class="mobile-nav-pill flex flex-col items-center justify-center w-full max-w-[62px] py-1.5 px-1 rounded-2xl transition-all">
+          <div class="mobile-nav-icon-box flex items-center justify-center transition-all">
+            <i data-lucide="radar" class="w-5 h-5"></i>
+          </div>
+          <span class="text-[10px] tracking-tight mt-1 leading-none font-semibold">레이더</span>
+        </div>
+      </button>
+
+      <!-- 3. [🏆 국민 필수 생필품] 탭 (상단 돌출 히어로 볼륨 뱃지 & 특화 강조) -->
+      <button 
+        type="button" 
+        id="mobileNavSteadyBtn" 
+        data-mobile-tab="steady" 
+        title="국민 필수 생필품 TOP 16" 
+        class="mobile-nav-btn hero-tab steady-tab flex flex-col items-center justify-end flex-1 pb-1 pt-0 transition-all cursor-pointer text-emerald-700 font-bold relative"
+      >
+        <div class="hero-nav-badge steady-badge active:scale-95">
+          <i data-lucide="trophy" class="text-white"></i>
+        </div>
+        <span class="text-[10px] tracking-tight mt-1 leading-none font-black text-emerald-700">생필품</span>
+      </button>
+
+      <!-- 4. [🔥 오늘 실시간 핫딜] 탭 (상단 돌출 히어로 볼륨 뱃지 & 특화 강조) -->
+      <button 
+        type="button" 
+        id="mobileNavHotdealBtn" 
+        data-mobile-tab="trending" 
+        title="오늘 실시간 핫딜 TOP 16" 
+        class="mobile-nav-btn hero-tab hotdeal-tab flex flex-col items-center justify-end flex-1 pb-1 pt-0 transition-all cursor-pointer text-rose-600 font-bold relative"
+      >
+        <div class="hero-nav-badge hotdeal-badge active:scale-95">
+          <i data-lucide="flame" class="text-white"></i>
+        </div>
+        <span class="text-[10px] tracking-tight mt-1 leading-none font-black text-rose-600">핫딜</span>
+      </button>
+
+      <!-- 5. [목표가/설정] 탭 -->
+      <button 
+        type="button" 
+        id="mobileNavConfigBtn" 
+        data-mobile-tab="config" 
+        title="목표가 알림 설정" 
+        class="mobile-nav-btn config-tab group flex flex-col items-center justify-end flex-1 pb-1 pt-1 rounded-2xl transition-all cursor-pointer relative"
+      >
+        <div class="mobile-nav-pill flex flex-col items-center justify-center w-full max-w-[62px] py-1.5 px-1 rounded-2xl transition-all">
+          <div class="mobile-nav-icon-box flex items-center justify-center transition-all">
+            <i data-lucide="sliders-horizontal" class="w-5 h-5"></i>
+          </div>
+          <span class="text-[10px] tracking-tight mt-1 leading-none font-semibold">설정</span>
+        </div>
+      </button>
+
+    </div>
+  </nav>
+
+  <!-- iOS Safari 전용 홈 화면 추가 안내 모달 -->
+  <div id="iosInstallModal" class="hidden fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-sm flex items-end sm:items-center justify-center p-4">
+    <div class="w-full max-w-sm bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-2xl text-white space-y-4">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-2.5">
+          <div class="w-9 h-9 rounded-xl bg-blue-600/20 border border-blue-500/30 flex items-center justify-center">
+            <i data-lucide="smartphone" class="w-5 h-5 text-blue-400"></i>
+          </div>
+          <h3 class="font-black text-base text-white">홈 화면에 앱 추가하기</h3>
+        </div>
+        <button id="closeIosInstallModalBtn" class="p-1 text-slate-400 hover:text-white rounded-lg">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+      
+      <p class="text-xs text-slate-300 leading-relaxed">
+        Safari 브라우저에서 아래 순서대로 진행하시면 홈 화면에서 독립 앱으로 즉시 실행됩니다:
+      </p>
+
+      <div class="space-y-2.5 text-xs text-slate-300">
+        <div class="flex items-center gap-3 p-2.5 rounded-xl bg-slate-800/60 border border-slate-700/50">
+          <span class="w-6 h-6 rounded-full bg-blue-600 text-white font-bold flex items-center justify-center text-xs shrink-0">1</span>
+          <span>Safari 하단 중앙의 <strong class="text-white">공유 버튼</strong>(<i data-lucide="share" class="w-3.5 h-3.5 inline mx-0.5 text-blue-400"></i>)을 탭합니다.</span>
+        </div>
+        <div class="flex items-center gap-3 p-2.5 rounded-xl bg-slate-800/60 border border-slate-700/50">
+          <span class="w-6 h-6 rounded-full bg-blue-600 text-white font-bold flex items-center justify-center text-xs shrink-0">2</span>
+          <span>공유 시트 메뉴에서 <strong class="text-white">'홈 화면에 추가'</strong>를 선택합니다.</span>
+        </div>
+        <div class="flex items-center gap-3 p-2.5 rounded-xl bg-slate-800/60 border border-slate-700/50">
+          <span class="w-6 h-6 rounded-full bg-blue-600 text-white font-bold flex items-center justify-center text-xs shrink-0">3</span>
+          <span>우측 상단의 <strong class="text-white">'추가'</strong>를 누르면 설치가 완료됩니다!</span>
+        </div>
+      </div>
+
+      <button id="confirmIosInstallBtn" class="w-full py-3 rounded-2xl bg-blue-600 hover:bg-blue-500 font-bold text-xs text-white shadow-lg shadow-blue-600/30 transition-all">
+        확인했습니다
+      </button>
+    </div>
+  </div>
+
+  <!-- 메인 스크립트 (모바일/태블릿 동적 인트로 스플래시 & 프로그레스 바 반영) -->
+  <script src="app.js?v=20261022_v148"></script>
+  <script>
+    // Lucide 아이콘 초기화
+    lucide.createIcons();
+  </script>
+  <!-- iOS 18+ WebKit Taptic Haptic Trigger -->
+    <!-- iOS 18+ WebKit Taptic Haptic Trigger -->
+  <div style="position: fixed; top: -9999px; left: -9999px; opacity: 0.001; pointer-events: none; width: 1px; height: 1px;" aria-hidden="true">
+    <input type="checkbox" switch id="iosHapticTrigger" tabindex="-1">
+    <label id="iosHapticTriggerLabel" for="iosHapticTrigger"></label>
+  </div>
+</body>
+</html>
