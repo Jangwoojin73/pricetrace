@@ -539,6 +539,7 @@ let STEADY_PRODUCTS_POOL = [
     title: "농심 신라면 20개",
     desc: "봉지라면 대표 베스트셀러<br>120g 20개 1박스 묶음",
     icon: "🍜",
+    image_url: "https://shop-phinf.pstatic.net/20251106_214/1762407596976acxbB_JPEG/44839668094579746_565605864.jpg?type=f750_750",
     bgClass: "bg-amber-50 border-amber-100/80"
   },
   {
@@ -548,6 +549,7 @@ let STEADY_PRODUCTS_POOL = [
     title: "CJ제일제당 햇반 24개",
     desc: "즉석밥 국민 필수 생필품<br>210g 24개 박스 특가",
     icon: "🍚",
+    image_url: "https://img.danuri.io/catalog-image/074/151/001/38cdd389a56f4c429c7d8ce164a1a2de.jpg",
     bgClass: "bg-slate-50 border-slate-100"
   },
   {
@@ -557,6 +559,7 @@ let STEADY_PRODUCTS_POOL = [
     title: "코카콜라 제로 24캔",
     desc: "탄산음료 압도적 1위<br>355ml 24캔 1박스 최저가",
     icon: "🥤",
+    image_url: "https://shop-phinf.pstatic.net/20260402_194/1775109012857lC9eR_JPEG/55146483987169084_1819069567.jpg?type=f750_750",
     bgClass: "bg-rose-50 border-rose-100/80"
   },
   {
@@ -566,6 +569,7 @@ let STEADY_PRODUCTS_POOL = [
     title: "제주 삼다수 2L 6개",
     desc: "국민 생수 정기 구매 필수<br>2L 6병 묶음 배송비 비교",
     icon: "💧",
+    image_url: "https://img.danuri.io/catalog-image/738/059/015/6626cd689d41417fa7efa0c15ff08d68.jpg",
     bgClass: "bg-sky-50 border-sky-100/80"
   },
   {
@@ -575,6 +579,7 @@ let STEADY_PRODUCTS_POOL = [
     title: "오뚜기 진라면 40개",
     desc: "가성비 라면 최강자<br>120g 40개 벌크 대용량",
     icon: "🍜",
+    image_url: "https://img.danuri.io/catalog-image/116/239/001/d5361d4f097e4c10a2e44c8a1e1d117a.jpg",
     bgClass: "bg-amber-50 border-amber-100/80"
   },
   {
@@ -584,6 +589,7 @@ let STEADY_PRODUCTS_POOL = [
     title: "맥심 모카골드 160T",
     desc: "국민 믹스커피 대용량<br>사무실·가정 필수 상비품",
     icon: "☕",
+    image_url: "https://img.danuri.io/catalog-image/166/251/002/2042e67b69b241ff80d5276b753cd379.jpg",
     bgClass: "bg-yellow-50 border-yellow-100/80"
   },
   {
@@ -593,6 +599,7 @@ let STEADY_PRODUCTS_POOL = [
     title: "크리넥스 롤화장지 30롤",
     desc: "도톰한 3겹 천연펄프<br>프리미엄 롤티슈 최저가",
     icon: "🧻",
+    image_url: "https://img.danuri.io/catalog-image/660/069/071/b9cc000c5f614c179ed35a4eb82995be.jpg",
     bgClass: "bg-purple-50 border-purple-100/80"
   },
   {
@@ -602,6 +609,7 @@ let STEADY_PRODUCTS_POOL = [
     title: "퍼실 드럼 액체세제",
     desc: "독일 No.1 세탁세제<br>딥클린 테크놀로지 특가",
     icon: "🧼",
+    image_url: "https://img.danuri.io/catalog-image/729/381/007/ed3368ec3d3a430f880b272bbea12da9.jpg",
     bgClass: "bg-emerald-50 border-emerald-100/80"
   },
   {
@@ -611,6 +619,7 @@ let STEADY_PRODUCTS_POOL = [
     title: "동원참치 라이트 10캔",
     desc: "살코기 참치 국민 반찬<br>100g 10캔 묶음 실속팩",
     icon: "🐟",
+    image_url: "https://img.danuri.io/catalog-image/889/094/003/9b1f5e9d0857463ebba10f715881c253.jpg",
     bgClass: "bg-blue-50 border-blue-100/80"
   },
   {
@@ -620,6 +629,7 @@ let STEADY_PRODUCTS_POOL = [
     title: "베베숲 프리미엄 물티슈",
     desc: "엠보싱 고평점 물티슈<br>70매 10팩 대용량 박스",
     icon: "👶",
+    image_url: "https://img.danuri.io/catalog-image/056/717/018/0731f60a26164a7f850884285a0d0d12.jpg",
     bgClass: "bg-indigo-50 border-indigo-100/80"
   },
   {
@@ -629,6 +639,7 @@ let STEADY_PRODUCTS_POOL = [
     title: "맛있는 오뚜기밥 24개",
     desc: "가성비 즉석밥 대표<br>210g 24개 1박스 특가",
     icon: "🍚",
+    image_url: "https://img.danuri.io/catalog-image/054/152/001/75bfef8375274ac4aaa3c96f50690f24.jpg",
     bgClass: "bg-orange-50 border-orange-100/80"
   },
   {
@@ -638,6 +649,7 @@ let STEADY_PRODUCTS_POOL = [
     title: "농심 안성탕면 20개",
     desc: "구수한 된장 베이스 라면<br>125g 20개 1박스 최저가",
     icon: "🍜",
+    image_url: "https://img.danuri.io/catalog-image/905/238/001/1d15bf988b4b4c8aa8e4f6a6565f401a.jpg",
     bgClass: "bg-amber-50 border-amber-100/80"
   },
   {
@@ -647,6 +659,7 @@ let STEADY_PRODUCTS_POOL = [
     title: "칠성사이다 제로 24캔",
     desc: "짜릿한 청량감 끝판왕<br>355ml 24캔 뚱캔 박스",
     icon: "🍏",
+    image_url: "https://img.danuri.io/catalog-image/201/472/013/4919bce162ff4874b54fc8b6ab9fe573.jpg",
     bgClass: "bg-emerald-50 border-emerald-100/80"
   },
   {
@@ -656,6 +669,7 @@ let STEADY_PRODUCTS_POOL = [
     title: "다우니 섬유유연제 3개",
     desc: "초고농축 상쾌한 향기<br>1L 3개 묶음 배송비 절약",
     icon: "🌸",
+    image_url: "https://img.danuri.io/catalog-image/860/407/013/2ef507095066450d8d739c09238cb048.jpg",
     bgClass: "bg-pink-50 border-pink-100/80"
   },
   {
@@ -665,6 +679,7 @@ let STEADY_PRODUCTS_POOL = [
     title: "페브리즈 리필 4개입",
     desc: "강력 항균 탈취 리필<br>가성비 4개 묶음 패키지",
     icon: "✨",
+    image_url: "https://img.danuri.io/catalog-image/998/987/010/44820825b44e4b15b79cdcf120ff73e3.jpg",
     bgClass: "bg-sky-50 border-sky-100/80"
   },
   {
@@ -674,6 +689,7 @@ let STEADY_PRODUCTS_POOL = [
     title: "CJ 스팸 클래식 10캔",
     desc: "국민 밥도둑 정품 캔햄<br>200g 10개 실속 묶음",
     icon: "🍖",
+    image_url: "https://img.danuri.io/catalog-image/210/006/001/5b881f953b1947acad0eba6c5b839b7d.jpg",
     bgClass: "bg-rose-50 border-rose-100/80"
   }
 ];
@@ -1506,12 +1522,14 @@ function renderChart(history, targetPrice) {
 function setLoadingUI(isLoading) {
   const mobileRefreshIcon = elements.mobileRefreshBtn ? elements.mobileRefreshBtn.querySelector("svg, i") : null;
   if (isLoading) {
-    if (elements.refreshIcon) elements.refreshIcon.classList.add("animate-spin");
+    const liveIcon = document.getElementById("refreshIcon") || (elements.refreshBtn ? elements.refreshBtn.querySelector("svg, i") : null);
+    if (liveIcon) liveIcon.classList.add("animate-spin");
     if (mobileRefreshIcon) mobileRefreshIcon.classList.add("animate-spin");
     elements.lowestPriceDisplay.classList.add("skeleton");
     elements.unitPriceDisplay.classList.add("skeleton");
   } else {
-    if (elements.refreshIcon) elements.refreshIcon.classList.remove("animate-spin");
+    const liveIcon = document.getElementById("refreshIcon") || (elements.refreshBtn ? elements.refreshBtn.querySelector("svg, i") : null);
+    if (liveIcon) liveIcon.classList.remove("animate-spin");
     if (mobileRefreshIcon) mobileRefreshIcon.classList.remove("animate-spin");
     elements.lowestPriceDisplay.classList.remove("skeleton");
     elements.unitPriceDisplay.classList.remove("skeleton");
@@ -1599,11 +1617,12 @@ function shuffleAndRenderRecommendations(animate = false) {
     ? STEADY_PRODUCTS_POOL
     : TRENDING_PRODUCTS_POOL;
 
-  const shuffled = shuffleArray(currentPool);
+  // 순차 랭킹 유지 (수동 셔플 클릭 시에만 무작위 셔플)
+  const poolItems = (animate && state.isManualShuffle) ? shuffleArray(currentPool) : currentPool;
 
   // 1. 상단 인기 검색어 칩 (상위 5개) 렌더링
   if (elements.quickChipsContainer) {
-    const topChips = shuffled.slice(0, 5);
+    const topChips = poolItems.slice(0, 5);
     elements.quickChipsContainer.innerHTML = topChips.map(item => `
       <button 
         type="button" 
@@ -1625,9 +1644,9 @@ function shuffleAndRenderRecommendations(animate = false) {
     });
   }
 
-  // 2. 메인 웰컴 추천 카드 (상위 4개) 렌더링
+  // 2. 메인 웰컴 추천 카드 (32대 전 품목 듀얼 탭 16종 전수) 렌더링
   if (elements.welcomeCardsContainer) {
-    const topCards = shuffled.slice(0, 4);
+    const displayCards = poolItems; // 16종 전수 렌더링 보장
 
     if (animate) {
       elements.welcomeCardsContainer.classList.add("opacity-20");
@@ -1635,12 +1654,17 @@ function shuffleAndRenderRecommendations(animate = false) {
 
     setTimeout(() => {
       const isSteady = state.activeTab === "steady";
-      elements.welcomeCardsContainer.innerHTML = topCards.map(item => `
+      elements.welcomeCardsContainer.innerHTML = displayCards.map(item => `
         <div class="welcome-card group bg-white rounded-3xl p-5 border border-slate-200/80 shadow-xs hover:shadow-lg hover:border-blue-600/40 transition-all duration-300 flex flex-col justify-between cursor-pointer" data-keyword="${item.keyword}">
           <div>
-            <div class="flex items-center justify-between mb-3">
-              <span class="text-2xl p-2 rounded-2xl ${item.bgClass || 'bg-slate-50 border-slate-100'}">${item.icon || '🛍️'}</span>
-              <span class="text-[11px] font-bold ${isSteady ? 'text-emerald-700 bg-emerald-50' : 'text-amber-700 bg-amber-50'} px-2.5 py-1 rounded-full">${item.tag || (isSteady ? '생필품' : '오늘 핫딜')}</span>
+            <div class="flex items-center space-x-3 mb-3">
+              <div class="w-12 h-12 rounded-2xl ${item.bgClass || 'bg-slate-50 border-slate-100'} p-1 flex items-center justify-center shrink-0 border border-slate-200/80 overflow-hidden shadow-2xs">
+                ${item.image_url ? `<img src="${item.image_url}" alt="${item.title || item.keyword}" class="w-full h-full object-cover rounded-xl" loading="eager" onerror="this.onerror=null;this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'48\' height=\'48\' viewBox=\'0 0 48 48\'><rect width=\'48\' height=\'48\' rx=\'12\' fill=\'%23F1F5F9\'/><text x=\'50%25\' y=\'55%25\' dominant-baseline=\'middle\' text-anchor=\'middle\' font-size=\'24\'>${encodeURIComponent(item.icon || '🛍️')}</text></svg>'">` : `<img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='48' height='48' viewBox='0 0 48 48'><rect width='48' height='48' rx='12' fill='%23F1F5F9'/><text x='50%25' y='55%25' dominant-baseline='middle' text-anchor='middle' font-size='24'>${encodeURIComponent(item.icon || '🛍️')}</text></svg>" alt="${item.title || item.keyword}" class="w-full h-full object-cover rounded-xl" loading="eager">`}
+              </div>
+              <div class="flex flex-col">
+                <span class="text-[11px] font-bold ${isSteady ? 'text-emerald-700 bg-emerald-50 border border-emerald-200/60' : 'text-amber-700 bg-amber-50 border border-amber-200/60'} px-2 py-0.5 rounded-full inline-block self-start">${item.tag || (isSteady ? '생필품' : '오늘 핫딜')}</span>
+                <span class="text-[10px] text-slate-400 font-medium mt-0.5">${item.category || (isSteady ? '국민 필수품' : '실시간 랭킹')}</span>
+              </div>
             </div>
             <h3 class="text-base font-bold text-slate-900 group-hover:text-blue-600 transition-colors">${item.title || item.keyword}</h3>
             <p class="text-xs text-slate-500 mt-1">${item.desc || '실시간 가격비교 최저가'}</p>
@@ -1756,7 +1780,9 @@ function initEventListeners() {
   // 웰컴 카드 '다른 추천 보기' 버튼
   if (elements.refreshRecommendCardsBtn) {
     elements.refreshRecommendCardsBtn.addEventListener("click", () => {
+      state.isManualShuffle = true;
       shuffleAndRenderRecommendations(true);
+      state.isManualShuffle = false;
     });
   }
 
@@ -1939,7 +1965,13 @@ function initEventListeners() {
       const now = Date.now();
       if (now - lastRadarTapTime < 300) return;
       lastRadarTapTime = now;
+      if (elements.mobileNavSearchFabBtn) {
+        try { elements.mobileNavSearchFabBtn.blur(); } catch(err) {}
+      }
       openRadarSearchModal();
+      if (elements.modalSearchInput) {
+        try { elements.modalSearchInput.focus(); } catch(err) {}
+      }
     };
 
     elements.mobileNavSearchFabBtn.addEventListener("click", handleRadarTabTap);

@@ -1944,6 +1944,7 @@ def _crawl_single_trending_item(cat_def: Dict[str, Any]) -> Dict[str, Any]:
 
     live_price = 0
     live_title = cat_def["default_title"]
+    live_img = ""
 
     # 100% 네이버 공식 프리셋 풀에서 즉시 실시간 가격 및 상품명 매칭
     for k, items in NAVER_PRESET_ITEMS.items():
@@ -1951,6 +1952,7 @@ def _crawl_single_trending_item(cat_def: Dict[str, Any]) -> Dict[str, Any]:
             if items:
                 live_price = items[0].get("price", 0)
                 live_title = items[0].get("title", live_title)
+                live_img = items[0].get("image_url", "")
             break
 
     # 설명 텍스트 구성 (실시간 최저가 가격 포함)
@@ -1970,6 +1972,7 @@ def _crawl_single_trending_item(cat_def: Dict[str, Any]) -> Dict[str, Any]:
         "icon": cat_def["icon"],
         "bgClass": cat_def["bgClass"],
         "price": live_price,
+        "image_url": live_img,
         "category": cat_def["category"]
     }
 
