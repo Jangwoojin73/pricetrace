@@ -164,8 +164,15 @@ html {
 
 /* 맨 위로 이동 (Scroll to Top) 플로팅 버튼 (n03 레퍼런스 스타일) */
 #scrollTopFabBtn {
+  bottom: max(6.75rem, calc(env(safe-area-inset-bottom, 0px) + 5.5rem));
   transition: opacity 0.28s ease, transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), bottom 0.32s cubic-bezier(0.16, 1, 0.3, 1);
   will-change: transform, opacity, bottom;
+}
+
+@media (min-width: 1024px) {
+  #scrollTopFabBtn {
+    bottom: 1.5rem !important;
+  }
 }
 
 #scrollTopFabBtn.visible {
@@ -176,7 +183,7 @@ html {
 
 /* 하단 독 숨김 시 플로팅 탑 버튼 위치 하향 조정 */
 body.nav-dock-collapsed #scrollTopFabBtn {
-  bottom: max(1.25rem, calc(env(safe-area-inset-bottom, 0px) + 0.75rem)) !important;
+  bottom: max(1.5rem, calc(env(safe-area-inset-bottom, 0px) + 1rem)) !important;
 }
 
 /* 하단 독 숨김 시 토스트 알림 위치 하향 조정 */
