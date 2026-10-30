@@ -14,7 +14,8 @@ const state = {
   chart: null,
   isLoading: false,
   view: "welcome", // "welcome" | "result"
-  activeTab: "steady" // "steady" | "trending"
+  activeTab: "steady", // "steady" | "trending"
+  isProgrammaticScroll: false
 };
 
 // 판매자 도배 수식어 정제 헬퍼 (네이버 가격비교 카탈로그 매칭 보장 & 핵심 단위 보존)
@@ -798,6 +799,9 @@ const elements = {
   toastNotification: document.getElementById("toastNotification"),
   toastMessage: document.getElementById("toastMessage"),
   toastIconBox: document.getElementById("toastIconBox"),
+
+  // 맨 위로 이동 플로팅 버튼
+  scrollTopFabBtn: document.getElementById("scrollTopFabBtn"),
 
   // 모바일 전용 플로팅 하단 네비게이션 바
   mobileBottomNav: document.getElementById("mobileBottomNav"),
@@ -1924,10 +1928,18 @@ function initEventListeners() {
 
   // 듀얼 탭(핫딜/생필품) 2개 버튼 위치로 정확하고 일관되게 고정 스크롤
   function scrollToDualTabs() {
+    state.isProgrammaticScroll = true;
+    if (elements.mobileBottomNav) {
+      elements.mobileBottomNav.classList.remove("nav-dock-hidden");
+      document.body.classList.remove("nav-dock-collapsed");
+    }
     requestAnimationFrame(() => {
       const targetElement = document.getElementById("dualTabSwitcherSection") || document.getElementById("dualTabButtonsTray");
       const header = document.querySelector("header");
-      if (!targetElement) return;
+      if (!targetElement) {
+        state.isProgrammaticScroll = false;
+        return;
+      }
 
       const headerHeight = header ? header.offsetHeight : 0;
       const elementRect = targetElement.getBoundingClientRect();
@@ -1941,6 +1953,9 @@ function initEventListeners() {
         top: targetScrollY,
         behavior: "smooth"
       });
+      setTimeout(() => {
+        state.isProgrammaticScroll = false;
+      }, 700);
     });
   }
 
@@ -2635,12 +2650,113 @@ window.showSplashDemo = function() {
   setupSplashScreen();
 };
 
+
+// ==========================================================================
+// [스마트 스크롤 하단 네비게이션 & 맨 위로 가기 플로팅 버튼 (n01 -> n02 -> n03)]
+// - n01(상단 안전지대): 하단 5대 탭 바 100% 노출
+// - n02(다운스크롤 delta >= 8px): 하단 바 슬라이드 다운 숨김 (컨텐츠 뷰포트 극대화)
+// - n03(업스크롤 delta <= -5px): 조금이라도 위로 올리면 즉시 스르륵 복귀 + 350px 이상 시 탑 버튼 노출
+// ==========================================================================
+function setupSmartScrollBottomNav() {
+  const nav = elements.mobileBottomNav || document.getElementById("mobileBottomNav");
+  const topFab = elements.scrollTopFabBtn || document.getElementById("scrollTopFabBtn");
+  if (!nav) return;
+
+  let lastScrollY = window.pageYOffset || window.scrollY || 0;
+  let isTicking = false;
+
+  function hideBottomNav() {
+    if (nav.classList.contains("nav-dock-hidden")) return;
+    nav.classList.add("nav-dock-hidden");
+    document.body.classList.add("nav-dock-collapsed");
+  }
+
+  function revealBottomNav() {
+    if (!nav.classList.contains("nav-dock-hidden")) return;
+    nav.classList.remove("nav-dock-hidden");
+    document.body.classList.remove("nav-dock-collapsed");
+  }
+
+  function updateTopFabVisibility(currentScrollY) {
+    if (!topFab) return;
+    // 350px 이상 스크롤 시 부드럽게 노출 (n03 레퍼런스 스타일)
+    if (currentScrollY > 350) {
+      topFab.classList.add("visible");
+    } else {
+      topFab.classList.remove("visible");
+    }
+  }
+
+  // 맨 위로 이동 (Scroll to Top) 버튼 클릭 리스너
+  if (topFab) {
+    topFab.addEventListener("click", () => {
+      try {
+        triggerTactileFeedback("light");
+      } catch(e) {}
+      state.isProgrammaticScroll = true;
+      revealBottomNav();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      setTimeout(() => {
+        state.isProgrammaticScroll = false;
+      }, 800);
+    });
+  }
+
+  function handleSmartScroll() {
+    const scrollY = window.pageYOffset || window.scrollY || document.documentElement.scrollTop || 0;
+    const maxScroll = Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
+    const clampedScrollY = Math.max(0, Math.min(scrollY, maxScroll));
+    const delta = clampedScrollY - lastScrollY;
+
+    updateTopFabVisibility(clampedScrollY);
+
+    // 1. 프로그래밍 자동 스크롤 중이거나 모달 창이 열려 있는 경우 보호
+    const isModalOpen = (elements.radarSearchModal && !elements.radarSearchModal.classList.contains("modal-hidden")) ||
+                        (elements.configModal && !elements.configModal.classList.contains("hidden")) ||
+                        (elements.iosInstallModal && !elements.iosInstallModal.classList.contains("hidden"));
+
+    if (state.isProgrammaticScroll || isModalOpen) {
+      revealBottomNav();
+      lastScrollY = clampedScrollY;
+      return;
+    }
+
+    // 2. 최상단 안전 지대 (scrollY <= 60px): 무조건 네비게이션 바 상시 노출 (n01 시작 화면)
+    if (clampedScrollY <= 60) {
+      revealBottomNav();
+    } 
+    // 3. 아래로 스크롤 (delta >= 8px): 화면 아래로 숨김 (n02 풀스크린 탐색)
+    else if (delta >= 8) {
+      hideBottomNav();
+    } 
+    // 4. 조금이라도 위로 스크롤 (delta <= -5px): 즉시 스르륵 올라와 재등장 (n03 메뉴 복귀)
+    else if (delta <= -5) {
+      revealBottomNav();
+    }
+
+    lastScrollY = clampedScrollY;
+  }
+
+  window.addEventListener("scroll", () => {
+    if (!isTicking) {
+      window.requestAnimationFrame(() => {
+        handleSmartScroll();
+        isTicking = false;
+      });
+      isTicking = true;
+    }
+  }, { passive: true });
+}
+
 // 초기 실행
 function initApp() {
   // 모바일/태블릿 동적 인트로 스플래시 화면 초기화
   setupSplashScreen();
 
   initEventListeners();
+
+  // 모바일 스마트 스크롤 하단 네비게이션 바 & 탑 버튼 초기화 (n01 -> n02 -> n03)
+  setupSmartScrollBottomNav();
 
   // PWA 서비스 워커 및 설치 경험 모듈 구동
   registerPwaServiceWorker();
