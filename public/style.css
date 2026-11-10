@@ -564,10 +564,10 @@ html, body, button, a, input, select, textarea, .modal-pad-chip, .modal-quick-ch
   transform: none !important;
 }
 
-/* 모바일 전용 (iOS Safari, PWA, 웹뷰 등 전 환경): 상태표시줄과 최적 밀착 (추가 4px 상향 밀착, 총 10px 컴팩트 여백 적용) */
+/* 모바일 전용 (iOS Safari, PWA, 웹뷰 등 전 환경): 상태표시줄과 최적 밀착 (추가 6px 상향 밀착 -> 34px 최종 정밀 튜닝) */
 @media (max-width: 1023px) {
   #topLiveBanner {
-    padding-top: max(2.5rem, calc(env(safe-area-inset-top, 2.75rem) - 0.5rem)) !important;
+    padding-top: max(2.125rem, calc(env(safe-area-inset-top, 2.125rem) - 0.625rem)) !important;
     padding-bottom: 0.5rem !important;
   }
 }
