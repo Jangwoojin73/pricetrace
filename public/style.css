@@ -191,6 +191,50 @@ body.nav-dock-collapsed #toastNotification {
   bottom: max(1.5rem, calc(env(safe-area-inset-bottom, 0px) + 1rem)) !important;
 }
 
+/* ==========================================================================
+   스마트 스크롤: 모바일/태블릿 헤더 검색바 동적 접힘 (Accordion Collapse)
+   - 아래로 스크롤 시 검색 입력창 + 인기 태그 칩이 화면 위로 스르륵 접혀 본문 뷰포트 극대화
+   - 위로 스크롤 시 또는 최상단 복귀 시 부드럽게 다시 펼쳐짐
+   ========================================================================== */
+@media (max-width: 1023px) {
+  #gnbSearchSection {
+    max-height: 130px;
+    opacity: 1;
+    transform: translateY(0);
+    overflow: hidden;
+    transition: max-height 0.32s cubic-bezier(0.16, 1, 0.3, 1),
+                opacity 0.22s ease,
+                transform 0.32s cubic-bezier(0.16, 1, 0.3, 1),
+                margin 0.32s cubic-bezier(0.16, 1, 0.3, 1),
+                padding 0.32s cubic-bezier(0.16, 1, 0.3, 1);
+    will-change: max-height, opacity, transform;
+  }
+
+  body.header-search-collapsed #gnbSearchSection {
+    max-height: 0 !important;
+    min-height: 0 !important;
+    height: 0 !important;
+    opacity: 0 !important;
+    transform: translateY(-8px) scale(0.98) !important;
+    margin-top: -0.5rem !important; /* 부모 flex flex-col gap-2 상쇄 */
+    margin-bottom: 0 !important;
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+    pointer-events: none !important;
+  }
+}
+
+/* 데스크톱(1024px 이상): 상시 100% 정상 노출 가드 (접힘 상태 클래스 무력화) */
+@media (min-width: 1024px) {
+  #gnbSearchSection {
+    max-height: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+    overflow: visible !important;
+    pointer-events: auto !important;
+  }
+}
+
 /* 활성 탭 인디케이터 스타일 동기화 */
 .mobile-nav-btn.active {
   color: #2563eb !important;

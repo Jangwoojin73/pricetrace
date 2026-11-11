@@ -734,6 +734,7 @@ const elements = {
   mobileBtnTargetPriceDisplay: document.getElementById("mobileBtnTargetPriceDisplay"),
 
   // 검색
+  gnbSearchSection: document.getElementById("gnbSearchSection"),
   searchForm: document.getElementById("searchForm"),
   searchInput: document.getElementById("searchInput"),
   clearSearchBtn: document.getElementById("clearSearchBtn"),
@@ -2658,24 +2659,42 @@ window.showSplashDemo = function() {
 // - n02(다운스크롤 delta >= 8px): 하단 바 슬라이드 다운 숨김 (컨텐츠 뷰포트 극대화)
 // - n03(업스크롤 delta <= -5px): 조금이라도 위로 올리면 즉시 스르륵 복귀 + 350px 이상 시 탑 버튼 노출
 // ==========================================================================
+// 스마트 스크롤: 하단 네비게이션 독 & 상단 검색바 동기화 접힘/펼침 제어 (n01 -> n02 -> n03)
+// ==========================================================================
 function setupSmartScrollBottomNav() {
   const nav = elements.mobileBottomNav || document.getElementById("mobileBottomNav");
   const topFab = elements.scrollTopFabBtn || document.getElementById("scrollTopFabBtn");
+  const searchInput = elements.searchInput || document.getElementById("searchInput");
   if (!nav) return;
 
   let lastScrollY = window.pageYOffset || window.scrollY || 0;
   let isTicking = false;
 
-  function hideBottomNav() {
-    if (nav.classList.contains("nav-dock-hidden")) return;
-    nav.classList.add("nav-dock-hidden");
-    document.body.classList.add("nav-dock-collapsed");
+  function hideBottomNavAndHeaderSearch() {
+    // 하단 네비 독 숨김
+    if (!nav.classList.contains("nav-dock-hidden")) {
+      nav.classList.add("nav-dock-hidden");
+      document.body.classList.add("nav-dock-collapsed");
+    }
+
+    // 상단 검색바 접힘 (단, 검색창에 현재 포커스가 있거나 타이핑 중인 경우 사용자 편의를 위해 유지)
+    const isSearchFocused = (searchInput && document.activeElement === searchInput);
+    if (!isSearchFocused && !document.body.classList.contains("header-search-collapsed")) {
+      document.body.classList.add("header-search-collapsed");
+    }
   }
 
-  function revealBottomNav() {
-    if (!nav.classList.contains("nav-dock-hidden")) return;
-    nav.classList.remove("nav-dock-hidden");
-    document.body.classList.remove("nav-dock-collapsed");
+  function revealBottomNavAndHeaderSearch() {
+    // 하단 네비 독 복귀
+    if (nav.classList.contains("nav-dock-hidden")) {
+      nav.classList.remove("nav-dock-hidden");
+      document.body.classList.remove("nav-dock-collapsed");
+    }
+
+    // 상단 검색바 복귀
+    if (document.body.classList.contains("header-search-collapsed")) {
+      document.body.classList.remove("header-search-collapsed");
+    }
   }
 
   function updateTopFabVisibility(currentScrollY) {
@@ -2695,7 +2714,7 @@ function setupSmartScrollBottomNav() {
         triggerTactileFeedback("light");
       } catch(e) {}
       state.isProgrammaticScroll = true;
-      revealBottomNav();
+      revealBottomNavAndHeaderSearch();
       window.scrollTo({ top: 0, behavior: "smooth" });
       setTimeout(() => {
         state.isProgrammaticScroll = false;
@@ -2717,22 +2736,22 @@ function setupSmartScrollBottomNav() {
                         (elements.iosInstallModal && !elements.iosInstallModal.classList.contains("hidden"));
 
     if (state.isProgrammaticScroll || isModalOpen) {
-      revealBottomNav();
+      revealBottomNavAndHeaderSearch();
       lastScrollY = clampedScrollY;
       return;
     }
 
-    // 2. 최상단 안전 지대 (scrollY <= 60px): 무조건 네비게이션 바 상시 노출 (n01 시작 화면)
-    if (clampedScrollY <= 60) {
-      revealBottomNav();
+    // 2. 최상단 안전 지대 (scrollY <= 80px): 무조건 네비게이션 바 및 검색바 상시 노출 (n01 시작 화면)
+    if (clampedScrollY <= 80) {
+      revealBottomNavAndHeaderSearch();
     } 
-    // 3. 아래로 스크롤 (delta >= 8px): 화면 아래로 숨김 (n02 풀스크린 탐색)
-    else if (delta >= 8) {
-      hideBottomNav();
+    // 3. 아래로 스크롤 (delta >= 10px 및 scrollY > 80px): 화면 아래로 하단 독 숨김 + 상단 검색바 접힘 (n02 풀스크린 탐색)
+    else if (delta >= 10 && clampedScrollY > 80) {
+      hideBottomNavAndHeaderSearch();
     } 
     // 4. 조금이라도 위로 스크롤 (delta <= -5px): 즉시 스르륵 올라와 재등장 (n03 메뉴 복귀)
     else if (delta <= -5) {
-      revealBottomNav();
+      revealBottomNavAndHeaderSearch();
     }
 
     lastScrollY = clampedScrollY;
