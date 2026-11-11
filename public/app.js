@@ -2759,6 +2759,9 @@ function initApp() {
   // 모바일 스마트 스크롤 하단 네비게이션 바 & 탑 버튼 초기화 (n01 -> n02 -> n03)
   setupSmartScrollBottomNav();
 
+  // 모바일/태블릿 히어로 Pull-to-Refresh 풀다운 새로고침 초기화
+  setupPullToRefresh();
+
   // PWA 서비스 워커 및 설치 경험 모듈 구동
   registerPwaServiceWorker();
   setupPwaInstallation();

@@ -737,7 +737,7 @@ header.sticky {
    - 아래로 당길 때만: flex로 전환되며 고정 헤더 바로 아래에 플로팅 캡슐 형태로 부드럽게 등장
    ========================================================================== */
 #ptrIndicator {
-  display: none !important;
+  display: none;
   position: fixed !important;
   left: 0 !important;
   right: 0 !important;
