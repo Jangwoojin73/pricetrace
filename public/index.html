@@ -311,7 +311,23 @@
   </header>
 
   <!-- 메인 본문 컨테이너 (모바일/태블릿 하단 네비게이션 바 여백 pb-28 확보) -->
-  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 pb-28 lg:pb-8 space-y-8">
+  <main id="mainContent" class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 pb-28 lg:pb-8 space-y-8">
+
+    <!-- 모바일/태블릿 전용 커스텀 Pull-to-Refresh 인디케이터 (헤더 고정, 히어로 섹션 상단에서 동작) -->
+    <div id="ptrIndicator" class="ptr-indicator-wrap" aria-hidden="true">
+      <div class="ptr-pill">
+        <span id="ptrIconBox" class="ptr-icon-box">
+          <svg id="ptrArrow" class="w-4 h-4 text-sky-400 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
+          </svg>
+          <svg id="ptrSpinner" class="w-4 h-4 text-sky-400 animate-spin hidden" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+          </svg>
+        </span>
+        <span id="ptrText" class="text-xs font-bold text-sky-200 tracking-tight">당겨서 최저가 새로고침</span>
+      </div>
+    </div>
 
     <!-- ============================================== -->
     <!-- [VIEW 1] 초기 웰컴 & 서비스 탐색 화면 (Welcome View) -->
@@ -1247,32 +1263,36 @@
         </div>
       </button>
 
-      <!-- 3. [🏆 국민 필수 생필품] 탭 (상단 돌출 히어로 볼륨 뱃지 & 특화 강조) -->
+      <!-- 3. [🏆 국민 필수 생필품] 탭 (평범한 크기 축소 & 메뉴 바 안으로 최적화) -->
       <button 
         type="button" 
         id="mobileNavSteadyBtn" 
         data-mobile-tab="steady" 
         title="국민 필수 생필품 TOP 16" 
-        class="mobile-nav-btn hero-tab steady-tab flex flex-col items-center justify-end flex-1 pb-1 pt-0 transition-all cursor-pointer text-emerald-700 font-bold relative"
+        class="mobile-nav-btn hero-tab steady-tab group flex flex-col items-center justify-end flex-1 pb-1 pt-1 rounded-2xl transition-all cursor-pointer relative"
       >
-        <div class="hero-nav-badge steady-badge active:scale-95">
-          <i data-lucide="trophy" class="text-white"></i>
+        <div class="mobile-nav-pill flex flex-col items-center justify-center w-full max-w-[62px] py-1.5 px-1 rounded-2xl transition-all">
+          <div class="hero-nav-badge steady-badge flex items-center justify-center transition-all">
+            <i data-lucide="trophy" class="text-white"></i>
+          </div>
+          <span class="text-[10px] tracking-tight mt-1 leading-none font-bold text-emerald-700">생필품</span>
         </div>
-        <span class="text-[10px] tracking-tight mt-1 leading-none font-black text-emerald-700">생필품</span>
       </button>
 
-      <!-- 4. [🔥 오늘 실시간 핫딜] 탭 (상단 돌출 히어로 볼륨 뱃지 & 특화 강조) -->
+      <!-- 4. [🔥 오늘 실시간 핫딜] 탭 (평범한 크기 축소 & 메뉴 바 안으로 최적화) -->
       <button 
         type="button" 
         id="mobileNavHotdealBtn" 
         data-mobile-tab="trending" 
         title="오늘 실시간 핫딜 TOP 16" 
-        class="mobile-nav-btn hero-tab hotdeal-tab flex flex-col items-center justify-end flex-1 pb-1 pt-0 transition-all cursor-pointer text-rose-600 font-bold relative"
+        class="mobile-nav-btn hero-tab hotdeal-tab group flex flex-col items-center justify-end flex-1 pb-1 pt-1 rounded-2xl transition-all cursor-pointer relative"
       >
-        <div class="hero-nav-badge hotdeal-badge active:scale-95">
-          <i data-lucide="flame" class="text-white"></i>
+        <div class="mobile-nav-pill flex flex-col items-center justify-center w-full max-w-[62px] py-1.5 px-1 rounded-2xl transition-all">
+          <div class="hero-nav-badge hotdeal-badge flex items-center justify-center transition-all">
+            <i data-lucide="flame" class="text-white"></i>
+          </div>
+          <span class="text-[10px] tracking-tight mt-1 leading-none font-bold text-rose-600">핫딜</span>
         </div>
-        <span class="text-[10px] tracking-tight mt-1 leading-none font-black text-rose-600">핫딜</span>
       </button>
 
       <!-- 5. [목표가/설정] 탭 -->

@@ -1,0 +1,40 @@
+{
+  "step": 1,
+  "name": "Splash Progression & Trending API Consistency",
+  "status": "PASS",
+  "elapsed_sec": 9.46,
+  "metrics": {
+    "mobile_splash": {
+      "canvas_rendered": true,
+      "has_pulse_radar": true,
+      "skip_btn_visible": true,
+      "session_flag_set": true,
+      "reload_instant_bypass": true,
+      "reload_duration_ms": 428.0,
+      "screenshot": "C:\\Users\\ROG\\.gemini\\antigravity\\brain\\1853f434-165f-4049-bb73-2739a84f7b41\\audit_01_mobile_splash_progress.png"
+    },
+    "desktop_bypass": {
+      "splash_display": "none",
+      "instant_main_verified": true,
+      "screenshot": "C:\\Users\\ROG\\.gemini\\antigravity\\brain\\1853f434-165f-4049-bb73-2739a84f7b41\\audit_01_desktop_instant_main.png"
+    },
+    "trending_api": {
+      "http_status": 200,
+      "api_items_count": 16,
+      "api_top4": [
+        "농심 신라면 20개",
+        "CJ제일제당 햇반 24개",
+        "코카콜라 제로 24캔",
+        "제주 삼다수 2L 6개"
+      ],
+      "ui_top4_cards": [
+        "농심 신라면 20개",
+        "CJ제일제당 햇반 24개",
+        "코카콜라 제로 24캔",
+        "제주 삼다수 2L 6개"
+      ],
+      "quick_chips_count": 5,
+      "screenshot": "C:\\Users\\ROG\\.gemini\\antigravity\\brain\\1853f434-165f-4049-bb73-2739a84f7b41\\audit_01_main_trending_view.png"
+    }
+  }
+}

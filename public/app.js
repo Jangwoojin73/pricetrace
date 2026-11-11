@@ -2648,6 +2648,7 @@ window.showSplashDemo = function() {
     splash.classList.remove("splash-hidden", "splash-fade-out");
   }
   setupSplashScreen();
+  setupPullToRefresh();
 };
 
 
@@ -2787,4 +2788,135 @@ if (document.readyState === "loading") {
   document.addEventListener("DOMContentLoaded", initApp);
 } else {
   initApp();
+}
+
+
+// ==========================================================================
+// 모바일 & 태블릿 전용 Pull-to-Refresh (히어로 섹션 풀다운 새로고침)
+// - 헤더(상단 LIVE 배너 + 로고 + 검색창)는 상단 고정 유지
+// - 히어로 섹션(#mainContent)부터 아래로 당겨지며 최저가 실시간 새로고침
+// ==========================================================================
+function setupPullToRefresh() {
+  const mainContent = document.getElementById("mainContent");
+  const ptrIndicator = document.getElementById("ptrIndicator");
+  const ptrArrow = document.getElementById("ptrArrow");
+  const ptrSpinner = document.getElementById("ptrSpinner");
+  const ptrText = document.getElementById("ptrText");
+  const mobileRefreshBtn = document.getElementById("mobileRefreshBtn");
+  const refreshBtn = document.getElementById("refreshBtn");
+
+  if (!mainContent || !ptrIndicator) return;
+
+  let startY = 0;
+  let startX = 0;
+  let currentY = 0;
+  let isPulling = false;
+  let isRefreshing = false;
+  const PULL_THRESHOLD = 60; // 당김 트리거 임계값(px)
+
+  const resetPtr = () => {
+    isPulling = false;
+    isRefreshing = false;
+    if (mainContent) {
+      mainContent.style.transition = "transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1)";
+      mainContent.style.transform = "translateY(0px)";
+    }
+    if (ptrIndicator) {
+      ptrIndicator.style.maxHeight = "0px";
+      ptrIndicator.classList.remove("ptr-active");
+    }
+    if (ptrArrow) {
+      ptrArrow.classList.remove("hidden");
+      ptrArrow.style.transform = "rotate(0deg)";
+    }
+    if (ptrSpinner) {
+      ptrSpinner.classList.add("hidden");
+    }
+    if (ptrText) {
+      ptrText.textContent = "당겨서 최저가 새로고침";
+    }
+  };
+
+  window.addEventListener("touchstart", (e) => {
+    if (window.innerWidth >= 1024) return; // 데스크톱 제외
+    if (isRefreshing) return;
+    if (window.scrollY > 4) return; // 최상단 스크롤에서만 감지
+
+    startY = e.touches[0].clientY;
+    startX = e.touches[0].clientX;
+    isPulling = false;
+  }, { passive: true });
+
+  window.addEventListener("touchmove", (e) => {
+    if (window.innerWidth >= 1024 || isRefreshing) return;
+    if (window.scrollY > 4) {
+      if (isPulling) resetPtr();
+      return;
+    }
+
+    currentY = e.touches[0].clientY;
+    const currentX = e.touches[0].clientX;
+    const diffY = currentY - startY;
+    const diffX = currentX - startX;
+
+    // 수직 드래그가 수평보다 크고 아래로 당길 때
+    if (diffY > 8 && Math.abs(diffY) > Math.abs(diffX) * 1.5) {
+      isPulling = true;
+      if (e.cancelable) e.preventDefault(); // 기본 브라우저 바운스 방지
+
+      // 고무줄 저항감 계수 적용 (최대 85px)
+      const pullDist = Math.min(85, diffY * 0.45);
+      
+      mainContent.style.transition = "none";
+      mainContent.style.transform = `translateY(${pullDist * 0.75}px)`;
+      
+      ptrIndicator.classList.add("ptr-active");
+      ptrIndicator.style.maxHeight = `${pullDist}px`;
+
+      if (pullDist >= PULL_THRESHOLD) {
+        if (ptrArrow) ptrArrow.style.transform = "rotate(180deg)";
+        if (ptrText) ptrText.textContent = "손을 놓아 최저가 갱신";
+      } else {
+        if (ptrArrow) ptrArrow.style.transform = "rotate(0deg)";
+        if (ptrText) ptrText.textContent = "당겨서 최저가 새로고침";
+      }
+    }
+  }, { passive: false });
+
+  window.addEventListener("touchend", () => {
+    if (!isPulling || isRefreshing) return;
+    
+    const diffY = currentY - startY;
+    const pullDist = Math.min(85, diffY * 0.45);
+
+    if (pullDist >= PULL_THRESHOLD) {
+      // 갱신 트리거 상태 진입
+      isRefreshing = true;
+      if (navigator.vibrate) {
+        try { navigator.vibrate(25); } catch (_) {}
+      }
+
+      if (ptrArrow) ptrArrow.classList.add("hidden");
+      if (ptrSpinner) ptrSpinner.classList.remove("hidden");
+      if (ptrText) ptrText.textContent = "실시간 최저가 레이더 갱신 중...";
+
+      mainContent.style.transition = "transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1)";
+      mainContent.style.transform = "translateY(52px)";
+      ptrIndicator.style.maxHeight = "52px";
+
+      // 기존 새로고침 로직 트리거
+      if (mobileRefreshBtn) {
+        mobileRefreshBtn.click();
+      } else if (refreshBtn) {
+        refreshBtn.click();
+      }
+
+      // 갱신 완료 후 부드럽게 원래 위치로 복귀
+      setTimeout(() => {
+        resetPtr();
+      }, 850);
+    } else {
+      resetPtr();
+    }
+  }, { passive: true });
 }

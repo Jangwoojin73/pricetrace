@@ -1,0 +1,77 @@
+{
+  "step": 2,
+  "name": "32 Items Dual Tabs & 5 Representative Items Search Sorting Audit",
+  "status": "PASS",
+  "elapsed_sec": 6.84,
+  "metrics": {
+    "dual_tabs": {
+      "steady_count": 16,
+      "steady_thumbs_valid": true,
+      "hotdeal_count": 16,
+      "hotdeal_thumbs_valid": true,
+      "screenshot": "C:\\Users\\ROG\\.gemini\\antigravity\\brain\\1853f434-165f-4049-bb73-2739a84f7b41\\audit_02_dual_tabs_overview.png"
+    },
+    "representative_items": {
+      "농심": {
+        "query": "농심 신라면 20개",
+        "cardCount": 3,
+        "prices": [
+          13200,
+          15730,
+          15760
+        ],
+        "isAscending": true,
+        "noiseDetected": false,
+        "screenshot": "C:\\Users\\ROG\\.gemini\\antigravity\\brain\\1853f434-165f-4049-bb73-2739a84f7b41\\audit_02_search_results_농심.png"
+      },
+      "CJ": {
+        "query": "CJ 햇반 24개",
+        "cardCount": 3,
+        "prices": [
+          23600,
+          24850,
+          26300
+        ],
+        "isAscending": true,
+        "noiseDetected": false,
+        "screenshot": "C:\\Users\\ROG\\.gemini\\antigravity\\brain\\1853f434-165f-4049-bb73-2739a84f7b41\\audit_02_search_results_CJ.png"
+      },
+      "커클랜드": {
+        "query": "커클랜드 휴지 30롤",
+        "cardCount": 3,
+        "prices": [
+          22730,
+          24990,
+          25250
+        ],
+        "isAscending": true,
+        "noiseDetected": false,
+        "screenshot": "C:\\Users\\ROG\\.gemini\\antigravity\\brain\\1853f434-165f-4049-bb73-2739a84f7b41\\audit_02_search_results_커클랜드.png"
+      },
+      "사과": {
+        "query": "사과",
+        "cardCount": 3,
+        "prices": [
+          39000,
+          40000,
+          45000
+        ],
+        "isAscending": true,
+        "noiseDetected": false,
+        "screenshot": "C:\\Users\\ROG\\.gemini\\antigravity\\brain\\1853f434-165f-4049-bb73-2739a84f7b41\\audit_02_search_results_사과.png"
+      },
+      "새우": {
+        "query": "새우",
+        "cardCount": 3,
+        "prices": [
+          15400,
+          19800,
+          20300
+        ],
+        "isAscending": true,
+        "noiseDetected": false,
+        "screenshot": "C:\\Users\\ROG\\.gemini\\antigravity\\brain\\1853f434-165f-4049-bb73-2739a84f7b41\\audit_02_search_results_새우.png"
+      }
+    }
+  }
+}

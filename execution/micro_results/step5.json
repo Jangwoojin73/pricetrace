@@ -1,0 +1,18 @@
+{
+  "step": 5,
+  "name": "Bottom Navigation 5 Tabs Baseline & Scroll Lock Stability Audit",
+  "status": "PASS",
+  "elapsed_sec": 8.1,
+  "metrics": {
+    "mobile": {
+      "baseline_diff": 0,
+      "steady_scroll_diff": 0,
+      "hotdeal_scroll_diff": 0,
+      "snap_steady": "C:\\Users\\ROG\\.gemini\\antigravity\\brain\\1853f434-165f-4049-bb73-2739a84f7b41\\audit_05_mobile_steady_scroll_lock.png",
+      "snap_hotdeal": "C:\\Users\\ROG\\.gemini\\antigravity\\brain\\1853f434-165f-4049-bb73-2739a84f7b41\\audit_05_mobile_hotdeal_scroll_lock.png"
+    },
+    "tablet": {
+      "snap_tab": "C:\\Users\\ROG\\.gemini\\antigravity\\brain\\1853f434-165f-4049-bb73-2739a84f7b41\\audit_05_tablet_dual_tab_scroll_lock.png"
+    }
+  }
+}
