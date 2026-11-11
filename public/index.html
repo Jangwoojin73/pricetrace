@@ -310,24 +310,24 @@
     </div><!-- /#gnbNavBar -->
   </header>
 
+  <!-- 모바일/태블릿 전용 커스텀 Pull-to-Refresh 인디케이터 (평상시 100% 완전 은닉, 풀다운 시 고정 헤더 바로 아래에 플로팅) -->
+  <div id="ptrIndicator" class="ptr-indicator-wrap" style="display: none;" aria-hidden="true">
+    <div class="ptr-pill">
+      <span id="ptrIconBox" class="ptr-icon-box">
+        <svg id="ptrArrow" class="w-4 h-4 text-sky-400 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
+        </svg>
+        <svg id="ptrSpinner" class="w-4 h-4 text-sky-400 animate-spin hidden" fill="none" viewBox="0 0 24 24">
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3"></circle>
+          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+        </svg>
+      </span>
+      <span id="ptrText" class="text-xs font-bold text-sky-200 tracking-tight">당겨서 최저가 새로고침</span>
+    </div>
+  </div>
+
   <!-- 메인 본문 컨테이너 (모바일/태블릿 하단 네비게이션 바 여백 pb-28 확보) -->
   <main id="mainContent" class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 pb-28 lg:pb-8 space-y-8">
-
-    <!-- 모바일/태블릿 전용 커스텀 Pull-to-Refresh 인디케이터 (헤더 고정, 히어로 섹션 상단에서 동작) -->
-    <div id="ptrIndicator" class="ptr-indicator-wrap" aria-hidden="true">
-      <div class="ptr-pill">
-        <span id="ptrIconBox" class="ptr-icon-box">
-          <svg id="ptrArrow" class="w-4 h-4 text-sky-400 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
-          </svg>
-          <svg id="ptrSpinner" class="w-4 h-4 text-sky-400 animate-spin hidden" fill="none" viewBox="0 0 24 24">
-            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3"></circle>
-            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-          </svg>
-        </span>
-        <span id="ptrText" class="text-xs font-bold text-sky-200 tracking-tight">당겨서 최저가 새로고침</span>
-      </div>
-    </div>
 
     <!-- ============================================== -->
     <!-- [VIEW 1] 초기 웰컴 & 서비스 탐색 화면 (Welcome View) -->

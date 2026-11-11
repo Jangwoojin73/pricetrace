@@ -2822,8 +2822,9 @@ function setupPullToRefresh() {
       mainContent.style.transform = "translateY(0px)";
     }
     if (ptrIndicator) {
-      ptrIndicator.style.maxHeight = "0px";
       ptrIndicator.classList.remove("ptr-active");
+      ptrIndicator.style.display = "none";
+      ptrIndicator.style.opacity = "0";
     }
     if (ptrArrow) {
       ptrArrow.classList.remove("hidden");
@@ -2870,8 +2871,12 @@ function setupPullToRefresh() {
       mainContent.style.transition = "none";
       mainContent.style.transform = `translateY(${pullDist * 0.75}px)`;
       
+      const headerEl = document.querySelector("header");
+      const headerBottom = headerEl ? headerEl.getBoundingClientRect().bottom : 206;
+      ptrIndicator.style.top = `${headerBottom + 8}px`;
+      ptrIndicator.style.display = "flex";
       ptrIndicator.classList.add("ptr-active");
-      ptrIndicator.style.maxHeight = `${pullDist}px`;
+      ptrIndicator.style.opacity = "1";
 
       if (pullDist >= PULL_THRESHOLD) {
         if (ptrArrow) ptrArrow.style.transform = "rotate(180deg)";
@@ -2902,7 +2907,12 @@ function setupPullToRefresh() {
 
       mainContent.style.transition = "transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1)";
       mainContent.style.transform = "translateY(52px)";
-      ptrIndicator.style.maxHeight = "52px";
+      
+      const headerEl = document.querySelector("header");
+      const headerBottom = headerEl ? headerEl.getBoundingClientRect().bottom : 206;
+      ptrIndicator.style.top = `${headerBottom + 8}px`;
+      ptrIndicator.style.display = "flex";
+      ptrIndicator.classList.add("ptr-active");
 
       // 기존 새로고침 로직 트리거
       if (mobileRefreshBtn) {
