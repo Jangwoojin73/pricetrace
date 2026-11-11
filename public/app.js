@@ -2660,6 +2660,10 @@ window.showSplashDemo = function() {
 // - n03(업스크롤 delta <= -5px): 조금이라도 위로 올리면 즉시 스르륵 복귀 + 350px 이상 시 탑 버튼 노출
 // ==========================================================================
 // 스마트 스크롤: 하단 네비게이션 독 & 상단 검색바 동기화 접힘/펼침 제어 (n01 -> n02 -> n03)
+// 3중 지터/바이브레이션 방어막:
+// 1. 상태 전이 쿨다운 락 (State Lock / Debounce 280ms)
+// 2. 누적 델타 히스테리시스 (Accumulated Scroll Delta: Down >= 20px, Up >= 15px)
+// 3. 레이아웃 시프트 피드백 루프 원천 차단
 // ==========================================================================
 function setupSmartScrollBottomNav() {
   const nav = elements.mobileBottomNav || document.getElementById("mobileBottomNav");
@@ -2670,30 +2674,67 @@ function setupSmartScrollBottomNav() {
   let lastScrollY = window.pageYOffset || window.scrollY || 0;
   let isTicking = false;
 
+  // 3중 떨림 방어막 상태 변수
+  let isTransitionLocked = false;
+  let lockTimer = null;
+  let accumulatedDownDelta = 0;
+  let accumulatedUpDelta = 0;
+  const LOCK_DURATION_MS = 280; // 트랜지션 애니메이션 반동 구간 잠금
+  const THRESHOLD_DOWN = 20;    // 아래로 20px 이상 의도적 스크롤 시 은닉
+  const THRESHOLD_UP = 15;      // 위로 15px 이상 의도적 스크롤 시 복귀
+
+  function lockTransition() {
+    isTransitionLocked = true;
+    if (lockTimer) clearTimeout(lockTimer);
+    lockTimer = setTimeout(() => {
+      isTransitionLocked = false;
+      // 락 해제 시점의 실제 뷰포트 scrollY로 기준점을 동기화하여 헤더 높이 변화로 인한 오차 소거
+      lastScrollY = window.pageYOffset || window.scrollY || document.documentElement.scrollTop || 0;
+      accumulatedDownDelta = 0;
+      accumulatedUpDelta = 0;
+    }, LOCK_DURATION_MS);
+  }
+
   function hideBottomNavAndHeaderSearch() {
+    let changed = false;
+
     // 하단 네비 독 숨김
     if (!nav.classList.contains("nav-dock-hidden")) {
       nav.classList.add("nav-dock-hidden");
       document.body.classList.add("nav-dock-collapsed");
+      changed = true;
     }
 
     // 상단 검색바 접힘 (단, 검색창에 현재 포커스가 있거나 타이핑 중인 경우 사용자 편의를 위해 유지)
     const isSearchFocused = (searchInput && document.activeElement === searchInput);
     if (!isSearchFocused && !document.body.classList.contains("header-search-collapsed")) {
       document.body.classList.add("header-search-collapsed");
+      changed = true;
+    }
+
+    if (changed) {
+      lockTransition();
     }
   }
 
   function revealBottomNavAndHeaderSearch() {
+    let changed = false;
+
     // 하단 네비 독 복귀
     if (nav.classList.contains("nav-dock-hidden")) {
       nav.classList.remove("nav-dock-hidden");
       document.body.classList.remove("nav-dock-collapsed");
+      changed = true;
     }
 
     // 상단 검색바 복귀
     if (document.body.classList.contains("header-search-collapsed")) {
       document.body.classList.remove("header-search-collapsed");
+      changed = true;
+    }
+
+    if (changed) {
+      lockTransition();
     }
   }
 
@@ -2718,6 +2759,9 @@ function setupSmartScrollBottomNav() {
       window.scrollTo({ top: 0, behavior: "smooth" });
       setTimeout(() => {
         state.isProgrammaticScroll = false;
+        lastScrollY = 0;
+        accumulatedDownDelta = 0;
+        accumulatedUpDelta = 0;
       }, 800);
     });
   }
@@ -2738,20 +2782,42 @@ function setupSmartScrollBottomNav() {
     if (state.isProgrammaticScroll || isModalOpen) {
       revealBottomNavAndHeaderSearch();
       lastScrollY = clampedScrollY;
+      accumulatedDownDelta = 0;
+      accumulatedUpDelta = 0;
       return;
     }
 
     // 2. 최상단 안전 지대 (scrollY <= 80px): 무조건 네비게이션 바 및 검색바 상시 노출 (n01 시작 화면)
     if (clampedScrollY <= 80) {
       revealBottomNavAndHeaderSearch();
-    } 
-    // 3. 아래로 스크롤 (delta >= 10px 및 scrollY > 80px): 화면 아래로 하단 독 숨김 + 상단 검색바 접힘 (n02 풀스크린 탐색)
-    else if (delta >= 10 && clampedScrollY > 80) {
+      lastScrollY = clampedScrollY;
+      accumulatedDownDelta = 0;
+      accumulatedUpDelta = 0;
+      return;
+    }
+
+    // 3. 상태 전이 잠금(Lock) 중일 때는 헤더 높이 변화 반동 델타 무시
+    if (isTransitionLocked) {
+      lastScrollY = clampedScrollY;
+      return;
+    }
+
+    // 4. 누적 델타 갱신 (방향 전환 시 반대 방향 누적 리셋)
+    if (delta > 0) {
+      accumulatedDownDelta += delta;
+      accumulatedUpDelta = 0;
+    } else if (delta < 0) {
+      accumulatedUpDelta += Math.abs(delta);
+      accumulatedDownDelta = 0;
+    }
+
+    // 5. 누적 임계값 도달 시에만 확실한 상태 전환 실행 (지터/바이브레이션 0%)
+    if (accumulatedDownDelta >= THRESHOLD_DOWN && clampedScrollY > 80) {
       hideBottomNavAndHeaderSearch();
-    } 
-    // 4. 조금이라도 위로 스크롤 (delta <= -5px): 즉시 스르륵 올라와 재등장 (n03 메뉴 복귀)
-    else if (delta <= -5) {
+      accumulatedDownDelta = 0;
+    } else if (accumulatedUpDelta >= THRESHOLD_UP) {
       revealBottomNavAndHeaderSearch();
+      accumulatedUpDelta = 0;
     }
 
     lastScrollY = clampedScrollY;
