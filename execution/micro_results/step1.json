@@ -1,17 +1,33 @@
 {
   "step": 1,
-  "name": "Splash Progression & Trending API Consistency",
+  "name": "Splash Progression (Mobile/Tablet), Desktop Bypass & Trending API Consistency",
   "status": "PASS",
-  "elapsed_sec": 9.46,
+  "elapsed_sec": 11.34,
+  "sentinel": {
+    "total_errors": 0,
+    "console_errors": [],
+    "page_errors": [],
+    "http_errors": [],
+    "failed_requests": [],
+    "broken_images_count": 0,
+    "broken_image_srcs": []
+  },
   "metrics": {
     "mobile_splash": {
+      "splash_display": "flex",
       "canvas_rendered": true,
       "has_pulse_radar": true,
+      "progress_text": "네이버 쇼핑 공식 카탈로그 연결 중...",
+      "progress_bar_width": "10%",
       "skip_btn_visible": true,
       "session_flag_set": true,
       "reload_instant_bypass": true,
-      "reload_duration_ms": 428.0,
+      "reload_duration_ms": 444.7,
       "screenshot": "C:\\Users\\ROG\\.gemini\\antigravity\\brain\\1853f434-165f-4049-bb73-2739a84f7b41\\audit_01_mobile_splash_progress.png"
+    },
+    "tablet_splash": {
+      "splashVisible": true,
+      "canvasRendered": true
     },
     "desktop_bypass": {
       "splash_display": "none",
@@ -20,7 +36,9 @@
     },
     "trending_api": {
       "http_status": 200,
-      "api_items_count": 16,
+      "source": "hybrid_dual_pool",
+      "steady_items_count": 16,
+      "trending_items_count": 16,
       "api_top4": [
         "농심 신라면 20개",
         "CJ제일제당 햇반 24개",
@@ -33,7 +51,9 @@
         "코카콜라 제로 24캔",
         "제주 삼다수 2L 6개"
       ],
-      "quick_chips_count": 5,
+      "exact_card_match_4of4": true,
+      "ui_quick_chips_count": 5,
+      "exact_chip_match_5of5": true,
       "screenshot": "C:\\Users\\ROG\\.gemini\\antigravity\\brain\\1853f434-165f-4049-bb73-2739a84f7b41\\audit_01_main_trending_view.png"
     }
   }

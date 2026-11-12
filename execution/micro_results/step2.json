@@ -2,74 +2,124 @@
   "step": 2,
   "name": "32 Items Dual Tabs & 5 Representative Items Search Sorting Audit",
   "status": "PASS",
-  "elapsed_sec": 6.84,
+  "elapsed_sec": 14.63,
+  "sentinel": {
+    "total_errors": 0,
+    "console_errors": [],
+    "page_errors": [],
+    "http_errors": [],
+    "failed_requests": [],
+    "broken_images_count": 0,
+    "broken_image_srcs": []
+  },
   "metrics": {
     "dual_tabs": {
       "steady_count": 16,
-      "steady_thumbs_valid": true,
+      "steady_valid_thumbs": 16,
       "hotdeal_count": 16,
-      "hotdeal_thumbs_valid": true,
+      "hotdeal_valid_thumbs": 16,
+      "hotdeal_price_labels_valid": true,
       "screenshot": "C:\\Users\\ROG\\.gemini\\antigravity\\brain\\1853f434-165f-4049-bb73-2739a84f7b41\\audit_02_dual_tabs_overview.png"
     },
     "representative_items": {
       "농심": {
         "query": "농심 신라면 20개",
+        "apiStatus": 200,
+        "apiSource": "naver_live",
         "cardCount": 3,
         "prices": [
           13200,
           15730,
           15760
         ],
+        "titles": [
+          "농심 신라면 120g 20개 1박스",
+          "농심 신라면10p 안성탕면5p 너구리5p 20개",
+          "농심 신라면 , 120g, 20개"
+        ],
         "isAscending": true,
         "noiseDetected": false,
+        "noiseFound": [],
         "screenshot": "C:\\Users\\ROG\\.gemini\\antigravity\\brain\\1853f434-165f-4049-bb73-2739a84f7b41\\audit_02_search_results_농심.png"
       },
       "CJ": {
         "query": "CJ 햇반 24개",
+        "apiStatus": 200,
+        "apiSource": "naver_live",
         "cardCount": 3,
         "prices": [
-          23600,
-          24850,
-          26300
+          25320,
+          25600,
+          29590
+        ],
+        "titles": [
+          "CJ 제일제당 햇반 윤기가득쌀밥 210g, 24개",
+          "CJ 제일제당 햇반 210g, 24개",
+          "CJ 제일제당 햇반 이천쌀밥 210g, 24개"
         ],
         "isAscending": true,
         "noiseDetected": false,
+        "noiseFound": [],
         "screenshot": "C:\\Users\\ROG\\.gemini\\antigravity\\brain\\1853f434-165f-4049-bb73-2739a84f7b41\\audit_02_search_results_CJ.png"
       },
       "커클랜드": {
         "query": "커클랜드 휴지 30롤",
+        "apiStatus": 200,
+        "apiSource": "naver_live",
         "cardCount": 3,
         "prices": [
           22730,
           24990,
           25250
         ],
+        "titles": [
+          "코스트코 휴지 커클랜드 3겹 30롤 프리미엄 화장지 두루마리 휴지 물에잘녹는 무형광",
+          "커클랜드 코스트코 프리미엄 3겹 휴지 40m x 30롤 코스트코",
+          "코스트코 커클랜드 휴지 3겹40m 30롤 1팩 화장지 두루마리 휴지 물에잘녹는 무형광 프리미엄"
+        ],
         "isAscending": true,
         "noiseDetected": false,
+        "noiseFound": [],
         "screenshot": "C:\\Users\\ROG\\.gemini\\antigravity\\brain\\1853f434-165f-4049-bb73-2739a84f7b41\\audit_02_search_results_커클랜드.png"
       },
       "사과": {
         "query": "사과",
+        "apiStatus": 200,
+        "apiSource": "naver_live",
         "cardCount": 3,
         "prices": [
           39000,
           40000,
           45000
         ],
+        "titles": [
+          "사과 청송 안동 홍로 감홍 부사 시나노골드 고당도 못난이 가정용 꿀 사과",
+          "사과 햇 부사 감홍 시나노골드 가정용 선물세트",
+          "감홍 사과 프리미엄 고당도 야채도사 당도선별"
+        ],
         "isAscending": true,
         "noiseDetected": false,
+        "noiseFound": [],
         "screenshot": "C:\\Users\\ROG\\.gemini\\antigravity\\brain\\1853f434-165f-4049-bb73-2739a84f7b41\\audit_02_search_results_사과.png"
       },
       "새우": {
         "query": "새우",
+        "apiStatus": 200,
+        "apiSource": "naver_live",
         "cardCount": 3,
         "prices": [
           15400,
-          19800,
-          20300
+          18900,
+          19800
+        ],
+        "titles": [
+          "훈훈 칵테일새우 900g 생 새우살 냉동 특대 깐새우 흰다리새우살",
+          "생 새우살 900g",
+          "국산 흰다리새우 활새우 1kg 왕새우 생새우 새우철 제철"
         ],
         "isAscending": true,
         "noiseDetected": false,
+        "noiseFound": [],
         "screenshot": "C:\\Users\\ROG\\.gemini\\antigravity\\brain\\1853f434-165f-4049-bb73-2739a84f7b41\\audit_02_search_results_새우.png"
       }
     }

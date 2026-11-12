@@ -1,8 +1,17 @@
 {
   "step": 7,
-  "name": "5 Devices Responsive Layout & PWA Infrastructure Audit",
+  "name": "5 Devices Responsive Layout, Desktop Search Guard & PWA Infrastructure Audit",
   "status": "PASS",
-  "elapsed_sec": 11.77,
+  "elapsed_sec": 12.2,
+  "sentinel": {
+    "total_errors": 0,
+    "console_errors": [],
+    "page_errors": [],
+    "http_errors": [],
+    "failed_requests": [],
+    "broken_images_count": 0,
+    "broken_image_srcs": []
+  },
   "metrics": {
     "responsive_matrix": {
       "iPhone 15 Pro": {
@@ -33,10 +42,22 @@
     },
     "pwa_assets": {
       "/manifest.json": 200,
+      "/sw.js": 200,
       "/favicon.ico": 200,
       "/logo_jwj.svg": 200,
       "/icons/icon-192x192.png": 200,
       "/icons/icon-512x512.png": 200
+    },
+    "pwa_dom": {
+      "hasInstallBtn": true,
+      "hasMobileInstallBtn": true,
+      "hasPwaBannerOrModal": true,
+      "hasIosModal": true
+    },
+    "desktop_search_guard": {
+      "searchHeight": 80,
+      "opacity": "1",
+      "alwaysVisible": true
     },
     "snap_matrix": "C:\\Users\\ROG\\.gemini\\antigravity\\brain\\1853f434-165f-4049-bb73-2739a84f7b41\\audit_07_responsive_matrix.png",
     "snap_pwa": "C:\\Users\\ROG\\.gemini\\antigravity\\brain\\1853f434-165f-4049-bb73-2739a84f7b41\\audit_07_pwa_install_elements.png"

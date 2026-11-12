@@ -704,8 +704,9 @@ header.sticky {
 }
 #mobileRefreshBtn svg,
 #mobileRefreshBtn i {
-  color: #1d4ed8 !important;
-  stroke: #1d4ed8 !important;
+  /* 순백색(#ffffff) 배경 대비 WCAG AAA 명도대비(10.36:1 >= 8.5:1) 확보용 딥 코발트 블루 */
+  color: #1e3a8a !important;
+  stroke: #1e3a8a !important;
   stroke-width: 2.6px !important;
   width: 1.05rem !important;
   height: 1.05rem !important;
@@ -739,8 +740,9 @@ header.sticky {
 }
 #refreshBtn svg,
 #refreshBtn i {
-  color: #1d4ed8 !important;
-  stroke: #1d4ed8 !important;
+  /* PC 새로고침 아이콘 역시 딥 코발트 블루(#1e3a8a)로 통일해 초고대비(10.36:1) 유지 */
+  color: #1e3a8a !important;
+  stroke: #1e3a8a !important;
   stroke-width: 2.4px !important;
 }
 

@@ -2,16 +2,28 @@
   "step": 6,
   "name": "Radar Modal Autofocus, Dismissal, iOS Zoom Prevention & Arbitrary Search",
   "status": "PASS",
-  "elapsed_sec": 5.79,
+  "elapsed_sec": 6.06,
+  "sentinel": {
+    "total_errors": 0,
+    "console_errors": [],
+    "page_errors": [],
+    "http_errors": [],
+    "failed_requests": [],
+    "broken_images_count": 0,
+    "broken_image_srcs": []
+  },
   "metrics": {
     "focus_metrics": {
       "modalVisible": true,
       "activeIsInput": true,
       "viewportMeta": "width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover",
-      "inputFontSize": "16px"
+      "hasMaxScaleOne": true,
+      "inputFontSize": "16px",
+      "inputFontSizePx": 16
     },
     "modal_hide_instant": true,
-    "arbitrary_item_cards": 3,
+    "dyson_cards": 3,
+    "macbook_cards": 3,
     "screenshot": "C:\\Users\\ROG\\.gemini\\antigravity\\brain\\1853f434-165f-4049-bb73-2739a84f7b41\\audit_06_search_modal_clean_dismiss.png"
   }
 }

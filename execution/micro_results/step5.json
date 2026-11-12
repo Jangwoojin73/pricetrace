@@ -1,17 +1,85 @@
 {
   "step": 5,
-  "name": "Bottom Navigation 5 Tabs Baseline & Scroll Lock Stability Audit",
+  "name": "Bottom Nav (25px Badges), Scroll Lock, Real-Touch PTR & Search Bar Smart Scroll",
   "status": "PASS",
-  "elapsed_sec": 8.1,
+  "elapsed_sec": 15.32,
+  "sentinel": {
+    "total_errors": 0,
+    "console_errors": [],
+    "page_errors": [],
+    "http_errors": [],
+    "failed_requests": [],
+    "broken_images_count": 0,
+    "broken_image_srcs": []
+  },
   "metrics": {
     "mobile": {
-      "baseline_diff": 0,
-      "steady_scroll_diff": 0,
-      "hotdeal_scroll_diff": 0,
-      "snap_steady": "C:\\Users\\ROG\\.gemini\\antigravity\\brain\\1853f434-165f-4049-bb73-2739a84f7b41\\audit_05_mobile_steady_scroll_lock.png",
-      "snap_hotdeal": "C:\\Users\\ROG\\.gemini\\antigravity\\brain\\1853f434-165f-4049-bb73-2739a84f7b41\\audit_05_mobile_hotdeal_scroll_lock.png"
+      "dock_and_25px_badges": {
+        "allFound": true,
+        "baselineDiff": 0,
+        "steadyBadgeWidth": 25,
+        "steadyBadgeHeight": 25,
+        "hotdealBadgeWidth": 25,
+        "hotdealBadgeHeight": 25,
+        "noProtrusion": true
+      },
+      "ptr": {
+        "default_hidden": {
+          "ptrDisplay": "none",
+          "ptrHeight": 0,
+          "headerToMainGapPx": 0
+        },
+        "during_real_touch_pull": {
+          "headerTopFixed": true,
+          "mainTransform": "translateY(54px)",
+          "ptrActiveClass": true,
+          "ptrDisplayDuringPull": "flex"
+        },
+        "after_release": {
+          "ptrDisplayAfterRelease": "none",
+          "mainTransformAfterRelease": "translateY(0px)"
+        },
+        "snap_ptr": "C:\\Users\\ROG\\.gemini\\antigravity\\brain\\1853f434-165f-4049-bb73-2739a84f7b41\\audit_05_ptr_pulled_real_touch.png"
+      },
+      "search_bar_smart_scroll": {
+        "top": {
+          "headerHeight": 206,
+          "searchHeight": 78,
+          "isCollapsed": false
+        },
+        "down_collapsed": {
+          "scrollY": 500,
+          "headerHeight": 120,
+          "searchHeight": 0,
+          "isCollapsed": true,
+          "navHidden": true
+        },
+        "height_saved_px": 86,
+        "up_revealed": {
+          "scrollY": 346,
+          "headerHeight": 206,
+          "searchHeight": 78,
+          "isCollapsed": false,
+          "navHidden": false
+        },
+        "stress_test_5x_toggle_count": 2,
+        "focus_guard": {
+          "isFocused": true,
+          "collapsedDuringFocus": false
+        },
+        "snap_collapsed": "C:\\Users\\ROG\\.gemini\\antigravity\\brain\\1853f434-165f-4049-bb73-2739a84f7b41\\audit_05_search_bar_collapsed.png",
+        "snap_revealed": "C:\\Users\\ROG\\.gemini\\antigravity\\brain\\1853f434-165f-4049-bb73-2739a84f7b41\\audit_05_search_bar_revealed.png"
+      },
+      "dual_tab_scroll_lock": {
+        "steady_diff_px": 0,
+        "hotdeal_diff_px": 0,
+        "tray_header_clearance_px": 32,
+        "snap_steady": "C:\\Users\\ROG\\.gemini\\antigravity\\brain\\1853f434-165f-4049-bb73-2739a84f7b41\\audit_05_mobile_steady_scroll_lock.png",
+        "snap_hotdeal": "C:\\Users\\ROG\\.gemini\\antigravity\\brain\\1853f434-165f-4049-bb73-2739a84f7b41\\audit_05_mobile_hotdeal_scroll_lock.png"
+      }
     },
     "tablet": {
+      "hotdeal_scroll_diff_px": 0,
       "snap_tab": "C:\\Users\\ROG\\.gemini\\antigravity\\brain\\1853f434-165f-4049-bb73-2739a84f7b41\\audit_05_tablet_dual_tab_scroll_lock.png"
     }
   }

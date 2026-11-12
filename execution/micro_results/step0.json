@@ -2,15 +2,22 @@
   "step": 0,
   "name": "Local/Live Environment Audit & Global Sentinel Init",
   "status": "PASS",
-  "elapsed_sec": 0.4,
+  "elapsed_sec": 1.64,
+  "sentinel": {
+    "total_errors": 0
+  },
   "metrics": {
     "local_url": "http://127.0.0.1:8080",
     "local_status": 200,
-    "local_response_ms": 8.6,
+    "local_response_ms": 171.0,
+    "local_api_status": 200,
+    "local_error": null,
     "prod_url": "https://pricetrace-nu.vercel.app",
     "prod_status": 200,
-    "prod_response_ms": 310.5,
-    "sentinel_active": true,
-    "sentinel_error_count_baseline": 0
+    "prod_response_ms": 182.6,
+    "prod_api_status": 200,
+    "prod_error": null,
+    "local_v161_synced": true,
+    "prod_v161_synced": true
   }
 }
