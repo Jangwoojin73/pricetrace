@@ -551,6 +551,33 @@ body.nav-dock-collapsed #toastNotification {
   }
 }
 
+/* 태블릿 (640px ~ 1024px) 최적화: 시원한 너비, 넉넉한 터치 영역, 스크롤바 정돈 */
+@media (min-width: 640px) and (max-width: 1024px) {
+  #radarSearchDrawer {
+    width: 90% !important;
+    max-width: 680px !important;
+    height: auto !important;
+    max-height: 88vh !important;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  #radarSearchDrawer::-webkit-scrollbar {
+    display: none;
+  }
+  .modal-pad-chip {
+    min-height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .modal-quick-chip {
+    min-height: 48px;
+  }
+  .modal-category-chip {
+    min-height: 72px;
+  }
+}
+
 #radarSearchModal.modal-open #radarSearchDrawer {
   transform: translateY(0) !important;
 }
