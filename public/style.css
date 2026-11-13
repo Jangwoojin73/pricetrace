@@ -539,6 +539,14 @@ body.nav-dock-collapsed #toastNotification {
   will-change: transform;
 }
 
+@media (max-width: 639px) {
+  #radarSearchDrawer {
+    height: 80vh !important;
+    max-height: 85vh !important;
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
 #radarSearchModal.modal-open #radarSearchDrawer {
   transform: translateY(0) !important;
 }
