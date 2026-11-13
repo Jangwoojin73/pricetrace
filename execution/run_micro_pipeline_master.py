@@ -66,6 +66,26 @@ def main():
 
     try:
         for idx, (step_id, script_name, description) in enumerate(STEPS):
+            # Health check & Auto-heal local server if needed
+            if not is_local_server_up():
+                print("[!] Local server not responding, reviving on port 8080...", flush=True)
+                if server_proc is not None:
+                    try:
+                        server_proc.terminate()
+                    except Exception:
+                        pass
+                server_proc = subprocess.Popen(
+                    [sys.executable, os.path.join(WORKSPACE_DIR, "server.py"), "--port", "8080"],
+                    cwd=WORKSPACE_DIR,
+                    stdout=subprocess.DEVNULL,
+                    stderr=subprocess.DEVNULL
+                )
+                for _ in range(15):
+                    time.sleep(0.4)
+                    if is_local_server_up():
+                        print("[✓] Local server recovered on http://127.0.0.1:8080", flush=True)
+                        break
+
             script_path = os.path.join(AUDIT_DIR, script_name)
             progress_pct = int(((idx + 1) / total_steps) * 100)
             filled_bars = int(progress_pct / 5)

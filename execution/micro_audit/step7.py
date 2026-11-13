@@ -49,7 +49,11 @@ def main():
             p_dev.set_default_timeout(8000)
             s_d = create_sentinel(p_dev)
             p_dev.add_init_script("sessionStorage.setItem('pricetrace_splash_seen', 'true');")
-            p_dev.goto(BASE_URL, wait_until="domcontentloaded")
+            try:
+                p_dev.goto(BASE_URL, wait_until="domcontentloaded", timeout=7000)
+            except Exception:
+                time.sleep(0.3)
+                p_dev.goto(BASE_URL, wait_until="commit", timeout=7000)
             p_dev.wait_for_timeout(350)
 
             overflow = p_dev.evaluate('''() => {

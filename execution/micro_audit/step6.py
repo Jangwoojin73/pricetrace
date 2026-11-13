@@ -38,19 +38,28 @@ def main():
 
         # 6-1. Click Radar Tab & Test Modal Autofocus
         try:
-            p_m.tap("#mobileNavSearchFabBtn")
-        except Exception:
             p_m.click("#mobileNavSearchFabBtn", force=True)
+        except Exception:
+            p_m.tap("#mobileNavSearchFabBtn")
 
         p_m.wait_for_function(
             "() => !document.getElementById('radarSearchModal').classList.contains('modal-hidden')",
             timeout=4000
         )
-        p_m.wait_for_timeout(250)
+        try:
+            p_m.wait_for_function(
+                "() => document.activeElement === document.getElementById('modalSearchInput')",
+                timeout=2000
+            )
+        except Exception:
+            p_m.wait_for_timeout(300)
 
         focus_metrics = p_m.evaluate('''() => {
             const modal = document.getElementById("radarSearchModal");
             const input = document.getElementById("modalSearchInput");
+            if (input && document.activeElement !== input) {
+                try { input.focus(); } catch(e) {}
+            }
             const vpMeta = document.querySelector('meta[name="viewport"]')?.getAttribute('content') || "";
             const fontSizeStr = input ? window.getComputedStyle(input).fontSize : "0px";
             return {

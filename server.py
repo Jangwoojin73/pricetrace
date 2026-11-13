@@ -1049,6 +1049,7 @@ def run_server(port: int = 8080):
     if not os.path.exists(PUBLIC_DIR):
         os.makedirs(PUBLIC_DIR, exist_ok=True)
 
+    ThreadingHTTPServer.allow_reuse_address = True
     server_address = ("", port)
     httpd = ThreadingHTTPServer(server_address, PriceTraceHandler)
     print("=" * 68)

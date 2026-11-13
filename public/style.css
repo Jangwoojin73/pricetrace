@@ -1,5 +1,24 @@
 /* style.css - PriceTrace WebApp 커스텀 스타일시트 */
 
+/* ==========================================================================
+   히어로 섹션 커스텀 배경 이미지 (Dark Code Editor Theme)
+   ========================================================================== */
+.hero-bg-banner {
+  position: relative;
+  background-color: #0c1021;
+  background-image: 
+    linear-gradient(135deg, rgba(12, 16, 33, 0.85) 0%, rgba(15, 23, 42, 0.72) 50%, rgba(30, 58, 138, 0.58) 100%),
+    url('/images/hero_bg.jpg');
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
+}
+
+.hero-bg-overlay {
+  background: radial-gradient(circle at 85% 25%, rgba(37, 99, 235, 0.20), transparent 55%),
+              linear-gradient(to bottom, rgba(10, 15, 30, 0.20), rgba(10, 15, 30, 0.40));
+}
+
 /* 부드러운 스크롤 및 기본 트랜지션 */
 html {
   scroll-behavior: smooth;

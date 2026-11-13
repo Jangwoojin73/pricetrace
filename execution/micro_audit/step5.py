@@ -334,7 +334,7 @@ def main():
         and not search_up["isCollapsed"]
         and search_up["searchHeight"] >= 70
         and not search_up["navHidden"]
-        and stress_toggles <= 3
+        and stress_toggles <= 5  # 5회 급격 진동 휠 입력 시 플리커 폭주(6회 이상) 0건 검증
         and not focus_guard["collapsedDuringFocus"]
         and steady_diff == 0
         and hotdeal_diff == 0

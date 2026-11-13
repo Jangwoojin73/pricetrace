@@ -2,7 +2,7 @@
   "step": 2,
   "name": "32 Items Dual Tabs & 5 Representative Items Search Sorting Audit",
   "status": "PASS",
-  "elapsed_sec": 14.63,
+  "elapsed_sec": 12.22,
   "sentinel": {
     "total_errors": 0,
     "console_errors": [],
@@ -29,13 +29,13 @@
         "cardCount": 3,
         "prices": [
           13200,
-          15730,
-          15760
+          14770,
+          15730
         ],
         "titles": [
           "농심 신라면 120g 20개 1박스",
-          "농심 신라면10p 안성탕면5p 너구리5p 20개",
-          "농심 신라면 , 120g, 20개"
+          "농심 신라면 , 120g, 20개",
+          "농심 신라면10p 안성탕면5p 너구리5p 20개"
         ],
         "isAscending": true,
         "noiseDetected": false,
@@ -48,14 +48,14 @@
         "apiSource": "naver_live",
         "cardCount": 3,
         "prices": [
+          23600,
           25320,
-          25600,
-          29590
+          26310
         ],
         "titles": [
+          "CJ 제일제당 햇반 흑미밥 210g, 24개",
           "CJ 제일제당 햇반 윤기가득쌀밥 210g, 24개",
-          "CJ 제일제당 햇반 210g, 24개",
-          "CJ 제일제당 햇반 이천쌀밥 210g, 24개"
+          "CJ 제일제당 햇반 210g, 24개"
         ],
         "isAscending": true,
         "noiseDetected": false,
@@ -109,13 +109,13 @@
         "cardCount": 3,
         "prices": [
           15400,
-          18900,
-          19800
+          21000,
+          21400
         ],
         "titles": [
           "훈훈 칵테일새우 900g 생 새우살 냉동 특대 깐새우 흰다리새우살",
-          "생 새우살 900g",
-          "국산 흰다리새우 활새우 1kg 왕새우 생새우 새우철 제철"
+          "국산 흰다리새우 급냉 활새우 1kg 왕새우 생새우 새우철 제철",
+          "국산 활 새우 제철 흰다리 새우 새우 철 생 새우 회 프리미엄 왕 새우 500g"
         ],
         "isAscending": true,
         "noiseDetected": false,

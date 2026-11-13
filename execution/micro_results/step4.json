@@ -2,7 +2,7 @@
   "step": 4,
   "name": "Cross-Device Naver Price Anchor & PowerLink Ad Bypass Audit",
   "status": "PASS",
-  "elapsed_sec": 13.53,
+  "elapsed_sec": 14.82,
   "sentinel": {
     "total_errors": 0,
     "pc_errors": {
@@ -34,7 +34,7 @@
         "url": "https://search.naver.com/search.naver?where=shp&query=%EB%86%8D%EC%8B%AC%20%EC%8B%A0%EB%9D%BC%EB%A9%B4%20120g%2020%EA%B0%9C#shp_dui_root",
         "final_url": "https://search.naver.com/search.naver?where=shp&query=%EB%86%8D%EC%8B%AC%20%EC%8B%A0%EB%9D%BC%EB%A9%B4%20120g%2020%EA%B0%9C#shp_dui_root",
         "http_status": 200,
-        "scrollY": 2159,
+        "scrollY": 2254,
         "anchor_found": true,
         "anchor_top_px": 0,
         "powerlink_found": true,
@@ -53,7 +53,7 @@
         "url": "https://m.search.naver.com/search.naver?where=m&query=%EB%86%8D%EC%8B%AC%20%EC%8B%A0%EB%9D%BC%EB%A9%B4%20120g%2020%EA%B0%9C#shp_lis_root",
         "final_url": "https://m.search.naver.com/search.naver?where=m&query=%EB%86%8D%EC%8B%AC%20%EC%8B%A0%EB%9D%BC%EB%A9%B4%20120g%2020%EA%B0%9C#shp_lis_root",
         "http_status": 200,
-        "scrollY": 1384,
+        "scrollY": 1396,
         "anchor_found": true,
         "anchor_top_px": 0,
         "powerlink_found": true,

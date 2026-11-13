@@ -119,6 +119,21 @@ def sentinel_summary(sentinel):
 def safe_screenshot(page, path, timeout=6000):
     try:
         page.screenshot(path=path, timeout=timeout, animations="disabled")
+        # 규칙 3: 고유 파일명 verify_{항목명}_{시각}.png 동시 생성
+        dirname = os.path.dirname(path)
+        base = os.path.splitext(os.path.basename(path))[0]
+        ext = os.path.splitext(os.path.basename(path))[1]
+        ts_str = time.strftime("%H%M%S")
+        verify_path = os.path.join(dirname, f"verify_{base}_{ts_str}{ext}")
+        try:
+            import shutil
+            shutil.copy2(path, verify_path)
+            # 아티팩트 디렉토리에도 동기화
+            if dirname != ARTIFACT_DIR:
+                shutil.copy2(path, os.path.join(ARTIFACT_DIR, os.path.basename(path)))
+                shutil.copy2(path, os.path.join(ARTIFACT_DIR, f"verify_{base}_{ts_str}{ext}"))
+        except Exception:
+            pass
         return True
     except Exception as e:
         print(f"  [!] Screenshot warning ({os.path.basename(path)}): {e}", flush=True)
