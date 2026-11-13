@@ -541,9 +541,13 @@ body.nav-dock-collapsed #toastNotification {
 
 @media (max-width: 639px) {
   #radarSearchDrawer {
-    height: 80vh !important;
-    max-height: 85vh !important;
+    height: 90vh !important;
+    max-height: 92vh !important;
     -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  #radarSearchDrawer::-webkit-scrollbar {
+    display: none;
   }
 }
 
