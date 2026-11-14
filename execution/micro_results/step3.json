@@ -2,7 +2,7 @@
   "step": 3,
   "name": "3-Tier Engine & Ottogi Missing Link Prevention & WAF Bypass",
   "status": "PASS",
-  "elapsed_sec": 6.47,
+  "elapsed_sec": 7.63,
   "sentinel": {
     "total_errors": 0,
     "console_errors": [],
@@ -16,13 +16,13 @@
     "cardCount": 3,
     "links": [
       "https://search.naver.com/search.naver?where=shp&query=%EC%98%A4%EB%9A%9C%EA%B8%B0%20%EB%A7%9B%EC%9E%88%EB%8A%94%20%EC%98%A4%EB%9A%9C%EA%B8%B0%EB%B0%A5%20%EB%B0%9C%EC%95%84%ED%98%84%EB%AF%B8%2018%EA%B0%9C#shp_dui_root",
-      "https://search.naver.com/search.naver?where=shp&query=%EC%98%A4%EB%9A%9C%EA%B8%B0%20%EB%A7%9B%EC%9E%88%EB%8A%94%20%EC%98%A4%EB%9A%9C%EA%B8%B0%EB%B0%A5%20%EB%B0%9C%EC%95%84%ED%9D%91%EB%AF%B8%2018%EA%B0%9C#shp_dui_root",
-      "https://search.naver.com/search.naver?where=shp&query=%EC%98%A4%EB%9A%9C%EA%B8%B0%20%EB%A7%9B%EC%9E%88%EB%8A%94%20%EC%98%A4%EB%9A%9C%EA%B8%B0%EB%B0%A5%20200g%2024%EA%B0%9C#shp_dui_root"
+      "https://search.naver.com/search.naver?where=shp&query=%EC%98%A4%EB%9A%9C%EA%B8%B0%20%EB%A7%9B%EC%9E%88%EB%8A%94%20%EC%98%A4%EB%9A%9C%EA%B8%B0%EB%B0%A5%20210g%2024%EA%B0%9C#shp_dui_root",
+      "https://search.naver.com/search.naver?where=shp&query=%EC%98%A4%EB%9A%9C%EA%B8%B0%20%EB%A7%9B%EC%9E%88%EB%8A%94%20%EC%98%A4%EB%9A%9C%EA%B8%B0%EB%B0%A5%20%EB%B0%9C%EC%95%84%ED%9D%91%EB%AF%B8%2018%EA%B0%9C#shp_dui_root"
     ],
     "titles": [
       "오뚜기 맛있는 오뚜기밥 발아현미 210g , 18개",
-      "오뚜기 맛있는 오뚜기밥 발아흑미 밥 210g , 18개",
-      "오뚜기 맛있는 오뚜기밥 200g, 24개"
+      "오뚜기 맛있는 오뚜기밥 210g , 24개",
+      "오뚜기 맛있는 오뚜기밥 발아흑미 밥 210g , 18개"
     ],
     "hasDeadLink": false,
     "hasWafBlock": false,

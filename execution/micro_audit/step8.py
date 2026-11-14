@@ -370,6 +370,7 @@ def assemble_final_markdown():
         "audit_01_desktop_instant_main.png",
         "audit_01_main_trending_view.png",
         "audit_02_dual_tabs_overview.png",
+        "audit_02_mobile_magazine_cards.png",
         "audit_02_search_results_농심.png",
         "audit_02_search_results_CJ.png",
         "audit_02_search_results_커클랜드.png",
@@ -386,6 +387,8 @@ def assemble_final_markdown():
         "audit_05_mobile_hotdeal_scroll_lock.png",
         "audit_05_tablet_dual_tab_scroll_lock.png",
         "audit_06_search_modal_clean_dismiss.png",
+        "audit_06_mobile_compact_fit_modal.png",
+        "audit_06_tablet_expanded_modal.png",
         "audit_07_responsive_matrix.png",
         "audit_07_pwa_install_elements.png",
         "audit_08_mobile_calibrated_header_10px.png",
@@ -434,6 +437,8 @@ def assemble_final_markdown():
 
 ### [Step 2 & 3: 32대 듀얼 탭, 5대 품목 정렬, 3단계 수집 & 오뚜기밥 24개]
 - **듀얼 탭 카드 실측**: 생필품=`{s2.get('dual_tabs', {}).get('steady_count')}개` (유효 썸네일 `{s2.get('dual_tabs', {}).get('steady_valid_thumbs')}개`), 핫딜=`{s2.get('dual_tabs', {}).get('hotdeal_count')}개` (유효 썸네일 `{s2.get('dual_tabs', {}).get('hotdeal_valid_thumbs')}개`)
+- **[오늘 세션 신규 실측] 모바일 매거진형 가로 카드 레이아웃 (v1.6.5)**:
+  - 카드 수=`{s2.get('dual_tabs', {}).get('magazine_eval', {}).get('count')}개` | 가로형 비례=`{s2.get('dual_tabs', {}).get('magazine_eval', {}).get('isMagazine')}` | 1개 카드 규격=`{s2.get('dual_tabs', {}).get('magazine_eval', {}).get('cardWidth')}x{s2.get('dual_tabs', {}).get('magazine_eval', {}).get('cardHeight')}px` | 스크롤 압박 대폭 감소
 - **5대 대표 품목 실측 가격 리스트**:
 {rep_detail}
 - **오뚜기밥 24개 단종 배제**: 카드 수=`{s3.get('cardCount')}개`, 단종 링크(`4915664157`) 포함=`{s3.get('hasDeadLink')}`, API 소스=`{s3.get('api_meta', {}).get('source')}`, 타겟 URL 실측 HTTP=`{s3.get('target_link_live_check', {}).get('http_status')}`, WAF 차단=`{s3.get('target_link_live_check', {}).get('waf_blocked')}`, 상품없음=`{s3.get('target_link_live_check', {}).get('missing_product')}`
@@ -457,6 +462,12 @@ def assemble_final_markdown():
 
 ### [Step 6, 7 & 8: 레이더 모달, 5대 반응형, PWA, UI 실측 & Vercel 프로덕션 교차 검증]
 - **레이더 모달 & iOS 줌 차단**: 오토포커스=`{s6.get('focus_metrics', {}).get('activeIsInput')}`, `fontSize="{s6.get('focus_metrics', {}).get('inputFontSize')}"`, `maximum-scale=1`=`{s6.get('focus_metrics', {}).get('hasMaxScaleOne')}`, 모달 즉시 은닉=`{s6.get('modal_hide_instant')}`, 임의검색(다이슨 `{s6.get('dyson_cards')}개` / 맥북 `{s6.get('macbook_cards')}개`)
+- **[오늘 세션 신규 실측 #1] 모바일 레이더 모달 컴팩트 저스트 핏 (v1.6.7)**:
+  - 모달 높이=`{s6.get('focus_metrics', {}).get('drawerHeight')}px` (화면 대비 `{s6.get('focus_metrics', {}).get('heightRatio')}`) | 하단 잔여 여백=`{s6.get('focus_metrics', {}).get('bottomPaddingDistance')}px` | 과도한 공백 배제=`{not s6.get('focus_metrics', {}).get('hasExcessiveWhitespace', True)}` | 무스크롤=`{s6.get('focus_metrics', {}).get('isZeroScroll')}`
+- **[오늘 세션 신규 실측 #2] 태블릿 화면 레이더 모달 680px 확장 & 대형 터치 타겟 (v1.6.8)**:
+  - 모달 가로폭=`{s6.get('tablet_eval', {}).get('drawerWidth')}px` (화면 대비 `{s6.get('tablet_eval', {}).get('widthRatio')}`) | 모달 높이=`{s6.get('tablet_eval', {}).get('drawerHeight')}px`
+  - 검색창 인풋 높이=`{s6.get('tablet_eval', {}).get('inputHeight')}px` | 수량자판 칩=`{s6.get('tablet_eval', {}).get('padButtonWidth')}x{s6.get('tablet_eval', {}).get('padButtonHeight')}px`
+  - 추천카드 높이=`{s6.get('tablet_eval', {}).get('quickChipHeight')}px` | 카테고리 칩 높이=`{s6.get('tablet_eval', {}).get('catChipHeight')}px` | 무스크롤=`{s6.get('tablet_eval', {}).get('isZeroScroll')}`
 - **5대 디바이스 반응형 & PC 검색 가드**: `{s7.get('responsive_matrix')}`, PC 데스크톱 스크롤 시 검색바 상시 노출=`{s7.get('desktop_search_guard', {}).get('alwaysVisible')}`
 - **PWA 에셋 상태**: `{s7.get('pwa_assets')}`
 - **UI 실측 (Step 8)**:

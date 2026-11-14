@@ -934,128 +934,128 @@
 
   <!-- 목표가 변경 모달 -->
   <div id="configModal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs hidden flex items-center justify-center p-3 sm:p-4 overflow-y-auto overscroll-contain">
-    <div class="bg-white rounded-3xl max-w-md w-full max-h-[90vh] flex flex-col shadow-2xl border border-slate-200 transform transition-all animate-in fade-in zoom-in-95 my-auto">
-      <div class="flex items-center justify-between p-5 sm:p-6 pb-3 sm:pb-4 border-b border-slate-100 shrink-0">
-        <h3 class="text-lg font-black text-slate-900 flex items-center space-x-2">
-          <i data-lucide="bell" class="w-5 h-5 text-naver"></i>
+    <div class="bg-white rounded-3xl md:rounded-[36px] max-w-md md:max-w-2xl w-full max-h-[90vh] md:max-h-[88vh] flex flex-col shadow-2xl border border-slate-200 transform transition-all animate-in fade-in zoom-in-95 my-auto">
+      <div class="flex items-center justify-between p-5 sm:p-6 md:p-8 pb-3 sm:pb-4 md:pb-5 border-b border-slate-100 shrink-0">
+        <h3 class="text-lg md:text-2xl font-black text-slate-900 flex items-center space-x-2 md:space-x-3">
+          <i data-lucide="bell" class="w-5 h-5 md:w-7 md:h-7 text-naver"></i>
           <span>목표 알림 가격 설정</span>
         </h3>
-        <button id="closeConfigModalBtn" class="p-1 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 cursor-pointer">
-          <i data-lucide="x" class="w-5 h-5"></i>
+        <button id="closeConfigModalBtn" class="p-1 md:p-2 rounded-lg md:rounded-xl text-slate-400 hover:text-slate-700 hover:bg-slate-100 cursor-pointer">
+          <i data-lucide="x" class="w-5 h-5 md:w-6 md:h-6"></i>
         </button>
       </div>
 
-      <div class="p-5 sm:p-6 py-4 space-y-4 overflow-y-auto overscroll-contain flex-1">
+      <div class="p-5 sm:p-6 md:p-8 py-4 md:py-6 space-y-4 md:space-y-5 overflow-y-auto overscroll-contain flex-1">
         <div>
-          <label class="block text-xs font-bold text-slate-600 mb-1.5">희망 알림 목표가 (원)</label>
+          <label class="block text-xs md:text-sm font-bold md:font-extrabold text-slate-600 mb-1.5 md:mb-2">희망 알림 목표가 (원)</label>
           <div class="relative">
             <input 
               type="number" 
               id="modalTargetPriceInput" 
               step="500" 
               value="15000" 
-              class="w-full px-4 py-3 bg-slate-100 rounded-2xl text-slate-900 font-extrabold text-lg focus:bg-white focus:ring-4 focus:ring-naver/20 focus:border-naver border-2 border-transparent outline-none transition-all"
+              class="w-full px-4 md:px-5 py-3 md:py-4 bg-slate-100 rounded-2xl text-slate-900 font-extrabold text-lg md:text-2xl focus:bg-white focus:ring-4 focus:ring-naver/20 focus:border-naver border-2 border-transparent outline-none transition-all"
             >
-            <span class="absolute right-4 top-3.5 text-slate-400 font-bold">원</span>
+            <span class="absolute right-4 md:right-5 top-3.5 md:top-4 text-slate-400 font-bold md:text-lg">원</span>
           </div>
-          <p class="text-xs text-slate-400 mt-1.5">이 가격 이하로 최저가가 떨어지면 '특가 발생' 알림이 발동됩니다.</p>
+          <p class="text-xs md:text-sm text-slate-400 mt-1.5 md:mt-2">이 가격 이하로 최저가가 떨어지면 '특가 발생' 알림이 발동됩니다.</p>
         </div>
 
         <!-- 빠른 선택 버튼 -->
-        <div class="flex items-center space-x-2 pt-1">
-          <button type="button" class="preset-price-btn px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-lg" data-price="14000">14,000원</button>
-          <button type="button" class="preset-price-btn px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-lg" data-price="14500">14,500원</button>
-          <button type="button" class="preset-price-btn px-3 py-1.5 bg-naver/10 text-naver text-xs font-bold rounded-lg border border-naver/30" data-price="15000">15,000원 (기본)</button>
-          <button type="button" class="preset-price-btn px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-lg" data-price="15500">15,500원</button>
+        <div class="flex items-center space-x-2 md:space-x-2.5 pt-1">
+          <button type="button" class="preset-price-btn px-3 md:px-4 py-1.5 md:py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs md:text-sm font-semibold md:font-bold rounded-lg md:rounded-xl flex-1 text-center transition-all cursor-pointer" data-price="14000">14,000원</button>
+          <button type="button" class="preset-price-btn px-3 md:px-4 py-1.5 md:py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs md:text-sm font-semibold md:font-bold rounded-lg md:rounded-xl flex-1 text-center transition-all cursor-pointer" data-price="14500">14,500원</button>
+          <button type="button" class="preset-price-btn px-3 md:px-4 py-1.5 md:py-2.5 bg-naver/10 text-naver text-xs md:text-sm font-bold md:font-extrabold rounded-lg md:rounded-xl border border-naver/30 flex-1 text-center transition-all cursor-pointer" data-price="15000">15,000원 (기본)</button>
+          <button type="button" class="preset-price-btn px-3 md:px-4 py-1.5 md:py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs md:text-sm font-semibold md:font-bold rounded-lg md:rounded-xl flex-1 text-center transition-all cursor-pointer" data-price="15500">15,500원</button>
         </div>
 
         <!-- 목표가 도달 알림 활성화 토글 -->
-        <div class="flex items-center justify-between p-3.5 bg-slate-50 border border-slate-200/80 rounded-2xl mt-2">
+        <div class="flex items-center justify-between p-3.5 md:p-5 bg-slate-50 border border-slate-200/80 rounded-2xl mt-2">
           <div>
-            <div class="text-xs font-bold text-slate-800 flex items-center space-x-1.5">
-              <i data-lucide="bell" class="w-3.5 h-3.5 text-blue-600"></i>
+            <div class="text-xs md:text-base font-bold md:font-extrabold text-slate-800 flex items-center space-x-1.5 md:space-x-2">
+              <i data-lucide="bell" class="w-3.5 h-3.5 md:w-5 md:h-5 text-blue-600"></i>
               <span>목표가 도달 알림 활성화</span>
             </div>
-            <div class="text-[11px] text-slate-500">목표가 이하로 떨어졌을 때 알림 배너 및 상태를 표시합니다.</div>
+            <div class="text-[11px] md:text-sm text-slate-500 leading-snug mt-0.5 md:mt-1">목표가 이하로 떨어졌을 때 알림 배너 및 상태를 표시합니다.</div>
           </div>
-          <label class="relative inline-flex items-center cursor-pointer shrink-0 ml-3" title="알림 활성화 토글">
+          <label class="relative inline-flex items-center cursor-pointer shrink-0 ml-3 md:ml-4" title="알림 활성화 토글">
             <input type="checkbox" id="modalAlertToggle" class="sr-only peer" checked>
-            <div class="w-10 h-6 bg-slate-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-naver"></div>
+            <div class="w-10 md:w-14 h-6 md:h-8 bg-slate-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 md:after:h-7 after:w-5 md:after:w-7 after:transition-all peer-checked:bg-naver"></div>
           </label>
         </div>
 
         <!-- 특가 알림 소리(차임벨) 토글 -->
-        <div class="flex items-center justify-between p-3.5 bg-slate-50 border border-slate-200/80 rounded-2xl mt-2">
+        <div class="flex items-center justify-between p-3.5 md:p-5 bg-slate-50 border border-slate-200/80 rounded-2xl mt-2">
           <div>
-            <div class="text-xs font-bold text-slate-800 flex items-center space-x-1.5">
-              <i data-lucide="volume-2" class="w-3.5 h-3.5 text-blue-600"></i>
+            <div class="text-xs md:text-base font-bold md:font-extrabold text-slate-800 flex items-center space-x-1.5 md:space-x-2">
+              <i data-lucide="volume-2" class="w-3.5 h-3.5 md:w-5 md:h-5 text-blue-600"></i>
               <span>특가 감지 차임벨 소리</span>
             </div>
-            <div class="text-[11px] text-slate-500">목표가 이하 달성 시 경쾌한 띵동~ 🔔 벨소리를 재생합니다.</div>
+            <div class="text-[11px] md:text-sm text-slate-500 leading-snug mt-0.5 md:mt-1">목표가 이하 달성 시 경쾌한 띵동~ 🔔 벨소리를 재생합니다.</div>
           </div>
-          <label class="relative inline-flex items-center cursor-pointer shrink-0 ml-3" title="차임벨 소리 토글">
+          <label class="relative inline-flex items-center cursor-pointer shrink-0 ml-3 md:ml-4" title="차임벨 소리 토글">
             <input type="checkbox" id="modalSoundToggle" class="sr-only peer" checked>
-            <div class="w-10 h-6 bg-slate-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-naver"></div>
+            <div class="w-10 md:w-14 h-6 md:h-8 bg-slate-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 md:after:h-7 after:w-5 md:after:w-7 after:transition-all peer-checked:bg-naver"></div>
           </label>
         </div>
 
         <!-- 특가 알림 모바일 햅틱 진동 토글 및 기기별 진단 배너 -->
-        <div class="p-3.5 bg-slate-50 border border-slate-200/80 rounded-2xl mt-2">
+        <div class="p-3.5 md:p-5 bg-slate-50 border border-slate-200/80 rounded-2xl mt-2">
           <div class="flex items-center justify-between">
             <div class="pr-2">
-              <div class="text-xs font-bold text-slate-800 flex items-center space-x-1.5">
-                <i data-lucide="vibrate" class="w-3.5 h-3.5 text-indigo-600"></i>
+              <div class="text-xs md:text-base font-bold md:font-extrabold text-slate-800 flex items-center space-x-1.5 md:space-x-2">
+                <i data-lucide="vibrate" class="w-3.5 h-3.5 md:w-5 md:h-5 text-indigo-600"></i>
                 <span>모바일 햅틱 진동</span>
               </div>
-              <div class="text-[11px] text-slate-500 leading-snug mt-0.5">
+              <div class="text-[11px] md:text-sm text-slate-500 leading-snug mt-0.5 md:mt-1">
                 목표가 달성 시 2단 햅틱 진동 및 시각 촉각 펄스를 전달합니다.
               </div>
             </div>
-            <label class="relative inline-flex items-center cursor-pointer shrink-0 ml-3" title="햅틱 진동 토글">
+            <label class="relative inline-flex items-center cursor-pointer shrink-0 ml-3 md:ml-4" title="햅틱 진동 토글">
               <input type="checkbox" id="modalVibrateToggle" class="sr-only peer" checked>
-              <div class="w-10 h-6 bg-slate-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-naver"></div>
+              <div class="w-10 md:w-14 h-6 md:h-8 bg-slate-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 md:after:h-7 after:w-5 md:after:w-7 after:transition-all peer-checked:bg-naver"></div>
             </label>
           </div>
 
           <!-- 실시간 기기 감지 및 햅틱 진단 안내 배너 -->
-          <div id="deviceHapticInfoBanner" class="mt-2.5 p-2.5 rounded-xl border text-[11px] leading-relaxed transition-all">
+          <div id="deviceHapticInfoBanner" class="mt-2.5 md:mt-3 p-2.5 md:p-3.5 rounded-xl border text-[11px] md:text-xs leading-relaxed transition-all">
             <!-- JS에서 iOS / Android / Desktop 감지 후 동적 렌더링 -->
           </div>
         </div>
 
         <!-- 소리 / 진동 즉시 테스트 버튼 -->
-        <div class="flex items-center justify-between p-3.5 bg-gradient-to-r from-emerald-50 to-teal-50 border border-emerald-200/80 rounded-2xl mt-2">
+        <div class="flex items-center justify-between p-3.5 md:p-5 bg-gradient-to-r from-emerald-50 to-teal-50 border border-emerald-200/80 rounded-2xl mt-2">
           <div>
-            <div class="text-xs font-bold text-emerald-900 flex items-center space-x-1.5">
-              <i data-lucide="sparkles" class="w-3.5 h-3.5 text-emerald-600"></i>
+            <div class="text-xs md:text-base font-bold md:font-extrabold text-emerald-900 flex items-center space-x-1.5 md:space-x-2">
+              <i data-lucide="sparkles" class="w-3.5 h-3.5 md:w-5 md:h-5 text-emerald-600"></i>
               <span>소리 및 진동 동작 테스트</span>
             </div>
-            <div class="text-[11px] text-emerald-700/80">현재 설정된 차임벨 소리와 햅틱 진동을 즉시 체험해 봅니다.</div>
+            <div class="text-[11px] md:text-sm text-emerald-700/80 leading-snug mt-0.5 md:mt-1">현재 설정된 차임벨 소리와 햅틱 진동을 즉시 체험해 봅니다.</div>
           </div>
-          <button type="button" id="testNotificationBtn" class="px-3.5 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold shrink-0 ml-3 shadow-xs active:scale-95 transition-all flex items-center space-x-1 cursor-pointer">
-            <i data-lucide="bell-ring" class="w-3.5 h-3.5"></i>
+          <button type="button" id="testNotificationBtn" class="px-3.5 md:px-5 py-1.5 md:py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs md:text-sm font-bold md:font-extrabold shrink-0 ml-3 md:ml-4 shadow-xs active:scale-95 transition-all flex items-center space-x-1 md:space-x-1.5 cursor-pointer">
+            <i data-lucide="bell-ring" class="w-3.5 h-3.5 md:w-4 md:h-4"></i>
             <span>미리 테스트</span>
           </button>
         </div>
 
         <!-- 오프닝 스플래시 인트로 다시 보기 (PC에서는 lg:hidden으로 숨김) -->
-        <div class="lg:hidden flex items-center justify-between p-3.5 bg-blue-50/70 border border-blue-200/80 rounded-2xl mt-2">
+        <div class="lg:hidden flex items-center justify-between p-3.5 md:p-5 bg-blue-50/70 border border-blue-200/80 rounded-2xl mt-2">
           <div>
-            <div class="text-xs font-bold text-blue-900">시작 인트로 애니메이션 다시 보기</div>
-            <div class="text-[11px] text-blue-700/80">동적 파티클과 프로그레스 바가 포함된 오프닝 화면을 재생합니다.</div>
+            <div class="text-xs md:text-base font-bold md:font-extrabold text-blue-900">시작 인트로 애니메이션 다시 보기</div>
+            <div class="text-[11px] md:text-sm text-blue-700/80 leading-snug mt-0.5 md:mt-1">동적 파티클과 프로그레스 바가 포함된 오프닝 화면을 재생합니다.</div>
           </div>
-          <button type="button" id="replaySplashBtn" class="px-3 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold shrink-0 ml-3 shadow-xs active:scale-95 transition-all flex items-center space-x-1 cursor-pointer">
-            <i data-lucide="play" class="w-3.5 h-3.5"></i>
+          <button type="button" id="replaySplashBtn" class="px-3 md:px-5 py-1.5 md:py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs md:text-sm font-bold md:font-extrabold shrink-0 ml-3 md:ml-4 shadow-xs active:scale-95 transition-all flex items-center space-x-1 md:space-x-1.5 cursor-pointer">
+            <i data-lucide="play" class="w-3.5 h-3.5 md:w-4 md:h-4"></i>
             <span>재생</span>
           </button>
         </div>
       </div>
 
-      <div class="p-5 sm:p-6 pt-3 sm:pt-4 border-t border-slate-100 flex items-center justify-end space-x-2 shrink-0 bg-slate-50/70 rounded-b-3xl">
-        <button id="cancelConfigModalBtn" class="px-4 py-2.5 rounded-xl text-slate-600 hover:bg-slate-100 text-xs font-bold cursor-pointer">
+      <div class="p-5 sm:p-6 md:p-8 pt-3 sm:pt-4 md:pt-5 border-t border-slate-100 flex items-center justify-end space-x-2 md:space-x-3 shrink-0 bg-slate-50/70 rounded-b-3xl md:rounded-b-[36px]">
+        <button id="cancelConfigModalBtn" class="px-4 md:px-6 py-2.5 md:py-3.5 rounded-xl text-slate-600 hover:bg-slate-100 text-xs md:text-sm font-bold md:font-extrabold cursor-pointer transition-all">
           취소
         </button>
-        <button id="saveConfigModalBtn" class="px-5 py-2.5 bg-naver hover:bg-naver-dark text-white rounded-xl text-xs font-black shadow-md shadow-naver/25 cursor-pointer">
+        <button id="saveConfigModalBtn" class="px-5 md:px-7 py-2.5 md:py-3.5 bg-naver hover:bg-naver-dark text-white rounded-xl text-xs md:text-base font-black shadow-md shadow-naver/25 cursor-pointer transition-all">
           설정 저장 및 다시 계산
         </button>
       </div>

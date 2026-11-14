@@ -2,7 +2,7 @@
   "step": 1,
   "name": "Splash Progression (Mobile/Tablet), Desktop Bypass & Trending API Consistency",
   "status": "PASS",
-  "elapsed_sec": 18.43,
+  "elapsed_sec": 10.41,
   "sentinel": {
     "total_errors": 0,
     "console_errors": [],
@@ -18,11 +18,11 @@
       "canvas_rendered": true,
       "has_pulse_radar": true,
       "progress_text": "네이버 쇼핑 공식 카탈로그 연결 중...",
-      "progress_bar_width": "10%",
+      "progress_bar_width": "11%",
       "skip_btn_visible": true,
       "session_flag_set": true,
       "reload_instant_bypass": true,
-      "reload_duration_ms": 423.0,
+      "reload_duration_ms": 566.2,
       "screenshot": "C:\\Users\\ROG\\.gemini\\antigravity\\brain\\1853f434-165f-4049-bb73-2739a84f7b41\\audit_01_mobile_splash_progress.png"
     },
     "tablet_splash": {

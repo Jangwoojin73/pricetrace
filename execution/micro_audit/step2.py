@@ -11,7 +11,7 @@ import time
 import urllib.parse
 from playwright.sync_api import sync_playwright
 from config import (
-    BASE_URL, ARTIFACT_DIR, CHROMIUM_ARGS, PC_UA,
+    BASE_URL, ARTIFACT_DIR, CHROMIUM_ARGS, PC_UA, MOBILE_UA,
     save_step_result, create_sentinel, collect_broken_images, sentinel_summary, safe_screenshot
 )
 
@@ -77,13 +77,43 @@ def main():
         snap_tabs = os.path.join(ARTIFACT_DIR, "audit_02_dual_tabs_overview.png")
         safe_screenshot(page, snap_tabs)
 
+        # 2-1-B. [오늘 세션 신규 검증] 모바일 환경(393x852) 매거진형 가로 카드 실측
+        m_ctx = browser.new_context(viewport={'width': 393, 'height': 852}, user_agent=MOBILE_UA, service_workers="block")
+        m_page = m_ctx.new_page()
+        m_page.add_init_script("sessionStorage.setItem('pricetrace_splash_seen', 'true');")
+        m_page.goto(BASE_URL, wait_until="domcontentloaded")
+        m_page.wait_for_selector("#welcomeCardsContainer .welcome-card", timeout=8000)
+        m_page.wait_for_timeout(600)
+
+        magazine_eval = m_page.evaluate('''() => {
+            const cards = Array.from(document.querySelectorAll("#welcomeCardsContainer .welcome-card"));
+            if (!cards.length) return { isMagazine: false, avgHeight: 0, count: 0 };
+            const first = cards[0];
+            const r = first.getBoundingClientRect();
+            const cs = window.getComputedStyle(first);
+            const imgBox = first.querySelector(".welcome-card-img-box, img, svg")?.parentElement;
+            const imgBoxR = imgBox ? imgBox.getBoundingClientRect() : null;
+            return {
+                isMagazine: cs.display === "flex" || r.width > r.height,
+                cardWidth: Math.round(r.width),
+                cardHeight: Math.round(r.height),
+                count: cards.length,
+                hasFlexRow: cs.flexDirection.includes("row") || r.width > 200
+            };
+        }''')
+        snap_magazine = os.path.join(ARTIFACT_DIR, "audit_02_mobile_magazine_cards.png")
+        safe_screenshot(m_page, snap_magazine)
+        m_ctx.close()
+
         metrics["dual_tabs"] = {
             "steady_count": steady_eval["count"],
             "steady_valid_thumbs": steady_eval["validThumbs"],
             "hotdeal_count": hotdeal_eval["count"],
             "hotdeal_valid_thumbs": hotdeal_eval["validThumbs"],
             "hotdeal_price_labels_valid": hotdeal_eval["hasPriceLabels"],
-            "screenshot": snap_tabs
+            "magazine_eval": magazine_eval,
+            "screenshot": snap_tabs,
+            "magazine_screenshot": snap_magazine
         }
 
         # 2-2. 5 Representative Items Search & Ascending Sort

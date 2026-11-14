@@ -2,7 +2,7 @@
   "step": 7,
   "name": "5 Devices Responsive Layout, Desktop Search Guard & PWA Infrastructure Audit",
   "status": "PASS",
-  "elapsed_sec": 23.62,
+  "elapsed_sec": 14.49,
   "sentinel": {
     "total_errors": 0,
     "console_errors": [],

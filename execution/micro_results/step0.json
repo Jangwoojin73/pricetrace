@@ -2,36 +2,36 @@
   "step": 0,
   "name": "Local/Live Environment Audit & Global Sentinel Init",
   "status": "PASS",
-  "elapsed_sec": 0.91,
+  "elapsed_sec": 2.22,
   "sentinel": {
     "total_errors": 0
   },
   "metrics": {
     "local_url": "http://127.0.0.1:8080",
     "local_status": 200,
-    "local_response_ms": 159.7,
+    "local_response_ms": 359.2,
     "local_api_status": 200,
     "local_api_raw_sample": {
       "status": "online",
       "service": "PriceTrace WebApp API",
       "bot_module_loaded": true,
       "public_dir_exists": true,
-      "timestamp": "2026-11-13T10:06:30.692258"
+      "timestamp": "2026-11-14T11:31:57.040914"
     },
     "local_error": null,
     "prod_url": "https://pricetrace-nu.vercel.app",
     "prod_status": 200,
-    "prod_response_ms": 102.7,
+    "prod_response_ms": 142.0,
     "prod_api_status": 200,
     "prod_api_raw_sample": {
       "status": "online",
       "platform": "Vercel Serverless Function",
       "bot_module_loaded": true,
-      "timestamp": "2026-11-13T01:06:30.927894"
+      "timestamp": "2026-11-14T02:31:57.234285"
     },
     "prod_error": null,
     "local_v161_synced": true,
     "prod_v161_synced": true,
-    "measured_at": "2026-11-13 10:06:31"
+    "measured_at": "2026-11-14 11:31:58"
   }
 }

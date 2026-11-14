@@ -576,6 +576,17 @@ body.nav-dock-collapsed #toastNotification {
   .modal-category-chip {
     min-height: 72px;
   }
+
+  /* 태블릿 목표 알림 설정 모달 최적화 */
+  #configModal > div {
+    width: 90% !important;
+    max-width: 680px !important;
+    max-height: 88vh !important;
+    scrollbar-width: none;
+  }
+  #configModal > div::-webkit-scrollbar {
+    display: none;
+  }
 }
 
 #radarSearchModal.modal-open #radarSearchDrawer {

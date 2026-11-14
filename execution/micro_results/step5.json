@@ -2,7 +2,7 @@
   "step": 5,
   "name": "Bottom Nav (25px Badges), Scroll Lock, Real-Touch PTR & Search Bar Smart Scroll",
   "status": "PASS",
-  "elapsed_sec": 26.02,
+  "elapsed_sec": 16.53,
   "sentinel": {
     "total_errors": 0,
     "console_errors": [],

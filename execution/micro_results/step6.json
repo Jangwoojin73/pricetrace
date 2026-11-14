@@ -2,7 +2,7 @@
   "step": 6,
   "name": "Radar Modal Autofocus, Dismissal, iOS Zoom Prevention & Arbitrary Search",
   "status": "PASS",
-  "elapsed_sec": 8.71,
+  "elapsed_sec": 11.18,
   "sentinel": {
     "total_errors": 0,
     "console_errors": [],
@@ -19,11 +19,31 @@
       "viewportMeta": "width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover",
       "hasMaxScaleOne": true,
       "inputFontSize": "16px",
-      "inputFontSizePx": 16
+      "inputFontSizePx": 16,
+      "drawerHeight": 572,
+      "heightRatio": "67.1%",
+      "bottomPaddingDistance": 25,
+      "hasExcessiveWhitespace": false,
+      "isZeroScroll": true
     },
     "modal_hide_instant": true,
     "dyson_cards": 3,
     "macbook_cards": 3,
-    "screenshot": "C:\\Users\\ROG\\.gemini\\antigravity\\brain\\1853f434-165f-4049-bb73-2739a84f7b41\\audit_06_search_modal_clean_dismiss.png"
+    "screenshot": "C:\\Users\\ROG\\.gemini\\antigravity\\brain\\1853f434-165f-4049-bb73-2739a84f7b41\\audit_06_search_modal_clean_dismiss.png",
+    "tablet_eval": {
+      "viewportWidth": 800,
+      "viewportHeight": 1280,
+      "drawerWidth": 680,
+      "drawerHeight": 844,
+      "widthRatio": "85.0%",
+      "inputHeight": 60,
+      "padButtonWidth": 146,
+      "padButtonHeight": 54,
+      "quickChipHeight": 54,
+      "catChipHeight": 88,
+      "isZeroScroll": true
+    },
+    "screenshot_mobile_compact": "C:\\Users\\ROG\\.gemini\\antigravity\\brain\\1853f434-165f-4049-bb73-2739a84f7b41\\audit_06_mobile_compact_fit_modal.png",
+    "screenshot_tablet_expanded": "C:\\Users\\ROG\\.gemini\\antigravity\\brain\\1853f434-165f-4049-bb73-2739a84f7b41\\audit_06_tablet_expanded_modal.png"
   }
 }
