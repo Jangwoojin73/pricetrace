@@ -1,28 +1,1810 @@
 {
   "step": 1,
   "name": "Splash Progression (Mobile/Tablet), Desktop Bypass & Trending API Consistency",
-  "status": "PASS",
-  "elapsed_sec": 10.62,
+  "status": "FAIL",
+  "elapsed_sec": 7.48,
   "sentinel": {
-    "total_errors": 0,
-    "console_errors": [],
-    "page_errors": [],
+    "total_errors": 812,
+    "console_errors": [
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "Failed to load resource: net::ERR_NAME_NOT_RESOLVED"
+    ],
+    "page_errors": [
+      "tailwind is not defined",
+      "lucide is not defined",
+      "Unexpected identifier 'http'",
+      "Unexpected identifier 'http'",
+      "Unexpected identifier 'http'",
+      "Unexpected identifier 'http'",
+      "Unexpected identifier 'http'",
+      "Unexpected identifier 'http'",
+      "Unexpected identifier 'http'",
+      "Unexpected identifier 'http'",
+      "Unexpected identifier 'http'",
+      "Unexpected identifier 'http'",
+      "Unexpected identifier 'http'",
+      "Unexpected identifier 'http'",
+      "Unexpected identifier 'http'",
+      "Unexpected identifier 'http'",
+      "Unexpected identifier 'http'",
+      "Unexpected identifier 'http'",
+      "Unexpected identifier 'http'",
+      "Unexpected identifier 'http'",
+      "Unexpected identifier 'http'",
+      "Unexpected identifier 'http'",
+      "Unexpected identifier 'http'",
+      "Unexpected identifier 'http'",
+      "Unexpected identifier 'http'",
+      "Unexpected identifier 'http'",
+      "Unexpected identifier 'http'",
+      "Unexpected identifier 'http'",
+      "Unexpected identifier 'http'",
+      "Unexpected identifier 'http'",
+      "Unexpected identifier 'http'",
+      "Unexpected identifier 'http'",
+      "Unexpected identifier 'http'",
+      "Unexpected identifier 'http'",
+      "tailwind is not defined",
+      "lucide is not defined",
+      "Unexpected identifier 'http'",
+      "Unexpected identifier 'http'",
+      "Unexpected identifier 'http'",
+      "Unexpected identifier 'http'",
+      "Unexpected identifier 'http'",
+      "Unexpected identifier 'http'",
+      "Unexpected identifier 'http'",
+      "Unexpected identifier 'http'",
+      "Unexpected identifier 'http'",
+      "Unexpected identifier 'http'",
+      "Unexpected identifier 'http'",
+      "Unexpected identifier 'http'",
+      "Unexpected identifier 'http'",
+      "Unexpected identifier 'http'",
+      "Unexpected identifier 'http'",
+      "Unexpected identifier 'http'",
+      "Unexpected identifier 'http'",
+      "Unexpected identifier 'http'",
+      "Unexpected identifier 'http'",
+      "Unexpected identifier 'http'",
+      "Unexpected identifier 'http'",
+      "Unexpected identifier 'http'",
+      "Unexpected identifier 'http'",
+      "Unexpected identifier 'http'",
+      "Unexpected identifier 'http'",
+      "Unexpected identifier 'http'",
+      "Unexpected identifier 'http'",
+      "Unexpected identifier 'http'",
+      "Unexpected identifier 'http'",
+      "Unexpected identifier 'http'",
+      "Unexpected identifier 'http'",
+      "Unexpected identifier 'http'",
+      "tailwind is not defined",
+      "lucide is not defined",
+      "Unexpected identifier 'http'",
+      "Unexpected identifier 'http'",
+      "Unexpected identifier 'http'",
+      "Unexpected identifier 'http'",
+      "Unexpected identifier 'http'",
+      "Unexpected identifier 'http'",
+      "Unexpected identifier 'http'",
+      "Unexpected identifier 'http'",
+      "Unexpected identifier 'http'",
+      "Unexpected identifier 'http'",
+      "Unexpected identifier 'http'",
+      "Unexpected identifier 'http'",
+      "Unexpected identifier 'http'",
+      "Unexpected identifier 'http'",
+      "Unexpected identifier 'http'",
+      "Unexpected identifier 'http'",
+      "Unexpected identifier 'http'",
+      "Unexpected identifier 'http'",
+      "Unexpected identifier 'http'",
+      "Unexpected identifier 'http'",
+      "Unexpected identifier 'http'",
+      "Unexpected identifier 'http'",
+      "Unexpected identifier 'http'",
+      "Unexpected identifier 'http'",
+      "Unexpected identifier 'http'",
+      "Unexpected identifier 'http'",
+      "Unexpected identifier 'http'",
+      "Unexpected identifier 'http'",
+      "Unexpected identifier 'http'",
+      "Unexpected identifier 'http'",
+      "Unexpected identifier 'http'",
+      "Unexpected identifier 'http'",
+      "tailwind is not defined",
+      "lucide is not defined",
+      "Unexpected identifier 'http'",
+      "Unexpected identifier 'http'",
+      "Unexpected identifier 'http'",
+      "Unexpected identifier 'http'",
+      "Unexpected identifier 'http'",
+      "Unexpected identifier 'http'",
+      "Unexpected identifier 'http'",
+      "Unexpected identifier 'http'",
+      "Unexpected identifier 'http'",
+      "Unexpected identifier 'http'",
+      "Unexpected identifier 'http'",
+      "Unexpected identifier 'http'",
+      "Unexpected identifier 'http'",
+      "Unexpected identifier 'http'",
+      "Unexpected identifier 'http'",
+      "Unexpected identifier 'http'",
+      "Unexpected identifier 'http'",
+      "Unexpected identifier 'http'",
+      "Unexpected identifier 'http'",
+      "Unexpected identifier 'http'",
+      "Unexpected identifier 'http'",
+      "Unexpected identifier 'http'",
+      "Unexpected identifier 'http'",
+      "Unexpected identifier 'http'",
+      "Unexpected identifier 'http'",
+      "Unexpected identifier 'http'",
+      "Unexpected identifier 'http'",
+      "Unexpected identifier 'http'",
+      "Unexpected identifier 'http'",
+      "Unexpected identifier 'http'",
+      "Unexpected identifier 'http'",
+      "Unexpected identifier 'http'"
+    ],
     "http_errors": [],
-    "failed_requests": [],
-    "broken_images_count": 0,
-    "broken_image_srcs": []
+    "failed_requests": [
+      {
+        "url": "https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://cdn.jsdelivr.net/npm/chart.js",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://cdn.tailwindcss.com/",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://unpkg.com/lucide@latest",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://shopping-phinf.pstatic.net/main_5301888/53018889018.20250214174431.jpg",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://shop-phinf.pstatic.net/20251106_214/1762407596976acxbB_JPEG/44839668094579746_565605864.jpg?type=f750_750",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://shop-phinf.pstatic.net/20260402_194/1775109012857lC9eR_JPEG/55146483987169084_1819069567.jpg?type=f750_750",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://img.danuri.io/catalog-image/738/059/015/6626cd689d41417fa7efa0c15ff08d68.jpg",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://img.danuri.io/catalog-image/074/151/001/38cdd389a56f4c429c7d8ce164a1a2de.jpg",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://img.danuri.io/catalog-image/166/251/002/2042e67b69b241ff80d5276b753cd379.jpg",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://img.danuri.io/catalog-image/660/069/071/b9cc000c5f614c179ed35a4eb82995be.jpg",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://img.danuri.io/catalog-image/116/239/001/d5361d4f097e4c10a2e44c8a1e1d117a.jpg",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://img.danuri.io/catalog-image/729/381/007/ed3368ec3d3a430f880b272bbea12da9.jpg",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://img.danuri.io/catalog-image/056/717/018/0731f60a26164a7f850884285a0d0d12.jpg",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://img.danuri.io/catalog-image/860/407/013/2ef507095066450d8d739c09238cb048.jpg",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://img.danuri.io/catalog-image/889/094/003/9b1f5e9d0857463ebba10f715881c253.jpg",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://img.danuri.io/catalog-image/054/152/001/75bfef8375274ac4aaa3c96f50690f24.jpg",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://img.danuri.io/catalog-image/905/238/001/1d15bf988b4b4c8aa8e4f6a6565f401a.jpg",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://img.danuri.io/catalog-image/201/472/013/4919bce162ff4874b54fc8b6ab9fe573.jpg",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://img.danuri.io/catalog-image/210/006/001/5b881f953b1947acad0eba6c5b839b7d.jpg",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://img.danuri.io/catalog-image/998/987/010/44820825b44e4b15b79cdcf120ff73e3.jpg",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://shop-phinf.pstatic.net/20251106_214/1762407596976acxbB_JPEG/44839668094579746_565605864.jpg?type=f750_750",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://shop-phinf.pstatic.net/20260402_194/1775109012857lC9eR_JPEG/55146483987169084_1819069567.jpg?type=f750_750",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://img.danuri.io/catalog-image/660/069/071/b9cc000c5f614c179ed35a4eb82995be.jpg",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://img.danuri.io/catalog-image/738/059/015/6626cd689d41417fa7efa0c15ff08d68.jpg",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://img.danuri.io/catalog-image/074/151/001/38cdd389a56f4c429c7d8ce164a1a2de.jpg",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://img.danuri.io/catalog-image/166/251/002/2042e67b69b241ff80d5276b753cd379.jpg",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://img.danuri.io/catalog-image/729/381/007/ed3368ec3d3a430f880b272bbea12da9.jpg",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://img.danuri.io/catalog-image/116/239/001/d5361d4f097e4c10a2e44c8a1e1d117a.jpg",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://img.danuri.io/catalog-image/201/472/013/4919bce162ff4874b54fc8b6ab9fe573.jpg",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://img.danuri.io/catalog-image/905/238/001/1d15bf988b4b4c8aa8e4f6a6565f401a.jpg",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://img.danuri.io/catalog-image/056/717/018/0731f60a26164a7f850884285a0d0d12.jpg",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://img.danuri.io/catalog-image/054/152/001/75bfef8375274ac4aaa3c96f50690f24.jpg",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://img.danuri.io/catalog-image/889/094/003/9b1f5e9d0857463ebba10f715881c253.jpg",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://img.danuri.io/catalog-image/860/407/013/2ef507095066450d8d739c09238cb048.jpg",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://img.danuri.io/catalog-image/210/006/001/5b881f953b1947acad0eba6c5b839b7d.jpg",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://img.danuri.io/catalog-image/998/987/010/44820825b44e4b15b79cdcf120ff73e3.jpg",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://cdn.tailwindcss.com/",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://cdn.jsdelivr.net/npm/chart.js",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://unpkg.com/lucide@latest",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://shopping-phinf.pstatic.net/main_5301888/53018889018.20250214174431.jpg",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://img.danuri.io/catalog-image/166/251/002/2042e67b69b241ff80d5276b753cd379.jpg",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://img.danuri.io/catalog-image/074/151/001/38cdd389a56f4c429c7d8ce164a1a2de.jpg",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://img.danuri.io/catalog-image/738/059/015/6626cd689d41417fa7efa0c15ff08d68.jpg",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://img.danuri.io/catalog-image/116/239/001/d5361d4f097e4c10a2e44c8a1e1d117a.jpg",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://img.danuri.io/catalog-image/729/381/007/ed3368ec3d3a430f880b272bbea12da9.jpg",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://img.danuri.io/catalog-image/660/069/071/b9cc000c5f614c179ed35a4eb82995be.jpg",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://shop-phinf.pstatic.net/20251106_214/1762407596976acxbB_JPEG/44839668094579746_565605864.jpg?type=f750_750",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://shop-phinf.pstatic.net/20260402_194/1775109012857lC9eR_JPEG/55146483987169084_1819069567.jpg?type=f750_750",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://img.danuri.io/catalog-image/054/152/001/75bfef8375274ac4aaa3c96f50690f24.jpg",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://img.danuri.io/catalog-image/889/094/003/9b1f5e9d0857463ebba10f715881c253.jpg",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://img.danuri.io/catalog-image/201/472/013/4919bce162ff4874b54fc8b6ab9fe573.jpg",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://img.danuri.io/catalog-image/905/238/001/1d15bf988b4b4c8aa8e4f6a6565f401a.jpg",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://img.danuri.io/catalog-image/056/717/018/0731f60a26164a7f850884285a0d0d12.jpg",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://img.danuri.io/catalog-image/860/407/013/2ef507095066450d8d739c09238cb048.jpg",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://img.danuri.io/catalog-image/210/006/001/5b881f953b1947acad0eba6c5b839b7d.jpg",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://img.danuri.io/catalog-image/998/987/010/44820825b44e4b15b79cdcf120ff73e3.jpg",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://img.danuri.io/catalog-image/166/251/002/2042e67b69b241ff80d5276b753cd379.jpg",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://img.danuri.io/catalog-image/074/151/001/38cdd389a56f4c429c7d8ce164a1a2de.jpg",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://img.danuri.io/catalog-image/738/059/015/6626cd689d41417fa7efa0c15ff08d68.jpg",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://img.danuri.io/catalog-image/116/239/001/d5361d4f097e4c10a2e44c8a1e1d117a.jpg",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://img.danuri.io/catalog-image/660/069/071/b9cc000c5f614c179ed35a4eb82995be.jpg",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://img.danuri.io/catalog-image/729/381/007/ed3368ec3d3a430f880b272bbea12da9.jpg",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://shop-phinf.pstatic.net/20260402_194/1775109012857lC9eR_JPEG/55146483987169084_1819069567.jpg?type=f750_750",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://shop-phinf.pstatic.net/20251106_214/1762407596976acxbB_JPEG/44839668094579746_565605864.jpg?type=f750_750",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://img.danuri.io/catalog-image/905/238/001/1d15bf988b4b4c8aa8e4f6a6565f401a.jpg",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://img.danuri.io/catalog-image/056/717/018/0731f60a26164a7f850884285a0d0d12.jpg",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://img.danuri.io/catalog-image/054/152/001/75bfef8375274ac4aaa3c96f50690f24.jpg",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://img.danuri.io/catalog-image/889/094/003/9b1f5e9d0857463ebba10f715881c253.jpg",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://img.danuri.io/catalog-image/201/472/013/4919bce162ff4874b54fc8b6ab9fe573.jpg",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://img.danuri.io/catalog-image/860/407/013/2ef507095066450d8d739c09238cb048.jpg",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://img.danuri.io/catalog-image/998/987/010/44820825b44e4b15b79cdcf120ff73e3.jpg",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://img.danuri.io/catalog-image/210/006/001/5b881f953b1947acad0eba6c5b839b7d.jpg",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://shopping-phinf.pstatic.net/main_5301888/53018889018.20250214174431.jpg",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://cdn.jsdelivr.net/npm/chart.js",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://cdn.tailwindcss.com/",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://unpkg.com/lucide@latest",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://img.danuri.io/catalog-image/729/381/007/ed3368ec3d3a430f880b272bbea12da9.jpg",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://img.danuri.io/catalog-image/166/251/002/2042e67b69b241ff80d5276b753cd379.jpg",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://img.danuri.io/catalog-image/116/239/001/d5361d4f097e4c10a2e44c8a1e1d117a.jpg",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://img.danuri.io/catalog-image/660/069/071/b9cc000c5f614c179ed35a4eb82995be.jpg",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://img.danuri.io/catalog-image/074/151/001/38cdd389a56f4c429c7d8ce164a1a2de.jpg",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://img.danuri.io/catalog-image/738/059/015/6626cd689d41417fa7efa0c15ff08d68.jpg",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://shop-phinf.pstatic.net/20260402_194/1775109012857lC9eR_JPEG/55146483987169084_1819069567.jpg?type=f750_750",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://shop-phinf.pstatic.net/20251106_214/1762407596976acxbB_JPEG/44839668094579746_565605864.jpg?type=f750_750",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://img.danuri.io/catalog-image/860/407/013/2ef507095066450d8d739c09238cb048.jpg",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://img.danuri.io/catalog-image/201/472/013/4919bce162ff4874b54fc8b6ab9fe573.jpg",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://img.danuri.io/catalog-image/056/717/018/0731f60a26164a7f850884285a0d0d12.jpg",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://img.danuri.io/catalog-image/905/238/001/1d15bf988b4b4c8aa8e4f6a6565f401a.jpg",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://img.danuri.io/catalog-image/889/094/003/9b1f5e9d0857463ebba10f715881c253.jpg",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://img.danuri.io/catalog-image/054/152/001/75bfef8375274ac4aaa3c96f50690f24.jpg",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://img.danuri.io/catalog-image/210/006/001/5b881f953b1947acad0eba6c5b839b7d.jpg",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://img.danuri.io/catalog-image/998/987/010/44820825b44e4b15b79cdcf120ff73e3.jpg",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://img.danuri.io/catalog-image/729/381/007/ed3368ec3d3a430f880b272bbea12da9.jpg",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://img.danuri.io/catalog-image/166/251/002/2042e67b69b241ff80d5276b753cd379.jpg",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://img.danuri.io/catalog-image/660/069/071/b9cc000c5f614c179ed35a4eb82995be.jpg",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://img.danuri.io/catalog-image/116/239/001/d5361d4f097e4c10a2e44c8a1e1d117a.jpg",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://img.danuri.io/catalog-image/074/151/001/38cdd389a56f4c429c7d8ce164a1a2de.jpg",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://img.danuri.io/catalog-image/738/059/015/6626cd689d41417fa7efa0c15ff08d68.jpg",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://shop-phinf.pstatic.net/20251106_214/1762407596976acxbB_JPEG/44839668094579746_565605864.jpg?type=f750_750",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://shop-phinf.pstatic.net/20260402_194/1775109012857lC9eR_JPEG/55146483987169084_1819069567.jpg?type=f750_750",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://img.danuri.io/catalog-image/201/472/013/4919bce162ff4874b54fc8b6ab9fe573.jpg",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://img.danuri.io/catalog-image/860/407/013/2ef507095066450d8d739c09238cb048.jpg",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://img.danuri.io/catalog-image/889/094/003/9b1f5e9d0857463ebba10f715881c253.jpg",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://img.danuri.io/catalog-image/905/238/001/1d15bf988b4b4c8aa8e4f6a6565f401a.jpg",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://img.danuri.io/catalog-image/054/152/001/75bfef8375274ac4aaa3c96f50690f24.jpg",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://img.danuri.io/catalog-image/056/717/018/0731f60a26164a7f850884285a0d0d12.jpg",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://img.danuri.io/catalog-image/210/006/001/5b881f953b1947acad0eba6c5b839b7d.jpg",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://img.danuri.io/catalog-image/998/987/010/44820825b44e4b15b79cdcf120ff73e3.jpg",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://shopping-phinf.pstatic.net/main_5301888/53018889018.20250214174431.jpg",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://cdn.jsdelivr.net/npm/chart.js",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://cdn.tailwindcss.com/",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://unpkg.com/lucide@latest",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://shop-phinf.pstatic.net/20251106_214/1762407596976acxbB_JPEG/44839668094579746_565605864.jpg?type=f750_750",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://shop-phinf.pstatic.net/20260402_194/1775109012857lC9eR_JPEG/55146483987169084_1819069567.jpg?type=f750_750",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://img.danuri.io/catalog-image/729/381/007/ed3368ec3d3a430f880b272bbea12da9.jpg",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://img.danuri.io/catalog-image/074/151/001/38cdd389a56f4c429c7d8ce164a1a2de.jpg",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://img.danuri.io/catalog-image/116/239/001/d5361d4f097e4c10a2e44c8a1e1d117a.jpg",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://img.danuri.io/catalog-image/166/251/002/2042e67b69b241ff80d5276b753cd379.jpg",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://img.danuri.io/catalog-image/738/059/015/6626cd689d41417fa7efa0c15ff08d68.jpg",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://img.danuri.io/catalog-image/660/069/071/b9cc000c5f614c179ed35a4eb82995be.jpg",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://img.danuri.io/catalog-image/860/407/013/2ef507095066450d8d739c09238cb048.jpg",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://img.danuri.io/catalog-image/905/238/001/1d15bf988b4b4c8aa8e4f6a6565f401a.jpg",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://img.danuri.io/catalog-image/054/152/001/75bfef8375274ac4aaa3c96f50690f24.jpg",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://img.danuri.io/catalog-image/889/094/003/9b1f5e9d0857463ebba10f715881c253.jpg",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://img.danuri.io/catalog-image/056/717/018/0731f60a26164a7f850884285a0d0d12.jpg",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://img.danuri.io/catalog-image/201/472/013/4919bce162ff4874b54fc8b6ab9fe573.jpg",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://img.danuri.io/catalog-image/998/987/010/44820825b44e4b15b79cdcf120ff73e3.jpg",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://img.danuri.io/catalog-image/210/006/001/5b881f953b1947acad0eba6c5b839b7d.jpg",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://img.danuri.io/catalog-image/116/239/001/d5361d4f097e4c10a2e44c8a1e1d117a.jpg",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://img.danuri.io/catalog-image/074/151/001/38cdd389a56f4c429c7d8ce164a1a2de.jpg",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://img.danuri.io/catalog-image/738/059/015/6626cd689d41417fa7efa0c15ff08d68.jpg",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://img.danuri.io/catalog-image/166/251/002/2042e67b69b241ff80d5276b753cd379.jpg",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://img.danuri.io/catalog-image/660/069/071/b9cc000c5f614c179ed35a4eb82995be.jpg",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://img.danuri.io/catalog-image/729/381/007/ed3368ec3d3a430f880b272bbea12da9.jpg",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://shop-phinf.pstatic.net/20251106_214/1762407596976acxbB_JPEG/44839668094579746_565605864.jpg?type=f750_750",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://shop-phinf.pstatic.net/20260402_194/1775109012857lC9eR_JPEG/55146483987169084_1819069567.jpg?type=f750_750",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://img.danuri.io/catalog-image/201/472/013/4919bce162ff4874b54fc8b6ab9fe573.jpg",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://img.danuri.io/catalog-image/056/717/018/0731f60a26164a7f850884285a0d0d12.jpg",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://img.danuri.io/catalog-image/889/094/003/9b1f5e9d0857463ebba10f715881c253.jpg",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://img.danuri.io/catalog-image/054/152/001/75bfef8375274ac4aaa3c96f50690f24.jpg",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://img.danuri.io/catalog-image/905/238/001/1d15bf988b4b4c8aa8e4f6a6565f401a.jpg",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://img.danuri.io/catalog-image/860/407/013/2ef507095066450d8d739c09238cb048.jpg",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://img.danuri.io/catalog-image/210/006/001/5b881f953b1947acad0eba6c5b839b7d.jpg",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://img.danuri.io/catalog-image/998/987/010/44820825b44e4b15b79cdcf120ff73e3.jpg",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80",
+        "failure": "net::ERR_NAME_NOT_RESOLVED"
+      }
+    ],
+    "broken_images_count": 32,
+    "broken_image_srcs": [
+      "https://shop-phinf.pstatic.net/20251106_214/1762407596976acxbB_JPEG/44839668094579746_565605864.jpg?type=f750_750",
+      "https://img.danuri.io/catalog-image/074/151/001/38cdd389a56f4c429c7d8ce164a1a2de.jpg",
+      "https://shop-phinf.pstatic.net/20260402_194/1775109012857lC9eR_JPEG/55146483987169084_1819069567.jpg?type=f750_750",
+      "https://img.danuri.io/catalog-image/738/059/015/6626cd689d41417fa7efa0c15ff08d68.jpg",
+      "https://img.danuri.io/catalog-image/116/239/001/d5361d4f097e4c10a2e44c8a1e1d117a.jpg",
+      "https://img.danuri.io/catalog-image/166/251/002/2042e67b69b241ff80d5276b753cd379.jpg",
+      "https://img.danuri.io/catalog-image/660/069/071/b9cc000c5f614c179ed35a4eb82995be.jpg",
+      "https://img.danuri.io/catalog-image/729/381/007/ed3368ec3d3a430f880b272bbea12da9.jpg",
+      "https://img.danuri.io/catalog-image/889/094/003/9b1f5e9d0857463ebba10f715881c253.jpg",
+      "https://img.danuri.io/catalog-image/056/717/018/0731f60a26164a7f850884285a0d0d12.jpg",
+      "https://img.danuri.io/catalog-image/054/152/001/75bfef8375274ac4aaa3c96f50690f24.jpg",
+      "https://img.danuri.io/catalog-image/905/238/001/1d15bf988b4b4c8aa8e4f6a6565f401a.jpg",
+      "https://img.danuri.io/catalog-image/201/472/013/4919bce162ff4874b54fc8b6ab9fe573.jpg",
+      "https://img.danuri.io/catalog-image/860/407/013/2ef507095066450d8d739c09238cb048.jpg",
+      "https://img.danuri.io/catalog-image/998/987/010/44820825b44e4b15b79cdcf120ff73e3.jpg",
+      "https://img.danuri.io/catalog-image/210/006/001/5b881f953b1947acad0eba6c5b839b7d.jpg",
+      "https://shop-phinf.pstatic.net/20251106_214/1762407596976acxbB_JPEG/44839668094579746_565605864.jpg?type=f750_750",
+      "https://img.danuri.io/catalog-image/074/151/001/38cdd389a56f4c429c7d8ce164a1a2de.jpg",
+      "https://shop-phinf.pstatic.net/20260402_194/1775109012857lC9eR_JPEG/55146483987169084_1819069567.jpg?type=f750_750",
+      "https://img.danuri.io/catalog-image/738/059/015/6626cd689d41417fa7efa0c15ff08d68.jpg",
+      "https://img.danuri.io/catalog-image/116/239/001/d5361d4f097e4c10a2e44c8a1e1d117a.jpg",
+      "https://img.danuri.io/catalog-image/166/251/002/2042e67b69b241ff80d5276b753cd379.jpg",
+      "https://img.danuri.io/catalog-image/660/069/071/b9cc000c5f614c179ed35a4eb82995be.jpg",
+      "https://img.danuri.io/catalog-image/729/381/007/ed3368ec3d3a430f880b272bbea12da9.jpg",
+      "https://img.danuri.io/catalog-image/889/094/003/9b1f5e9d0857463ebba10f715881c253.jpg",
+      "https://img.danuri.io/catalog-image/056/717/018/0731f60a26164a7f850884285a0d0d12.jpg",
+      "https://img.danuri.io/catalog-image/054/152/001/75bfef8375274ac4aaa3c96f50690f24.jpg",
+      "https://img.danuri.io/catalog-image/905/238/001/1d15bf988b4b4c8aa8e4f6a6565f401a.jpg",
+      "https://img.danuri.io/catalog-image/201/472/013/4919bce162ff4874b54fc8b6ab9fe573.jpg",
+      "https://img.danuri.io/catalog-image/860/407/013/2ef507095066450d8d739c09238cb048.jpg",
+      "https://img.danuri.io/catalog-image/998/987/010/44820825b44e4b15b79cdcf120ff73e3.jpg",
+      "https://img.danuri.io/catalog-image/210/006/001/5b881f953b1947acad0eba6c5b839b7d.jpg"
+    ]
   },
   "metrics": {
     "mobile_splash": {
-      "splash_display": "flex",
+      "splash_display": "block",
       "canvas_rendered": true,
       "has_pulse_radar": true,
       "progress_text": "네이버 쇼핑 공식 카탈로그 연결 중...",
-      "progress_bar_width": "11%",
+      "progress_bar_width": "10%",
       "skip_btn_visible": true,
       "session_flag_set": true,
       "reload_instant_bypass": true,
-      "reload_duration_ms": 610.2,
+      "reload_duration_ms": 267.2,
       "screenshot": "C:\\Users\\ROG\\.gemini\\antigravity\\brain\\1853f434-165f-4049-bb73-2739a84f7b41\\audit_01_mobile_splash_progress.png"
     },
     "tablet_splash": {

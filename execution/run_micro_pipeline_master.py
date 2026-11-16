@@ -12,6 +12,9 @@ import subprocess
 
 sys.stdout.reconfigure(encoding='utf-8', errors='replace')
 
+os.environ["NO_PROXY"] = "127.0.0.1,localhost"
+os.environ["no_proxy"] = "127.0.0.1,localhost"
+
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 WORKSPACE_DIR = os.path.dirname(BASE_DIR)
 AUDIT_DIR = os.path.join(BASE_DIR, "micro_audit")

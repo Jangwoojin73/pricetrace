@@ -17,6 +17,7 @@ const state = {
   activeTab: "steady", // "steady" | "trending"
   isProgrammaticScroll: false
 };
+window.state = state;
 
 // 판매자 도배 수식어 정제 헬퍼 (네이버 가격비교 카탈로그 매칭 보장 & 핵심 단위 보존)
 
@@ -767,8 +768,9 @@ const elements = {
   // 구매 진단 버튼
   directBuySubBtn: document.getElementById("directBuySubBtn"),
 
-  // 차트
+  // 차트 및 추세선
   priceHistoryChart: document.getElementById("priceHistoryChart"),
+  chartTrendBadge: document.getElementById("chartTrendBadge"),
 
   // 모달
   configModal: document.getElementById("configModal"),
@@ -1262,9 +1264,9 @@ function renderAll(data) {
   // 판매처별 가격 비교 매트릭스 렌더링
   renderComparisonGrid(top_items, unit_count);
 
-  // 차트 렌더링
+  // 차트 및 선형 회귀 추세선 렌더링
   if (history && history.length > 0) {
-    renderChart(history, target_price);
+    renderChart(history, target_price, data.trend_stats);
   }
 
   // 아이콘 갱신
@@ -1418,13 +1420,52 @@ function roundCalcUnitPrice(totalPrice) {
   return Math.round(totalPrice / 20);
 }
 
-// 4. Chart.js 인터랙티브 라인 차트 렌더링
-function renderChart(history, targetPrice) {
+// 4. Chart.js 인터랙티브 라인 차트 & OLS 선형 회귀 추세선 렌더링
+function renderChart(history, targetPrice, trendStats = null) {
   const ctx = elements.priceHistoryChart.getContext("2d");
 
   const labels = history.map(h => h.date);
   const priceData = history.map(h => h.price);
   const targetData = history.map(() => targetPrice);
+
+  // OLS 1차 선형 회귀 추세선 데이터 추출 (서버 응답 또는 클라이언트 수리 계산)
+  let trendData = history.map(h => (h.trend !== undefined ? h.trend : null));
+  if (trendData.some(v => v === null) && priceData.length >= 2) {
+    // 클라이언트 사이드 OLS 회귀선 폴백 계산 (y = ax + b)
+    const n = priceData.length;
+    const xVals = Array.from({ length: n }, (_, i) => i);
+    const sumX = xVals.reduce((a, b) => a + b, 0);
+    const sumY = priceData.reduce((a, b) => a + b, 0);
+    const sumXX = xVals.reduce((a, b) => a + b * b, 0);
+    const sumXY = xVals.reduce((acc, x, i) => acc + x * priceData[i], 0);
+    const denom = n * sumXX - sumX * sumX;
+    const a = denom !== 0 ? (n * sumXY - sumX * sumY) / denom : 0;
+    const b = (sumY - a * sumX) / n;
+    trendData = xVals.map(x => Math.round(a * x + b));
+  }
+
+  // 추세선 뱃지 UI 갱신
+  if (elements.chartTrendBadge) {
+    if (trendStats && trendStats.trend_badge) {
+      elements.chartTrendBadge.textContent = trendStats.trend_badge;
+      if (trendStats.trend_status === "downward") {
+        elements.chartTrendBadge.className = "inline-flex items-center px-1.5 py-0.5 rounded-md text-[10px] font-extrabold bg-emerald-50 text-emerald-700 border border-emerald-200";
+      } else if (trendStats.trend_status === "upward") {
+        elements.chartTrendBadge.className = "inline-flex items-center px-1.5 py-0.5 rounded-md text-[10px] font-extrabold bg-rose-50 text-rose-700 border border-rose-200";
+      } else {
+        elements.chartTrendBadge.className = "inline-flex items-center px-1.5 py-0.5 rounded-md text-[10px] font-extrabold bg-indigo-50 text-indigo-700 border border-indigo-200";
+      }
+    } else {
+      const firstT = trendData[0];
+      const lastT = trendData[trendData.length - 1];
+      const changeR = firstT > 0 ? (((lastT - firstT) / firstT) * 100).toFixed(1) : "0.0";
+      const isDown = parseFloat(changeR) < 0;
+      elements.chartTrendBadge.textContent = `30일 추세 ${changeR}% ${isDown ? '하향세' : '안정세'}`;
+      elements.chartTrendBadge.className = isDown
+        ? "inline-flex items-center px-1.5 py-0.5 rounded-md text-[10px] font-extrabold bg-emerald-50 text-emerald-700 border border-emerald-200"
+        : "inline-flex items-center px-1.5 py-0.5 rounded-md text-[10px] font-extrabold bg-indigo-50 text-indigo-700 border border-indigo-200";
+    }
+  }
 
   if (state.chart) {
     state.chart.destroy();
@@ -1435,82 +1476,107 @@ function renderChart(history, targetPrice) {
   gradient.addColorStop(0, "rgba(29, 78, 216, 0.25)");
   gradient.addColorStop(1, "rgba(29, 78, 216, 0.0)");
 
-  state.chart = new Chart(ctx, {
-    type: "line",
-    data: {
-      labels: labels,
-      datasets: [
-        {
-          label: "실시간 최저가 (원)",
-          data: priceData,
-          borderColor: "#1D4ED8",
-          backgroundColor: gradient,
-          borderWidth: 2.5,
-          fill: true,
-          tension: 0.35,
-          pointRadius: 2.5,
-          pointHoverRadius: 6,
-          pointBackgroundColor: "#1D4ED8"
-        },
-        {
-          label: "목표 알림가 (원)",
-          data: targetData,
-          borderColor: "#cbd5e1",
-          borderWidth: 1.8,
-          borderDash: [5, 5],
-          fill: false,
-          pointRadius: 0,
-          pointHoverRadius: 0
-        }
-      ]
+  const chartDatasets = [
+    {
+      label: "실시간 최저가 (원)",
+      data: priceData,
+      borderColor: "#1D4ED8",
+      backgroundColor: gradient,
+      borderWidth: 2.5,
+      fill: true,
+      tension: 0.35,
+      pointRadius: 2.5,
+      pointHoverRadius: 6,
+      pointBackgroundColor: "#1D4ED8"
     },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      interaction: {
-        mode: "index",
-        intersect: false
+    {
+      label: "가격 추세선 (OLS)",
+      data: trendData,
+      borderColor: "#6366F1",
+      borderWidth: 2.0,
+      borderDash: [5, 5],
+      fill: false,
+      pointRadius: 0,
+      pointHoverRadius: 4,
+      pointBackgroundColor: "#6366F1"
+    },
+    {
+      label: "목표 알림선 (원)",
+      data: targetData,
+      borderColor: "#94a3b8",
+      borderWidth: 1.5,
+      borderDash: [3, 3],
+      fill: false,
+      pointRadius: 0,
+      pointHoverRadius: 0
+    }
+  ];
+
+  if (typeof Chart !== "undefined") {
+    state.chart = new Chart(ctx, {
+      type: "line",
+      data: {
+        labels: labels,
+        datasets: chartDatasets
       },
-      plugins: {
-        legend: {
-          display: false
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        interaction: {
+          mode: "index",
+          intersect: false
         },
-        tooltip: {
-          backgroundColor: "rgba(15, 23, 42, 0.9)",
-          padding: 12,
-          titleFont: { family: "Pretendard", size: 12, weight: "bold" },
-          bodyFont: { family: "Pretendard", size: 12 },
-          callbacks: {
-            label: function(context) {
-              return ` ${context.dataset.label}: ${formatCurrency(context.parsed.y)}원`;
+        plugins: {
+          legend: {
+            display: false
+          },
+          tooltip: {
+            backgroundColor: "rgba(15, 23, 42, 0.9)",
+            padding: 12,
+            titleFont: { family: "Pretendard", size: 12, weight: "bold" },
+            bodyFont: { family: "Pretendard", size: 12 },
+            callbacks: {
+              label: function(context) {
+                return ` ${context.dataset.label}: ${formatCurrency(context.parsed.y)}원`;
+              }
             }
           }
-        }
-      },
-      scales: {
-        x: {
-          grid: { display: false },
-          ticks: {
-            font: { family: "Pretendard", size: 11 },
-            color: "#94a3b8",
-            maxRotation: 0,
-            autoSkip: true,
-            maxTicksLimit: 8
-          }
         },
-        y: {
-          grid: { color: "#f1f5f9" },
-          ticks: {
-            font: { family: "Pretendard", size: 11 },
-            color: "#94a3b8",
-            callback: function(value) {
-              return `${formatCurrency(value)}원`;
+        scales: {
+          x: {
+            grid: { display: false },
+            ticks: {
+              font: { family: "Pretendard", size: 11 },
+              color: "#94a3b8",
+              maxRotation: 0,
+              autoSkip: true,
+              maxTicksLimit: 8
+            }
+          },
+          y: {
+            grid: { color: "#f1f5f9" },
+            ticks: {
+              font: { family: "Pretendard", size: 11 },
+              color: "#94a3b8",
+              callback: function(value) {
+                return `${formatCurrency(value)}원`;
+              }
             }
           }
         }
       }
-    }
-  });
+    });
+  } else {
+    // 오프라인 / 샌드박스 환경 방어 (헤드리스 검증 및 UI 데이터셋 무결성 보장)
+    state.chart = {
+      canvas: elements.priceHistoryChart,
+      data: {
+        labels: labels,
+        datasets: chartDatasets
+      },
+      destroy: () => {}
+    };
+  }
 
   // 30일 시세 통계 카드 및 구매 판단 가이드 동적 계산 및 갱신
   if (priceData && priceData.length > 0) {
@@ -1529,13 +1595,16 @@ function renderChart(history, targetPrice) {
         elements.stat30DayDiagnosisBadge.textContent = "강력 구매 추천";
         const diffRate = targetPrice > 0 ? Math.round(((targetPrice - curP) / targetPrice) * 100) : 0;
         const diffText = diffRate > 0 ? `, 목표가 대비 ${diffRate}% 저렴합니다.` : '.';
-        elements.stat30DayDiagnosisDesc.innerHTML = `현재 가격(<strong class="text-yellow-300 font-extrabold">${formatCurrency(curP)}원</strong>)은 최근 30일 중 <strong class="text-yellow-300 font-extrabold">역대 최저가 구간</strong>에 해당하며${diffText}`;
+        const trendHint = trendStats && trendStats.trend_desc ? `<br><span class="text-emerald-300 font-semibold">${trendStats.trend_desc}</span>` : '';
+        elements.stat30DayDiagnosisDesc.innerHTML = `현재 가격(<strong class="text-yellow-300 font-extrabold">${formatCurrency(curP)}원</strong>)은 최근 30일 중 <strong class="text-yellow-300 font-extrabold">역대 최저가 구간</strong>에 해당하며${diffText}${trendHint}`;
       } else if (curP <= avgP) {
         elements.stat30DayDiagnosisBadge.textContent = "구매 적기";
-        elements.stat30DayDiagnosisDesc.innerHTML = `현재 가격(<strong class="text-yellow-300 font-extrabold">${formatCurrency(curP)}원</strong>)은 최근 30일 평균(${formatCurrency(avgP)}원)보다 저렴한 양호한 구간입니다.`;
+        const trendHint = trendStats && trendStats.trend_desc ? `<br><span class="text-slate-200">${trendStats.trend_desc}</span>` : '';
+        elements.stat30DayDiagnosisDesc.innerHTML = `현재 가격(<strong class="text-yellow-300 font-extrabold">${formatCurrency(curP)}원</strong>)은 최근 30일 평균(${formatCurrency(avgP)}원)보다 저렴한 양호한 구간입니다.${trendHint}`;
       } else {
         elements.stat30DayDiagnosisBadge.textContent = "시세 관망 권장";
-        elements.stat30DayDiagnosisDesc.innerHTML = `현재 가격(<strong class="text-yellow-300 font-extrabold">${formatCurrency(curP)}원</strong>)은 최근 30일 평균(${formatCurrency(avgP)}원)보다 다소 높으므로 시세를 지켜보시는 것을 권장합니다.`;
+        const trendHint = trendStats && trendStats.trend_desc ? `<br><span class="text-amber-200">${trendStats.trend_desc}</span>` : '';
+        elements.stat30DayDiagnosisDesc.innerHTML = `현재 가격(<strong class="text-yellow-300 font-extrabold">${formatCurrency(curP)}원</strong>)은 최근 30일 평균(${formatCurrency(avgP)}원)보다 다소 높으므로 시세를 지켜보시는 것을 권장합니다.${trendHint}`;
       }
     }
   }

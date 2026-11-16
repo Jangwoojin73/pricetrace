@@ -10,6 +10,10 @@ import time
 
 sys.stdout.reconfigure(encoding='utf-8', errors='replace')
 
+# 로컬 서버 프록시 우회 필수 설정
+os.environ["NO_PROXY"] = "127.0.0.1,localhost"
+os.environ["no_proxy"] = "127.0.0.1,localhost"
+
 ARTIFACT_DIR = r"C:\Users\ROG\.gemini\antigravity\brain\1853f434-165f-4049-bb73-2739a84f7b41"
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 WORKSPACE_DIR = os.path.dirname(BASE_DIR)

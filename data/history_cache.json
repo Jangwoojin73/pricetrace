@@ -1,0 +1,5826 @@
+{
+  "CJ제일제당 햇반 210g 24개": [
+    {
+      "date": "2026-10-18",
+      "price": 20930,
+      "mall_name": "CJ더마켓 네이버 브랜드스토어",
+      "unit_price": 872
+    },
+    {
+      "date": "2026-10-19",
+      "price": 21230,
+      "mall_name": "CJ더마켓 네이버 브랜드스토어",
+      "unit_price": 885
+    },
+    {
+      "date": "2026-10-20",
+      "price": 20530,
+      "mall_name": "CJ더마켓 네이버 브랜드스토어",
+      "unit_price": 855
+    },
+    {
+      "date": "2026-10-21",
+      "price": 20750,
+      "mall_name": "CJ더마켓 네이버 브랜드스토어",
+      "unit_price": 865
+    },
+    {
+      "date": "2026-10-22",
+      "price": 20690,
+      "mall_name": "CJ더마켓 네이버 브랜드스토어",
+      "unit_price": 862
+    },
+    {
+      "date": "2026-10-23",
+      "price": 20940,
+      "mall_name": "CJ더마켓 네이버 브랜드스토어",
+      "unit_price": 872
+    },
+    {
+      "date": "2026-10-24",
+      "price": 20690,
+      "mall_name": "CJ더마켓 네이버 브랜드스토어",
+      "unit_price": 862
+    },
+    {
+      "date": "2026-10-25",
+      "price": 20440,
+      "mall_name": "CJ더마켓 네이버 브랜드스토어",
+      "unit_price": 852
+    },
+    {
+      "date": "2026-10-26",
+      "price": 20290,
+      "mall_name": "CJ더마켓 네이버 브랜드스토어",
+      "unit_price": 845
+    },
+    {
+      "date": "2026-10-27",
+      "price": 19990,
+      "mall_name": "CJ더마켓 네이버 브랜드스토어",
+      "unit_price": 833
+    },
+    {
+      "date": "2026-10-28",
+      "price": 19880,
+      "mall_name": "CJ더마켓 네이버 브랜드스토어",
+      "unit_price": 828
+    },
+    {
+      "date": "2026-10-29",
+      "price": 20230,
+      "mall_name": "CJ더마켓 네이버 브랜드스토어",
+      "unit_price": 843
+    },
+    {
+      "date": "2026-10-30",
+      "price": 20100,
+      "mall_name": "CJ더마켓 네이버 브랜드스토어",
+      "unit_price": 838
+    },
+    {
+      "date": "2026-10-31",
+      "price": 19670,
+      "mall_name": "CJ더마켓 네이버 브랜드스토어",
+      "unit_price": 820
+    },
+    {
+      "date": "2026-11-01",
+      "price": 19780,
+      "mall_name": "CJ더마켓 네이버 브랜드스토어",
+      "unit_price": 824
+    },
+    {
+      "date": "2026-11-02",
+      "price": 20140,
+      "mall_name": "CJ더마켓 네이버 브랜드스토어",
+      "unit_price": 839
+    },
+    {
+      "date": "2026-11-03",
+      "price": 19610,
+      "mall_name": "CJ더마켓 네이버 브랜드스토어",
+      "unit_price": 817
+    },
+    {
+      "date": "2026-11-04",
+      "price": 19390,
+      "mall_name": "CJ더마켓 네이버 브랜드스토어",
+      "unit_price": 808
+    },
+    {
+      "date": "2026-11-05",
+      "price": 19900,
+      "mall_name": "CJ더마켓 네이버 브랜드스토어",
+      "unit_price": 829
+    },
+    {
+      "date": "2026-11-06",
+      "price": 19280,
+      "mall_name": "CJ더마켓 네이버 브랜드스토어",
+      "unit_price": 803
+    },
+    {
+      "date": "2026-11-07",
+      "price": 19500,
+      "mall_name": "CJ더마켓 네이버 브랜드스토어",
+      "unit_price": 812
+    },
+    {
+      "date": "2026-11-08",
+      "price": 19150,
+      "mall_name": "CJ더마켓 네이버 브랜드스토어",
+      "unit_price": 798
+    },
+    {
+      "date": "2026-11-09",
+      "price": 19460,
+      "mall_name": "CJ더마켓 네이버 브랜드스토어",
+      "unit_price": 811
+    },
+    {
+      "date": "2026-11-10",
+      "price": 19670,
+      "mall_name": "CJ더마켓 네이버 브랜드스토어",
+      "unit_price": 820
+    },
+    {
+      "date": "2026-11-11",
+      "price": 19260,
+      "mall_name": "CJ더마켓 네이버 브랜드스토어",
+      "unit_price": 802
+    },
+    {
+      "date": "2026-11-12",
+      "price": 19480,
+      "mall_name": "CJ더마켓 네이버 브랜드스토어",
+      "unit_price": 812
+    },
+    {
+      "date": "2026-11-13",
+      "price": 19410,
+      "mall_name": "CJ더마켓 네이버 브랜드스토어",
+      "unit_price": 809
+    },
+    {
+      "date": "2026-11-14",
+      "price": 18810,
+      "mall_name": "CJ더마켓 네이버 브랜드스토어",
+      "unit_price": 784
+    },
+    {
+      "date": "2026-11-15",
+      "price": 19340,
+      "mall_name": "CJ더마켓 네이버 브랜드스토어",
+      "unit_price": 806
+    },
+    {
+      "date": "2026-11-16",
+      "price": 18900,
+      "mall_name": "CJ더마켓 네이버 브랜드스토어",
+      "unit_price": 788
+    }
+  ],
+  "농심 너구리 얼큰한맛 20개입": [
+    {
+      "date": "2026-10-18",
+      "price": 17630,
+      "mall_name": "농심 공식몰",
+      "unit_price": 882
+    },
+    {
+      "date": "2026-10-19",
+      "price": 17640,
+      "mall_name": "농심 공식몰",
+      "unit_price": 882
+    },
+    {
+      "date": "2026-10-20",
+      "price": 17090,
+      "mall_name": "농심 공식몰",
+      "unit_price": 854
+    },
+    {
+      "date": "2026-10-21",
+      "price": 16950,
+      "mall_name": "농심 공식몰",
+      "unit_price": 848
+    },
+    {
+      "date": "2026-10-22",
+      "price": 17100,
+      "mall_name": "농심 공식몰",
+      "unit_price": 855
+    },
+    {
+      "date": "2026-10-23",
+      "price": 17250,
+      "mall_name": "농심 공식몰",
+      "unit_price": 862
+    },
+    {
+      "date": "2026-10-24",
+      "price": 16740,
+      "mall_name": "농심 공식몰",
+      "unit_price": 837
+    },
+    {
+      "date": "2026-10-25",
+      "price": 16780,
+      "mall_name": "농심 공식몰",
+      "unit_price": 839
+    },
+    {
+      "date": "2026-10-26",
+      "price": 16590,
+      "mall_name": "농심 공식몰",
+      "unit_price": 830
+    },
+    {
+      "date": "2026-10-27",
+      "price": 16660,
+      "mall_name": "농심 공식몰",
+      "unit_price": 833
+    },
+    {
+      "date": "2026-10-28",
+      "price": 16860,
+      "mall_name": "농심 공식몰",
+      "unit_price": 843
+    },
+    {
+      "date": "2026-10-29",
+      "price": 16650,
+      "mall_name": "농심 공식몰",
+      "unit_price": 832
+    },
+    {
+      "date": "2026-10-30",
+      "price": 16850,
+      "mall_name": "농심 공식몰",
+      "unit_price": 842
+    },
+    {
+      "date": "2026-10-31",
+      "price": 16760,
+      "mall_name": "농심 공식몰",
+      "unit_price": 838
+    },
+    {
+      "date": "2026-11-01",
+      "price": 16240,
+      "mall_name": "농심 공식몰",
+      "unit_price": 812
+    },
+    {
+      "date": "2026-11-02",
+      "price": 16270,
+      "mall_name": "농심 공식몰",
+      "unit_price": 814
+    },
+    {
+      "date": "2026-11-03",
+      "price": 16400,
+      "mall_name": "농심 공식몰",
+      "unit_price": 820
+    },
+    {
+      "date": "2026-11-04",
+      "price": 16010,
+      "mall_name": "농심 공식몰",
+      "unit_price": 800
+    },
+    {
+      "date": "2026-11-05",
+      "price": 16380,
+      "mall_name": "농심 공식몰",
+      "unit_price": 819
+    },
+    {
+      "date": "2026-11-06",
+      "price": 16260,
+      "mall_name": "농심 공식몰",
+      "unit_price": 813
+    },
+    {
+      "date": "2026-11-07",
+      "price": 16140,
+      "mall_name": "농심 공식몰",
+      "unit_price": 807
+    },
+    {
+      "date": "2026-11-08",
+      "price": 15930,
+      "mall_name": "농심 공식몰",
+      "unit_price": 796
+    },
+    {
+      "date": "2026-11-09",
+      "price": 16240,
+      "mall_name": "농심 공식몰",
+      "unit_price": 812
+    },
+    {
+      "date": "2026-11-10",
+      "price": 15610,
+      "mall_name": "농심 공식몰",
+      "unit_price": 780
+    },
+    {
+      "date": "2026-11-11",
+      "price": 15680,
+      "mall_name": "농심 공식몰",
+      "unit_price": 784
+    },
+    {
+      "date": "2026-11-12",
+      "price": 15950,
+      "mall_name": "농심 공식몰",
+      "unit_price": 798
+    },
+    {
+      "date": "2026-11-13",
+      "price": 15480,
+      "mall_name": "농심 공식몰",
+      "unit_price": 774
+    },
+    {
+      "date": "2026-11-14",
+      "price": 15320,
+      "mall_name": "농심 공식몰",
+      "unit_price": 766
+    },
+    {
+      "date": "2026-11-15",
+      "price": 15550,
+      "mall_name": "농심 공식몰",
+      "unit_price": 778
+    },
+    {
+      "date": "2026-11-16",
+      "price": 15500,
+      "mall_name": "농심 공식몰",
+      "unit_price": 775
+    }
+  ],
+  "농심 신라면 봉지 20개입": [
+    {
+      "date": "2026-10-18",
+      "price": 16780,
+      "mall_name": "네이버 가격비교 (공식 카탈로그)",
+      "unit_price": 839
+    },
+    {
+      "date": "2026-10-19",
+      "price": 16390,
+      "mall_name": "네이버 가격비교 (공식 카탈로그)",
+      "unit_price": 820
+    },
+    {
+      "date": "2026-10-20",
+      "price": 16740,
+      "mall_name": "네이버 가격비교 (공식 카탈로그)",
+      "unit_price": 837
+    },
+    {
+      "date": "2026-10-21",
+      "price": 16740,
+      "mall_name": "네이버 가격비교 (공식 카탈로그)",
+      "unit_price": 837
+    },
+    {
+      "date": "2026-10-22",
+      "price": 16730,
+      "mall_name": "네이버 가격비교 (공식 카탈로그)",
+      "unit_price": 836
+    },
+    {
+      "date": "2026-10-23",
+      "price": 16370,
+      "mall_name": "네이버 가격비교 (공식 카탈로그)",
+      "unit_price": 818
+    },
+    {
+      "date": "2026-10-24",
+      "price": 16550,
+      "mall_name": "네이버 가격비교 (공식 카탈로그)",
+      "unit_price": 828
+    },
+    {
+      "date": "2026-10-25",
+      "price": 16390,
+      "mall_name": "네이버 가격비교 (공식 카탈로그)",
+      "unit_price": 820
+    },
+    {
+      "date": "2026-10-26",
+      "price": 16160,
+      "mall_name": "네이버 가격비교 (공식 카탈로그)",
+      "unit_price": 808
+    },
+    {
+      "date": "2026-10-27",
+      "price": 16100,
+      "mall_name": "네이버 가격비교 (공식 카탈로그)",
+      "unit_price": 805
+    },
+    {
+      "date": "2026-10-28",
+      "price": 16240,
+      "mall_name": "네이버 가격비교 (공식 카탈로그)",
+      "unit_price": 812
+    },
+    {
+      "date": "2026-10-29",
+      "price": 15950,
+      "mall_name": "네이버 가격비교 (공식 카탈로그)",
+      "unit_price": 798
+    },
+    {
+      "date": "2026-10-30",
+      "price": 15730,
+      "mall_name": "네이버 가격비교 (공식 카탈로그)",
+      "unit_price": 786
+    },
+    {
+      "date": "2026-10-31",
+      "price": 16180,
+      "mall_name": "네이버 가격비교 (공식 카탈로그)",
+      "unit_price": 809
+    },
+    {
+      "date": "2026-11-01",
+      "price": 15860,
+      "mall_name": "네이버 가격비교 (공식 카탈로그)",
+      "unit_price": 793
+    },
+    {
+      "date": "2026-11-02",
+      "price": 15730,
+      "mall_name": "네이버 가격비교 (공식 카탈로그)",
+      "unit_price": 786
+    },
+    {
+      "date": "2026-11-03",
+      "price": 15560,
+      "mall_name": "네이버 가격비교 (공식 카탈로그)",
+      "unit_price": 778
+    },
+    {
+      "date": "2026-11-04",
+      "price": 15620,
+      "mall_name": "네이버 가격비교 (공식 카탈로그)",
+      "unit_price": 781
+    },
+    {
+      "date": "2026-11-05",
+      "price": 15490,
+      "mall_name": "네이버 가격비교 (공식 카탈로그)",
+      "unit_price": 774
+    },
+    {
+      "date": "2026-11-06",
+      "price": 15630,
+      "mall_name": "네이버 가격비교 (공식 카탈로그)",
+      "unit_price": 782
+    },
+    {
+      "date": "2026-11-07",
+      "price": 15750,
+      "mall_name": "네이버 가격비교 (공식 카탈로그)",
+      "unit_price": 788
+    },
+    {
+      "date": "2026-11-08",
+      "price": 15410,
+      "mall_name": "네이버 가격비교 (공식 카탈로그)",
+      "unit_price": 770
+    },
+    {
+      "date": "2026-11-09",
+      "price": 15180,
+      "mall_name": "네이버 가격비교 (공식 카탈로그)",
+      "unit_price": 759
+    },
+    {
+      "date": "2026-11-10",
+      "price": 15510,
+      "mall_name": "네이버 가격비교 (공식 카탈로그)",
+      "unit_price": 776
+    },
+    {
+      "date": "2026-11-11",
+      "price": 15380,
+      "mall_name": "네이버 가격비교 (공식 카탈로그)",
+      "unit_price": 769
+    },
+    {
+      "date": "2026-11-12",
+      "price": 15270,
+      "mall_name": "네이버 가격비교 (공식 카탈로그)",
+      "unit_price": 764
+    },
+    {
+      "date": "2026-11-13",
+      "price": 15300,
+      "mall_name": "네이버 가격비교 (공식 카탈로그)",
+      "unit_price": 765
+    },
+    {
+      "date": "2026-11-14",
+      "price": 14880,
+      "mall_name": "네이버 가격비교 (공식 카탈로그)",
+      "unit_price": 744
+    },
+    {
+      "date": "2026-11-15",
+      "price": 14800,
+      "mall_name": "네이버 가격비교 (공식 카탈로그)",
+      "unit_price": 740
+    },
+    {
+      "date": "2026-11-16",
+      "price": 14900,
+      "mall_name": "네이버 가격비교 (공식 카탈로그)",
+      "unit_price": 745
+    }
+  ],
+  "농심 안성탕면 봉지 20개입": [
+    {
+      "date": "2026-10-18",
+      "price": 14200,
+      "mall_name": "농심 공식몰",
+      "unit_price": 710
+    },
+    {
+      "date": "2026-10-19",
+      "price": 13880,
+      "mall_name": "농심 공식몰",
+      "unit_price": 694
+    },
+    {
+      "date": "2026-10-20",
+      "price": 14170,
+      "mall_name": "농심 공식몰",
+      "unit_price": 708
+    },
+    {
+      "date": "2026-10-21",
+      "price": 13960,
+      "mall_name": "농심 공식몰",
+      "unit_price": 698
+    },
+    {
+      "date": "2026-10-22",
+      "price": 14110,
+      "mall_name": "농심 공식몰",
+      "unit_price": 706
+    },
+    {
+      "date": "2026-10-23",
+      "price": 13890,
+      "mall_name": "농심 공식몰",
+      "unit_price": 694
+    },
+    {
+      "date": "2026-10-24",
+      "price": 13610,
+      "mall_name": "농심 공식몰",
+      "unit_price": 680
+    },
+    {
+      "date": "2026-10-25",
+      "price": 13480,
+      "mall_name": "농심 공식몰",
+      "unit_price": 674
+    },
+    {
+      "date": "2026-10-26",
+      "price": 13850,
+      "mall_name": "농심 공식몰",
+      "unit_price": 692
+    },
+    {
+      "date": "2026-10-27",
+      "price": 13500,
+      "mall_name": "농심 공식몰",
+      "unit_price": 675
+    },
+    {
+      "date": "2026-10-28",
+      "price": 13430,
+      "mall_name": "농심 공식몰",
+      "unit_price": 672
+    },
+    {
+      "date": "2026-10-29",
+      "price": 13790,
+      "mall_name": "농심 공식몰",
+      "unit_price": 690
+    },
+    {
+      "date": "2026-10-30",
+      "price": 13480,
+      "mall_name": "농심 공식몰",
+      "unit_price": 674
+    },
+    {
+      "date": "2026-10-31",
+      "price": 13440,
+      "mall_name": "농심 공식몰",
+      "unit_price": 672
+    },
+    {
+      "date": "2026-11-01",
+      "price": 13420,
+      "mall_name": "농심 공식몰",
+      "unit_price": 671
+    },
+    {
+      "date": "2026-11-02",
+      "price": 13220,
+      "mall_name": "농심 공식몰",
+      "unit_price": 661
+    },
+    {
+      "date": "2026-11-03",
+      "price": 13410,
+      "mall_name": "농심 공식몰",
+      "unit_price": 670
+    },
+    {
+      "date": "2026-11-04",
+      "price": 13110,
+      "mall_name": "농심 공식몰",
+      "unit_price": 656
+    },
+    {
+      "date": "2026-11-05",
+      "price": 13360,
+      "mall_name": "농심 공식몰",
+      "unit_price": 668
+    },
+    {
+      "date": "2026-11-06",
+      "price": 13130,
+      "mall_name": "농심 공식몰",
+      "unit_price": 656
+    },
+    {
+      "date": "2026-11-07",
+      "price": 13280,
+      "mall_name": "농심 공식몰",
+      "unit_price": 664
+    },
+    {
+      "date": "2026-11-08",
+      "price": 13020,
+      "mall_name": "농심 공식몰",
+      "unit_price": 651
+    },
+    {
+      "date": "2026-11-09",
+      "price": 12890,
+      "mall_name": "농심 공식몰",
+      "unit_price": 644
+    },
+    {
+      "date": "2026-11-10",
+      "price": 13010,
+      "mall_name": "농심 공식몰",
+      "unit_price": 650
+    },
+    {
+      "date": "2026-11-11",
+      "price": 12920,
+      "mall_name": "농심 공식몰",
+      "unit_price": 646
+    },
+    {
+      "date": "2026-11-12",
+      "price": 12780,
+      "mall_name": "농심 공식몰",
+      "unit_price": 639
+    },
+    {
+      "date": "2026-11-13",
+      "price": 12730,
+      "mall_name": "농심 공식몰",
+      "unit_price": 636
+    },
+    {
+      "date": "2026-11-14",
+      "price": 13110,
+      "mall_name": "농심 공식몰",
+      "unit_price": 656
+    },
+    {
+      "date": "2026-11-15",
+      "price": 12880,
+      "mall_name": "농심 공식몰",
+      "unit_price": 644
+    },
+    {
+      "date": "2026-11-16",
+      "price": 12800,
+      "mall_name": "농심 공식몰",
+      "unit_price": 640
+    }
+  ],
+  "농심 짜파게티 봉지 20개입": [
+    {
+      "date": "2026-10-18",
+      "price": 16960,
+      "mall_name": "농심 공식몰",
+      "unit_price": 848
+    },
+    {
+      "date": "2026-10-19",
+      "price": 16760,
+      "mall_name": "농심 공식몰",
+      "unit_price": 838
+    },
+    {
+      "date": "2026-10-20",
+      "price": 16530,
+      "mall_name": "농심 공식몰",
+      "unit_price": 826
+    },
+    {
+      "date": "2026-10-21",
+      "price": 16260,
+      "mall_name": "농심 공식몰",
+      "unit_price": 813
+    },
+    {
+      "date": "2026-10-22",
+      "price": 16790,
+      "mall_name": "농심 공식몰",
+      "unit_price": 840
+    },
+    {
+      "date": "2026-10-23",
+      "price": 16210,
+      "mall_name": "농심 공식몰",
+      "unit_price": 810
+    },
+    {
+      "date": "2026-10-24",
+      "price": 16650,
+      "mall_name": "농심 공식몰",
+      "unit_price": 832
+    },
+    {
+      "date": "2026-10-25",
+      "price": 16040,
+      "mall_name": "농심 공식몰",
+      "unit_price": 802
+    },
+    {
+      "date": "2026-10-26",
+      "price": 16050,
+      "mall_name": "농심 공식몰",
+      "unit_price": 802
+    },
+    {
+      "date": "2026-10-27",
+      "price": 16120,
+      "mall_name": "농심 공식몰",
+      "unit_price": 806
+    },
+    {
+      "date": "2026-10-28",
+      "price": 16450,
+      "mall_name": "농심 공식몰",
+      "unit_price": 822
+    },
+    {
+      "date": "2026-10-29",
+      "price": 16350,
+      "mall_name": "농심 공식몰",
+      "unit_price": 818
+    },
+    {
+      "date": "2026-10-30",
+      "price": 16010,
+      "mall_name": "농심 공식몰",
+      "unit_price": 800
+    },
+    {
+      "date": "2026-10-31",
+      "price": 15720,
+      "mall_name": "농심 공식몰",
+      "unit_price": 786
+    },
+    {
+      "date": "2026-11-01",
+      "price": 15810,
+      "mall_name": "농심 공식몰",
+      "unit_price": 790
+    },
+    {
+      "date": "2026-11-02",
+      "price": 15870,
+      "mall_name": "농심 공식몰",
+      "unit_price": 794
+    },
+    {
+      "date": "2026-11-03",
+      "price": 15550,
+      "mall_name": "농심 공식몰",
+      "unit_price": 778
+    },
+    {
+      "date": "2026-11-04",
+      "price": 15510,
+      "mall_name": "농심 공식몰",
+      "unit_price": 776
+    },
+    {
+      "date": "2026-11-05",
+      "price": 15680,
+      "mall_name": "농심 공식몰",
+      "unit_price": 784
+    },
+    {
+      "date": "2026-11-06",
+      "price": 15640,
+      "mall_name": "농심 공식몰",
+      "unit_price": 782
+    },
+    {
+      "date": "2026-11-07",
+      "price": 15910,
+      "mall_name": "농심 공식몰",
+      "unit_price": 796
+    },
+    {
+      "date": "2026-11-08",
+      "price": 15600,
+      "mall_name": "농심 공식몰",
+      "unit_price": 780
+    },
+    {
+      "date": "2026-11-09",
+      "price": 15370,
+      "mall_name": "농심 공식몰",
+      "unit_price": 768
+    },
+    {
+      "date": "2026-11-10",
+      "price": 15510,
+      "mall_name": "농심 공식몰",
+      "unit_price": 776
+    },
+    {
+      "date": "2026-11-11",
+      "price": 15510,
+      "mall_name": "농심 공식몰",
+      "unit_price": 776
+    },
+    {
+      "date": "2026-11-12",
+      "price": 15600,
+      "mall_name": "농심 공식몰",
+      "unit_price": 780
+    },
+    {
+      "date": "2026-11-13",
+      "price": 15180,
+      "mall_name": "농심 공식몰",
+      "unit_price": 759
+    },
+    {
+      "date": "2026-11-14",
+      "price": 15370,
+      "mall_name": "농심 공식몰",
+      "unit_price": 768
+    },
+    {
+      "date": "2026-11-15",
+      "price": 15170,
+      "mall_name": "농심 공식몰",
+      "unit_price": 758
+    },
+    {
+      "date": "2026-11-16",
+      "price": 15200,
+      "mall_name": "농심 공식몰",
+      "unit_price": 760
+    }
+  ],
+  "다우니 울트라 섬유유연제 1.05L 3개": [
+    {
+      "date": "2026-10-18",
+      "price": 17640,
+      "mall_name": "P&G 공식스토어",
+      "unit_price": 5880
+    },
+    {
+      "date": "2026-10-19",
+      "price": 17450,
+      "mall_name": "P&G 공식스토어",
+      "unit_price": 5817
+    },
+    {
+      "date": "2026-10-20",
+      "price": 17470,
+      "mall_name": "P&G 공식스토어",
+      "unit_price": 5823
+    },
+    {
+      "date": "2026-10-21",
+      "price": 17130,
+      "mall_name": "P&G 공식스토어",
+      "unit_price": 5710
+    },
+    {
+      "date": "2026-10-22",
+      "price": 17100,
+      "mall_name": "P&G 공식스토어",
+      "unit_price": 5700
+    },
+    {
+      "date": "2026-10-23",
+      "price": 16780,
+      "mall_name": "P&G 공식스토어",
+      "unit_price": 5593
+    },
+    {
+      "date": "2026-10-24",
+      "price": 17400,
+      "mall_name": "P&G 공식스토어",
+      "unit_price": 5800
+    },
+    {
+      "date": "2026-10-25",
+      "price": 16760,
+      "mall_name": "P&G 공식스토어",
+      "unit_price": 5587
+    },
+    {
+      "date": "2026-10-26",
+      "price": 16670,
+      "mall_name": "P&G 공식스토어",
+      "unit_price": 5557
+    },
+    {
+      "date": "2026-10-27",
+      "price": 17060,
+      "mall_name": "P&G 공식스토어",
+      "unit_price": 5687
+    },
+    {
+      "date": "2026-10-28",
+      "price": 16620,
+      "mall_name": "P&G 공식스토어",
+      "unit_price": 5540
+    },
+    {
+      "date": "2026-10-29",
+      "price": 16510,
+      "mall_name": "P&G 공식스토어",
+      "unit_price": 5503
+    },
+    {
+      "date": "2026-10-30",
+      "price": 16510,
+      "mall_name": "P&G 공식스토어",
+      "unit_price": 5503
+    },
+    {
+      "date": "2026-10-31",
+      "price": 16810,
+      "mall_name": "P&G 공식스토어",
+      "unit_price": 5603
+    },
+    {
+      "date": "2026-11-01",
+      "price": 16890,
+      "mall_name": "P&G 공식스토어",
+      "unit_price": 5630
+    },
+    {
+      "date": "2026-11-02",
+      "price": 16770,
+      "mall_name": "P&G 공식스토어",
+      "unit_price": 5590
+    },
+    {
+      "date": "2026-11-03",
+      "price": 16800,
+      "mall_name": "P&G 공식스토어",
+      "unit_price": 5600
+    },
+    {
+      "date": "2026-11-04",
+      "price": 16760,
+      "mall_name": "P&G 공식스토어",
+      "unit_price": 5587
+    },
+    {
+      "date": "2026-11-05",
+      "price": 16330,
+      "mall_name": "P&G 공식스토어",
+      "unit_price": 5443
+    },
+    {
+      "date": "2026-11-06",
+      "price": 16520,
+      "mall_name": "P&G 공식스토어",
+      "unit_price": 5507
+    },
+    {
+      "date": "2026-11-07",
+      "price": 16650,
+      "mall_name": "P&G 공식스토어",
+      "unit_price": 5550
+    },
+    {
+      "date": "2026-11-08",
+      "price": 16490,
+      "mall_name": "P&G 공식스토어",
+      "unit_price": 5497
+    },
+    {
+      "date": "2026-11-09",
+      "price": 16410,
+      "mall_name": "P&G 공식스토어",
+      "unit_price": 5470
+    },
+    {
+      "date": "2026-11-10",
+      "price": 16440,
+      "mall_name": "P&G 공식스토어",
+      "unit_price": 5480
+    },
+    {
+      "date": "2026-11-11",
+      "price": 15990,
+      "mall_name": "P&G 공식스토어",
+      "unit_price": 5330
+    },
+    {
+      "date": "2026-11-12",
+      "price": 16130,
+      "mall_name": "P&G 공식스토어",
+      "unit_price": 5377
+    },
+    {
+      "date": "2026-11-13",
+      "price": 16330,
+      "mall_name": "P&G 공식스토어",
+      "unit_price": 5443
+    },
+    {
+      "date": "2026-11-14",
+      "price": 15920,
+      "mall_name": "P&G 공식스토어",
+      "unit_price": 5307
+    },
+    {
+      "date": "2026-11-15",
+      "price": 16210,
+      "mall_name": "P&G 공식스토어",
+      "unit_price": 5403
+    },
+    {
+      "date": "2026-11-16",
+      "price": 15900,
+      "mall_name": "P&G 공식스토어",
+      "unit_price": 5300
+    }
+  ],
+  "동서식품 카누 다크로스트 100T": [
+    {
+      "date": "2026-10-18",
+      "price": 21190,
+      "mall_name": "동서식품 공식몰",
+      "unit_price": 212
+    },
+    {
+      "date": "2026-10-19",
+      "price": 21840,
+      "mall_name": "동서식품 공식몰",
+      "unit_price": 218
+    },
+    {
+      "date": "2026-10-20",
+      "price": 21740,
+      "mall_name": "동서식품 공식몰",
+      "unit_price": 217
+    },
+    {
+      "date": "2026-10-21",
+      "price": 21070,
+      "mall_name": "동서식품 공식몰",
+      "unit_price": 211
+    },
+    {
+      "date": "2026-10-22",
+      "price": 20940,
+      "mall_name": "동서식품 공식몰",
+      "unit_price": 209
+    },
+    {
+      "date": "2026-10-23",
+      "price": 21310,
+      "mall_name": "동서식품 공식몰",
+      "unit_price": 213
+    },
+    {
+      "date": "2026-10-24",
+      "price": 21230,
+      "mall_name": "동서식품 공식몰",
+      "unit_price": 212
+    },
+    {
+      "date": "2026-10-25",
+      "price": 21520,
+      "mall_name": "동서식품 공식몰",
+      "unit_price": 215
+    },
+    {
+      "date": "2026-10-26",
+      "price": 20950,
+      "mall_name": "동서식품 공식몰",
+      "unit_price": 210
+    },
+    {
+      "date": "2026-10-27",
+      "price": 21160,
+      "mall_name": "동서식품 공식몰",
+      "unit_price": 212
+    },
+    {
+      "date": "2026-10-28",
+      "price": 21330,
+      "mall_name": "동서식품 공식몰",
+      "unit_price": 213
+    },
+    {
+      "date": "2026-10-29",
+      "price": 21190,
+      "mall_name": "동서식품 공식몰",
+      "unit_price": 212
+    },
+    {
+      "date": "2026-10-30",
+      "price": 20990,
+      "mall_name": "동서식품 공식몰",
+      "unit_price": 210
+    },
+    {
+      "date": "2026-10-31",
+      "price": 20590,
+      "mall_name": "동서식품 공식몰",
+      "unit_price": 206
+    },
+    {
+      "date": "2026-11-01",
+      "price": 20930,
+      "mall_name": "동서식품 공식몰",
+      "unit_price": 209
+    },
+    {
+      "date": "2026-11-02",
+      "price": 20700,
+      "mall_name": "동서식품 공식몰",
+      "unit_price": 207
+    },
+    {
+      "date": "2026-11-03",
+      "price": 20730,
+      "mall_name": "동서식품 공식몰",
+      "unit_price": 207
+    },
+    {
+      "date": "2026-11-04",
+      "price": 20580,
+      "mall_name": "동서식품 공식몰",
+      "unit_price": 206
+    },
+    {
+      "date": "2026-11-05",
+      "price": 20550,
+      "mall_name": "동서식품 공식몰",
+      "unit_price": 206
+    },
+    {
+      "date": "2026-11-06",
+      "price": 20620,
+      "mall_name": "동서식품 공식몰",
+      "unit_price": 206
+    },
+    {
+      "date": "2026-11-07",
+      "price": 19960,
+      "mall_name": "동서식품 공식몰",
+      "unit_price": 200
+    },
+    {
+      "date": "2026-11-08",
+      "price": 20160,
+      "mall_name": "동서식품 공식몰",
+      "unit_price": 202
+    },
+    {
+      "date": "2026-11-09",
+      "price": 20230,
+      "mall_name": "동서식품 공식몰",
+      "unit_price": 202
+    },
+    {
+      "date": "2026-11-10",
+      "price": 20130,
+      "mall_name": "동서식품 공식몰",
+      "unit_price": 201
+    },
+    {
+      "date": "2026-11-11",
+      "price": 20410,
+      "mall_name": "동서식품 공식몰",
+      "unit_price": 204
+    },
+    {
+      "date": "2026-11-12",
+      "price": 20050,
+      "mall_name": "동서식품 공식몰",
+      "unit_price": 200
+    },
+    {
+      "date": "2026-11-13",
+      "price": 19890,
+      "mall_name": "동서식품 공식몰",
+      "unit_price": 199
+    },
+    {
+      "date": "2026-11-14",
+      "price": 19770,
+      "mall_name": "동서식품 공식몰",
+      "unit_price": 198
+    },
+    {
+      "date": "2026-11-15",
+      "price": 19740,
+      "mall_name": "동서식품 공식몰",
+      "unit_price": 197
+    },
+    {
+      "date": "2026-11-16",
+      "price": 19800,
+      "mall_name": "동서식품 공식몰",
+      "unit_price": 198
+    }
+  ],
+  "동원 참치 라이트스탠다드 135g 10캔": [
+    {
+      "date": "2026-10-18",
+      "price": 18490,
+      "mall_name": "동원몰 공식스토어",
+      "unit_price": 1849
+    },
+    {
+      "date": "2026-10-19",
+      "price": 18300,
+      "mall_name": "동원몰 공식스토어",
+      "unit_price": 1830
+    },
+    {
+      "date": "2026-10-20",
+      "price": 18890,
+      "mall_name": "동원몰 공식스토어",
+      "unit_price": 1889
+    },
+    {
+      "date": "2026-10-21",
+      "price": 18440,
+      "mall_name": "동원몰 공식스토어",
+      "unit_price": 1844
+    },
+    {
+      "date": "2026-10-22",
+      "price": 18360,
+      "mall_name": "동원몰 공식스토어",
+      "unit_price": 1836
+    },
+    {
+      "date": "2026-10-23",
+      "price": 18520,
+      "mall_name": "동원몰 공식스토어",
+      "unit_price": 1852
+    },
+    {
+      "date": "2026-10-24",
+      "price": 18280,
+      "mall_name": "동원몰 공식스토어",
+      "unit_price": 1828
+    },
+    {
+      "date": "2026-10-25",
+      "price": 18200,
+      "mall_name": "동원몰 공식스토어",
+      "unit_price": 1820
+    },
+    {
+      "date": "2026-10-26",
+      "price": 18040,
+      "mall_name": "동원몰 공식스토어",
+      "unit_price": 1804
+    },
+    {
+      "date": "2026-10-27",
+      "price": 18460,
+      "mall_name": "동원몰 공식스토어",
+      "unit_price": 1846
+    },
+    {
+      "date": "2026-10-28",
+      "price": 17770,
+      "mall_name": "동원몰 공식스토어",
+      "unit_price": 1777
+    },
+    {
+      "date": "2026-10-29",
+      "price": 17670,
+      "mall_name": "동원몰 공식스토어",
+      "unit_price": 1767
+    },
+    {
+      "date": "2026-10-30",
+      "price": 17830,
+      "mall_name": "동원몰 공식스토어",
+      "unit_price": 1783
+    },
+    {
+      "date": "2026-10-31",
+      "price": 18230,
+      "mall_name": "동원몰 공식스토어",
+      "unit_price": 1823
+    },
+    {
+      "date": "2026-11-01",
+      "price": 17700,
+      "mall_name": "동원몰 공식스토어",
+      "unit_price": 1770
+    },
+    {
+      "date": "2026-11-02",
+      "price": 17870,
+      "mall_name": "동원몰 공식스토어",
+      "unit_price": 1787
+    },
+    {
+      "date": "2026-11-03",
+      "price": 17890,
+      "mall_name": "동원몰 공식스토어",
+      "unit_price": 1789
+    },
+    {
+      "date": "2026-11-04",
+      "price": 17550,
+      "mall_name": "동원몰 공식스토어",
+      "unit_price": 1755
+    },
+    {
+      "date": "2026-11-05",
+      "price": 17740,
+      "mall_name": "동원몰 공식스토어",
+      "unit_price": 1774
+    },
+    {
+      "date": "2026-11-06",
+      "price": 17750,
+      "mall_name": "동원몰 공식스토어",
+      "unit_price": 1775
+    },
+    {
+      "date": "2026-11-07",
+      "price": 17490,
+      "mall_name": "동원몰 공식스토어",
+      "unit_price": 1749
+    },
+    {
+      "date": "2026-11-08",
+      "price": 17440,
+      "mall_name": "동원몰 공식스토어",
+      "unit_price": 1744
+    },
+    {
+      "date": "2026-11-09",
+      "price": 17350,
+      "mall_name": "동원몰 공식스토어",
+      "unit_price": 1735
+    },
+    {
+      "date": "2026-11-10",
+      "price": 17520,
+      "mall_name": "동원몰 공식스토어",
+      "unit_price": 1752
+    },
+    {
+      "date": "2026-11-11",
+      "price": 17540,
+      "mall_name": "동원몰 공식스토어",
+      "unit_price": 1754
+    },
+    {
+      "date": "2026-11-12",
+      "price": 17150,
+      "mall_name": "동원몰 공식스토어",
+      "unit_price": 1715
+    },
+    {
+      "date": "2026-11-13",
+      "price": 16950,
+      "mall_name": "동원몰 공식스토어",
+      "unit_price": 1695
+    },
+    {
+      "date": "2026-11-14",
+      "price": 17170,
+      "mall_name": "동원몰 공식스토어",
+      "unit_price": 1717
+    },
+    {
+      "date": "2026-11-15",
+      "price": 17100,
+      "mall_name": "동원몰 공식스토어",
+      "unit_price": 1710
+    },
+    {
+      "date": "2026-11-16",
+      "price": 16900,
+      "mall_name": "동원몰 공식스토어",
+      "unit_price": 1690
+    }
+  ],
+  "매일유업 아몬드브리즈 오리지널 190ml 24팩": [
+    {
+      "date": "2026-10-18",
+      "price": 16650,
+      "mall_name": "매일유업 공식몰",
+      "unit_price": 694
+    },
+    {
+      "date": "2026-10-19",
+      "price": 16710,
+      "mall_name": "매일유업 공식몰",
+      "unit_price": 696
+    },
+    {
+      "date": "2026-10-20",
+      "price": 16850,
+      "mall_name": "매일유업 공식몰",
+      "unit_price": 702
+    },
+    {
+      "date": "2026-10-21",
+      "price": 16630,
+      "mall_name": "매일유업 공식몰",
+      "unit_price": 693
+    },
+    {
+      "date": "2026-10-22",
+      "price": 16890,
+      "mall_name": "매일유업 공식몰",
+      "unit_price": 704
+    },
+    {
+      "date": "2026-10-23",
+      "price": 16530,
+      "mall_name": "매일유업 공식몰",
+      "unit_price": 689
+    },
+    {
+      "date": "2026-10-24",
+      "price": 16190,
+      "mall_name": "매일유업 공식몰",
+      "unit_price": 675
+    },
+    {
+      "date": "2026-10-25",
+      "price": 16620,
+      "mall_name": "매일유업 공식몰",
+      "unit_price": 692
+    },
+    {
+      "date": "2026-10-26",
+      "price": 16100,
+      "mall_name": "매일유업 공식몰",
+      "unit_price": 671
+    },
+    {
+      "date": "2026-10-27",
+      "price": 16080,
+      "mall_name": "매일유업 공식몰",
+      "unit_price": 670
+    },
+    {
+      "date": "2026-10-28",
+      "price": 16470,
+      "mall_name": "매일유업 공식몰",
+      "unit_price": 686
+    },
+    {
+      "date": "2026-10-29",
+      "price": 15850,
+      "mall_name": "매일유업 공식몰",
+      "unit_price": 660
+    },
+    {
+      "date": "2026-10-30",
+      "price": 16040,
+      "mall_name": "매일유업 공식몰",
+      "unit_price": 668
+    },
+    {
+      "date": "2026-10-31",
+      "price": 15900,
+      "mall_name": "매일유업 공식몰",
+      "unit_price": 662
+    },
+    {
+      "date": "2026-11-01",
+      "price": 16060,
+      "mall_name": "매일유업 공식몰",
+      "unit_price": 669
+    },
+    {
+      "date": "2026-11-02",
+      "price": 15980,
+      "mall_name": "매일유업 공식몰",
+      "unit_price": 666
+    },
+    {
+      "date": "2026-11-03",
+      "price": 16010,
+      "mall_name": "매일유업 공식몰",
+      "unit_price": 667
+    },
+    {
+      "date": "2026-11-04",
+      "price": 15840,
+      "mall_name": "매일유업 공식몰",
+      "unit_price": 660
+    },
+    {
+      "date": "2026-11-05",
+      "price": 15520,
+      "mall_name": "매일유업 공식몰",
+      "unit_price": 647
+    },
+    {
+      "date": "2026-11-06",
+      "price": 15880,
+      "mall_name": "매일유업 공식몰",
+      "unit_price": 662
+    },
+    {
+      "date": "2026-11-07",
+      "price": 15510,
+      "mall_name": "매일유업 공식몰",
+      "unit_price": 646
+    },
+    {
+      "date": "2026-11-08",
+      "price": 15680,
+      "mall_name": "매일유업 공식몰",
+      "unit_price": 653
+    },
+    {
+      "date": "2026-11-09",
+      "price": 15510,
+      "mall_name": "매일유업 공식몰",
+      "unit_price": 646
+    },
+    {
+      "date": "2026-11-10",
+      "price": 15610,
+      "mall_name": "매일유업 공식몰",
+      "unit_price": 650
+    },
+    {
+      "date": "2026-11-11",
+      "price": 15020,
+      "mall_name": "매일유업 공식몰",
+      "unit_price": 626
+    },
+    {
+      "date": "2026-11-12",
+      "price": 15200,
+      "mall_name": "매일유업 공식몰",
+      "unit_price": 633
+    },
+    {
+      "date": "2026-11-13",
+      "price": 15190,
+      "mall_name": "매일유업 공식몰",
+      "unit_price": 633
+    },
+    {
+      "date": "2026-11-14",
+      "price": 15230,
+      "mall_name": "매일유업 공식몰",
+      "unit_price": 635
+    },
+    {
+      "date": "2026-11-15",
+      "price": 15020,
+      "mall_name": "매일유업 공식몰",
+      "unit_price": 626
+    },
+    {
+      "date": "2026-11-16",
+      "price": 14900,
+      "mall_name": "매일유업 공식몰",
+      "unit_price": 621
+    }
+  ],
+  "맥심 모카골드 마일드 210T": [
+    {
+      "date": "2026-10-18",
+      "price": 30510,
+      "mall_name": "동서식품 공식몰",
+      "unit_price": 145
+    },
+    {
+      "date": "2026-10-19",
+      "price": 30430,
+      "mall_name": "동서식품 공식몰",
+      "unit_price": 145
+    },
+    {
+      "date": "2026-10-20",
+      "price": 30500,
+      "mall_name": "동서식품 공식몰",
+      "unit_price": 145
+    },
+    {
+      "date": "2026-10-21",
+      "price": 30060,
+      "mall_name": "동서식품 공식몰",
+      "unit_price": 143
+    },
+    {
+      "date": "2026-10-22",
+      "price": 30320,
+      "mall_name": "동서식품 공식몰",
+      "unit_price": 144
+    },
+    {
+      "date": "2026-10-23",
+      "price": 30640,
+      "mall_name": "동서식품 공식몰",
+      "unit_price": 146
+    },
+    {
+      "date": "2026-10-24",
+      "price": 29950,
+      "mall_name": "동서식품 공식몰",
+      "unit_price": 143
+    },
+    {
+      "date": "2026-10-25",
+      "price": 29620,
+      "mall_name": "동서식품 공식몰",
+      "unit_price": 141
+    },
+    {
+      "date": "2026-10-26",
+      "price": 29410,
+      "mall_name": "동서식품 공식몰",
+      "unit_price": 140
+    },
+    {
+      "date": "2026-10-27",
+      "price": 30330,
+      "mall_name": "동서식품 공식몰",
+      "unit_price": 144
+    },
+    {
+      "date": "2026-10-28",
+      "price": 30140,
+      "mall_name": "동서식품 공식몰",
+      "unit_price": 144
+    },
+    {
+      "date": "2026-10-29",
+      "price": 29510,
+      "mall_name": "동서식품 공식몰",
+      "unit_price": 141
+    },
+    {
+      "date": "2026-10-30",
+      "price": 29140,
+      "mall_name": "동서식품 공식몰",
+      "unit_price": 139
+    },
+    {
+      "date": "2026-10-31",
+      "price": 30040,
+      "mall_name": "동서식품 공식몰",
+      "unit_price": 143
+    },
+    {
+      "date": "2026-11-01",
+      "price": 29860,
+      "mall_name": "동서식품 공식몰",
+      "unit_price": 142
+    },
+    {
+      "date": "2026-11-02",
+      "price": 29240,
+      "mall_name": "동서식품 공식몰",
+      "unit_price": 139
+    },
+    {
+      "date": "2026-11-03",
+      "price": 29330,
+      "mall_name": "동서식품 공식몰",
+      "unit_price": 140
+    },
+    {
+      "date": "2026-11-04",
+      "price": 29010,
+      "mall_name": "동서식품 공식몰",
+      "unit_price": 138
+    },
+    {
+      "date": "2026-11-05",
+      "price": 28450,
+      "mall_name": "동서식품 공식몰",
+      "unit_price": 135
+    },
+    {
+      "date": "2026-11-06",
+      "price": 28890,
+      "mall_name": "동서식품 공식몰",
+      "unit_price": 138
+    },
+    {
+      "date": "2026-11-07",
+      "price": 29180,
+      "mall_name": "동서식품 공식몰",
+      "unit_price": 139
+    },
+    {
+      "date": "2026-11-08",
+      "price": 28530,
+      "mall_name": "동서식품 공식몰",
+      "unit_price": 136
+    },
+    {
+      "date": "2026-11-09",
+      "price": 28150,
+      "mall_name": "동서식품 공식몰",
+      "unit_price": 134
+    },
+    {
+      "date": "2026-11-10",
+      "price": 29040,
+      "mall_name": "동서식품 공식몰",
+      "unit_price": 138
+    },
+    {
+      "date": "2026-11-11",
+      "price": 28770,
+      "mall_name": "동서식품 공식몰",
+      "unit_price": 137
+    },
+    {
+      "date": "2026-11-12",
+      "price": 27840,
+      "mall_name": "동서식품 공식몰",
+      "unit_price": 133
+    },
+    {
+      "date": "2026-11-13",
+      "price": 28590,
+      "mall_name": "동서식품 공식몰",
+      "unit_price": 136
+    },
+    {
+      "date": "2026-11-14",
+      "price": 28350,
+      "mall_name": "동서식품 공식몰",
+      "unit_price": 135
+    },
+    {
+      "date": "2026-11-15",
+      "price": 27580,
+      "mall_name": "동서식품 공식몰",
+      "unit_price": 131
+    },
+    {
+      "date": "2026-11-16",
+      "price": 27900,
+      "mall_name": "동서식품 공식몰",
+      "unit_price": 133
+    }
+  ],
+  "백설 하얀설탕 1kg 5개": [
+    {
+      "date": "2026-10-18",
+      "price": 13210,
+      "mall_name": "CJ제일제당 공식몰",
+      "unit_price": 2642
+    },
+    {
+      "date": "2026-10-19",
+      "price": 12810,
+      "mall_name": "CJ제일제당 공식몰",
+      "unit_price": 2562
+    },
+    {
+      "date": "2026-10-20",
+      "price": 13090,
+      "mall_name": "CJ제일제당 공식몰",
+      "unit_price": 2618
+    },
+    {
+      "date": "2026-10-21",
+      "price": 13130,
+      "mall_name": "CJ제일제당 공식몰",
+      "unit_price": 2626
+    },
+    {
+      "date": "2026-10-22",
+      "price": 12880,
+      "mall_name": "CJ제일제당 공식몰",
+      "unit_price": 2576
+    },
+    {
+      "date": "2026-10-23",
+      "price": 12630,
+      "mall_name": "CJ제일제당 공식몰",
+      "unit_price": 2526
+    },
+    {
+      "date": "2026-10-24",
+      "price": 12650,
+      "mall_name": "CJ제일제당 공식몰",
+      "unit_price": 2530
+    },
+    {
+      "date": "2026-10-25",
+      "price": 12550,
+      "mall_name": "CJ제일제당 공식몰",
+      "unit_price": 2510
+    },
+    {
+      "date": "2026-10-26",
+      "price": 12790,
+      "mall_name": "CJ제일제당 공식몰",
+      "unit_price": 2558
+    },
+    {
+      "date": "2026-10-27",
+      "price": 12430,
+      "mall_name": "CJ제일제당 공식몰",
+      "unit_price": 2486
+    },
+    {
+      "date": "2026-10-28",
+      "price": 12540,
+      "mall_name": "CJ제일제당 공식몰",
+      "unit_price": 2508
+    },
+    {
+      "date": "2026-10-29",
+      "price": 12630,
+      "mall_name": "CJ제일제당 공식몰",
+      "unit_price": 2526
+    },
+    {
+      "date": "2026-10-30",
+      "price": 12260,
+      "mall_name": "CJ제일제당 공식몰",
+      "unit_price": 2452
+    },
+    {
+      "date": "2026-10-31",
+      "price": 12150,
+      "mall_name": "CJ제일제당 공식몰",
+      "unit_price": 2430
+    },
+    {
+      "date": "2026-11-01",
+      "price": 12310,
+      "mall_name": "CJ제일제당 공식몰",
+      "unit_price": 2462
+    },
+    {
+      "date": "2026-11-02",
+      "price": 12280,
+      "mall_name": "CJ제일제당 공식몰",
+      "unit_price": 2456
+    },
+    {
+      "date": "2026-11-03",
+      "price": 12150,
+      "mall_name": "CJ제일제당 공식몰",
+      "unit_price": 2430
+    },
+    {
+      "date": "2026-11-04",
+      "price": 12400,
+      "mall_name": "CJ제일제당 공식몰",
+      "unit_price": 2480
+    },
+    {
+      "date": "2026-11-05",
+      "price": 11930,
+      "mall_name": "CJ제일제당 공식몰",
+      "unit_price": 2386
+    },
+    {
+      "date": "2026-11-06",
+      "price": 12270,
+      "mall_name": "CJ제일제당 공식몰",
+      "unit_price": 2454
+    },
+    {
+      "date": "2026-11-07",
+      "price": 11850,
+      "mall_name": "CJ제일제당 공식몰",
+      "unit_price": 2370
+    },
+    {
+      "date": "2026-11-08",
+      "price": 11780,
+      "mall_name": "CJ제일제당 공식몰",
+      "unit_price": 2356
+    },
+    {
+      "date": "2026-11-09",
+      "price": 12030,
+      "mall_name": "CJ제일제당 공식몰",
+      "unit_price": 2406
+    },
+    {
+      "date": "2026-11-10",
+      "price": 11870,
+      "mall_name": "CJ제일제당 공식몰",
+      "unit_price": 2374
+    },
+    {
+      "date": "2026-11-11",
+      "price": 11880,
+      "mall_name": "CJ제일제당 공식몰",
+      "unit_price": 2376
+    },
+    {
+      "date": "2026-11-12",
+      "price": 11600,
+      "mall_name": "CJ제일제당 공식몰",
+      "unit_price": 2320
+    },
+    {
+      "date": "2026-11-13",
+      "price": 11860,
+      "mall_name": "CJ제일제당 공식몰",
+      "unit_price": 2372
+    },
+    {
+      "date": "2026-11-14",
+      "price": 11720,
+      "mall_name": "CJ제일제당 공식몰",
+      "unit_price": 2344
+    },
+    {
+      "date": "2026-11-15",
+      "price": 11710,
+      "mall_name": "CJ제일제당 공식몰",
+      "unit_price": 2342
+    },
+    {
+      "date": "2026-11-16",
+      "price": 11500,
+      "mall_name": "CJ제일제당 공식몰",
+      "unit_price": 2300
+    }
+  ],
+  "베베숲 시그니처 물티슈 70매 10팩": [
+    {
+      "date": "2026-10-18",
+      "price": 16520,
+      "mall_name": "베베숲 공식스토어",
+      "unit_price": 1652
+    },
+    {
+      "date": "2026-10-19",
+      "price": 15980,
+      "mall_name": "베베숲 공식스토어",
+      "unit_price": 1598
+    },
+    {
+      "date": "2026-10-20",
+      "price": 15850,
+      "mall_name": "베베숲 공식스토어",
+      "unit_price": 1585
+    },
+    {
+      "date": "2026-10-21",
+      "price": 15770,
+      "mall_name": "베베숲 공식스토어",
+      "unit_price": 1577
+    },
+    {
+      "date": "2026-10-22",
+      "price": 16320,
+      "mall_name": "베베숲 공식스토어",
+      "unit_price": 1632
+    },
+    {
+      "date": "2026-10-23",
+      "price": 15960,
+      "mall_name": "베베숲 공식스토어",
+      "unit_price": 1596
+    },
+    {
+      "date": "2026-10-24",
+      "price": 16000,
+      "mall_name": "베베숲 공식스토어",
+      "unit_price": 1600
+    },
+    {
+      "date": "2026-10-25",
+      "price": 15900,
+      "mall_name": "베베숲 공식스토어",
+      "unit_price": 1590
+    },
+    {
+      "date": "2026-10-26",
+      "price": 16030,
+      "mall_name": "베베숲 공식스토어",
+      "unit_price": 1603
+    },
+    {
+      "date": "2026-10-27",
+      "price": 15750,
+      "mall_name": "베베숲 공식스토어",
+      "unit_price": 1575
+    },
+    {
+      "date": "2026-10-28",
+      "price": 15660,
+      "mall_name": "베베숲 공식스토어",
+      "unit_price": 1566
+    },
+    {
+      "date": "2026-10-29",
+      "price": 15940,
+      "mall_name": "베베숲 공식스토어",
+      "unit_price": 1594
+    },
+    {
+      "date": "2026-10-30",
+      "price": 15640,
+      "mall_name": "베베숲 공식스토어",
+      "unit_price": 1564
+    },
+    {
+      "date": "2026-10-31",
+      "price": 15760,
+      "mall_name": "베베숲 공식스토어",
+      "unit_price": 1576
+    },
+    {
+      "date": "2026-11-01",
+      "price": 15780,
+      "mall_name": "베베숲 공식스토어",
+      "unit_price": 1578
+    },
+    {
+      "date": "2026-11-02",
+      "price": 15300,
+      "mall_name": "베베숲 공식스토어",
+      "unit_price": 1530
+    },
+    {
+      "date": "2026-11-03",
+      "price": 15370,
+      "mall_name": "베베숲 공식스토어",
+      "unit_price": 1537
+    },
+    {
+      "date": "2026-11-04",
+      "price": 15550,
+      "mall_name": "베베숲 공식스토어",
+      "unit_price": 1555
+    },
+    {
+      "date": "2026-11-05",
+      "price": 15120,
+      "mall_name": "베베숲 공식스토어",
+      "unit_price": 1512
+    },
+    {
+      "date": "2026-11-06",
+      "price": 15500,
+      "mall_name": "베베숲 공식스토어",
+      "unit_price": 1550
+    },
+    {
+      "date": "2026-11-07",
+      "price": 15250,
+      "mall_name": "베베숲 공식스토어",
+      "unit_price": 1525
+    },
+    {
+      "date": "2026-11-08",
+      "price": 15180,
+      "mall_name": "베베숲 공식스토어",
+      "unit_price": 1518
+    },
+    {
+      "date": "2026-11-09",
+      "price": 15460,
+      "mall_name": "베베숲 공식스토어",
+      "unit_price": 1546
+    },
+    {
+      "date": "2026-11-10",
+      "price": 14880,
+      "mall_name": "베베숲 공식스토어",
+      "unit_price": 1488
+    },
+    {
+      "date": "2026-11-11",
+      "price": 15330,
+      "mall_name": "베베숲 공식스토어",
+      "unit_price": 1533
+    },
+    {
+      "date": "2026-11-12",
+      "price": 15060,
+      "mall_name": "베베숲 공식스토어",
+      "unit_price": 1506
+    },
+    {
+      "date": "2026-11-13",
+      "price": 14770,
+      "mall_name": "베베숲 공식스토어",
+      "unit_price": 1477
+    },
+    {
+      "date": "2026-11-14",
+      "price": 15080,
+      "mall_name": "베베숲 공식스토어",
+      "unit_price": 1508
+    },
+    {
+      "date": "2026-11-15",
+      "price": 15010,
+      "mall_name": "베베숲 공식스토어",
+      "unit_price": 1501
+    },
+    {
+      "date": "2026-11-16",
+      "price": 14900,
+      "mall_name": "베베숲 공식스토어",
+      "unit_price": 1490
+    }
+  ],
+  "비비고 왕교자 1.05kg 2봉": [
+    {
+      "date": "2026-10-18",
+      "price": 18320,
+      "mall_name": "CJ더마켓 네이버 브랜드스토어",
+      "unit_price": 9160
+    },
+    {
+      "date": "2026-10-19",
+      "price": 18360,
+      "mall_name": "CJ더마켓 네이버 브랜드스토어",
+      "unit_price": 9180
+    },
+    {
+      "date": "2026-10-20",
+      "price": 17880,
+      "mall_name": "CJ더마켓 네이버 브랜드스토어",
+      "unit_price": 8940
+    },
+    {
+      "date": "2026-10-21",
+      "price": 18120,
+      "mall_name": "CJ더마켓 네이버 브랜드스토어",
+      "unit_price": 9060
+    },
+    {
+      "date": "2026-10-22",
+      "price": 17940,
+      "mall_name": "CJ더마켓 네이버 브랜드스토어",
+      "unit_price": 8970
+    },
+    {
+      "date": "2026-10-23",
+      "price": 17940,
+      "mall_name": "CJ더마켓 네이버 브랜드스토어",
+      "unit_price": 8970
+    },
+    {
+      "date": "2026-10-24",
+      "price": 17410,
+      "mall_name": "CJ더마켓 네이버 브랜드스토어",
+      "unit_price": 8705
+    },
+    {
+      "date": "2026-10-25",
+      "price": 17740,
+      "mall_name": "CJ더마켓 네이버 브랜드스토어",
+      "unit_price": 8870
+    },
+    {
+      "date": "2026-10-26",
+      "price": 17590,
+      "mall_name": "CJ더마켓 네이버 브랜드스토어",
+      "unit_price": 8795
+    },
+    {
+      "date": "2026-10-27",
+      "price": 17320,
+      "mall_name": "CJ더마켓 네이버 브랜드스토어",
+      "unit_price": 8660
+    },
+    {
+      "date": "2026-10-28",
+      "price": 17310,
+      "mall_name": "CJ더마켓 네이버 브랜드스토어",
+      "unit_price": 8655
+    },
+    {
+      "date": "2026-10-29",
+      "price": 17510,
+      "mall_name": "CJ더마켓 네이버 브랜드스토어",
+      "unit_price": 8755
+    },
+    {
+      "date": "2026-10-30",
+      "price": 17300,
+      "mall_name": "CJ더마켓 네이버 브랜드스토어",
+      "unit_price": 8650
+    },
+    {
+      "date": "2026-10-31",
+      "price": 16910,
+      "mall_name": "CJ더마켓 네이버 브랜드스토어",
+      "unit_price": 8455
+    },
+    {
+      "date": "2026-11-01",
+      "price": 16730,
+      "mall_name": "CJ더마켓 네이버 브랜드스토어",
+      "unit_price": 8365
+    },
+    {
+      "date": "2026-11-02",
+      "price": 16930,
+      "mall_name": "CJ더마켓 네이버 브랜드스토어",
+      "unit_price": 8465
+    },
+    {
+      "date": "2026-11-03",
+      "price": 16590,
+      "mall_name": "CJ더마켓 네이버 브랜드스토어",
+      "unit_price": 8295
+    },
+    {
+      "date": "2026-11-04",
+      "price": 17150,
+      "mall_name": "CJ더마켓 네이버 브랜드스토어",
+      "unit_price": 8575
+    },
+    {
+      "date": "2026-11-05",
+      "price": 16820,
+      "mall_name": "CJ더마켓 네이버 브랜드스토어",
+      "unit_price": 8410
+    },
+    {
+      "date": "2026-11-06",
+      "price": 16930,
+      "mall_name": "CJ더마켓 네이버 브랜드스토어",
+      "unit_price": 8465
+    },
+    {
+      "date": "2026-11-07",
+      "price": 16310,
+      "mall_name": "CJ더마켓 네이버 브랜드스토어",
+      "unit_price": 8155
+    },
+    {
+      "date": "2026-11-08",
+      "price": 16680,
+      "mall_name": "CJ더마켓 네이버 브랜드스토어",
+      "unit_price": 8340
+    },
+    {
+      "date": "2026-11-09",
+      "price": 16140,
+      "mall_name": "CJ더마켓 네이버 브랜드스토어",
+      "unit_price": 8070
+    },
+    {
+      "date": "2026-11-10",
+      "price": 16680,
+      "mall_name": "CJ더마켓 네이버 브랜드스토어",
+      "unit_price": 8340
+    },
+    {
+      "date": "2026-11-11",
+      "price": 16330,
+      "mall_name": "CJ더마켓 네이버 브랜드스토어",
+      "unit_price": 8165
+    },
+    {
+      "date": "2026-11-12",
+      "price": 15890,
+      "mall_name": "CJ더마켓 네이버 브랜드스토어",
+      "unit_price": 7945
+    },
+    {
+      "date": "2026-11-13",
+      "price": 16330,
+      "mall_name": "CJ더마켓 네이버 브랜드스토어",
+      "unit_price": 8165
+    },
+    {
+      "date": "2026-11-14",
+      "price": 16290,
+      "mall_name": "CJ더마켓 네이버 브랜드스토어",
+      "unit_price": 8145
+    },
+    {
+      "date": "2026-11-15",
+      "price": 16030,
+      "mall_name": "CJ더마켓 네이버 브랜드스토어",
+      "unit_price": 8015
+    },
+    {
+      "date": "2026-11-16",
+      "price": 15900,
+      "mall_name": "CJ더마켓 네이버 브랜드스토어",
+      "unit_price": 7950
+    }
+  ],
+  "삼양 불닭볶음면 봉지 140g 20개입": [
+    {
+      "date": "2026-10-18",
+      "price": 19350,
+      "mall_name": "삼양식품 공식몰",
+      "unit_price": 968
+    },
+    {
+      "date": "2026-10-19",
+      "price": 19220,
+      "mall_name": "삼양식품 공식몰",
+      "unit_price": 961
+    },
+    {
+      "date": "2026-10-20",
+      "price": 19630,
+      "mall_name": "삼양식품 공식몰",
+      "unit_price": 982
+    },
+    {
+      "date": "2026-10-21",
+      "price": 19270,
+      "mall_name": "삼양식품 공식몰",
+      "unit_price": 964
+    },
+    {
+      "date": "2026-10-22",
+      "price": 19110,
+      "mall_name": "삼양식품 공식몰",
+      "unit_price": 956
+    },
+    {
+      "date": "2026-10-23",
+      "price": 19510,
+      "mall_name": "삼양식품 공식몰",
+      "unit_price": 976
+    },
+    {
+      "date": "2026-10-24",
+      "price": 19010,
+      "mall_name": "삼양식품 공식몰",
+      "unit_price": 950
+    },
+    {
+      "date": "2026-10-25",
+      "price": 19090,
+      "mall_name": "삼양식품 공식몰",
+      "unit_price": 954
+    },
+    {
+      "date": "2026-10-26",
+      "price": 19200,
+      "mall_name": "삼양식품 공식몰",
+      "unit_price": 960
+    },
+    {
+      "date": "2026-10-27",
+      "price": 19100,
+      "mall_name": "삼양식품 공식몰",
+      "unit_price": 955
+    },
+    {
+      "date": "2026-10-28",
+      "price": 18590,
+      "mall_name": "삼양식품 공식몰",
+      "unit_price": 930
+    },
+    {
+      "date": "2026-10-29",
+      "price": 18550,
+      "mall_name": "삼양식품 공식몰",
+      "unit_price": 928
+    },
+    {
+      "date": "2026-10-30",
+      "price": 18950,
+      "mall_name": "삼양식품 공식몰",
+      "unit_price": 948
+    },
+    {
+      "date": "2026-10-31",
+      "price": 18230,
+      "mall_name": "삼양식품 공식몰",
+      "unit_price": 912
+    },
+    {
+      "date": "2026-11-01",
+      "price": 18260,
+      "mall_name": "삼양식품 공식몰",
+      "unit_price": 913
+    },
+    {
+      "date": "2026-11-02",
+      "price": 18040,
+      "mall_name": "삼양식품 공식몰",
+      "unit_price": 902
+    },
+    {
+      "date": "2026-11-03",
+      "price": 18080,
+      "mall_name": "삼양식품 공식몰",
+      "unit_price": 904
+    },
+    {
+      "date": "2026-11-04",
+      "price": 18090,
+      "mall_name": "삼양식품 공식몰",
+      "unit_price": 904
+    },
+    {
+      "date": "2026-11-05",
+      "price": 18120,
+      "mall_name": "삼양식품 공식몰",
+      "unit_price": 906
+    },
+    {
+      "date": "2026-11-06",
+      "price": 17810,
+      "mall_name": "삼양식품 공식몰",
+      "unit_price": 890
+    },
+    {
+      "date": "2026-11-07",
+      "price": 17620,
+      "mall_name": "삼양식품 공식몰",
+      "unit_price": 881
+    },
+    {
+      "date": "2026-11-08",
+      "price": 17880,
+      "mall_name": "삼양식품 공식몰",
+      "unit_price": 894
+    },
+    {
+      "date": "2026-11-09",
+      "price": 18050,
+      "mall_name": "삼양식품 공식몰",
+      "unit_price": 902
+    },
+    {
+      "date": "2026-11-10",
+      "price": 17470,
+      "mall_name": "삼양식품 공식몰",
+      "unit_price": 874
+    },
+    {
+      "date": "2026-11-11",
+      "price": 17590,
+      "mall_name": "삼양식품 공식몰",
+      "unit_price": 880
+    },
+    {
+      "date": "2026-11-12",
+      "price": 17890,
+      "mall_name": "삼양식품 공식몰",
+      "unit_price": 894
+    },
+    {
+      "date": "2026-11-13",
+      "price": 17520,
+      "mall_name": "삼양식품 공식몰",
+      "unit_price": 876
+    },
+    {
+      "date": "2026-11-14",
+      "price": 17690,
+      "mall_name": "삼양식품 공식몰",
+      "unit_price": 884
+    },
+    {
+      "date": "2026-11-15",
+      "price": 16980,
+      "mall_name": "삼양식품 공식몰",
+      "unit_price": 849
+    },
+    {
+      "date": "2026-11-16",
+      "price": 17200,
+      "mall_name": "삼양식품 공식몰",
+      "unit_price": 860
+    }
+  ],
+  "서울우유 멸균우유 200ml 24팩": [
+    {
+      "date": "2026-10-18",
+      "price": 18210,
+      "mall_name": "서울우유 공식몰",
+      "unit_price": 759
+    },
+    {
+      "date": "2026-10-19",
+      "price": 17920,
+      "mall_name": "서울우유 공식몰",
+      "unit_price": 747
+    },
+    {
+      "date": "2026-10-20",
+      "price": 18370,
+      "mall_name": "서울우유 공식몰",
+      "unit_price": 765
+    },
+    {
+      "date": "2026-10-21",
+      "price": 18290,
+      "mall_name": "서울우유 공식몰",
+      "unit_price": 762
+    },
+    {
+      "date": "2026-10-22",
+      "price": 18130,
+      "mall_name": "서울우유 공식몰",
+      "unit_price": 755
+    },
+    {
+      "date": "2026-10-23",
+      "price": 18090,
+      "mall_name": "서울우유 공식몰",
+      "unit_price": 754
+    },
+    {
+      "date": "2026-10-24",
+      "price": 17910,
+      "mall_name": "서울우유 공식몰",
+      "unit_price": 746
+    },
+    {
+      "date": "2026-10-25",
+      "price": 18060,
+      "mall_name": "서울우유 공식몰",
+      "unit_price": 752
+    },
+    {
+      "date": "2026-10-26",
+      "price": 17920,
+      "mall_name": "서울우유 공식몰",
+      "unit_price": 747
+    },
+    {
+      "date": "2026-10-27",
+      "price": 17640,
+      "mall_name": "서울우유 공식몰",
+      "unit_price": 735
+    },
+    {
+      "date": "2026-10-28",
+      "price": 18050,
+      "mall_name": "서울우유 공식몰",
+      "unit_price": 752
+    },
+    {
+      "date": "2026-10-29",
+      "price": 17600,
+      "mall_name": "서울우유 공식몰",
+      "unit_price": 733
+    },
+    {
+      "date": "2026-10-30",
+      "price": 17390,
+      "mall_name": "서울우유 공식몰",
+      "unit_price": 725
+    },
+    {
+      "date": "2026-10-31",
+      "price": 17490,
+      "mall_name": "서울우유 공식몰",
+      "unit_price": 729
+    },
+    {
+      "date": "2026-11-01",
+      "price": 17320,
+      "mall_name": "서울우유 공식몰",
+      "unit_price": 722
+    },
+    {
+      "date": "2026-11-02",
+      "price": 17320,
+      "mall_name": "서울우유 공식몰",
+      "unit_price": 722
+    },
+    {
+      "date": "2026-11-03",
+      "price": 17270,
+      "mall_name": "서울우유 공식몰",
+      "unit_price": 720
+    },
+    {
+      "date": "2026-11-04",
+      "price": 17220,
+      "mall_name": "서울우유 공식몰",
+      "unit_price": 718
+    },
+    {
+      "date": "2026-11-05",
+      "price": 17670,
+      "mall_name": "서울우유 공식몰",
+      "unit_price": 736
+    },
+    {
+      "date": "2026-11-06",
+      "price": 17450,
+      "mall_name": "서울우유 공식몰",
+      "unit_price": 727
+    },
+    {
+      "date": "2026-11-07",
+      "price": 17410,
+      "mall_name": "서울우유 공식몰",
+      "unit_price": 725
+    },
+    {
+      "date": "2026-11-08",
+      "price": 17170,
+      "mall_name": "서울우유 공식몰",
+      "unit_price": 715
+    },
+    {
+      "date": "2026-11-09",
+      "price": 17460,
+      "mall_name": "서울우유 공식몰",
+      "unit_price": 728
+    },
+    {
+      "date": "2026-11-10",
+      "price": 17420,
+      "mall_name": "서울우유 공식몰",
+      "unit_price": 726
+    },
+    {
+      "date": "2026-11-11",
+      "price": 16980,
+      "mall_name": "서울우유 공식몰",
+      "unit_price": 708
+    },
+    {
+      "date": "2026-11-12",
+      "price": 17210,
+      "mall_name": "서울우유 공식몰",
+      "unit_price": 717
+    },
+    {
+      "date": "2026-11-13",
+      "price": 16730,
+      "mall_name": "서울우유 공식몰",
+      "unit_price": 697
+    },
+    {
+      "date": "2026-11-14",
+      "price": 16870,
+      "mall_name": "서울우유 공식몰",
+      "unit_price": 703
+    },
+    {
+      "date": "2026-11-15",
+      "price": 16660,
+      "mall_name": "서울우유 공식몰",
+      "unit_price": 694
+    },
+    {
+      "date": "2026-11-16",
+      "price": 16800,
+      "mall_name": "서울우유 공식몰",
+      "unit_price": 700
+    }
+  ],
+  "스팸 클래식 200g 10개": [
+    {
+      "date": "2026-10-18",
+      "price": 26330,
+      "mall_name": "CJ더마켓 네이버 브랜드스토어",
+      "unit_price": 2633
+    },
+    {
+      "date": "2026-10-19",
+      "price": 26190,
+      "mall_name": "CJ더마켓 네이버 브랜드스토어",
+      "unit_price": 2619
+    },
+    {
+      "date": "2026-10-20",
+      "price": 26030,
+      "mall_name": "CJ더마켓 네이버 브랜드스토어",
+      "unit_price": 2603
+    },
+    {
+      "date": "2026-10-21",
+      "price": 25320,
+      "mall_name": "CJ더마켓 네이버 브랜드스토어",
+      "unit_price": 2532
+    },
+    {
+      "date": "2026-10-22",
+      "price": 25640,
+      "mall_name": "CJ더마켓 네이버 브랜드스토어",
+      "unit_price": 2564
+    },
+    {
+      "date": "2026-10-23",
+      "price": 26020,
+      "mall_name": "CJ더마켓 네이버 브랜드스토어",
+      "unit_price": 2602
+    },
+    {
+      "date": "2026-10-24",
+      "price": 25920,
+      "mall_name": "CJ더마켓 네이버 브랜드스토어",
+      "unit_price": 2592
+    },
+    {
+      "date": "2026-10-25",
+      "price": 25460,
+      "mall_name": "CJ더마켓 네이버 브랜드스토어",
+      "unit_price": 2546
+    },
+    {
+      "date": "2026-10-26",
+      "price": 25820,
+      "mall_name": "CJ더마켓 네이버 브랜드스토어",
+      "unit_price": 2582
+    },
+    {
+      "date": "2026-10-27",
+      "price": 25690,
+      "mall_name": "CJ더마켓 네이버 브랜드스토어",
+      "unit_price": 2569
+    },
+    {
+      "date": "2026-10-28",
+      "price": 25080,
+      "mall_name": "CJ더마켓 네이버 브랜드스토어",
+      "unit_price": 2508
+    },
+    {
+      "date": "2026-10-29",
+      "price": 24910,
+      "mall_name": "CJ더마켓 네이버 브랜드스토어",
+      "unit_price": 2491
+    },
+    {
+      "date": "2026-10-30",
+      "price": 25490,
+      "mall_name": "CJ더마켓 네이버 브랜드스토어",
+      "unit_price": 2549
+    },
+    {
+      "date": "2026-10-31",
+      "price": 24730,
+      "mall_name": "CJ더마켓 네이버 브랜드스토어",
+      "unit_price": 2473
+    },
+    {
+      "date": "2026-11-01",
+      "price": 24730,
+      "mall_name": "CJ더마켓 네이버 브랜드스토어",
+      "unit_price": 2473
+    },
+    {
+      "date": "2026-11-02",
+      "price": 25290,
+      "mall_name": "CJ더마켓 네이버 브랜드스토어",
+      "unit_price": 2529
+    },
+    {
+      "date": "2026-11-03",
+      "price": 24980,
+      "mall_name": "CJ더마켓 네이버 브랜드스토어",
+      "unit_price": 2498
+    },
+    {
+      "date": "2026-11-04",
+      "price": 25160,
+      "mall_name": "CJ더마켓 네이버 브랜드스토어",
+      "unit_price": 2516
+    },
+    {
+      "date": "2026-11-05",
+      "price": 25140,
+      "mall_name": "CJ더마켓 네이버 브랜드스토어",
+      "unit_price": 2514
+    },
+    {
+      "date": "2026-11-06",
+      "price": 24910,
+      "mall_name": "CJ더마켓 네이버 브랜드스토어",
+      "unit_price": 2491
+    },
+    {
+      "date": "2026-11-07",
+      "price": 24590,
+      "mall_name": "CJ더마켓 네이버 브랜드스토어",
+      "unit_price": 2459
+    },
+    {
+      "date": "2026-11-08",
+      "price": 24660,
+      "mall_name": "CJ더마켓 네이버 브랜드스토어",
+      "unit_price": 2466
+    },
+    {
+      "date": "2026-11-09",
+      "price": 24550,
+      "mall_name": "CJ더마켓 네이버 브랜드스토어",
+      "unit_price": 2455
+    },
+    {
+      "date": "2026-11-10",
+      "price": 23960,
+      "mall_name": "CJ더마켓 네이버 브랜드스토어",
+      "unit_price": 2396
+    },
+    {
+      "date": "2026-11-11",
+      "price": 23840,
+      "mall_name": "CJ더마켓 네이버 브랜드스토어",
+      "unit_price": 2384
+    },
+    {
+      "date": "2026-11-12",
+      "price": 24080,
+      "mall_name": "CJ더마켓 네이버 브랜드스토어",
+      "unit_price": 2408
+    },
+    {
+      "date": "2026-11-13",
+      "price": 24470,
+      "mall_name": "CJ더마켓 네이버 브랜드스토어",
+      "unit_price": 2447
+    },
+    {
+      "date": "2026-11-14",
+      "price": 24290,
+      "mall_name": "CJ더마켓 네이버 브랜드스토어",
+      "unit_price": 2429
+    },
+    {
+      "date": "2026-11-15",
+      "price": 23970,
+      "mall_name": "CJ더마켓 네이버 브랜드스토어",
+      "unit_price": 2397
+    },
+    {
+      "date": "2026-11-16",
+      "price": 23900,
+      "mall_name": "CJ더마켓 네이버 브랜드스토어",
+      "unit_price": 2390
+    }
+  ],
+  "오뚜기 고소한 참기름 320ml": [
+    {
+      "date": "2026-10-18",
+      "price": 9710,
+      "mall_name": "오뚜기 공식몰",
+      "unit_price": 9710
+    },
+    {
+      "date": "2026-10-19",
+      "price": 9660,
+      "mall_name": "오뚜기 공식몰",
+      "unit_price": 9660
+    },
+    {
+      "date": "2026-10-20",
+      "price": 9900,
+      "mall_name": "오뚜기 공식몰",
+      "unit_price": 9900
+    },
+    {
+      "date": "2026-10-21",
+      "price": 9800,
+      "mall_name": "오뚜기 공식몰",
+      "unit_price": 9800
+    },
+    {
+      "date": "2026-10-22",
+      "price": 9530,
+      "mall_name": "오뚜기 공식몰",
+      "unit_price": 9530
+    },
+    {
+      "date": "2026-10-23",
+      "price": 9770,
+      "mall_name": "오뚜기 공식몰",
+      "unit_price": 9770
+    },
+    {
+      "date": "2026-10-24",
+      "price": 9660,
+      "mall_name": "오뚜기 공식몰",
+      "unit_price": 9660
+    },
+    {
+      "date": "2026-10-25",
+      "price": 9550,
+      "mall_name": "오뚜기 공식몰",
+      "unit_price": 9550
+    },
+    {
+      "date": "2026-10-26",
+      "price": 9500,
+      "mall_name": "오뚜기 공식몰",
+      "unit_price": 9500
+    },
+    {
+      "date": "2026-10-27",
+      "price": 9530,
+      "mall_name": "오뚜기 공식몰",
+      "unit_price": 9530
+    },
+    {
+      "date": "2026-10-28",
+      "price": 9650,
+      "mall_name": "오뚜기 공식몰",
+      "unit_price": 9650
+    },
+    {
+      "date": "2026-10-29",
+      "price": 9500,
+      "mall_name": "오뚜기 공식몰",
+      "unit_price": 9500
+    },
+    {
+      "date": "2026-10-30",
+      "price": 9300,
+      "mall_name": "오뚜기 공식몰",
+      "unit_price": 9300
+    },
+    {
+      "date": "2026-10-31",
+      "price": 9580,
+      "mall_name": "오뚜기 공식몰",
+      "unit_price": 9580
+    },
+    {
+      "date": "2026-11-01",
+      "price": 9250,
+      "mall_name": "오뚜기 공식몰",
+      "unit_price": 9250
+    },
+    {
+      "date": "2026-11-02",
+      "price": 9340,
+      "mall_name": "오뚜기 공식몰",
+      "unit_price": 9340
+    },
+    {
+      "date": "2026-11-03",
+      "price": 9270,
+      "mall_name": "오뚜기 공식몰",
+      "unit_price": 9270
+    },
+    {
+      "date": "2026-11-04",
+      "price": 9380,
+      "mall_name": "오뚜기 공식몰",
+      "unit_price": 9380
+    },
+    {
+      "date": "2026-11-05",
+      "price": 9130,
+      "mall_name": "오뚜기 공식몰",
+      "unit_price": 9130
+    },
+    {
+      "date": "2026-11-06",
+      "price": 9190,
+      "mall_name": "오뚜기 공식몰",
+      "unit_price": 9190
+    },
+    {
+      "date": "2026-11-07",
+      "price": 9110,
+      "mall_name": "오뚜기 공식몰",
+      "unit_price": 9110
+    },
+    {
+      "date": "2026-11-08",
+      "price": 9180,
+      "mall_name": "오뚜기 공식몰",
+      "unit_price": 9180
+    },
+    {
+      "date": "2026-11-09",
+      "price": 9040,
+      "mall_name": "오뚜기 공식몰",
+      "unit_price": 9040
+    },
+    {
+      "date": "2026-11-10",
+      "price": 9110,
+      "mall_name": "오뚜기 공식몰",
+      "unit_price": 9110
+    },
+    {
+      "date": "2026-11-11",
+      "price": 9140,
+      "mall_name": "오뚜기 공식몰",
+      "unit_price": 9140
+    },
+    {
+      "date": "2026-11-12",
+      "price": 8900,
+      "mall_name": "오뚜기 공식몰",
+      "unit_price": 8900
+    },
+    {
+      "date": "2026-11-13",
+      "price": 8880,
+      "mall_name": "오뚜기 공식몰",
+      "unit_price": 8880
+    },
+    {
+      "date": "2026-11-14",
+      "price": 9000,
+      "mall_name": "오뚜기 공식몰",
+      "unit_price": 9000
+    },
+    {
+      "date": "2026-11-15",
+      "price": 8800,
+      "mall_name": "오뚜기 공식몰",
+      "unit_price": 8800
+    },
+    {
+      "date": "2026-11-16",
+      "price": 8900,
+      "mall_name": "오뚜기 공식몰",
+      "unit_price": 8900
+    }
+  ],
+  "오뚜기 맛있는 오뚜기밥 210g 24개": [
+    {
+      "date": "2026-10-18",
+      "price": 19540,
+      "mall_name": "오뚜기 공식몰",
+      "unit_price": 814
+    },
+    {
+      "date": "2026-10-19",
+      "price": 19170,
+      "mall_name": "오뚜기 공식몰",
+      "unit_price": 799
+    },
+    {
+      "date": "2026-10-20",
+      "price": 19600,
+      "mall_name": "오뚜기 공식몰",
+      "unit_price": 817
+    },
+    {
+      "date": "2026-10-21",
+      "price": 19240,
+      "mall_name": "오뚜기 공식몰",
+      "unit_price": 802
+    },
+    {
+      "date": "2026-10-22",
+      "price": 19220,
+      "mall_name": "오뚜기 공식몰",
+      "unit_price": 801
+    },
+    {
+      "date": "2026-10-23",
+      "price": 19180,
+      "mall_name": "오뚜기 공식몰",
+      "unit_price": 799
+    },
+    {
+      "date": "2026-10-24",
+      "price": 19380,
+      "mall_name": "오뚜기 공식몰",
+      "unit_price": 808
+    },
+    {
+      "date": "2026-10-25",
+      "price": 19200,
+      "mall_name": "오뚜기 공식몰",
+      "unit_price": 800
+    },
+    {
+      "date": "2026-10-26",
+      "price": 18690,
+      "mall_name": "오뚜기 공식몰",
+      "unit_price": 779
+    },
+    {
+      "date": "2026-10-27",
+      "price": 19060,
+      "mall_name": "오뚜기 공식몰",
+      "unit_price": 794
+    },
+    {
+      "date": "2026-10-28",
+      "price": 18680,
+      "mall_name": "오뚜기 공식몰",
+      "unit_price": 778
+    },
+    {
+      "date": "2026-10-29",
+      "price": 18760,
+      "mall_name": "오뚜기 공식몰",
+      "unit_price": 782
+    },
+    {
+      "date": "2026-10-30",
+      "price": 18850,
+      "mall_name": "오뚜기 공식몰",
+      "unit_price": 785
+    },
+    {
+      "date": "2026-10-31",
+      "price": 19020,
+      "mall_name": "오뚜기 공식몰",
+      "unit_price": 792
+    },
+    {
+      "date": "2026-11-01",
+      "price": 18600,
+      "mall_name": "오뚜기 공식몰",
+      "unit_price": 775
+    },
+    {
+      "date": "2026-11-02",
+      "price": 18960,
+      "mall_name": "오뚜기 공식몰",
+      "unit_price": 790
+    },
+    {
+      "date": "2026-11-03",
+      "price": 18310,
+      "mall_name": "오뚜기 공식몰",
+      "unit_price": 763
+    },
+    {
+      "date": "2026-11-04",
+      "price": 18310,
+      "mall_name": "오뚜기 공식몰",
+      "unit_price": 763
+    },
+    {
+      "date": "2026-11-05",
+      "price": 18250,
+      "mall_name": "오뚜기 공식몰",
+      "unit_price": 760
+    },
+    {
+      "date": "2026-11-06",
+      "price": 18460,
+      "mall_name": "오뚜기 공식몰",
+      "unit_price": 769
+    },
+    {
+      "date": "2026-11-07",
+      "price": 18660,
+      "mall_name": "오뚜기 공식몰",
+      "unit_price": 778
+    },
+    {
+      "date": "2026-11-08",
+      "price": 18140,
+      "mall_name": "오뚜기 공식몰",
+      "unit_price": 756
+    },
+    {
+      "date": "2026-11-09",
+      "price": 18230,
+      "mall_name": "오뚜기 공식몰",
+      "unit_price": 760
+    },
+    {
+      "date": "2026-11-10",
+      "price": 17940,
+      "mall_name": "오뚜기 공식몰",
+      "unit_price": 748
+    },
+    {
+      "date": "2026-11-11",
+      "price": 18150,
+      "mall_name": "오뚜기 공식몰",
+      "unit_price": 756
+    },
+    {
+      "date": "2026-11-12",
+      "price": 18260,
+      "mall_name": "오뚜기 공식몰",
+      "unit_price": 761
+    },
+    {
+      "date": "2026-11-13",
+      "price": 18230,
+      "mall_name": "오뚜기 공식몰",
+      "unit_price": 760
+    },
+    {
+      "date": "2026-11-14",
+      "price": 18320,
+      "mall_name": "오뚜기 공식몰",
+      "unit_price": 763
+    },
+    {
+      "date": "2026-11-15",
+      "price": 18290,
+      "mall_name": "오뚜기 공식몰",
+      "unit_price": 762
+    },
+    {
+      "date": "2026-11-16",
+      "price": 17900,
+      "mall_name": "오뚜기 공식몰",
+      "unit_price": 746
+    }
+  ],
+  "오뚜기 진라면 매운맛 120g 20개": [
+    {
+      "date": "2026-10-18",
+      "price": 13240,
+      "mall_name": "오뚜기 공식몰",
+      "unit_price": 662
+    },
+    {
+      "date": "2026-10-19",
+      "price": 12990,
+      "mall_name": "오뚜기 공식몰",
+      "unit_price": 650
+    },
+    {
+      "date": "2026-10-20",
+      "price": 13160,
+      "mall_name": "오뚜기 공식몰",
+      "unit_price": 658
+    },
+    {
+      "date": "2026-10-21",
+      "price": 12970,
+      "mall_name": "오뚜기 공식몰",
+      "unit_price": 648
+    },
+    {
+      "date": "2026-10-22",
+      "price": 13010,
+      "mall_name": "오뚜기 공식몰",
+      "unit_price": 650
+    },
+    {
+      "date": "2026-10-23",
+      "price": 12880,
+      "mall_name": "오뚜기 공식몰",
+      "unit_price": 644
+    },
+    {
+      "date": "2026-10-24",
+      "price": 12620,
+      "mall_name": "오뚜기 공식몰",
+      "unit_price": 631
+    },
+    {
+      "date": "2026-10-25",
+      "price": 12920,
+      "mall_name": "오뚜기 공식몰",
+      "unit_price": 646
+    },
+    {
+      "date": "2026-10-26",
+      "price": 12610,
+      "mall_name": "오뚜기 공식몰",
+      "unit_price": 630
+    },
+    {
+      "date": "2026-10-27",
+      "price": 12530,
+      "mall_name": "오뚜기 공식몰",
+      "unit_price": 626
+    },
+    {
+      "date": "2026-10-28",
+      "price": 12880,
+      "mall_name": "오뚜기 공식몰",
+      "unit_price": 644
+    },
+    {
+      "date": "2026-10-29",
+      "price": 12620,
+      "mall_name": "오뚜기 공식몰",
+      "unit_price": 631
+    },
+    {
+      "date": "2026-10-30",
+      "price": 12470,
+      "mall_name": "오뚜기 공식몰",
+      "unit_price": 624
+    },
+    {
+      "date": "2026-10-31",
+      "price": 12390,
+      "mall_name": "오뚜기 공식몰",
+      "unit_price": 620
+    },
+    {
+      "date": "2026-11-01",
+      "price": 12620,
+      "mall_name": "오뚜기 공식몰",
+      "unit_price": 631
+    },
+    {
+      "date": "2026-11-02",
+      "price": 12410,
+      "mall_name": "오뚜기 공식몰",
+      "unit_price": 620
+    },
+    {
+      "date": "2026-11-03",
+      "price": 12420,
+      "mall_name": "오뚜기 공식몰",
+      "unit_price": 621
+    },
+    {
+      "date": "2026-11-04",
+      "price": 12470,
+      "mall_name": "오뚜기 공식몰",
+      "unit_price": 624
+    },
+    {
+      "date": "2026-11-05",
+      "price": 12190,
+      "mall_name": "오뚜기 공식몰",
+      "unit_price": 610
+    },
+    {
+      "date": "2026-11-06",
+      "price": 12450,
+      "mall_name": "오뚜기 공식몰",
+      "unit_price": 622
+    },
+    {
+      "date": "2026-11-07",
+      "price": 12480,
+      "mall_name": "오뚜기 공식몰",
+      "unit_price": 624
+    },
+    {
+      "date": "2026-11-08",
+      "price": 12410,
+      "mall_name": "오뚜기 공식몰",
+      "unit_price": 620
+    },
+    {
+      "date": "2026-11-09",
+      "price": 12130,
+      "mall_name": "오뚜기 공식몰",
+      "unit_price": 606
+    },
+    {
+      "date": "2026-11-10",
+      "price": 11960,
+      "mall_name": "오뚜기 공식몰",
+      "unit_price": 598
+    },
+    {
+      "date": "2026-11-11",
+      "price": 12090,
+      "mall_name": "오뚜기 공식몰",
+      "unit_price": 604
+    },
+    {
+      "date": "2026-11-12",
+      "price": 12060,
+      "mall_name": "오뚜기 공식몰",
+      "unit_price": 603
+    },
+    {
+      "date": "2026-11-13",
+      "price": 12010,
+      "mall_name": "오뚜기 공식몰",
+      "unit_price": 600
+    },
+    {
+      "date": "2026-11-14",
+      "price": 11930,
+      "mall_name": "오뚜기 공식몰",
+      "unit_price": 596
+    },
+    {
+      "date": "2026-11-15",
+      "price": 12150,
+      "mall_name": "오뚜기 공식몰",
+      "unit_price": 608
+    },
+    {
+      "date": "2026-11-16",
+      "price": 11900,
+      "mall_name": "오뚜기 공식몰",
+      "unit_price": 595
+    }
+  ],
+  "제주 삼다수 2L 6개": [
+    {
+      "date": "2026-10-18",
+      "price": 6530,
+      "mall_name": "광동제약 삼다수 공식몰",
+      "unit_price": 1088
+    },
+    {
+      "date": "2026-10-19",
+      "price": 6500,
+      "mall_name": "광동제약 삼다수 공식몰",
+      "unit_price": 1083
+    },
+    {
+      "date": "2026-10-20",
+      "price": 6460,
+      "mall_name": "광동제약 삼다수 공식몰",
+      "unit_price": 1077
+    },
+    {
+      "date": "2026-10-21",
+      "price": 6630,
+      "mall_name": "광동제약 삼다수 공식몰",
+      "unit_price": 1105
+    },
+    {
+      "date": "2026-10-22",
+      "price": 6540,
+      "mall_name": "광동제약 삼다수 공식몰",
+      "unit_price": 1090
+    },
+    {
+      "date": "2026-10-23",
+      "price": 6420,
+      "mall_name": "광동제약 삼다수 공식몰",
+      "unit_price": 1070
+    },
+    {
+      "date": "2026-10-24",
+      "price": 6410,
+      "mall_name": "광동제약 삼다수 공식몰",
+      "unit_price": 1068
+    },
+    {
+      "date": "2026-10-25",
+      "price": 6430,
+      "mall_name": "광동제약 삼다수 공식몰",
+      "unit_price": 1072
+    },
+    {
+      "date": "2026-10-26",
+      "price": 6310,
+      "mall_name": "광동제약 삼다수 공식몰",
+      "unit_price": 1052
+    },
+    {
+      "date": "2026-10-27",
+      "price": 6400,
+      "mall_name": "광동제약 삼다수 공식몰",
+      "unit_price": 1067
+    },
+    {
+      "date": "2026-10-28",
+      "price": 6360,
+      "mall_name": "광동제약 삼다수 공식몰",
+      "unit_price": 1060
+    },
+    {
+      "date": "2026-10-29",
+      "price": 6380,
+      "mall_name": "광동제약 삼다수 공식몰",
+      "unit_price": 1063
+    },
+    {
+      "date": "2026-10-30",
+      "price": 6390,
+      "mall_name": "광동제약 삼다수 공식몰",
+      "unit_price": 1065
+    },
+    {
+      "date": "2026-10-31",
+      "price": 6380,
+      "mall_name": "광동제약 삼다수 공식몰",
+      "unit_price": 1063
+    },
+    {
+      "date": "2026-11-01",
+      "price": 6330,
+      "mall_name": "광동제약 삼다수 공식몰",
+      "unit_price": 1055
+    },
+    {
+      "date": "2026-11-02",
+      "price": 6270,
+      "mall_name": "광동제약 삼다수 공식몰",
+      "unit_price": 1045
+    },
+    {
+      "date": "2026-11-03",
+      "price": 6190,
+      "mall_name": "광동제약 삼다수 공식몰",
+      "unit_price": 1032
+    },
+    {
+      "date": "2026-11-04",
+      "price": 6070,
+      "mall_name": "광동제약 삼다수 공식몰",
+      "unit_price": 1012
+    },
+    {
+      "date": "2026-11-05",
+      "price": 6220,
+      "mall_name": "광동제약 삼다수 공식몰",
+      "unit_price": 1037
+    },
+    {
+      "date": "2026-11-06",
+      "price": 6200,
+      "mall_name": "광동제약 삼다수 공식몰",
+      "unit_price": 1033
+    },
+    {
+      "date": "2026-11-07",
+      "price": 6070,
+      "mall_name": "광동제약 삼다수 공식몰",
+      "unit_price": 1012
+    },
+    {
+      "date": "2026-11-08",
+      "price": 6100,
+      "mall_name": "광동제약 삼다수 공식몰",
+      "unit_price": 1017
+    },
+    {
+      "date": "2026-11-09",
+      "price": 6050,
+      "mall_name": "광동제약 삼다수 공식몰",
+      "unit_price": 1008
+    },
+    {
+      "date": "2026-11-10",
+      "price": 5970,
+      "mall_name": "광동제약 삼다수 공식몰",
+      "unit_price": 995
+    },
+    {
+      "date": "2026-11-11",
+      "price": 6060,
+      "mall_name": "광동제약 삼다수 공식몰",
+      "unit_price": 1010
+    },
+    {
+      "date": "2026-11-12",
+      "price": 5860,
+      "mall_name": "광동제약 삼다수 공식몰",
+      "unit_price": 977
+    },
+    {
+      "date": "2026-11-13",
+      "price": 5970,
+      "mall_name": "광동제약 삼다수 공식몰",
+      "unit_price": 995
+    },
+    {
+      "date": "2026-11-14",
+      "price": 5920,
+      "mall_name": "광동제약 삼다수 공식몰",
+      "unit_price": 987
+    },
+    {
+      "date": "2026-11-15",
+      "price": 5740,
+      "mall_name": "광동제약 삼다수 공식몰",
+      "unit_price": 957
+    },
+    {
+      "date": "2026-11-16",
+      "price": 5800,
+      "mall_name": "광동제약 삼다수 공식몰",
+      "unit_price": 967
+    }
+  ],
+  "종근당건강 락토핏 골드 50포 2통": [
+    {
+      "date": "2026-10-18",
+      "price": 22270,
+      "mall_name": "종근당건강 공식몰",
+      "unit_price": 11135
+    },
+    {
+      "date": "2026-10-19",
+      "price": 22190,
+      "mall_name": "종근당건강 공식몰",
+      "unit_price": 11095
+    },
+    {
+      "date": "2026-10-20",
+      "price": 22400,
+      "mall_name": "종근당건강 공식몰",
+      "unit_price": 11200
+    },
+    {
+      "date": "2026-10-21",
+      "price": 21740,
+      "mall_name": "종근당건강 공식몰",
+      "unit_price": 10870
+    },
+    {
+      "date": "2026-10-22",
+      "price": 22060,
+      "mall_name": "종근당건강 공식몰",
+      "unit_price": 11030
+    },
+    {
+      "date": "2026-10-23",
+      "price": 21910,
+      "mall_name": "종근당건강 공식몰",
+      "unit_price": 10955
+    },
+    {
+      "date": "2026-10-24",
+      "price": 21450,
+      "mall_name": "종근당건강 공식몰",
+      "unit_price": 10725
+    },
+    {
+      "date": "2026-10-25",
+      "price": 22150,
+      "mall_name": "종근당건강 공식몰",
+      "unit_price": 11075
+    },
+    {
+      "date": "2026-10-26",
+      "price": 21380,
+      "mall_name": "종근당건강 공식몰",
+      "unit_price": 10690
+    },
+    {
+      "date": "2026-10-27",
+      "price": 21560,
+      "mall_name": "종근당건강 공식몰",
+      "unit_price": 10780
+    },
+    {
+      "date": "2026-10-28",
+      "price": 21230,
+      "mall_name": "종근당건강 공식몰",
+      "unit_price": 10615
+    },
+    {
+      "date": "2026-10-29",
+      "price": 21520,
+      "mall_name": "종근당건강 공식몰",
+      "unit_price": 10760
+    },
+    {
+      "date": "2026-10-30",
+      "price": 21420,
+      "mall_name": "종근당건강 공식몰",
+      "unit_price": 10710
+    },
+    {
+      "date": "2026-10-31",
+      "price": 21140,
+      "mall_name": "종근당건강 공식몰",
+      "unit_price": 10570
+    },
+    {
+      "date": "2026-11-01",
+      "price": 20870,
+      "mall_name": "종근당건강 공식몰",
+      "unit_price": 10435
+    },
+    {
+      "date": "2026-11-02",
+      "price": 21080,
+      "mall_name": "종근당건강 공식몰",
+      "unit_price": 10540
+    },
+    {
+      "date": "2026-11-03",
+      "price": 20800,
+      "mall_name": "종근당건강 공식몰",
+      "unit_price": 10400
+    },
+    {
+      "date": "2026-11-04",
+      "price": 20610,
+      "mall_name": "종근당건강 공식몰",
+      "unit_price": 10305
+    },
+    {
+      "date": "2026-11-05",
+      "price": 20620,
+      "mall_name": "종근당건강 공식몰",
+      "unit_price": 10310
+    },
+    {
+      "date": "2026-11-06",
+      "price": 20430,
+      "mall_name": "종근당건강 공식몰",
+      "unit_price": 10215
+    },
+    {
+      "date": "2026-11-07",
+      "price": 21050,
+      "mall_name": "종근당건강 공식몰",
+      "unit_price": 10525
+    },
+    {
+      "date": "2026-11-08",
+      "price": 20190,
+      "mall_name": "종근당건강 공식몰",
+      "unit_price": 10095
+    },
+    {
+      "date": "2026-11-09",
+      "price": 20520,
+      "mall_name": "종근당건강 공식몰",
+      "unit_price": 10260
+    },
+    {
+      "date": "2026-11-10",
+      "price": 20770,
+      "mall_name": "종근당건강 공식몰",
+      "unit_price": 10385
+    },
+    {
+      "date": "2026-11-11",
+      "price": 20110,
+      "mall_name": "종근당건강 공식몰",
+      "unit_price": 10055
+    },
+    {
+      "date": "2026-11-12",
+      "price": 20030,
+      "mall_name": "종근당건강 공식몰",
+      "unit_price": 10015
+    },
+    {
+      "date": "2026-11-13",
+      "price": 20260,
+      "mall_name": "종근당건강 공식몰",
+      "unit_price": 10130
+    },
+    {
+      "date": "2026-11-14",
+      "price": 20030,
+      "mall_name": "종근당건강 공식몰",
+      "unit_price": 10015
+    },
+    {
+      "date": "2026-11-15",
+      "price": 20340,
+      "mall_name": "종근당건강 공식몰",
+      "unit_price": 10170
+    },
+    {
+      "date": "2026-11-16",
+      "price": 19900,
+      "mall_name": "종근당건강 공식몰",
+      "unit_price": 9950
+    }
+  ],
+  "청정원 순창 태양초 찰고추장 1kg 2개": [
+    {
+      "date": "2026-10-18",
+      "price": 16540,
+      "mall_name": "대상 청정원 공식몰",
+      "unit_price": 8270
+    },
+    {
+      "date": "2026-10-19",
+      "price": 16240,
+      "mall_name": "대상 청정원 공식몰",
+      "unit_price": 8120
+    },
+    {
+      "date": "2026-10-20",
+      "price": 16310,
+      "mall_name": "대상 청정원 공식몰",
+      "unit_price": 8155
+    },
+    {
+      "date": "2026-10-21",
+      "price": 16290,
+      "mall_name": "대상 청정원 공식몰",
+      "unit_price": 8145
+    },
+    {
+      "date": "2026-10-22",
+      "price": 16270,
+      "mall_name": "대상 청정원 공식몰",
+      "unit_price": 8135
+    },
+    {
+      "date": "2026-10-23",
+      "price": 16160,
+      "mall_name": "대상 청정원 공식몰",
+      "unit_price": 8080
+    },
+    {
+      "date": "2026-10-24",
+      "price": 15900,
+      "mall_name": "대상 청정원 공식몰",
+      "unit_price": 7950
+    },
+    {
+      "date": "2026-10-25",
+      "price": 15810,
+      "mall_name": "대상 청정원 공식몰",
+      "unit_price": 7905
+    },
+    {
+      "date": "2026-10-26",
+      "price": 16260,
+      "mall_name": "대상 청정원 공식몰",
+      "unit_price": 8130
+    },
+    {
+      "date": "2026-10-27",
+      "price": 15750,
+      "mall_name": "대상 청정원 공식몰",
+      "unit_price": 7875
+    },
+    {
+      "date": "2026-10-28",
+      "price": 16040,
+      "mall_name": "대상 청정원 공식몰",
+      "unit_price": 8020
+    },
+    {
+      "date": "2026-10-29",
+      "price": 15730,
+      "mall_name": "대상 청정원 공식몰",
+      "unit_price": 7865
+    },
+    {
+      "date": "2026-10-30",
+      "price": 15970,
+      "mall_name": "대상 청정원 공식몰",
+      "unit_price": 7985
+    },
+    {
+      "date": "2026-10-31",
+      "price": 15710,
+      "mall_name": "대상 청정원 공식몰",
+      "unit_price": 7855
+    },
+    {
+      "date": "2026-11-01",
+      "price": 15430,
+      "mall_name": "대상 청정원 공식몰",
+      "unit_price": 7715
+    },
+    {
+      "date": "2026-11-02",
+      "price": 15790,
+      "mall_name": "대상 청정원 공식몰",
+      "unit_price": 7895
+    },
+    {
+      "date": "2026-11-03",
+      "price": 15360,
+      "mall_name": "대상 청정원 공식몰",
+      "unit_price": 7680
+    },
+    {
+      "date": "2026-11-04",
+      "price": 15160,
+      "mall_name": "대상 청정원 공식몰",
+      "unit_price": 7580
+    },
+    {
+      "date": "2026-11-05",
+      "price": 15220,
+      "mall_name": "대상 청정원 공식몰",
+      "unit_price": 7610
+    },
+    {
+      "date": "2026-11-06",
+      "price": 15190,
+      "mall_name": "대상 청정원 공식몰",
+      "unit_price": 7595
+    },
+    {
+      "date": "2026-11-07",
+      "price": 14890,
+      "mall_name": "대상 청정원 공식몰",
+      "unit_price": 7445
+    },
+    {
+      "date": "2026-11-08",
+      "price": 15200,
+      "mall_name": "대상 청정원 공식몰",
+      "unit_price": 7600
+    },
+    {
+      "date": "2026-11-09",
+      "price": 15150,
+      "mall_name": "대상 청정원 공식몰",
+      "unit_price": 7575
+    },
+    {
+      "date": "2026-11-10",
+      "price": 14690,
+      "mall_name": "대상 청정원 공식몰",
+      "unit_price": 7345
+    },
+    {
+      "date": "2026-11-11",
+      "price": 14610,
+      "mall_name": "대상 청정원 공식몰",
+      "unit_price": 7305
+    },
+    {
+      "date": "2026-11-12",
+      "price": 14700,
+      "mall_name": "대상 청정원 공식몰",
+      "unit_price": 7350
+    },
+    {
+      "date": "2026-11-13",
+      "price": 14630,
+      "mall_name": "대상 청정원 공식몰",
+      "unit_price": 7315
+    },
+    {
+      "date": "2026-11-14",
+      "price": 14750,
+      "mall_name": "대상 청정원 공식몰",
+      "unit_price": 7375
+    },
+    {
+      "date": "2026-11-15",
+      "price": 14850,
+      "mall_name": "대상 청정원 공식몰",
+      "unit_price": 7425
+    },
+    {
+      "date": "2026-11-16",
+      "price": 14500,
+      "mall_name": "대상 청정원 공식몰",
+      "unit_price": 7250
+    }
+  ],
+  "칠성사이다 제로 355ml 24캔": [
+    {
+      "date": "2026-10-18",
+      "price": 18240,
+      "mall_name": "롯데칠성 공식몰",
+      "unit_price": 760
+    },
+    {
+      "date": "2026-10-19",
+      "price": 18090,
+      "mall_name": "롯데칠성 공식몰",
+      "unit_price": 754
+    },
+    {
+      "date": "2026-10-20",
+      "price": 17930,
+      "mall_name": "롯데칠성 공식몰",
+      "unit_price": 747
+    },
+    {
+      "date": "2026-10-21",
+      "price": 18270,
+      "mall_name": "롯데칠성 공식몰",
+      "unit_price": 761
+    },
+    {
+      "date": "2026-10-22",
+      "price": 17880,
+      "mall_name": "롯데칠성 공식몰",
+      "unit_price": 745
+    },
+    {
+      "date": "2026-10-23",
+      "price": 17830,
+      "mall_name": "롯데칠성 공식몰",
+      "unit_price": 743
+    },
+    {
+      "date": "2026-10-24",
+      "price": 17700,
+      "mall_name": "롯데칠성 공식몰",
+      "unit_price": 738
+    },
+    {
+      "date": "2026-10-25",
+      "price": 17650,
+      "mall_name": "롯데칠성 공식몰",
+      "unit_price": 735
+    },
+    {
+      "date": "2026-10-26",
+      "price": 17660,
+      "mall_name": "롯데칠성 공식몰",
+      "unit_price": 736
+    },
+    {
+      "date": "2026-10-27",
+      "price": 17370,
+      "mall_name": "롯데칠성 공식몰",
+      "unit_price": 724
+    },
+    {
+      "date": "2026-10-28",
+      "price": 17760,
+      "mall_name": "롯데칠성 공식몰",
+      "unit_price": 740
+    },
+    {
+      "date": "2026-10-29",
+      "price": 17840,
+      "mall_name": "롯데칠성 공식몰",
+      "unit_price": 743
+    },
+    {
+      "date": "2026-10-30",
+      "price": 17530,
+      "mall_name": "롯데칠성 공식몰",
+      "unit_price": 730
+    },
+    {
+      "date": "2026-10-31",
+      "price": 17340,
+      "mall_name": "롯데칠성 공식몰",
+      "unit_price": 722
+    },
+    {
+      "date": "2026-11-01",
+      "price": 17620,
+      "mall_name": "롯데칠성 공식몰",
+      "unit_price": 734
+    },
+    {
+      "date": "2026-11-02",
+      "price": 17500,
+      "mall_name": "롯데칠성 공식몰",
+      "unit_price": 729
+    },
+    {
+      "date": "2026-11-03",
+      "price": 17460,
+      "mall_name": "롯데칠성 공식몰",
+      "unit_price": 728
+    },
+    {
+      "date": "2026-11-04",
+      "price": 17380,
+      "mall_name": "롯데칠성 공식몰",
+      "unit_price": 724
+    },
+    {
+      "date": "2026-11-05",
+      "price": 16920,
+      "mall_name": "롯데칠성 공식몰",
+      "unit_price": 705
+    },
+    {
+      "date": "2026-11-06",
+      "price": 17280,
+      "mall_name": "롯데칠성 공식몰",
+      "unit_price": 720
+    },
+    {
+      "date": "2026-11-07",
+      "price": 17180,
+      "mall_name": "롯데칠성 공식몰",
+      "unit_price": 716
+    },
+    {
+      "date": "2026-11-08",
+      "price": 16810,
+      "mall_name": "롯데칠성 공식몰",
+      "unit_price": 700
+    },
+    {
+      "date": "2026-11-09",
+      "price": 16590,
+      "mall_name": "롯데칠성 공식몰",
+      "unit_price": 691
+    },
+    {
+      "date": "2026-11-10",
+      "price": 16520,
+      "mall_name": "롯데칠성 공식몰",
+      "unit_price": 688
+    },
+    {
+      "date": "2026-11-11",
+      "price": 16950,
+      "mall_name": "롯데칠성 공식몰",
+      "unit_price": 706
+    },
+    {
+      "date": "2026-11-12",
+      "price": 16990,
+      "mall_name": "롯데칠성 공식몰",
+      "unit_price": 708
+    },
+    {
+      "date": "2026-11-13",
+      "price": 16430,
+      "mall_name": "롯데칠성 공식몰",
+      "unit_price": 685
+    },
+    {
+      "date": "2026-11-14",
+      "price": 16420,
+      "mall_name": "롯데칠성 공식몰",
+      "unit_price": 684
+    },
+    {
+      "date": "2026-11-15",
+      "price": 16570,
+      "mall_name": "롯데칠성 공식몰",
+      "unit_price": 690
+    },
+    {
+      "date": "2026-11-16",
+      "price": 16500,
+      "mall_name": "롯데칠성 공식몰",
+      "unit_price": 688
+    }
+  ],
+  "커클랜드 시그니처 3겹 화장지 30롤": [
+    {
+      "date": "2026-10-18",
+      "price": 27660,
+      "mall_name": "코스트코 온라인몰",
+      "unit_price": 922
+    },
+    {
+      "date": "2026-10-19",
+      "price": 27650,
+      "mall_name": "코스트코 온라인몰",
+      "unit_price": 922
+    },
+    {
+      "date": "2026-10-20",
+      "price": 26810,
+      "mall_name": "코스트코 온라인몰",
+      "unit_price": 894
+    },
+    {
+      "date": "2026-10-21",
+      "price": 26610,
+      "mall_name": "코스트코 온라인몰",
+      "unit_price": 887
+    },
+    {
+      "date": "2026-10-22",
+      "price": 26910,
+      "mall_name": "코스트코 온라인몰",
+      "unit_price": 897
+    },
+    {
+      "date": "2026-10-23",
+      "price": 27180,
+      "mall_name": "코스트코 온라인몰",
+      "unit_price": 906
+    },
+    {
+      "date": "2026-10-24",
+      "price": 27020,
+      "mall_name": "코스트코 온라인몰",
+      "unit_price": 901
+    },
+    {
+      "date": "2026-10-25",
+      "price": 26750,
+      "mall_name": "코스트코 온라인몰",
+      "unit_price": 892
+    },
+    {
+      "date": "2026-10-26",
+      "price": 25900,
+      "mall_name": "코스트코 온라인몰",
+      "unit_price": 863
+    },
+    {
+      "date": "2026-10-27",
+      "price": 26440,
+      "mall_name": "코스트코 온라인몰",
+      "unit_price": 881
+    },
+    {
+      "date": "2026-10-28",
+      "price": 26050,
+      "mall_name": "코스트코 온라인몰",
+      "unit_price": 868
+    },
+    {
+      "date": "2026-10-29",
+      "price": 25480,
+      "mall_name": "코스트코 온라인몰",
+      "unit_price": 849
+    },
+    {
+      "date": "2026-10-30",
+      "price": 26340,
+      "mall_name": "코스트코 온라인몰",
+      "unit_price": 878
+    },
+    {
+      "date": "2026-10-31",
+      "price": 25440,
+      "mall_name": "코스트코 온라인몰",
+      "unit_price": 848
+    },
+    {
+      "date": "2026-11-01",
+      "price": 25680,
+      "mall_name": "코스트코 온라인몰",
+      "unit_price": 856
+    },
+    {
+      "date": "2026-11-02",
+      "price": 25430,
+      "mall_name": "코스트코 온라인몰",
+      "unit_price": 848
+    },
+    {
+      "date": "2026-11-03",
+      "price": 25240,
+      "mall_name": "코스트코 온라인몰",
+      "unit_price": 841
+    },
+    {
+      "date": "2026-11-04",
+      "price": 25660,
+      "mall_name": "코스트코 온라인몰",
+      "unit_price": 855
+    },
+    {
+      "date": "2026-11-05",
+      "price": 25590,
+      "mall_name": "코스트코 온라인몰",
+      "unit_price": 853
+    },
+    {
+      "date": "2026-11-06",
+      "price": 25170,
+      "mall_name": "코스트코 온라인몰",
+      "unit_price": 839
+    },
+    {
+      "date": "2026-11-07",
+      "price": 24820,
+      "mall_name": "코스트코 온라인몰",
+      "unit_price": 827
+    },
+    {
+      "date": "2026-11-08",
+      "price": 25100,
+      "mall_name": "코스트코 온라인몰",
+      "unit_price": 837
+    },
+    {
+      "date": "2026-11-09",
+      "price": 24770,
+      "mall_name": "코스트코 온라인몰",
+      "unit_price": 826
+    },
+    {
+      "date": "2026-11-10",
+      "price": 24780,
+      "mall_name": "코스트코 온라인몰",
+      "unit_price": 826
+    },
+    {
+      "date": "2026-11-11",
+      "price": 24600,
+      "mall_name": "코스트코 온라인몰",
+      "unit_price": 820
+    },
+    {
+      "date": "2026-11-12",
+      "price": 24590,
+      "mall_name": "코스트코 온라인몰",
+      "unit_price": 820
+    },
+    {
+      "date": "2026-11-13",
+      "price": 24650,
+      "mall_name": "코스트코 온라인몰",
+      "unit_price": 822
+    },
+    {
+      "date": "2026-11-14",
+      "price": 23830,
+      "mall_name": "코스트코 온라인몰",
+      "unit_price": 794
+    },
+    {
+      "date": "2026-11-15",
+      "price": 23590,
+      "mall_name": "코스트코 온라인몰",
+      "unit_price": 786
+    },
+    {
+      "date": "2026-11-16",
+      "price": 23900,
+      "mall_name": "코스트코 온라인몰",
+      "unit_price": 797
+    }
+  ],
+  "코카콜라 제로 355ml 24캔": [
+    {
+      "date": "2026-10-18",
+      "price": 19870,
+      "mall_name": "코카콜라 공식몰",
+      "unit_price": 828
+    },
+    {
+      "date": "2026-10-19",
+      "price": 19700,
+      "mall_name": "코카콜라 공식몰",
+      "unit_price": 821
+    },
+    {
+      "date": "2026-10-20",
+      "price": 19420,
+      "mall_name": "코카콜라 공식몰",
+      "unit_price": 809
+    },
+    {
+      "date": "2026-10-21",
+      "price": 19240,
+      "mall_name": "코카콜라 공식몰",
+      "unit_price": 802
+    },
+    {
+      "date": "2026-10-22",
+      "price": 19480,
+      "mall_name": "코카콜라 공식몰",
+      "unit_price": 812
+    },
+    {
+      "date": "2026-10-23",
+      "price": 19290,
+      "mall_name": "코카콜라 공식몰",
+      "unit_price": 804
+    },
+    {
+      "date": "2026-10-24",
+      "price": 19600,
+      "mall_name": "코카콜라 공식몰",
+      "unit_price": 817
+    },
+    {
+      "date": "2026-10-25",
+      "price": 18920,
+      "mall_name": "코카콜라 공식몰",
+      "unit_price": 788
+    },
+    {
+      "date": "2026-10-26",
+      "price": 19240,
+      "mall_name": "코카콜라 공식몰",
+      "unit_price": 802
+    },
+    {
+      "date": "2026-10-27",
+      "price": 19020,
+      "mall_name": "코카콜라 공식몰",
+      "unit_price": 792
+    },
+    {
+      "date": "2026-10-28",
+      "price": 19170,
+      "mall_name": "코카콜라 공식몰",
+      "unit_price": 799
+    },
+    {
+      "date": "2026-10-29",
+      "price": 18960,
+      "mall_name": "코카콜라 공식몰",
+      "unit_price": 790
+    },
+    {
+      "date": "2026-10-30",
+      "price": 19040,
+      "mall_name": "코카콜라 공식몰",
+      "unit_price": 793
+    },
+    {
+      "date": "2026-10-31",
+      "price": 18550,
+      "mall_name": "코카콜라 공식몰",
+      "unit_price": 773
+    },
+    {
+      "date": "2026-11-01",
+      "price": 18840,
+      "mall_name": "코카콜라 공식몰",
+      "unit_price": 785
+    },
+    {
+      "date": "2026-11-02",
+      "price": 18580,
+      "mall_name": "코카콜라 공식몰",
+      "unit_price": 774
+    },
+    {
+      "date": "2026-11-03",
+      "price": 18560,
+      "mall_name": "코카콜라 공식몰",
+      "unit_price": 773
+    },
+    {
+      "date": "2026-11-04",
+      "price": 18920,
+      "mall_name": "코카콜라 공식몰",
+      "unit_price": 788
+    },
+    {
+      "date": "2026-11-05",
+      "price": 18720,
+      "mall_name": "코카콜라 공식몰",
+      "unit_price": 780
+    },
+    {
+      "date": "2026-11-06",
+      "price": 18230,
+      "mall_name": "코카콜라 공식몰",
+      "unit_price": 760
+    },
+    {
+      "date": "2026-11-07",
+      "price": 18400,
+      "mall_name": "코카콜라 공식몰",
+      "unit_price": 767
+    },
+    {
+      "date": "2026-11-08",
+      "price": 18560,
+      "mall_name": "코카콜라 공식몰",
+      "unit_price": 773
+    },
+    {
+      "date": "2026-11-09",
+      "price": 18020,
+      "mall_name": "코카콜라 공식몰",
+      "unit_price": 751
+    },
+    {
+      "date": "2026-11-10",
+      "price": 18120,
+      "mall_name": "코카콜라 공식몰",
+      "unit_price": 755
+    },
+    {
+      "date": "2026-11-11",
+      "price": 18390,
+      "mall_name": "코카콜라 공식몰",
+      "unit_price": 766
+    },
+    {
+      "date": "2026-11-12",
+      "price": 18290,
+      "mall_name": "코카콜라 공식몰",
+      "unit_price": 762
+    },
+    {
+      "date": "2026-11-13",
+      "price": 17840,
+      "mall_name": "코카콜라 공식몰",
+      "unit_price": 743
+    },
+    {
+      "date": "2026-11-14",
+      "price": 17680,
+      "mall_name": "코카콜라 공식몰",
+      "unit_price": 737
+    },
+    {
+      "date": "2026-11-15",
+      "price": 17780,
+      "mall_name": "코카콜라 공식몰",
+      "unit_price": 741
+    },
+    {
+      "date": "2026-11-16",
+      "price": 17800,
+      "mall_name": "코카콜라 공식몰",
+      "unit_price": 742
+    }
+  ],
+  "크리넥스 데코앤소프트 30롤": [
+    {
+      "date": "2026-10-18",
+      "price": 27870,
+      "mall_name": "유한킴벌리 공식몰",
+      "unit_price": 929
+    },
+    {
+      "date": "2026-10-19",
+      "price": 26910,
+      "mall_name": "유한킴벌리 공식몰",
+      "unit_price": 897
+    },
+    {
+      "date": "2026-10-20",
+      "price": 27410,
+      "mall_name": "유한킴벌리 공식몰",
+      "unit_price": 914
+    },
+    {
+      "date": "2026-10-21",
+      "price": 26690,
+      "mall_name": "유한킴벌리 공식몰",
+      "unit_price": 890
+    },
+    {
+      "date": "2026-10-22",
+      "price": 27620,
+      "mall_name": "유한킴벌리 공식몰",
+      "unit_price": 921
+    },
+    {
+      "date": "2026-10-23",
+      "price": 27540,
+      "mall_name": "유한킴벌리 공식몰",
+      "unit_price": 918
+    },
+    {
+      "date": "2026-10-24",
+      "price": 27180,
+      "mall_name": "유한킴벌리 공식몰",
+      "unit_price": 906
+    },
+    {
+      "date": "2026-10-25",
+      "price": 27300,
+      "mall_name": "유한킴벌리 공식몰",
+      "unit_price": 910
+    },
+    {
+      "date": "2026-10-26",
+      "price": 26240,
+      "mall_name": "유한킴벌리 공식몰",
+      "unit_price": 875
+    },
+    {
+      "date": "2026-10-27",
+      "price": 26140,
+      "mall_name": "유한킴벌리 공식몰",
+      "unit_price": 871
+    },
+    {
+      "date": "2026-10-28",
+      "price": 26720,
+      "mall_name": "유한킴벌리 공식몰",
+      "unit_price": 891
+    },
+    {
+      "date": "2026-10-29",
+      "price": 26930,
+      "mall_name": "유한킴벌리 공식몰",
+      "unit_price": 898
+    },
+    {
+      "date": "2026-10-30",
+      "price": 26850,
+      "mall_name": "유한킴벌리 공식몰",
+      "unit_price": 895
+    },
+    {
+      "date": "2026-10-31",
+      "price": 26830,
+      "mall_name": "유한킴벌리 공식몰",
+      "unit_price": 894
+    },
+    {
+      "date": "2026-11-01",
+      "price": 26320,
+      "mall_name": "유한킴벌리 공식몰",
+      "unit_price": 877
+    },
+    {
+      "date": "2026-11-02",
+      "price": 25910,
+      "mall_name": "유한킴벌리 공식몰",
+      "unit_price": 864
+    },
+    {
+      "date": "2026-11-03",
+      "price": 26130,
+      "mall_name": "유한킴벌리 공식몰",
+      "unit_price": 871
+    },
+    {
+      "date": "2026-11-04",
+      "price": 25800,
+      "mall_name": "유한킴벌리 공식몰",
+      "unit_price": 860
+    },
+    {
+      "date": "2026-11-05",
+      "price": 25840,
+      "mall_name": "유한킴벌리 공식몰",
+      "unit_price": 861
+    },
+    {
+      "date": "2026-11-06",
+      "price": 25590,
+      "mall_name": "유한킴벌리 공식몰",
+      "unit_price": 853
+    },
+    {
+      "date": "2026-11-07",
+      "price": 25230,
+      "mall_name": "유한킴벌리 공식몰",
+      "unit_price": 841
+    },
+    {
+      "date": "2026-11-08",
+      "price": 25330,
+      "mall_name": "유한킴벌리 공식몰",
+      "unit_price": 844
+    },
+    {
+      "date": "2026-11-09",
+      "price": 25710,
+      "mall_name": "유한킴벌리 공식몰",
+      "unit_price": 857
+    },
+    {
+      "date": "2026-11-10",
+      "price": 25510,
+      "mall_name": "유한킴벌리 공식몰",
+      "unit_price": 850
+    },
+    {
+      "date": "2026-11-11",
+      "price": 25170,
+      "mall_name": "유한킴벌리 공식몰",
+      "unit_price": 839
+    },
+    {
+      "date": "2026-11-12",
+      "price": 25130,
+      "mall_name": "유한킴벌리 공식몰",
+      "unit_price": 838
+    },
+    {
+      "date": "2026-11-13",
+      "price": 25510,
+      "mall_name": "유한킴벌리 공식몰",
+      "unit_price": 850
+    },
+    {
+      "date": "2026-11-14",
+      "price": 24760,
+      "mall_name": "유한킴벌리 공식몰",
+      "unit_price": 825
+    },
+    {
+      "date": "2026-11-15",
+      "price": 24760,
+      "mall_name": "유한킴벌리 공식몰",
+      "unit_price": 825
+    },
+    {
+      "date": "2026-11-16",
+      "price": 24900,
+      "mall_name": "유한킴벌리 공식몰",
+      "unit_price": 830
+    }
+  ],
+  "팔도 비빔면 130g 20개입": [
+    {
+      "date": "2026-10-18",
+      "price": 16740,
+      "mall_name": "팔도 공식몰",
+      "unit_price": 837
+    },
+    {
+      "date": "2026-10-19",
+      "price": 16490,
+      "mall_name": "팔도 공식몰",
+      "unit_price": 824
+    },
+    {
+      "date": "2026-10-20",
+      "price": 16400,
+      "mall_name": "팔도 공식몰",
+      "unit_price": 820
+    },
+    {
+      "date": "2026-10-21",
+      "price": 16240,
+      "mall_name": "팔도 공식몰",
+      "unit_price": 812
+    },
+    {
+      "date": "2026-10-22",
+      "price": 16390,
+      "mall_name": "팔도 공식몰",
+      "unit_price": 820
+    },
+    {
+      "date": "2026-10-23",
+      "price": 16170,
+      "mall_name": "팔도 공식몰",
+      "unit_price": 808
+    },
+    {
+      "date": "2026-10-24",
+      "price": 16500,
+      "mall_name": "팔도 공식몰",
+      "unit_price": 825
+    },
+    {
+      "date": "2026-10-25",
+      "price": 16350,
+      "mall_name": "팔도 공식몰",
+      "unit_price": 818
+    },
+    {
+      "date": "2026-10-26",
+      "price": 16040,
+      "mall_name": "팔도 공식몰",
+      "unit_price": 802
+    },
+    {
+      "date": "2026-10-27",
+      "price": 15910,
+      "mall_name": "팔도 공식몰",
+      "unit_price": 796
+    },
+    {
+      "date": "2026-10-28",
+      "price": 16260,
+      "mall_name": "팔도 공식몰",
+      "unit_price": 813
+    },
+    {
+      "date": "2026-10-29",
+      "price": 15800,
+      "mall_name": "팔도 공식몰",
+      "unit_price": 790
+    },
+    {
+      "date": "2026-10-30",
+      "price": 16030,
+      "mall_name": "팔도 공식몰",
+      "unit_price": 802
+    },
+    {
+      "date": "2026-10-31",
+      "price": 16020,
+      "mall_name": "팔도 공식몰",
+      "unit_price": 801
+    },
+    {
+      "date": "2026-11-01",
+      "price": 15750,
+      "mall_name": "팔도 공식몰",
+      "unit_price": 788
+    },
+    {
+      "date": "2026-11-02",
+      "price": 15810,
+      "mall_name": "팔도 공식몰",
+      "unit_price": 790
+    },
+    {
+      "date": "2026-11-03",
+      "price": 15350,
+      "mall_name": "팔도 공식몰",
+      "unit_price": 768
+    },
+    {
+      "date": "2026-11-04",
+      "price": 15810,
+      "mall_name": "팔도 공식몰",
+      "unit_price": 790
+    },
+    {
+      "date": "2026-11-05",
+      "price": 15740,
+      "mall_name": "팔도 공식몰",
+      "unit_price": 787
+    },
+    {
+      "date": "2026-11-06",
+      "price": 15410,
+      "mall_name": "팔도 공식몰",
+      "unit_price": 770
+    },
+    {
+      "date": "2026-11-07",
+      "price": 15250,
+      "mall_name": "팔도 공식몰",
+      "unit_price": 762
+    },
+    {
+      "date": "2026-11-08",
+      "price": 15210,
+      "mall_name": "팔도 공식몰",
+      "unit_price": 760
+    },
+    {
+      "date": "2026-11-09",
+      "price": 15470,
+      "mall_name": "팔도 공식몰",
+      "unit_price": 774
+    },
+    {
+      "date": "2026-11-10",
+      "price": 15480,
+      "mall_name": "팔도 공식몰",
+      "unit_price": 774
+    },
+    {
+      "date": "2026-11-11",
+      "price": 14860,
+      "mall_name": "팔도 공식몰",
+      "unit_price": 743
+    },
+    {
+      "date": "2026-11-12",
+      "price": 15240,
+      "mall_name": "팔도 공식몰",
+      "unit_price": 762
+    },
+    {
+      "date": "2026-11-13",
+      "price": 15020,
+      "mall_name": "팔도 공식몰",
+      "unit_price": 751
+    },
+    {
+      "date": "2026-11-14",
+      "price": 15160,
+      "mall_name": "팔도 공식몰",
+      "unit_price": 758
+    },
+    {
+      "date": "2026-11-15",
+      "price": 14980,
+      "mall_name": "팔도 공식몰",
+      "unit_price": 749
+    },
+    {
+      "date": "2026-11-16",
+      "price": 14800,
+      "mall_name": "팔도 공식몰",
+      "unit_price": 740
+    }
+  ],
+  "퍼실 딥클린 파워젤 2.7L 2개": [
+    {
+      "date": "2026-10-18",
+      "price": 24230,
+      "mall_name": "헨켈 공식스토어",
+      "unit_price": 12115
+    },
+    {
+      "date": "2026-10-19",
+      "price": 24250,
+      "mall_name": "헨켈 공식스토어",
+      "unit_price": 12125
+    },
+    {
+      "date": "2026-10-20",
+      "price": 24140,
+      "mall_name": "헨켈 공식스토어",
+      "unit_price": 12070
+    },
+    {
+      "date": "2026-10-21",
+      "price": 24310,
+      "mall_name": "헨켈 공식스토어",
+      "unit_price": 12155
+    },
+    {
+      "date": "2026-10-22",
+      "price": 23650,
+      "mall_name": "헨켈 공식스토어",
+      "unit_price": 11825
+    },
+    {
+      "date": "2026-10-23",
+      "price": 23870,
+      "mall_name": "헨켈 공식스토어",
+      "unit_price": 11935
+    },
+    {
+      "date": "2026-10-24",
+      "price": 23280,
+      "mall_name": "헨켈 공식스토어",
+      "unit_price": 11640
+    },
+    {
+      "date": "2026-10-25",
+      "price": 23270,
+      "mall_name": "헨켈 공식스토어",
+      "unit_price": 11635
+    },
+    {
+      "date": "2026-10-26",
+      "price": 24010,
+      "mall_name": "헨켈 공식스토어",
+      "unit_price": 12005
+    },
+    {
+      "date": "2026-10-27",
+      "price": 23730,
+      "mall_name": "헨켈 공식스토어",
+      "unit_price": 11865
+    },
+    {
+      "date": "2026-10-28",
+      "price": 23370,
+      "mall_name": "헨켈 공식스토어",
+      "unit_price": 11685
+    },
+    {
+      "date": "2026-10-29",
+      "price": 23480,
+      "mall_name": "헨켈 공식스토어",
+      "unit_price": 11740
+    },
+    {
+      "date": "2026-10-30",
+      "price": 23450,
+      "mall_name": "헨켈 공식스토어",
+      "unit_price": 11725
+    },
+    {
+      "date": "2026-10-31",
+      "price": 23410,
+      "mall_name": "헨켈 공식스토어",
+      "unit_price": 11705
+    },
+    {
+      "date": "2026-11-01",
+      "price": 22740,
+      "mall_name": "헨켈 공식스토어",
+      "unit_price": 11370
+    },
+    {
+      "date": "2026-11-02",
+      "price": 23200,
+      "mall_name": "헨켈 공식스토어",
+      "unit_price": 11600
+    },
+    {
+      "date": "2026-11-03",
+      "price": 23220,
+      "mall_name": "헨켈 공식스토어",
+      "unit_price": 11610
+    },
+    {
+      "date": "2026-11-04",
+      "price": 22560,
+      "mall_name": "헨켈 공식스토어",
+      "unit_price": 11280
+    },
+    {
+      "date": "2026-11-05",
+      "price": 23080,
+      "mall_name": "헨켈 공식스토어",
+      "unit_price": 11540
+    },
+    {
+      "date": "2026-11-06",
+      "price": 22990,
+      "mall_name": "헨켈 공식스토어",
+      "unit_price": 11495
+    },
+    {
+      "date": "2026-11-07",
+      "price": 22770,
+      "mall_name": "헨켈 공식스토어",
+      "unit_price": 11385
+    },
+    {
+      "date": "2026-11-08",
+      "price": 22410,
+      "mall_name": "헨켈 공식스토어",
+      "unit_price": 11205
+    },
+    {
+      "date": "2026-11-09",
+      "price": 22680,
+      "mall_name": "헨켈 공식스토어",
+      "unit_price": 11340
+    },
+    {
+      "date": "2026-11-10",
+      "price": 22210,
+      "mall_name": "헨켈 공식스토어",
+      "unit_price": 11105
+    },
+    {
+      "date": "2026-11-11",
+      "price": 21940,
+      "mall_name": "헨켈 공식스토어",
+      "unit_price": 10970
+    },
+    {
+      "date": "2026-11-12",
+      "price": 22500,
+      "mall_name": "헨켈 공식스토어",
+      "unit_price": 11250
+    },
+    {
+      "date": "2026-11-13",
+      "price": 21950,
+      "mall_name": "헨켈 공식스토어",
+      "unit_price": 10975
+    },
+    {
+      "date": "2026-11-14",
+      "price": 21660,
+      "mall_name": "헨켈 공식스토어",
+      "unit_price": 10830
+    },
+    {
+      "date": "2026-11-15",
+      "price": 21740,
+      "mall_name": "헨켈 공식스토어",
+      "unit_price": 10870
+    },
+    {
+      "date": "2026-11-16",
+      "price": 21900,
+      "mall_name": "헨켈 공식스토어",
+      "unit_price": 10950
+    }
+  ],
+  "페브리즈 상쾌한향 370ml 2개": [
+    {
+      "date": "2026-10-18",
+      "price": 10960,
+      "mall_name": "P&G 공식스토어",
+      "unit_price": 5480
+    },
+    {
+      "date": "2026-10-19",
+      "price": 10810,
+      "mall_name": "P&G 공식스토어",
+      "unit_price": 5405
+    },
+    {
+      "date": "2026-10-20",
+      "price": 10570,
+      "mall_name": "P&G 공식스토어",
+      "unit_price": 5285
+    },
+    {
+      "date": "2026-10-21",
+      "price": 10770,
+      "mall_name": "P&G 공식스토어",
+      "unit_price": 5385
+    },
+    {
+      "date": "2026-10-22",
+      "price": 10480,
+      "mall_name": "P&G 공식스토어",
+      "unit_price": 5240
+    },
+    {
+      "date": "2026-10-23",
+      "price": 10500,
+      "mall_name": "P&G 공식스토어",
+      "unit_price": 5250
+    },
+    {
+      "date": "2026-10-24",
+      "price": 10520,
+      "mall_name": "P&G 공식스토어",
+      "unit_price": 5260
+    },
+    {
+      "date": "2026-10-25",
+      "price": 10600,
+      "mall_name": "P&G 공식스토어",
+      "unit_price": 5300
+    },
+    {
+      "date": "2026-10-26",
+      "price": 10740,
+      "mall_name": "P&G 공식스토어",
+      "unit_price": 5370
+    },
+    {
+      "date": "2026-10-27",
+      "price": 10500,
+      "mall_name": "P&G 공식스토어",
+      "unit_price": 5250
+    },
+    {
+      "date": "2026-10-28",
+      "price": 10310,
+      "mall_name": "P&G 공식스토어",
+      "unit_price": 5155
+    },
+    {
+      "date": "2026-10-29",
+      "price": 10630,
+      "mall_name": "P&G 공식스토어",
+      "unit_price": 5315
+    },
+    {
+      "date": "2026-10-30",
+      "price": 10420,
+      "mall_name": "P&G 공식스토어",
+      "unit_price": 5210
+    },
+    {
+      "date": "2026-10-31",
+      "price": 10320,
+      "mall_name": "P&G 공식스토어",
+      "unit_price": 5160
+    },
+    {
+      "date": "2026-11-01",
+      "price": 10170,
+      "mall_name": "P&G 공식스토어",
+      "unit_price": 5085
+    },
+    {
+      "date": "2026-11-02",
+      "price": 10310,
+      "mall_name": "P&G 공식스토어",
+      "unit_price": 5155
+    },
+    {
+      "date": "2026-11-03",
+      "price": 10450,
+      "mall_name": "P&G 공식스토어",
+      "unit_price": 5225
+    },
+    {
+      "date": "2026-11-04",
+      "price": 10170,
+      "mall_name": "P&G 공식스토어",
+      "unit_price": 5085
+    },
+    {
+      "date": "2026-11-05",
+      "price": 10430,
+      "mall_name": "P&G 공식스토어",
+      "unit_price": 5215
+    },
+    {
+      "date": "2026-11-06",
+      "price": 10370,
+      "mall_name": "P&G 공식스토어",
+      "unit_price": 5185
+    },
+    {
+      "date": "2026-11-07",
+      "price": 10230,
+      "mall_name": "P&G 공식스토어",
+      "unit_price": 5115
+    },
+    {
+      "date": "2026-11-08",
+      "price": 10240,
+      "mall_name": "P&G 공식스토어",
+      "unit_price": 5120
+    },
+    {
+      "date": "2026-11-09",
+      "price": 10040,
+      "mall_name": "P&G 공식스토어",
+      "unit_price": 5020
+    },
+    {
+      "date": "2026-11-10",
+      "price": 9980,
+      "mall_name": "P&G 공식스토어",
+      "unit_price": 4990
+    },
+    {
+      "date": "2026-11-11",
+      "price": 10030,
+      "mall_name": "P&G 공식스토어",
+      "unit_price": 5015
+    },
+    {
+      "date": "2026-11-12",
+      "price": 9910,
+      "mall_name": "P&G 공식스토어",
+      "unit_price": 4955
+    },
+    {
+      "date": "2026-11-13",
+      "price": 10150,
+      "mall_name": "P&G 공식스토어",
+      "unit_price": 5075
+    },
+    {
+      "date": "2026-11-14",
+      "price": 9880,
+      "mall_name": "P&G 공식스토어",
+      "unit_price": 4940
+    },
+    {
+      "date": "2026-11-15",
+      "price": 10010,
+      "mall_name": "P&G 공식스토어",
+      "unit_price": 5005
+    },
+    {
+      "date": "2026-11-16",
+      "price": 9900,
+      "mall_name": "P&G 공식스토어",
+      "unit_price": 4950
+    }
+  ],
+  "풀무원 얇은피 꽉찬속 만두 400g 4봉": [
+    {
+      "date": "2026-10-18",
+      "price": 15770,
+      "mall_name": "풀무원 공식몰",
+      "unit_price": 3942
+    },
+    {
+      "date": "2026-10-19",
+      "price": 16100,
+      "mall_name": "풀무원 공식몰",
+      "unit_price": 4025
+    },
+    {
+      "date": "2026-10-20",
+      "price": 15700,
+      "mall_name": "풀무원 공식몰",
+      "unit_price": 3925
+    },
+    {
+      "date": "2026-10-21",
+      "price": 15480,
+      "mall_name": "풀무원 공식몰",
+      "unit_price": 3870
+    },
+    {
+      "date": "2026-10-22",
+      "price": 15870,
+      "mall_name": "풀무원 공식몰",
+      "unit_price": 3968
+    },
+    {
+      "date": "2026-10-23",
+      "price": 15380,
+      "mall_name": "풀무원 공식몰",
+      "unit_price": 3845
+    },
+    {
+      "date": "2026-10-24",
+      "price": 15260,
+      "mall_name": "풀무원 공식몰",
+      "unit_price": 3815
+    },
+    {
+      "date": "2026-10-25",
+      "price": 15710,
+      "mall_name": "풀무원 공식몰",
+      "unit_price": 3928
+    },
+    {
+      "date": "2026-10-26",
+      "price": 15240,
+      "mall_name": "풀무원 공식몰",
+      "unit_price": 3810
+    },
+    {
+      "date": "2026-10-27",
+      "price": 15160,
+      "mall_name": "풀무원 공식몰",
+      "unit_price": 3790
+    },
+    {
+      "date": "2026-10-28",
+      "price": 15380,
+      "mall_name": "풀무원 공식몰",
+      "unit_price": 3845
+    },
+    {
+      "date": "2026-10-29",
+      "price": 14900,
+      "mall_name": "풀무원 공식몰",
+      "unit_price": 3725
+    },
+    {
+      "date": "2026-10-30",
+      "price": 14920,
+      "mall_name": "풀무원 공식몰",
+      "unit_price": 3730
+    },
+    {
+      "date": "2026-10-31",
+      "price": 14940,
+      "mall_name": "풀무원 공식몰",
+      "unit_price": 3735
+    },
+    {
+      "date": "2026-11-01",
+      "price": 15070,
+      "mall_name": "풀무원 공식몰",
+      "unit_price": 3768
+    },
+    {
+      "date": "2026-11-02",
+      "price": 14950,
+      "mall_name": "풀무원 공식몰",
+      "unit_price": 3738
+    },
+    {
+      "date": "2026-11-03",
+      "price": 14790,
+      "mall_name": "풀무원 공식몰",
+      "unit_price": 3698
+    },
+    {
+      "date": "2026-11-04",
+      "price": 15010,
+      "mall_name": "풀무원 공식몰",
+      "unit_price": 3752
+    },
+    {
+      "date": "2026-11-05",
+      "price": 14740,
+      "mall_name": "풀무원 공식몰",
+      "unit_price": 3685
+    },
+    {
+      "date": "2026-11-06",
+      "price": 14310,
+      "mall_name": "풀무원 공식몰",
+      "unit_price": 3578
+    },
+    {
+      "date": "2026-11-07",
+      "price": 14660,
+      "mall_name": "풀무원 공식몰",
+      "unit_price": 3665
+    },
+    {
+      "date": "2026-11-08",
+      "price": 14190,
+      "mall_name": "풀무원 공식몰",
+      "unit_price": 3548
+    },
+    {
+      "date": "2026-11-09",
+      "price": 14150,
+      "mall_name": "풀무원 공식몰",
+      "unit_price": 3538
+    },
+    {
+      "date": "2026-11-10",
+      "price": 14190,
+      "mall_name": "풀무원 공식몰",
+      "unit_price": 3548
+    },
+    {
+      "date": "2026-11-11",
+      "price": 14100,
+      "mall_name": "풀무원 공식몰",
+      "unit_price": 3525
+    },
+    {
+      "date": "2026-11-12",
+      "price": 13950,
+      "mall_name": "풀무원 공식몰",
+      "unit_price": 3488
+    },
+    {
+      "date": "2026-11-13",
+      "price": 14260,
+      "mall_name": "풀무원 공식몰",
+      "unit_price": 3565
+    },
+    {
+      "date": "2026-11-14",
+      "price": 14310,
+      "mall_name": "풀무원 공식몰",
+      "unit_price": 3578
+    },
+    {
+      "date": "2026-11-15",
+      "price": 14010,
+      "mall_name": "풀무원 공식몰",
+      "unit_price": 3502
+    },
+    {
+      "date": "2026-11-16",
+      "price": 13900,
+      "mall_name": "풀무원 공식몰",
+      "unit_price": 3475
+    }
+  ],
+  "하림 닭가슴살 오리지널 100g 10팩": [
+    {
+      "date": "2026-10-18",
+      "price": 14420,
+      "mall_name": "하림 공식몰",
+      "unit_price": 1442
+    },
+    {
+      "date": "2026-10-19",
+      "price": 14260,
+      "mall_name": "하림 공식몰",
+      "unit_price": 1426
+    },
+    {
+      "date": "2026-10-20",
+      "price": 14350,
+      "mall_name": "하림 공식몰",
+      "unit_price": 1435
+    },
+    {
+      "date": "2026-10-21",
+      "price": 14240,
+      "mall_name": "하림 공식몰",
+      "unit_price": 1424
+    },
+    {
+      "date": "2026-10-22",
+      "price": 14300,
+      "mall_name": "하림 공식몰",
+      "unit_price": 1430
+    },
+    {
+      "date": "2026-10-23",
+      "price": 13840,
+      "mall_name": "하림 공식몰",
+      "unit_price": 1384
+    },
+    {
+      "date": "2026-10-24",
+      "price": 13700,
+      "mall_name": "하림 공식몰",
+      "unit_price": 1370
+    },
+    {
+      "date": "2026-10-25",
+      "price": 13890,
+      "mall_name": "하림 공식몰",
+      "unit_price": 1389
+    },
+    {
+      "date": "2026-10-26",
+      "price": 13620,
+      "mall_name": "하림 공식몰",
+      "unit_price": 1362
+    },
+    {
+      "date": "2026-10-27",
+      "price": 13750,
+      "mall_name": "하림 공식몰",
+      "unit_price": 1375
+    },
+    {
+      "date": "2026-10-28",
+      "price": 13940,
+      "mall_name": "하림 공식몰",
+      "unit_price": 1394
+    },
+    {
+      "date": "2026-10-29",
+      "price": 13950,
+      "mall_name": "하림 공식몰",
+      "unit_price": 1395
+    },
+    {
+      "date": "2026-10-30",
+      "price": 13440,
+      "mall_name": "하림 공식몰",
+      "unit_price": 1344
+    },
+    {
+      "date": "2026-10-31",
+      "price": 13360,
+      "mall_name": "하림 공식몰",
+      "unit_price": 1336
+    },
+    {
+      "date": "2026-11-01",
+      "price": 13420,
+      "mall_name": "하림 공식몰",
+      "unit_price": 1342
+    },
+    {
+      "date": "2026-11-02",
+      "price": 13720,
+      "mall_name": "하림 공식몰",
+      "unit_price": 1372
+    },
+    {
+      "date": "2026-11-03",
+      "price": 13330,
+      "mall_name": "하림 공식몰",
+      "unit_price": 1333
+    },
+    {
+      "date": "2026-11-04",
+      "price": 13280,
+      "mall_name": "하림 공식몰",
+      "unit_price": 1328
+    },
+    {
+      "date": "2026-11-05",
+      "price": 13530,
+      "mall_name": "하림 공식몰",
+      "unit_price": 1353
+    },
+    {
+      "date": "2026-11-06",
+      "price": 13130,
+      "mall_name": "하림 공식몰",
+      "unit_price": 1313
+    },
+    {
+      "date": "2026-11-07",
+      "price": 13060,
+      "mall_name": "하림 공식몰",
+      "unit_price": 1306
+    },
+    {
+      "date": "2026-11-08",
+      "price": 13470,
+      "mall_name": "하림 공식몰",
+      "unit_price": 1347
+    },
+    {
+      "date": "2026-11-09",
+      "price": 13100,
+      "mall_name": "하림 공식몰",
+      "unit_price": 1310
+    },
+    {
+      "date": "2026-11-10",
+      "price": 13080,
+      "mall_name": "하림 공식몰",
+      "unit_price": 1308
+    },
+    {
+      "date": "2026-11-11",
+      "price": 13110,
+      "mall_name": "하림 공식몰",
+      "unit_price": 1311
+    },
+    {
+      "date": "2026-11-12",
+      "price": 13200,
+      "mall_name": "하림 공식몰",
+      "unit_price": 1320
+    },
+    {
+      "date": "2026-11-13",
+      "price": 13250,
+      "mall_name": "하림 공식몰",
+      "unit_price": 1325
+    },
+    {
+      "date": "2026-11-14",
+      "price": 13180,
+      "mall_name": "하림 공식몰",
+      "unit_price": 1318
+    },
+    {
+      "date": "2026-11-15",
+      "price": 12810,
+      "mall_name": "하림 공식몰",
+      "unit_price": 1281
+    },
+    {
+      "date": "2026-11-16",
+      "price": 12900,
+      "mall_name": "하림 공식몰",
+      "unit_price": 1290
+    }
+  ],
+  "해표 식용유 1.8L 2병": [
+    {
+      "date": "2026-10-18",
+      "price": 15560,
+      "mall_name": "사조해표 공식몰",
+      "unit_price": 7780
+    },
+    {
+      "date": "2026-10-19",
+      "price": 15680,
+      "mall_name": "사조해표 공식몰",
+      "unit_price": 7840
+    },
+    {
+      "date": "2026-10-20",
+      "price": 15460,
+      "mall_name": "사조해표 공식몰",
+      "unit_price": 7730
+    },
+    {
+      "date": "2026-10-21",
+      "price": 15620,
+      "mall_name": "사조해표 공식몰",
+      "unit_price": 7810
+    },
+    {
+      "date": "2026-10-22",
+      "price": 15580,
+      "mall_name": "사조해표 공식몰",
+      "unit_price": 7790
+    },
+    {
+      "date": "2026-10-23",
+      "price": 15210,
+      "mall_name": "사조해표 공식몰",
+      "unit_price": 7605
+    },
+    {
+      "date": "2026-10-24",
+      "price": 15330,
+      "mall_name": "사조해표 공식몰",
+      "unit_price": 7665
+    },
+    {
+      "date": "2026-10-25",
+      "price": 15080,
+      "mall_name": "사조해표 공식몰",
+      "unit_price": 7540
+    },
+    {
+      "date": "2026-10-26",
+      "price": 15090,
+      "mall_name": "사조해표 공식몰",
+      "unit_price": 7545
+    },
+    {
+      "date": "2026-10-27",
+      "price": 14740,
+      "mall_name": "사조해표 공식몰",
+      "unit_price": 7370
+    },
+    {
+      "date": "2026-10-28",
+      "price": 15070,
+      "mall_name": "사조해표 공식몰",
+      "unit_price": 7535
+    },
+    {
+      "date": "2026-10-29",
+      "price": 14980,
+      "mall_name": "사조해표 공식몰",
+      "unit_price": 7490
+    },
+    {
+      "date": "2026-10-30",
+      "price": 15040,
+      "mall_name": "사조해표 공식몰",
+      "unit_price": 7520
+    },
+    {
+      "date": "2026-10-31",
+      "price": 14930,
+      "mall_name": "사조해표 공식몰",
+      "unit_price": 7465
+    },
+    {
+      "date": "2026-11-01",
+      "price": 14670,
+      "mall_name": "사조해표 공식몰",
+      "unit_price": 7335
+    },
+    {
+      "date": "2026-11-02",
+      "price": 14740,
+      "mall_name": "사조해표 공식몰",
+      "unit_price": 7370
+    },
+    {
+      "date": "2026-11-03",
+      "price": 14320,
+      "mall_name": "사조해표 공식몰",
+      "unit_price": 7160
+    },
+    {
+      "date": "2026-11-04",
+      "price": 14230,
+      "mall_name": "사조해표 공식몰",
+      "unit_price": 7115
+    },
+    {
+      "date": "2026-11-05",
+      "price": 14520,
+      "mall_name": "사조해표 공식몰",
+      "unit_price": 7260
+    },
+    {
+      "date": "2026-11-06",
+      "price": 14690,
+      "mall_name": "사조해표 공식몰",
+      "unit_price": 7345
+    },
+    {
+      "date": "2026-11-07",
+      "price": 14580,
+      "mall_name": "사조해표 공식몰",
+      "unit_price": 7290
+    },
+    {
+      "date": "2026-11-08",
+      "price": 14010,
+      "mall_name": "사조해표 공식몰",
+      "unit_price": 7005
+    },
+    {
+      "date": "2026-11-09",
+      "price": 14450,
+      "mall_name": "사조해표 공식몰",
+      "unit_price": 7225
+    },
+    {
+      "date": "2026-11-10",
+      "price": 14210,
+      "mall_name": "사조해표 공식몰",
+      "unit_price": 7105
+    },
+    {
+      "date": "2026-11-11",
+      "price": 14180,
+      "mall_name": "사조해표 공식몰",
+      "unit_price": 7090
+    },
+    {
+      "date": "2026-11-12",
+      "price": 14200,
+      "mall_name": "사조해표 공식몰",
+      "unit_price": 7100
+    },
+    {
+      "date": "2026-11-13",
+      "price": 14040,
+      "mall_name": "사조해표 공식몰",
+      "unit_price": 7020
+    },
+    {
+      "date": "2026-11-14",
+      "price": 13680,
+      "mall_name": "사조해표 공식몰",
+      "unit_price": 6840
+    },
+    {
+      "date": "2026-11-15",
+      "price": 13930,
+      "mall_name": "사조해표 공식몰",
+      "unit_price": 6965
+    },
+    {
+      "date": "2026-11-16",
+      "price": 13800,
+      "mall_name": "사조해표 공식몰",
+      "unit_price": 6900
+    }
+  ]
+}
