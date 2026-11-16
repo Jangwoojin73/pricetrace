@@ -1200,9 +1200,9 @@ function renderAll(data) {
     elements.productTitle.textContent = representative_item.title || keyword;
     elements.lowestPriceDisplay.textContent = formatCurrency(lowest_price);
     
-    // 단위 단가 표시 (수량 자동 감지)
+    // 단위 단가 표시 (수량 자동 감지 - 슬림 컴팩트 라벨)
     if (elements.unitPriceLabel) {
-      elements.unitPriceLabel.textContent = unit_count > 1 ? `1개/봉당 환산가 (${unit_count}개입)` : '1개당 가격';
+      elements.unitPriceLabel.textContent = unit_count > 1 ? `개당 (${unit_count}개입)` : '1개당';
     }
     elements.unitPriceDisplay.textContent = `약 ${formatCurrency(unit_price)}원`;
 
@@ -1232,15 +1232,15 @@ function renderAll(data) {
       elements.directBuySubBtn.onclick = () => window.open(safeBuyUrl, "_blank", "noopener,noreferrer");
     }
 
-    // 할인 뱃지
+    // 할인 뱃지 (줄바꿈 방지 whitespace-nowrap)
     if (is_special_price && discount_amount > 0) {
       const discountRate = target_price > 0 ? Math.round((discount_amount / target_price) * 100) : 0;
       elements.discountBadge.textContent = `목표가 대비 -${formatCurrency(discount_amount)}원 (-${discountRate}%)`;
-      elements.discountBadge.className = "text-xs sm:text-sm font-bold text-coupang bg-coupang/10 px-2.5 py-0.5 rounded-lg ml-2";
+      elements.discountBadge.className = "text-xs sm:text-sm font-bold text-coupang bg-coupang/10 px-2 py-0.5 rounded-lg ml-1 sm:ml-2 whitespace-nowrap";
     } else {
       const diff = lowest_price - target_price;
       elements.discountBadge.textContent = `목표가 대비 +${formatCurrency(diff)}원`;
-      elements.discountBadge.className = "text-xs sm:text-sm font-bold text-slate-600 bg-slate-200 px-2.5 py-0.5 rounded-lg ml-2";
+      elements.discountBadge.className = "text-xs sm:text-sm font-bold text-slate-600 bg-slate-200 px-2 py-0.5 rounded-lg ml-1 sm:ml-2 whitespace-nowrap";
     }
   }
 
