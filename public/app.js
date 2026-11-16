@@ -1138,7 +1138,7 @@ function renderAll(data) {
   // 검색 결과가 없는 경우 깔끔한 안내 화면
   if (!data.success || lowest_price <= 0) {
     elements.topBannerText.textContent = `${keyword} 검색 결과 없음`;
-    elements.alertBanner.className = "relative overflow-hidden rounded-3xl p-5 sm:p-6 transition-all duration-300 shadow-md bg-amber-50 border border-amber-200";
+    elements.alertBanner.className = "relative overflow-hidden rounded-2xl sm:rounded-3xl p-3.5 sm:p-5 md:p-6 transition-all duration-300 shadow-md bg-amber-50 border border-amber-200";
     elements.alertIconBox.textContent = "🔍";
     elements.alertStatusBadge.textContent = "결과 없음";
     elements.alertMainMessage.textContent = data.alert_message || "해당 상품에 대한 최저가 정보를 찾지 못했습니다.";
@@ -1168,14 +1168,14 @@ function renderAll(data) {
 
   // 특가 배너 스타일 토글 (알림 활성화 여부 반영)
   if (!state.alertEnabled) {
-    elements.alertBanner.className = "relative overflow-hidden rounded-3xl p-5 sm:p-6 transition-all duration-300 shadow-md bg-slate-100 border border-slate-300 text-slate-800";
+    elements.alertBanner.className = "relative overflow-hidden rounded-2xl sm:rounded-3xl p-3.5 sm:p-5 md:p-6 transition-all duration-300 shadow-md bg-slate-100 border border-slate-300 text-slate-800";
     elements.alertIconBox.textContent = "🔕";
     elements.alertStatusBadge.textContent = "알림 끔";
     elements.alertStatusBadge.className = "px-2.5 py-0.5 rounded-full text-xs font-extrabold uppercase tracking-wide bg-slate-200 text-slate-700";
     elements.alertMainMessage.textContent = "목표가 도달 알림이 꺼져 있습니다.";
     elements.alertDescription.innerHTML = `현재 1위 최저가는 <strong>${formatCurrency(lowest_price)}원</strong>입니다. 우측 상단 토글을 켜면 목표가(${formatCurrency(target_price)}원) 도달 시 특가 안내를 받으실 수 있습니다.`;
   } else if (is_special_price) {
-    elements.alertBanner.className = "relative overflow-hidden rounded-3xl p-5 sm:p-6 transition-all duration-300 shadow-md banner-special";
+    elements.alertBanner.className = "relative overflow-hidden rounded-2xl sm:rounded-3xl p-3.5 sm:p-5 md:p-6 transition-all duration-300 shadow-md banner-special";
     elements.alertIconBox.textContent = "🚨";
     elements.alertStatusBadge.textContent = "특가 감지";
     elements.alertStatusBadge.className = "px-2.5 py-0.5 rounded-full text-xs font-extrabold uppercase tracking-wide";
@@ -1186,7 +1186,7 @@ function renderAll(data) {
     // 🔔 목표가 이하 특가 달성 시 차임벨 소리 및 햅틱 진동 피드백 발동
     notifySpecialPrice(keyword, lowest_price, false, target_price);
   } else {
-    elements.alertBanner.className = "relative overflow-hidden rounded-3xl p-5 sm:p-6 transition-all duration-300 shadow-md banner-normal";
+    elements.alertBanner.className = "relative overflow-hidden rounded-2xl sm:rounded-3xl p-3.5 sm:p-5 md:p-6 transition-all duration-300 shadow-md banner-normal";
     elements.alertIconBox.textContent = "ℹ️";
     elements.alertStatusBadge.textContent = "가격 관망";
     elements.alertStatusBadge.className = "px-2.5 py-0.5 rounded-full text-xs font-extrabold uppercase tracking-wide";
@@ -1351,40 +1351,42 @@ function renderComparisonGrid(items, unit_count = 1) {
     }
 
     return `
-      <div class="rank-card relative bg-white rounded-3xl p-5 ${borderClass} flex flex-col justify-between space-y-4 card-hover">
-        <div class="flex items-center justify-between">
-          <span class="inline-flex items-center space-x-1 text-xs font-black ${medalClass} px-3 py-1 rounded-full">
-            <span>${medal}</span>
-          </span>
-          ${isFirst ? '<span class="text-xs text-naver font-bold flex items-center"><i data-lucide="zap" class="w-3.5 h-3.5 mr-0.5"></i> 실시간 최저</span>' : ''}
+      <div class="rank-card relative bg-white rounded-2xl md:rounded-3xl p-3.5 md:p-5 ${borderClass} flex flex-col justify-between gap-2.5 md:space-y-4 card-hover transition-all">
+        <div class="flex items-center justify-between gap-2">
+          <div class="flex items-center space-x-1.5 flex-wrap">
+            <span class="inline-flex items-center space-x-1 text-[11px] md:text-xs font-black ${medalClass} px-2.5 py-0.5 md:px-3 md:py-1 rounded-full">
+              <span>${medal}</span>
+            </span>
+            <span class="text-[10px] md:text-[11px] px-1.5 py-0.5 rounded-md border ${mallBadgeClass}">${mallLogoPrefix}</span>
+            <span class="text-[11px] md:text-xs text-slate-500 font-semibold truncate max-w-[120px] sm:max-w-none">${mallRaw}</span>
+          </div>
+          ${isFirst ? '<span class="text-[11px] md:text-xs text-naver font-bold flex items-center shrink-0"><i data-lucide="zap" class="w-3 h-3 md:w-3.5 md:h-3.5 mr-0.5"></i> 최저</span>' : ''}
         </div>
         <div>
-          <div class="flex items-center gap-1.5 mb-1.5">
-            <span class="text-[11px] px-2 py-0.5 rounded-md border ${mallBadgeClass}">${mallLogoPrefix}</span>
-            <span class="text-xs text-slate-500 font-semibold truncate">${mallRaw}</span>
-          </div>
-          <h4 class="text-sm font-bold text-slate-900 mt-1 line-clamp-2 leading-snug" title="${safeTitleAttr}">${item.title}</h4>
-          <div class="mt-3 flex items-baseline space-x-1">
-            <span class="text-2xl font-black text-slate-900">${formatCurrency(item.price)}</span>
-            <span class="text-sm font-bold text-slate-700">원</span>
-            ${unitText}
-          </div>
-          <div class="mt-2 text-xs text-slate-500 flex items-center space-x-2">
+          <h4 class="text-xs sm:text-sm font-bold text-slate-900 line-clamp-1 md:line-clamp-2 leading-snug" title="${safeTitleAttr}">${item.title}</h4>
+          <div class="mt-1 text-[10px] sm:text-xs text-slate-400 flex items-center space-x-1.5">
             <span>${reviewCnt}</span>
             <span>·</span>
             <span>${scoreVal}</span>
           </div>
         </div>
-        <a 
-          href="${safeItemUrl}" 
-          target="_blank" 
-          rel="noopener noreferrer" 
-          referrerpolicy="no-referrer"
-          class="w-full py-2.5 text-center ${btnClass} text-xs font-extrabold rounded-xl transition-colors flex items-center justify-center space-x-1"
-        >
-          <span>구매 페이지 열기</span>
-          <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
-        </a>
+        <div class="flex items-center justify-between md:flex-col md:items-stretch gap-2 pt-1.5 border-t border-slate-100 md:border-t-0 md:pt-0">
+          <div class="flex items-baseline space-x-1">
+            <span class="text-lg sm:text-xl md:text-2xl font-black text-slate-900">${formatCurrency(item.price)}</span>
+            <span class="text-xs sm:text-sm font-bold text-slate-700">원</span>
+            ${unitText}
+          </div>
+          <a 
+            href="${safeItemUrl}" 
+            target="_blank" 
+            rel="noopener noreferrer" 
+            referrerpolicy="no-referrer"
+            class="px-3.5 py-1.5 md:w-full md:py-2.5 text-center ${btnClass} text-xs font-extrabold rounded-xl transition-all flex items-center justify-center space-x-1 shrink-0 active:scale-95 shadow-xs cursor-pointer"
+          >
+            <span>구매 열기</span>
+            <i data-lucide="external-link" class="w-3 h-3 md:w-3.5 md:h-3.5"></i>
+          </a>
+        </div>
       </div>
     `;
   }).join("");
