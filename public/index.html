@@ -332,42 +332,52 @@
     <!-- ============================================== -->
     <!-- [VIEW 1] 초기 웰컴 & 서비스 탐색 화면 (Welcome View) -->
     <!-- ============================================== -->
-    <div id="welcomeView" class="space-y-10">
+    <div id="welcomeView" class="space-y-4 sm:space-y-6 md:space-y-8">
 
-      <!-- 1. 웰컴 히어로 헤더 (코드 그래픽 배경 이미지 테마) -->
-      <div id="welcomeHeroSection" class="hero-bg-banner relative overflow-hidden rounded-3xl text-white p-7 sm:p-10 shadow-2xl border border-blue-800/60">
+      <!-- 1. 웰컴 히어로 헤더 (모바일 슬림 컴팩트 핏 / 데스크톱 볼드 핏) -->
+      <div id="welcomeHeroSection" class="hero-bg-banner relative overflow-hidden rounded-2xl sm:rounded-3xl text-white p-3.5 sm:p-7 md:p-8 lg:p-10 shadow-xl border border-blue-800/60">
         <!-- 배경 오버레이 및 장식 글로우 -->
         <div class="hero-bg-overlay absolute inset-0 pointer-events-none"></div>
         <div class="absolute -right-20 -top-20 w-80 h-80 bg-blue-600/20 rounded-full blur-3xl pointer-events-none"></div>
         <div class="absolute -left-20 -bottom-20 w-80 h-80 bg-indigo-600/25 rounded-full blur-3xl pointer-events-none"></div>
 
-        <div class="relative z-10 max-w-3xl lg:max-w-5xl space-y-4">
-          <div class="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-blue-500/15 border border-blue-400/30 text-sky-300 text-xs font-bold tracking-wide uppercase">
-            <i data-lucide="sparkles" class="w-3.5 h-3.5 text-sky-400"></i>
+        <div class="relative z-10 max-w-3xl lg:max-w-5xl space-y-1.5 sm:space-y-3 md:space-y-4">
+          <div class="inline-flex items-center space-x-1.5 px-2 py-0.5 sm:px-3 sm:py-1 rounded-full bg-blue-500/15 border border-blue-400/30 text-sky-300 text-[10px] sm:text-xs font-bold tracking-wide uppercase">
+            <i data-lucide="sparkles" class="w-3 h-3 sm:w-3.5 sm:h-3.5 text-sky-400"></i>
             <span>실시간 이커머스 최저가 추적 레이더</span>
           </div>
 
-          <h1 class="text-2xl sm:text-4xl font-black tracking-tight text-white leading-tight">
-            광고는 거르고,<br class="hidden sm:block">
-            <span class="text-transparent bg-clip-text bg-gradient-to-r from-sky-300 via-blue-400 to-indigo-300">1개당 진짜 최저가</span>를 찾아드립니다
+          <h1 class="text-[15px] sm:text-2xl md:text-3xl lg:text-4xl font-black tracking-tight text-white leading-tight">
+            광고는 거르고, <span class="text-transparent bg-clip-text bg-gradient-to-r from-sky-300 via-blue-400 to-indigo-300">1개당 진짜 최저가</span>를 찾아드립니다
           </h1>
 
-          <p class="text-slate-100 text-xs sm:text-sm font-normal leading-relaxed pt-1 lg:whitespace-nowrap">
-            수많은 미끼 상품과 스폰서 광고 속에서, <strong class="text-white font-bold">네이버 쇼핑 공식 카탈로그</strong>와 <strong class="text-white font-bold">스마트스토어</strong>의 
-            <strong class="text-yellow-300 font-extrabold">배송비 포함 실구매가</strong> 및 <strong class="text-yellow-300 font-extrabold">묶음당 개당 환산단가</strong>를 실시간으로 비교 분석합니다.
+          <!-- 모바일 전용 콤팩트 1줄 핵심 뱃지 바 (세로 길이 획기적 단축) -->
+          <div class="flex sm:hidden items-center gap-1.5 text-[10px] text-yellow-300 font-bold pt-0.5 flex-wrap">
+            <span class="flex items-center gap-1">
+              <i data-lucide="check-circle-2" class="w-3 h-3 text-yellow-300"></i> 배송비 포함 실구매가
+            </span>
+            <span class="text-slate-400">•</span>
+            <span class="flex items-center gap-1">
+              <i data-lucide="check-circle-2" class="w-3 h-3 text-yellow-300"></i> 1개당 단가 자동 환산
+            </span>
+          </div>
+
+          <!-- 태블릿/데스크톱 상세 설명 및 3대 특징 배지 (모바일에서는 숨김 처리하여 스크롤 완전 제거) -->
+          <p class="hidden sm:block text-slate-100 text-xs md:text-sm font-normal leading-relaxed pt-0.5">
+            네이버 쇼핑 공식 카탈로그와 스마트스토어의 <strong class="text-yellow-300 font-extrabold">배송비 포함 실구매가</strong> 및 <strong class="text-yellow-300 font-extrabold">묶음당 개당 환산단가</strong>를 실시간으로 비교 분석합니다.
           </p>
 
-          <div class="pt-2 flex flex-wrap items-center gap-3 text-xs text-slate-200 font-medium">
-            <span class="flex items-center gap-1.5 text-yellow-300 font-bold">
-              <i data-lucide="check-circle-2" class="w-4 h-4 text-yellow-300"></i> 광고(AD) 자동 필터링
+          <div class="hidden sm:flex pt-1 flex-wrap items-center gap-2 sm:gap-3 text-xs text-slate-200 font-medium">
+            <span class="flex items-center gap-1 text-yellow-300 font-bold">
+              <i data-lucide="check-circle-2" class="w-3.5 h-3.5 text-yellow-300"></i> 광고(AD) 자동 필터링
             </span>
             <span class="text-slate-400">•</span>
-            <span class="flex items-center gap-1.5 text-yellow-300 font-bold">
-              <i data-lucide="check-circle-2" class="w-4 h-4 text-yellow-300"></i> 1개당 단가 자동 환산
+            <span class="flex items-center gap-1 text-yellow-300 font-bold">
+              <i data-lucide="check-circle-2" class="w-3.5 h-3.5 text-yellow-300"></i> 1개당 단가 자동 환산
             </span>
             <span class="text-slate-400">•</span>
-            <span class="flex items-center gap-1.5 text-yellow-300 font-bold">
-              <i data-lucide="check-circle-2" class="w-4 h-4 text-yellow-300"></i> 30일 시세 변동 추이
+            <span class="flex items-center gap-1 text-yellow-300 font-bold">
+              <i data-lucide="check-circle-2" class="w-3.5 h-3.5 text-yellow-300"></i> 30일 시세 변동 추이
             </span>
           </div>
         </div>
