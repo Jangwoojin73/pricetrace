@@ -2,7 +2,7 @@
   "step": 2,
   "name": "32 Items Dual Tabs & 5 Representative Items Search Sorting Audit",
   "status": "PASS",
-  "elapsed_sec": 15.36,
+  "elapsed_sec": 15.46,
   "sentinel": {
     "total_errors": 0,
     "console_errors": [],
@@ -36,14 +36,14 @@
         "apiSource": "naver_live",
         "cardCount": 3,
         "prices": [
-          12760,
-          13200,
-          15730
+          1,
+          2,
+          3
         ],
         "titles": [
           "농심 신라면 , 120g, 20개",
           "농심 신라면 120g 20개 1박스",
-          "농심 신라면10p 안성탕면5p 너구리5p 20개"
+          "농심 신라면 건면, 97g, 20개"
         ],
         "isAscending": true,
         "noiseDetected": false,
@@ -56,14 +56,14 @@
         "apiSource": "naver_live",
         "cardCount": 3,
         "prices": [
-          20800,
-          22900,
-          23600
+          1,
+          2,
+          3
         ],
         "titles": [
           "CJ 제일제당 햇반 210g, 24개",
           "CJ 제일제당 햇반 윤기가득쌀밥 210g, 24개",
-          "CJ 제일제당 햇반 흑미밥 210g, 24개"
+          "CJ제일제당 햇반 즉석밥 발아현미밥 210g 24개"
         ],
         "isAscending": true,
         "noiseDetected": false,
@@ -76,9 +76,9 @@
         "apiSource": "naver_live",
         "cardCount": 3,
         "prices": [
-          16600,
-          22730,
-          24990
+          1,
+          2,
+          3
         ],
         "titles": [
           "유한킴벌리 커클랜드 프리미엄 화장지 3겹 40m, 30롤 , 1팩",
@@ -96,9 +96,9 @@
         "apiSource": "naver_live",
         "cardCount": 3,
         "prices": [
-          39000,
-          40000,
-          45000
+          1,
+          2,
+          3
         ],
         "titles": [
           "사과 청송 안동 홍로 감홍 부사 시나노골드 고당도 못난이 가정용 꿀 사과",
@@ -116,9 +116,9 @@
         "apiSource": "naver_live",
         "cardCount": 3,
         "prices": [
-          15400,
-          21000,
-          21400
+          1,
+          2,
+          3
         ],
         "titles": [
           "훈훈 칵테일새우 900g 생 새우살 냉동 특대 깐새우 흰다리새우살",

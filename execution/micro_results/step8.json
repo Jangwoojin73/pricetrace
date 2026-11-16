@@ -3,7 +3,7 @@
   "name": "UI Enhancements Audit, Vercel Cross-Check & Final Report Assembly",
   "status": "PASS",
   "fail_reasons": [],
-  "elapsed_sec": 13.92,
+  "elapsed_sec": 20.05,
   "sentinel": {
     "total_errors": 0,
     "console_errors": [],
@@ -67,6 +67,29 @@
         "isCollapsed": false
       },
       "live_v161_verified": true
+    },
+    "session_ui_improvements": {
+      "welcome_hero": {
+        "heroHeight": 121,
+        "dualTabsTop": 335,
+        "titleText": "광고는 거르고, 1개당 진짜 최저가를 찾아드립니다",
+        "mobileBadgeVisible": true,
+        "desktopDescHidden": true
+      },
+      "result_view": {
+        "scrollY": 0,
+        "isTopStart": true,
+        "alertHeight": 177,
+        "alertTop": 294,
+        "navBarMarginBottom": "4px",
+        "hasAlertToggle": true,
+        "priceBoxHeight": 112,
+        "buyBtnInline": true
+      },
+      "snap_slim_hero": "C:\\Users\\ROG\\.gemini\\antigravity\\brain\\1853f434-165f-4049-bb73-2739a84f7b41\\audit_08_mobile_slim_hero_card.png",
+      "snap_result_top": "C:\\Users\\ROG\\.gemini\\antigravity\\brain\\1853f434-165f-4049-bb73-2739a84f7b41\\audit_08_search_result_top_start.png",
+      "hero_slim_passed": true,
+      "result_top_start_passed": true
     }
   }
 }

@@ -146,7 +146,7 @@ def main():
             res = page.evaluate('''() => {
                 const cards = Array.from(document.querySelectorAll("#priceComparisonGrid .rank-card"));
                 const prices = cards.map(c => {
-                    const pEl = c.querySelector("span.text-2xl.font-black");
+                    const pEl = c.querySelector("span[class*='font-black']") || c.querySelector("span.text-slate-900.font-black");
                     return pEl ? parseInt(pEl.innerText.replace(/[^0-9]/g, ""), 10) || 0 : 0;
                 }).filter(p => p > 0);
                 const titles = cards.map(c => c.querySelector("h4")?.innerText?.trim() || "");

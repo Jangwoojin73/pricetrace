@@ -254,8 +254,74 @@ def main():
             "up_revealed": live_up,
             "live_v161_verified": live_down["isCollapsed"] and live_down["searchHeight"] == 0 and (not live_up["isCollapsed"]) and live_up["searchHeight"] >= 70
         }
-        live_ctx.close()
 
+        # -----------------------------------------------------------------
+        # 8-4. [오늘 대화 세션 신규 개선 항목 전수 실측 v1.7.4]
+        # (1) 시작화면 웰컴 히어로 '광고는 거르고...' 초슬림화 (310px -> 100~121px)
+        # (2) 검색 결과 상세 화면 상부 시작점(top:0) 및 특가감지 토글/공백 축소
+        # -----------------------------------------------------------------
+        # (A) 모바일 웰컴 히어로 카드 초슬림 실측
+        live_hero_eval = p_live.evaluate('''() => {
+            const hero = document.getElementById("welcomeHeroSection");
+            const heroR = hero ? hero.getBoundingClientRect() : null;
+            const dualTabs = document.getElementById("dualTabButtonsTray");
+            const dtR = dualTabs ? dualTabs.getBoundingClientRect() : null;
+            const heroTitle = hero ? hero.querySelector("h1") : null;
+            const mobileBadge = hero ? hero.querySelector(".flex.sm\\\\:hidden") : null;
+            const desktopDesc = hero ? hero.querySelector("p.hidden.sm\\\\:block") : null;
+            return {
+                heroHeight: heroR ? Math.round(heroR.height) : null,
+                dualTabsTop: dtR ? Math.round(dtR.top) : null,
+                titleText: heroTitle ? heroTitle.innerText.trim() : "",
+                mobileBadgeVisible: mobileBadge ? window.getComputedStyle(mobileBadge).display !== "none" : false,
+                desktopDescHidden: desktopDesc ? window.getComputedStyle(desktopDesc).display === "none" : false
+            };
+        }''')
+        snap_slim_hero = os.path.join(ARTIFACT_DIR, "audit_08_mobile_slim_hero_card.png")
+        safe_screenshot(p_live, snap_slim_hero)
+
+        # (B) 검색 결과 화면 상부 시작점 & 특가 감지 토글 & 컴팩트 카드 실측
+        p_live.evaluate("window.scrollTo({ top: 0, behavior: 'instant' })")
+        p_live.fill("#searchInput", "CJ제일제당 햇반 210g 24개")
+        p_live.press("#searchInput", "Enter")
+        p_live.wait_for_selector("#priceComparisonGrid .rank-card", timeout=12000)
+        p_live.wait_for_timeout(1000)
+
+        result_view_eval = p_live.evaluate('''() => {
+            const rv = document.getElementById("resultView");
+            const alertB = document.getElementById("alertBanner");
+            const alertR = alertB ? alertB.getBoundingClientRect() : null;
+            const toggleBox = alertB ? alertB.querySelector("#alertToggleSwitch") : null;
+            const navBar = rv ? rv.querySelector("div:first-child") : null;
+            const navBarMargin = navBar ? window.getComputedStyle(navBar).marginBottom : null;
+            const buyBtn = document.getElementById("buyButton");
+            const buyBtnR = buyBtn ? buyBtn.getBoundingClientRect() : null;
+            const priceBox = buyBtn ? buyBtn.closest(".bg-gradient-to-br") : null;
+            const priceBoxR = priceBox ? priceBox.getBoundingClientRect() : null;
+            return {
+                scrollY: window.scrollY,
+                isTopStart: window.scrollY === 0,
+                alertHeight: alertR ? Math.round(alertR.height) : null,
+                alertTop: alertR ? Math.round(alertR.top) : null,
+                navBarMarginBottom: navBarMargin,
+                hasAlertToggle: !!toggleBox,
+                priceBoxHeight: priceBoxR ? Math.round(priceBoxR.height) : null,
+                buyBtnInline: buyBtnR && priceBoxR ? (buyBtnR.top >= priceBoxR.top && buyBtnR.bottom <= priceBoxR.bottom + 10) : false
+            };
+        }''')
+        snap_result_top = os.path.join(ARTIFACT_DIR, "audit_08_search_result_top_start.png")
+        safe_screenshot(p_live, snap_result_top)
+
+        metrics["session_ui_improvements"] = {
+            "welcome_hero": live_hero_eval,
+            "result_view": result_view_eval,
+            "snap_slim_hero": snap_slim_hero,
+            "snap_result_top": snap_result_top,
+            "hero_slim_passed": live_hero_eval["heroHeight"] is not None and live_hero_eval["heroHeight"] <= 130,
+            "result_top_start_passed": result_view_eval["isTopStart"] and result_view_eval["hasAlertToggle"]
+        }
+
+        live_ctx.close()
         browser.close()
 
     s_sum = sentinel_summary(s_all)
@@ -363,6 +429,7 @@ def assemble_final_markdown():
     s8_mob = s8_m.get("mobile_ui", {})
     s8_pc = s8_m.get("pc_ui", {})
     s8_live = s8_m.get("prod_live_crosscheck", {})
+    s8_session = s8_m.get("session_ui_improvements", {})
 
     # Artifacts matrix
     artifact_files = [
@@ -393,7 +460,9 @@ def assemble_final_markdown():
         "audit_07_pwa_install_elements.png",
         "audit_08_mobile_calibrated_header_10px.png",
         "audit_08_pc_header_high_contrast.png",
-        "audit_08_mobile_footer_clearance.png"
+        "audit_08_mobile_footer_clearance.png",
+        "audit_08_mobile_slim_hero_card.png",
+        "audit_08_search_result_top_start.png"
     ]
 
     artifact_rows = []
@@ -477,6 +546,16 @@ def assemble_final_markdown():
   - 모바일 푸터 클리어런스: 좌측정렬=`{s8_mob.get('footer_clearance', {}).get('textLeftAligned')}`, 배지 `{s8_mob.get('footer_clearance', {}).get('badgeCount')}개`, `paddingBottom="{s8_mob.get('footer_clearance', {}).get('footerPaddingBottom')}"`, 독 노출상태=`{s8_mob.get('footer_clearance', {}).get('navVisible')}`, 독 이격=`{s8_mob.get('footer_clearance', {}).get('clearancePx')}px`, 겹침=`{s8_mob.get('footer_clearance', {}).get('hasOverlap')}`
   - **Step 8 실측 미달/결함 사항**: `{results.get('step8', {}).get('fail_reasons', [])}`
 - **Vercel 프로덕션 교차 검증 (`{s8_live.get('url')}`)**: 다운 은닉=`{s8_live.get('down_collapsed')}` | 업 복귀=`{s8_live.get('up_revealed')}` | 최종 일치=`{s8_live.get('live_v161_verified')}`
+- **[오늘 대화 세션 신규 UI 개선 전수 실측 (v1.7.4)]**:
+  - **시작화면 웰컴 히어로 ('광고는 거르고...') 모바일 초슬림 실측**:
+    - 실측 높이: `{s8_session.get('welcome_hero', {}).get('heroHeight')}px` (기준 <= 130px, 판정=`{s8_session.get('hero_slim_passed')}`)
+    - 모바일 1줄 핵심 뱃지 노출=`{s8_session.get('welcome_hero', {}).get('mobileBadgeVisible')}`, 데스크톱용 긴 설명문 숨김=`{s8_session.get('welcome_hero', {}).get('desktopDescHidden')}`
+    - 듀얼 탭 스위처 상단 위치: `{s8_session.get('welcome_hero', {}).get('dualTabsTop')}px` (모바일 첫 화면 내 완전 노출 보장)
+  - **검색 결과 상세 화면 (Result View) 상부 시작점 및 컴팩트 카드 실측**:
+    - 검색 결과 진입 시 상부 시작점 스크롤: `scrollY={s8_session.get('result_view', {}).get('scrollY')}px` (상부 시작점 최상단 일치=`{s8_session.get('result_view', {}).get('isTopStart')}`)
+    - 특가 감지 토글 배너 높이: `{s8_session.get('result_view', {}).get('alertHeight')}px` (토글 스위치 정상=`{s8_session.get('result_view', {}).get('hasAlertToggle')}`)
+    - 초기 화면으로 돌아가기 버튼 상단 여백: `{s8_session.get('result_view', {}).get('navBarMarginBottom')}` (컴팩트 간격 확인)
+    - 대표 상품 최저가 가격 박스 높이: `{s8_session.get('result_view', {}).get('priceBoxHeight')}px` (구매 버튼 인라인 안착=`{s8_session.get('result_view', {}).get('buyBtnInline')}`)
 
 ---
 

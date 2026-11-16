@@ -2,7 +2,7 @@
   "step": 6,
   "name": "Radar Modal Autofocus, Dismissal, iOS Zoom Prevention & Arbitrary Search",
   "status": "PASS",
-  "elapsed_sec": 11.18,
+  "elapsed_sec": 12.65,
   "sentinel": {
     "total_errors": 0,
     "console_errors": [],
