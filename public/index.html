@@ -327,7 +327,7 @@
   </div>
 
   <!-- 메인 본문 컨테이너 (모바일/태블릿 하단 네비게이션 바 여백 pb-28 확보) -->
-  <main id="mainContent" class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 pb-28 lg:pb-8 space-y-8">
+  <main id="mainContent" class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 pt-2 sm:pt-4 md:pt-6 pb-28 lg:pb-8 space-y-4 sm:space-y-6 md:space-y-8">
 
     <!-- ============================================== -->
     <!-- [VIEW 1] 초기 웰컴 & 서비스 탐색 화면 (Welcome View) -->
@@ -497,20 +497,20 @@
     <!-- ============================================== -->
     <!-- [VIEW 2] 검색 결과 대시보드 화면 (Result View) -->
     <!-- ============================================== -->
-    <div id="resultView" class="space-y-4 sm:space-y-6 md:space-y-8 hidden">
+    <div id="resultView" class="space-y-3 sm:space-y-5 md:space-y-7 hidden">
 
-      <!-- 상단 네비게이션 (홈으로 돌아가기 & 현재 검색어 정보) -->
-      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5 pb-2.5 border-b border-slate-200/80">
+      <!-- 상단 네비게이션 (홈으로 돌아가기 & 현재 검색어 정보 - 상단 공백 최소화 컴팩트 바) -->
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1 pb-1.5 sm:pb-2.5 border-b border-slate-200/80">
         <button 
           id="backToHomeBtn" 
           type="button" 
-          class="inline-flex items-center space-x-1.5 text-xs sm:text-sm font-bold text-slate-600 hover:text-blue-600 transition-colors group px-2 sm:px-3 py-1.5 rounded-xl hover:bg-slate-100 self-start cursor-pointer"
+          class="inline-flex items-center space-x-1.5 text-xs sm:text-sm font-bold text-slate-600 hover:text-blue-600 transition-colors group px-1.5 sm:px-3 py-1 rounded-lg hover:bg-slate-100 self-start cursor-pointer"
         >
-          <i data-lucide="arrow-left" class="w-4 h-4 group-hover:-translate-x-1 transition-transform"></i>
+          <i data-lucide="arrow-left" class="w-3.5 h-3.5 sm:w-4 sm:h-4 group-hover:-translate-x-1 transition-transform"></i>
           <span>초기 화면으로 돌아가기</span>
         </button>
 
-        <div class="text-xs text-slate-500 font-medium pl-1 sm:pl-0">
+        <div class="text-[11px] sm:text-xs text-slate-500 font-medium pl-1 sm:pl-0">
           현재 검색어: <strong id="currentSearchKeywordText" class="text-slate-900 font-bold"></strong>
         </div>
       </div>

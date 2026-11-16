@@ -1007,6 +1007,13 @@ function switchToResultView(keyword) {
   state.view = "result";
   if (elements.welcomeView) elements.welcomeView.classList.add("hidden");
   if (elements.resultView) elements.resultView.classList.remove("hidden");
+
+  // 🎯 화면 최상단 시작점 강제 고정: 특가 감지 토글버튼 카드부터 화면이 시작되도록 보장
+  window.scrollTo({ top: 0, behavior: "instant" });
+  requestAnimationFrame(() => {
+    window.scrollTo({ top: 0, behavior: "instant" });
+  });
+
   if (elements.currentSearchKeywordText) {
     elements.currentSearchKeywordText.textContent = keyword;
   }
@@ -1094,6 +1101,14 @@ async function loadPriceData(keyword, targetPrice = 0, forceRefresh = false) {
 
     // UI 렌더링
     renderAll(data);
+
+    // 🎯 검색 결과 렌더링 완료 후에도 상부 시작점(특가 감지 토글 카드) 유지 보장
+    requestAnimationFrame(() => {
+      window.scrollTo({ top: 0, behavior: "instant" });
+    });
+    setTimeout(() => {
+      window.scrollTo({ top: 0, behavior: "instant" });
+    }, 100);
 
     if (forceRefresh) {
       const timeStr = getCurrentTimeString();

@@ -924,6 +924,14 @@ header.sticky {
 /* [모바일 전용] 검색어 상세 화면 초경량 컴팩트 핏 (Search Result View) */
 /* ========================================================= */
 @media (max-width: 640px) {
+  /* 상단 고정 헤더와 [초기 화면으로 돌아가기] 사이의 과도한 상단 빈 공백 축소 */
+  #mainContent {
+    padding-top: 0.5rem !important;
+  }
+  #resultView > div:first-child {
+    margin-bottom: 0.25rem !important;
+  }
+
   #alertBanner {
     padding: 0.875rem 1rem !important;
   }
