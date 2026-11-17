@@ -874,16 +874,23 @@ def generate_mock_history(lowest_price: int, target_price: int) -> List[Dict[str
 
 
 def extract_unit_count(title: str, keyword: str = "") -> int:
-    """상품명(또는 검색어)에서 수량(20개, 30캔, 6입 등)을 자동 감지하여 정수로 반환"""
+    """상품명 또는 검색어에서 수량을 감지하여 정수로 반환 (검색어 지정 수량 최우선)"""
     import re
-    for text in [title, keyword]:
+    # 1. 검색어에 수량이 명시되어 있으면 검색어 수량을 1순위로 채택
+    if keyword and pricetrace_bot and hasattr(pricetrace_bot, 'extract_unit_count'):
+        q_cnt = pricetrace_bot.extract_unit_count(keyword)
+        if q_cnt and q_cnt > 0:
+            return q_cnt
+
+    # 2. 검색어에 없으면 상품명에서 수량 추출
+    for text in [keyword, title]:
         if not text:
             continue
-        match = re.search(r'(\d+)\s*(개|봉|입|ea|캔|병|팩|box|박스|롤|t)', text.lower())
+        match = re.search(r'(\d+)\s*(?:개입|봉입|캔입|팩입|롤입|개|봉|입|ea|캔|병|팩|box|박스|롤|t)\b', text.lower())
         if match:
             try:
                 cnt = int(match.group(1))
-                if 1 <= cnt <= 200:
+                if 1 <= cnt <= 500:
                     return cnt
             except ValueError:
                 pass

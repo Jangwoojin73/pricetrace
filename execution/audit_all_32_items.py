@@ -142,7 +142,13 @@ def audit_32_items():
                     };
                 }""")
 
-                is_pass = check["hasDui"] and check["hasHeading"] and not check["adVisible"]
+                # 수량 일치 및 단품 미끼 상품 차단 정밀 검증 (Sanity Assertion)
+                import pricetrace_bot
+                is_qty_valid = pricetrace_bot.is_quantity_matched(kw, item.get("title", ""), card_price)
+                if not is_qty_valid:
+                    print(f"  ❌ 수량 불일치 미끼 상품 감지: 키워드='{kw}', 상품명='{item.get('title')}', 가격={card_price}원")
+
+                is_pass = check["hasDui"] and check["hasHeading"] and not check["adVisible"] and is_qty_valid
                 status_str = "PASS ✅" if is_pass else "FAIL ❌"
                 print(f"  - 결과: {status_str} (scrollY={check['scrollY']}px, 헤딩={check['headingText']}, top={check['headingTop']}px, 1위실측가={check['topPrice']}원, 광고노출={check['adVisible']})")
 
@@ -245,7 +251,13 @@ def audit_32_items():
                     };
                 }""")
 
-                is_pass = check["hasDui"] and check["hasHeading"] and not check["adVisible"]
+                # 수량 일치 및 단품 미끼 상품 차단 정밀 검증 (Sanity Assertion)
+                import pricetrace_bot
+                is_qty_valid = pricetrace_bot.is_quantity_matched(kw, item.get("title", ""), card_price)
+                if not is_qty_valid:
+                    print(f"  ❌ 수량 불일치 미끼 상품 감지: 키워드='{kw}', 상품명='{item.get('title')}', 가격={card_price}원")
+
+                is_pass = check["hasDui"] and check["hasHeading"] and not check["adVisible"] and is_qty_valid
                 status_str = "PASS ✅" if is_pass else "FAIL ❌"
                 print(f"  - 결과: {status_str} (scrollY={check['scrollY']}px, 헤딩={check['headingText']}, top={check['headingTop']}px, 1위실측가={check['topPrice']}원, 광고노출={check['adVisible']})")
 

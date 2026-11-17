@@ -151,12 +151,61 @@ def extract_clean_tokens(text: str) -> List[str]:
     return tokens
 
 
+def extract_unit_count(text: str) -> Optional[int]:
+    """
+    텍스트(상품명 또는 검색어)에서 수량(20개, 10캔, 24입, 30롤, 10팩, 6병, 160T 등)을 정수로 추출합니다.
+    단, 중량/용량(100g, 210g, 2.7L, 355ml)이나 날짜 등은 배제합니다.
+    """
+    if not text:
+        return None
+    matches = re.findall(r'(\d+)\s*(?:개입|봉입|캔입|팩입|롤입|개|봉|입|캔|롤|팩|병|box|박스|t)\b', str(text).lower())
+    if matches:
+        for m in reversed(matches):
+            try:
+                cnt = int(m)
+                if 1 <= cnt <= 500:
+                    return cnt
+            except ValueError:
+                pass
+    return None
+
+
+def is_quantity_matched(query: str, title: str, price: int = 0) -> bool:
+    """
+    검색어에 명시적인 수량(예: 10캔, 20개, 24개 등)이 지정되어 있는 경우,
+    상품명의 수량이 일치하는지 검증하고 옵션 낚시(1개 미끼 상품)를 원천 차단합니다.
+    """
+    q_qty = extract_unit_count(query)
+    if not q_qty or q_qty <= 1:
+        # 검색어에 특별한 복수 수량이 지정되지 않은 경우(예: '사과', '동원참치', '퍼실 세제')는 통과
+        return True
+
+    t_qty = extract_unit_count(title)
+
+    # 1. 명백한 1개 단품 미끼 상품 차단
+    # 검색어는 4개 이상 대용량 묶음팩인데 상품명이 1개 단품인 경우 즉시 탈락
+    if q_qty >= 4 and t_qty == 1:
+        return False
+
+    # 상품명에 "1개", "단품", "1캔", "1봉"이 명시되어 있는 경우 탈락
+    if q_qty >= 4 and re.search(r'(?:^|[,\s])1(?:개|캔|봉|입|팩)(?:$|[,\s])', str(title)):
+        return False
+
+    # 2. 수량이 감지된 경우: 검색 수량과 현저히 차이나는 경우 탈락 (0.7 ~ 1.5 범위 외 탈락)
+    if t_qty is not None and t_qty > 0:
+        if t_qty < q_qty * 0.7 or t_qty > q_qty * 1.5:
+            return False
+
+    return True
+
+
 def is_title_relevant(query: str, title: str) -> bool:
     """
     상품명(title)이 검색어(query)의 핵심 품목과 실제로 일치하는지 엄격히 검증합니다.
     - 순수 숫자/수량 단위 배제 후 핵심 토큰 추출
     - 합성어 오매칭(사과대추, 새우깡 등) 검사
     - 핵심 의미 토큰 일치 여부 확인
+    - 수량 일치 및 1개 단품 미끼 상품 차단 검증
     """
     q_tokens = extract_clean_tokens(query)
     if not q_tokens:
@@ -178,6 +227,10 @@ def is_title_relevant(query: str, title: str) -> bool:
     # 검색어의 핵심 토큰 중 적어도 1개 이상이 상품명에 포함되어야 함
     matched = any(tok in t_lower for tok in q_tokens)
     if not matched:
+        return False
+
+    # 3. 수량 일치 및 옵션 낚시(1개 미끼 상품) 원천 차단
+    if not is_quantity_matched(query, title):
         return False
 
     return True
@@ -1422,13 +1475,16 @@ def default_data_fetcher(keyword: Optional[str] = None) -> Tuple[List[Dict[str, 
 
 def filter_and_refine_products(items: List[Dict[str, Any]], keyword: str = "") -> List[Dict[str, Any]]:
     """
-    광고 제외 및 최저가순 정렬 후, 각 순위별로 차단 없는 안전 포털 검색 딥링크 적용
+    광고 제외, 수량 불일치 미끼 상품 차단 및 최저가순 정렬 후 각 순위별 안전 포털 검색 딥링크 적용
     """
     if not items:
         return []
     valid_products = []
     for item in items:
         if item.get("is_ad", False):
+            continue
+        # 수량 매칭 가드: 검색어가 묶음 상품일 때 1개 미끼 상품 배제
+        if keyword and not is_quantity_matched(keyword, item.get("title", ""), item.get("price", 0)):
             continue
         valid_products.append(dict(item))
     valid_products.sort(key=lambda x: x["price"])
